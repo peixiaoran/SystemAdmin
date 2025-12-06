@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="../SystemAdmin.CommonSetup/SystemAdmin.CommonSetup.csproj" />
+  <Project Path="../SystemAdmin.Hosting/SystemAdmin.Hosting.csproj" />
+  <Project Path="../SystemAdmin.Localization/SystemAdmin.Localization.csproj" Id="2505ce6f-a6c9-45b0-948e-2e69efb3a6e2" />
+  <Project Path="../SystemAdmin.Model/SystemAdmin.Model.csproj" />
+  <Project Path="../SystemAdmin.Repository/SystemAdmin.Repository.csproj" />
+  <Project Path="../SystemAdmin.Service/SystemAdmin.Service.csproj" />
+  <Project Path="SystemAdmin.WebApi.csproj" />
+</Solution>
