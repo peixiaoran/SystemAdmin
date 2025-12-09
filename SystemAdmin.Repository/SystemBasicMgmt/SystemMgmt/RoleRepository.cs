@@ -1,11 +1,10 @@
 ﻿using Mapster;
 using SqlSugar;
-using SystemAdmin.CommonSetup.DependencyInjection.Localization;
+using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Queries;
-using SystemAdmin.Tool;
 
 namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
 {

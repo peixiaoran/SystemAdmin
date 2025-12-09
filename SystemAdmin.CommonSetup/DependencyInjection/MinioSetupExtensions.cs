@@ -2,9 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Minio;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.CommonSetup.Security;
 
@@ -13,21 +10,20 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
     public static class MinioSetupExtensions
     {
         /// <summary>
-        /// 注册 Minio 相关依赖：MinioSettings、MinioClient、MinioStorageService
+        /// 注册 Minio 相关依赖：MinioSettings、IMinioClient、MinioService
         /// </summary>
         public static IServiceCollection AddMinioSetup(
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            // 1. 绑定 MinioSettings（JSON + 环境变量 Minio__XXX）
+            // 1. 绑定 MinioSettings
             services.Configure<MinioSettings>(opts =>
             {
-                // 从 appsettings.json: "Minio" section 绑定默认值
                 configuration.GetSection("Minio").Bind(opts);
             });
 
-            // 2. 注册 MinioClient 单例（从 Options 里读取配置）
-            services.AddSingleton(sp =>
+            // 2. 注册 IMinioClient 单例
+            services.AddSingleton<IMinioClient>(sp =>
             {
                 var options = sp.GetRequiredService<IOptions<MinioSettings>>().Value;
 
@@ -40,6 +36,7 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
                     client = client.WithSSL();
                 }
 
+                // Build() 返回 IMinioClient，正好匹配注册类型
                 return client.Build();
             });
 

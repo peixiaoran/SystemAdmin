@@ -59,5 +59,59 @@ namespace SystemAdmin.Localization.Resources {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找类似 账号密码错误，剩余 {0} 次机会 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_Auth_SysLogOut_LoginFailed {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_Auth_SysLogOut_LoginFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 登录成功！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_Auth_SysLogOut_LoginSuccess {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_Auth_SysLogOut_LoginSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 该帐号已锁定，请解锁 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_LoginLock {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_LoginLock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 安全登出失败！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_LogOutFailed {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_LogOutFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 安全登出成功！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_LogOutSuccess {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_LogOutSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 账号密码已过期，请及时修改 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordExpiration {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordExpiration", resourceCulture);
+            }
+        }
     }
 }

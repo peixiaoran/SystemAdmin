@@ -1,6 +1,6 @@
 ﻿using Mapster;
 using SqlSugar;
-using SystemAdmin.CommonSetup.DependencyInjection.Localization;
+using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
@@ -9,7 +9,6 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemUserConfig.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemUserConfig.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemUserConfig.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemUserConfig.Queries;
-using SystemAdmin.Tool;
 
 namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
 {

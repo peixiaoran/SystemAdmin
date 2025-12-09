@@ -27,34 +27,43 @@ namespace SystemAdmin.CommonSetup.Security
         }
 
         /// <summary>
-        /// 获取多语言文案：
-        /// _msg.ReturnMsg($"{_this}InsertFailed")
+        /// 获取多语言文案（支持 {0} 格式化）
+        /// 用法：_msg.ReturnMsg($"{_this}InsertFailed", arg1, arg2...)
         /// </summary>
-        public string ReturnMsg(string key)
+        public string ReturnMsg(string key, params object?[] args)
         {
             if (string.IsNullOrWhiteSpace(key))
                 return string.Empty;
 
             var culture = GetCultureFromHeader();
 
-            // 1. 根据请求语言取
+            // 1. 按请求语言读取
             var value = _resourceManager.GetString(key, culture);
 
-            if (!string.IsNullOrEmpty(value))
+            // 2. zh-CN 兜底
+            if (string.IsNullOrEmpty(value))
+                value = _resourceManager.GetString(key, new CultureInfo("zh-CN"));
+
+            // 3. en-US 兜底
+            if (string.IsNullOrEmpty(value))
+                value = _resourceManager.GetString(key, new CultureInfo("en-US"));
+
+            // 4. 全部没有 → 返回 key 本身
+            if (string.IsNullOrEmpty(value))
+                return key;
+
+            // 5. 格式化占位符 {0}，确保格式化安全不抛异常
+            try
+            {
+                return (args is { Length: > 0 })
+                    ? string.Format(value, args)
+                    : value;
+            }
+            catch
+            {
+                // 如果格式化失败，返回原文案，避免 FormatException 影响业务
                 return value;
-
-            // 2. 兜底用 zh-CN
-            var zhCn = _resourceManager.GetString(key, new CultureInfo("zh-CN"));
-            if (!string.IsNullOrEmpty(zhCn))
-                return zhCn!;
-
-            // 3. 再兜底用 en-US
-            var enUs = _resourceManager.GetString(key, new CultureInfo("en-US"));
-            if (!string.IsNullOrEmpty(enUs))
-                return enUs!;
-
-            // 4. 全部都没有就返回 key，方便发现漏配
-            return key;
+            }
         }
 
         /// <summary>
