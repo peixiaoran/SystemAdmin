@@ -44,33 +44,33 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                 PhoneNumber = parsonal.PhoneNumber,
                                 LoginNo = parsonal.LoginNo,
                                 DepartmentId = parsonal.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-CN"
+                                DepartmentName = _lang.Locale == "zh-cn"
                                                  ? parsonal.DepartmentNameCn
                                                  : parsonal.DepartmentNameEn,
                                 DepartmentLevelId = parsonal.DepartmentLevelId,
-                                DepartmentLevelName = _lang.Locale == "zh-CN"
+                                DepartmentLevelName = _lang.Locale == "zh-cn"
                                                  ? parsonal.DepartmentLevelNameCn
                                                  : parsonal.DepartmentLevelNameEn,
                                 RoleId = parsonal.RoleId,
                                 PositionId = parsonal.PositionId,
-                                PositionName = _lang.Locale == "zh-CN"
+                                PositionName = _lang.Locale == "zh-cn"
                                                  ? parsonal.PositionNameCn
                                                  : parsonal.PositionNameEn,
                                 Gender = parsonal.Gender,
-                                GenderName = _lang.Locale == "zh-CN"
+                                GenderName = _lang.Locale == "zh-cn"
                                                  ? parsonal.GenderNameCn
                                                  : parsonal.GenderNameEn,
-                                RoleName = _lang.Locale == "zh-CN"
+                                RoleName = _lang.Locale == "zh-cn"
                                                  ? parsonal.RoleNameCn
                                                  : parsonal.RoleNameEn,
                                 LaborId = parsonal.LaborId,
-                                LaborName = _lang.Locale == "zh-CN"
+                                LaborName = _lang.Locale == "zh-cn"
                                                  ? parsonal.LaborNameCn
                                                  : parsonal.LaborNameEn,
                                 HireDate = Convert.ToDateTime(parsonal.HireDate).ToString("yyyy-MM-dd"),
                                 AvatarAddress = parsonal.AvatarAddress,
                                 IsEmployed = parsonal.IsEmployed,
-                                IsEmployedName = _lang.Locale == "zh-CN"
+                                IsEmployedName = _lang.Locale == "zh-cn"
                                                  ? parsonal.IsEmployedNameCn
                                                  : parsonal.IsEmployedNameEn,
                                 IsApproval = parsonal.IsApproval,
@@ -119,7 +119,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select(genderdic => new GenderDropDto
                             {
                                 GenderCode = genderdic.DicCode,
-                                GenderName = _lang.Locale == "zh-CN"
+                                GenderName = _lang.Locale == "zh-cn"
                                              ? genderdic.DicNameCn
                                              : genderdic.DicNameEn
                             }).ToListAsync();
@@ -136,7 +136,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select(userlabor => new UserLaborDropDto
                             {
                                 LaborId = userlabor.LaborId,
-                                LaborName = _lang.Locale == "zh-CN"
+                                LaborName = _lang.Locale == "zh-cn"
                                             ? userlabor.LaborNameCn
                                             : userlabor.LaborNameEn
                             }).ToListAsync();
@@ -155,7 +155,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {
                                 DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-CN"
+                                DepartmentName = _lang.Locale == "zh-cn"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
@@ -174,7 +174,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select((userpos) => new UserPositionDropDto
                             {
                                 PositionId = userpos.PositionId,
-                                PositionName = _lang.Locale == "zh-CN"
+                                PositionName = _lang.Locale == "zh-cn"
                                                ? userpos.PositionNameCn
                                                : userpos.PositionNameEn
                             }).ToListAsync();
@@ -191,7 +191,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select(role => new RoleInfoDropDto
                             {
                                 RoleId = role.RoleId,
-                                RoleName = _lang.Locale == "zh-CN"
+                                RoleName = _lang.Locale == "zh-cn"
                                            ? role.RoleNameCn
                                            : role.RoleNameEn,
                                 Disabled = role.IsEnabled == 0

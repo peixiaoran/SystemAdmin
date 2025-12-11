@@ -15,14 +15,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.Auth.Dto
         public long ModuleId { get; set; }
 
         /// <summary>
-        /// 模块名称（中文）
+        /// 模块名称
         /// </summary>
-        public string ModuleNameCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 模块名称（英文）
-        /// </summary>
-        public string ModuleNameEn { get; set; } = string.Empty;
+        public string ModuleName { get; set; } = string.Empty;
 
         /// <summary>
         /// 模块图标
@@ -35,13 +30,8 @@ namespace SystemAdmin.Model.SystemBasicMgmt.Auth.Dto
         public string Path { get; set; } = string.Empty;
 
         /// <summary>
-        /// 备注（中文）
+        /// 备注
         /// </summary>
-        public string RemarkCh { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 备注（英文）
-        /// </summary>
-        public string RemarkEn { get; set; } = string.Empty;
+        public string Remark { get; set; } = string.Empty;
     }
 }

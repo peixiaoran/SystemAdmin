@@ -129,7 +129,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                            MenuNameCn = pmenu.MenuNameCn,
                                            MenuNameEn = pmenu.MenuNameEn,
                                            MenuType = pmenu.MenuType,
-                                           MenuTypeName = _lang.Locale == "zh-CN"
+                                           MenuTypeName = _lang.Locale == "zh-cn"
                                                           ? dic.DicNameCn
                                                           : dic.DicNameEn,
                                            MenuIcon = pmenu.MenuIcon,
@@ -155,7 +155,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                             .Select(module => new ModuleDropDto
                             {
                                 ModuleId = module.ModuleId,
-                                ModuleName = _lang.Locale == "zh-CN"
+                                ModuleName = _lang.Locale == "zh-cn"
                                              ? module.ModuleNameCn
                                              : module.ModuleNameEn,
                                 Disabled = module.IsEnabled == 0
@@ -176,7 +176,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                             .Select(pmenu => new MenuDropDto
                             {
                                 MenuId = pmenu.MenuId,
-                                MenuName = _lang.Locale == "zh-CN"
+                                MenuName = _lang.Locale == "zh-cn"
                                            ? pmenu.MenuNameCn
                                            : pmenu.MenuNameEn,
                                 Disabled = pmenu.IsEnabled == 0

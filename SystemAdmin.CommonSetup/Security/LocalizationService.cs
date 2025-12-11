@@ -40,13 +40,13 @@ namespace SystemAdmin.CommonSetup.Security
             // 1. 按请求语言读取
             var value = _resourceManager.GetString(key, culture);
 
-            // 2. zh-CN 兜底
+            // 2. zh-cn 兜底
             if (string.IsNullOrEmpty(value))
-                value = _resourceManager.GetString(key, new CultureInfo("zh-CN"));
+                value = _resourceManager.GetString(key, new CultureInfo("zh-cn"));
 
-            // 3. en-US 兜底
+            // 3. en-us 兜底
             if (string.IsNullOrEmpty(value))
-                value = _resourceManager.GetString(key, new CultureInfo("en-US"));
+                value = _resourceManager.GetString(key, new CultureInfo("en-us"));
 
             // 4. 全部没有 → 返回 key 本身
             if (string.IsNullOrEmpty(value))
@@ -77,10 +77,10 @@ namespace SystemAdmin.CommonSetup.Security
             if (string.IsNullOrWhiteSpace(langHeader))
             {
                 // 默认中文
-                return new CultureInfo("zh-CN");
+                return new CultureInfo("zh-cn");
             }
 
-            // Accept-Language 可能类似： "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7"
+            // Accept-Language 可能类似： "zh-cn,zh;q=0.9,en-us;q=0.8,en;q=0.7"
             var first = langHeader.Split(',')[0].Trim();
 
             try
@@ -90,7 +90,7 @@ namespace SystemAdmin.CommonSetup.Security
             catch
             {
                 // 解析失败给一个默认
-                return new CultureInfo("zh-CN");
+                return new CultureInfo("zh-cn");
             }
         }
     }

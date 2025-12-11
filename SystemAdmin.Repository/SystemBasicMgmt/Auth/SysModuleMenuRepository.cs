@@ -38,12 +38,14 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.Auth
                                       .Select((user, userrole, role, rolemodule, module) => new SysModuleInfoDto
                                       {
                                           ModuleId = module.ModuleId,
-                                          ModuleNameCn = module.ModuleNameCn,
-                                          ModuleNameEn = module.ModuleNameEn,
+                                          ModuleName = _lang.Locale == "zh-cn"
+                                                       ? module.ModuleNameCn
+                                                       : module.ModuleNameEn,
                                           ModuleIcon = module.ModuleIcon,
                                           Path = module.Path,
-                                          RemarkCh = module.RemarkCh,
-                                          RemarkEn = module.RemarkEn
+                                          Remark = _lang.Locale == "zh-cn"
+                                                       ? module.RemarkCh
+                                                       : module.RemarkEn,
                                       }).ToListAsync();
 
             return moduleList;
@@ -70,7 +72,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.Auth
                                          MenuId = menu.MenuId,
                                          ParentMenuId = menu.ParentMenuId,
                                          MenuCode = menu.MenuCode,
-                                         MenuName = _lang.Locale == "zh-CN"
+                                         MenuName = _lang.Locale == "zh-cn"
                                                          ? menu.MenuNameCn
                                                          : menu.MenuNameEn,
                                          Path = menu.Path,

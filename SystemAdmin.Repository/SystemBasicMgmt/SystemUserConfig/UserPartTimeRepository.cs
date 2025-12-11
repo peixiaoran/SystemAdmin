@@ -70,35 +70,35 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                 UserId = user.UserId,
                 UserNo = user.UserNo,
                 // 员工姓名
-                UserName = _lang.Locale == "zh-CN"
+                UserName = _lang.Locale == "zh-cn"
                            ? user.UserNameCn
                            : user.UserNameEn,
                 // 部门名称
-                DepartmentName = _lang.Locale == "zh-CN"
+                DepartmentName = _lang.Locale == "zh-cn"
                            ? dept.DepartmentNameCn
                            : dept.DepartmentNameEn,
                 // 职级名称
-                PositionName = _lang.Locale == "zh-CN"
+                PositionName = _lang.Locale == "zh-cn"
                            ? userpos.PositionNameCn
                            : userpos.PositionNameEn,
                 // 是否签核
                 IsApproval = user.IsApproval,
-                IsApprovalName = _lang.Locale == "zh-CN"
+                IsApprovalName = _lang.Locale == "zh-cn"
                            ? approvaldic.DicNameCn
                            : approvaldic.DicNameEn,
                 // 兼任部门名称
                 PartTimeDeptId = userpart.PartTimeDeptId,
-                PartTimeDeptName = _lang.Locale == "zh-CN"
+                PartTimeDeptName = _lang.Locale == "zh-cn"
                            ? p_userdept.DepartmentNameCn
                            : p_userdept.DepartmentNameEn,
                 // 兼任职级名称
                 PartTimePositionId = userpart.PartTimePositionId,
-                PartTimePositionName = _lang.Locale == "zh-CN"
+                PartTimePositionName = _lang.Locale == "zh-cn"
                            ? p_userpos.PositionNameCn
                            : p_userpos.PositionNameEn,
                 // 兼任职业名称
                 PartTimeLaborId = userpart.PartTimeLaborId,
-                PartTimeLaborName = _lang.Locale == "zh-CN"
+                PartTimeLaborName = _lang.Locale == "zh-cn"
                            ? p_userlabor.LaborNameCn
                            : p_userlabor.LaborNameEn,
                 StartTime = userpart.StartTime,
@@ -153,23 +153,23 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
             {
                  UserId = user.UserId,
                  UserNo = user.UserNo,
-                 UserName = _lang.Locale == "zh-CN"
+                 UserName = _lang.Locale == "zh-cn"
                             ? user.UserNameCn
                             : user.UserNameEn,
-                 DepartmentName = _lang.Locale == "zh-CN"
+                 DepartmentName = _lang.Locale == "zh-cn"
                             ? dept.DepartmentNameCn
                             : dept.DepartmentNameEn,
-                 PositionName = _lang.Locale == "zh-CN"
+                 PositionName = _lang.Locale == "zh-cn"
                             ? userpos.PositionNameCn
                             : userpos.PositionNameEn,
-                 NationalityName = _lang.Locale == "zh-CN"
+                 NationalityName = _lang.Locale == "zh-cn"
                             ? nation.NationNameCn
                             : nation.NationNameEn,
-                 LaborName = _lang.Locale == "zh-CN"
+                 LaborName = _lang.Locale == "zh-cn"
                             ? userlabor.LaborNameCn
                             : userlabor.LaborNameEn,
                  IsApproval = user.IsApproval,
-                 IsApprovalName = _lang.Locale == "zh-CN"
+                 IsApprovalName = _lang.Locale == "zh-cn"
                             ? approvaldic.DicNameCn
                             : approvaldic.DicNameEn,
             }).ToPageListAsync(getUserPage.PageIndex, getUserPage.PageSize, totalCount);
@@ -279,7 +279,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                             .Select(userlabor => new UserLaborDropDto
                             {
                                 LaborId = userlabor.LaborId,
-                                LaborName = _lang.Locale == "zh-CN"
+                                LaborName = _lang.Locale == "zh-cn"
                                             ? userlabor.LaborNameCn
                                             : userlabor.LaborNameEn
                             }).ToListAsync();
@@ -298,7 +298,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {
                                 DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-CN"
+                                DepartmentName = _lang.Locale == "zh-cn"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
@@ -318,7 +318,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                             .Select((userpos) => new UserPositionDropDto
                             {
                                 PositionId = userpos.PositionId,
-                                PositionName = _lang.Locale == "zh-CN"
+                                PositionName = _lang.Locale == "zh-cn"
                                                ? userpos.PositionNameCn
                                                : userpos.PositionNameEn
                             }).ToListAsync();

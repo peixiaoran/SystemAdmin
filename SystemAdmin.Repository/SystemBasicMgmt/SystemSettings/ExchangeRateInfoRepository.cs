@@ -94,7 +94,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemSettings
                             .Select(currency => new CurrencyInfoDropDto
                             {
                                 CurrencyCode = currency.CurrencyCode,
-                                CurrencyName = _lang.Locale == "zh-CN"
+                                CurrencyName = _lang.Locale == "zh-cn"
                                                ? currency.CurrencyNameCn
                                                : currency.CurrencyNameEn,
                                 Disabled = currency.IsEnabled == 0

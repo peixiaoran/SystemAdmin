@@ -53,20 +53,20 @@ namespace SystemAdmin.WebApi.DependencyInjection
             {
                 Name = "Accept-Language",
                 In = ParameterLocation.Header,
-                Description = "语言偏好设置：zh-CN（简体中文）、en-US（英文）",
+                Description = "语言偏好设置：zh-cn（简体中文）、en-us（英文）",
                 Required = false,
                 Schema = new OpenApiSchema
                 {
                     Type = JsonSchemaType.String,
 
                     // 默认值
-                    Default = "zh-CN",
+                    Default = "zh-cn",
 
-                    // 枚举：zh-CN、en-US
+                    // 枚举：zh-cn、en-us
                     Enum = new List<JsonNode>
                     {
-                        JsonValue.Create("zh-CN")!,
-                        JsonValue.Create("en-US")!
+                        JsonValue.Create("zh-cn")!,
+                        JsonValue.Create("en-us")!
                     }
                 }
             };

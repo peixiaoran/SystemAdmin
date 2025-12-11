@@ -23,8 +23,8 @@ namespace SystemAdmin.CommonSetup.Security
             var header = _httpContextAccessor.HttpContext?
                 .Request.Headers["Accept-Language"].ToString();
 
-            // 格式： "zh-CN,zh;q=0.9,en-US;q=0.8"
-            var ui = "zh-CN"; // 默认语言
+            // 格式： "zh-cn,zh;q=0.9,en-us;q=0.8"
+            var ui = "zh-cn"; // 默认语言
 
             if (!string.IsNullOrWhiteSpace(header))
             {
