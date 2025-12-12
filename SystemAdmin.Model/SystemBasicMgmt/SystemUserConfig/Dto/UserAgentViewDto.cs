@@ -15,7 +15,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemUserConfig.Dto
         public long UserId { get; set; }
 
         /// <summary>
-        /// 员工编号
+        /// 员工工号
         /// </summary>
         public string UserNo { get; set; } = string.Empty;
 

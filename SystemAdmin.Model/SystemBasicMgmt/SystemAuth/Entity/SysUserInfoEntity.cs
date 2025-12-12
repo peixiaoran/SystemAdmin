@@ -25,7 +25,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Entity
         public long PositionId { get; set; }
 
         /// <summary>
-        /// 员工编号
+        /// 员工工号
         /// </summary>
         public string UserNo { get; set; } = string.Empty;
 

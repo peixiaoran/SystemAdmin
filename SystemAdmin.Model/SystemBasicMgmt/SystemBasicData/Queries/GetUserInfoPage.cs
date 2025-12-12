@@ -13,7 +13,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries
         public string DepartmentId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 员工编号
+        /// 员工工号
         /// </summary>
         public string UserNo { get; set; } = string.Empty;
 

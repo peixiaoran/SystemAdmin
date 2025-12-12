@@ -6,6 +6,11 @@
     public class SysUserLoginReturnDto
     {
         /// <summary>
+        /// 员工工号
+        /// </summary>
+        public string UserNo { get; set; } = string.Empty;
+
+        /// <summary>
         /// 员工姓名（中文）
         /// </summary>
         public string UserNameCn { get; set; } = string.Empty;

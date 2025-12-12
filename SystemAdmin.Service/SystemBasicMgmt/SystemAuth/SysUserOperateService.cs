@@ -147,6 +147,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
 
                 return Result<SysUserLoginReturnDto>.Ok(new SysUserLoginReturnDto
                 {
+                    UserNo = user.UserNo,
                     UserNameCn = user.UserNameCn,
                     UserNameEn = user.UserNameEn,
                     AvatarAddress = user.AvatarAddress
