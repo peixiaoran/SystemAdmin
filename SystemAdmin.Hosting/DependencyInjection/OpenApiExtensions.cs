@@ -1,4 +1,6 @@
-﻿using Microsoft.OpenApi;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi;
+using SystemAdmin.Hosting.DependencyInjection;
 
 namespace SystemAdmin.WebApi.DependencyInjection
 {

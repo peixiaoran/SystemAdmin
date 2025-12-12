@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 using System.Text.Json.Nodes;
 
-namespace SystemAdmin.WebApi.DependencyInjection
+namespace SystemAdmin.Hosting.DependencyInjection
 {
     public class OpenApiTransformer(IAuthenticationSchemeProvider authenticationSchemeProvider) : IOpenApiDocumentTransformer
     {
