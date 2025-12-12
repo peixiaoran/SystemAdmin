@@ -77,9 +77,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     });
 
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(
-                        500,
-                        _localization.ReturnMsg($"{_this}UserNotFound")
+                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFound")
                     );
                 }
 
@@ -87,17 +85,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 if (user.IsFreeze != 0)
                 {
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(
-                        220,
-                        _localization.ReturnMsg($"{_this}LoginLock")
-                    );
+                    return Result<SysUserLoginReturnDto>.Failure(220,_localization.ReturnMsg($"{_this}LoginLock"));
                 }
 
                 // 校验密码
-                var inputHash = HashPasswordWithArgon2id(
-                    sysLogin.PassWord,
-                    Convert.FromBase64String(user.PwdSalt)
-                );
+                var inputHash = HashPasswordWithArgon2id(sysLogin.PassWord,Convert.FromBase64String(user.PwdSalt));
 
                 if (inputHash != user.PassWord)
                 {
@@ -134,19 +126,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                         await _sysUserOperateRepository.UpdateUserFreeze(user.UserId);
                         await _db.CommitTranAsync();
 
-                        return Result<SysUserLoginReturnDto>.Failure(
-                            220,
-                            _localization.ReturnMsg($"{_this}LoginLock")
-                        );
+                        return Result<SysUserLoginReturnDto>.Failure(220, _localization.ReturnMsg($"{_this}LoginLock"));
                     }
 
                     // 未达阈值
                     var remain = 5 - newErrors;
                     await _db.CommitTranAsync();
 
-                    return Result<SysUserLoginReturnDto>.Failure(
-                        500,
-                        _localization.ReturnMsg($"{_this}LoginFailed", remain)
+                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}LoginFailed", remain)
                     );
                 }
 
@@ -154,10 +141,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 if (Convert.ToDateTime(user.ExpirationTime) < now)
                 {
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(
-                        210,
-                        _localization.ReturnMsg($"{_this}PasswordExpiration")
-                    );
+                    return Result<SysUserLoginReturnDto>.Failure(210, _localization.ReturnMsg($"{_this}PasswordExpiration"));
                 }
 
                 // 登录成功日志
