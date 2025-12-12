@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SystemAdmin.CommonSetup.Options
+﻿namespace SystemAdmin.CommonSetup.Options
 {
     /// <summary>
     /// 业务层使用的邮件消息对象，用于描述一封要发送的邮件内容。

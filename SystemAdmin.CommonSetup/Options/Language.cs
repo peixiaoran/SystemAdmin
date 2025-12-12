@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SystemAdmin.CommonSetup.Options
+﻿namespace SystemAdmin.CommonSetup.Options
 {
     public class Language
     {
