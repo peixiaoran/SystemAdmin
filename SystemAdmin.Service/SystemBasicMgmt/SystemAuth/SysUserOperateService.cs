@@ -57,103 +57,136 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             try
             {
                 await _db.BeginTranAsync();
+
+                var ip = GetLocalIPv4();
+                var now = DateTime.Now;
+                var nowStr = now.ToString("yyyy-MM-dd HH:mm:ss");
+
+                // 查询用户
                 var user = await _sysUserOperateRepository.LoginGetUserInfo(sysLogin);
-                string ip = GetLocalIPv4();
-                string now = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                
+
                 if (user == null)
                 {
+                    // 员工不存在
                     await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                     {
                         UserId = 0,
-                        StatusId = 3, // 员工不存在
+                        StatusId = 3,
                         IP = ip,
-                        LoginDate = now
+                        LoginDate = nowStr
                     });
+
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFound"));
+                    return Result<SysUserLoginReturnDto>.Failure(
+                        500,
+                        _localization.ReturnMsg($"{_this}UserNotFound")
+                    );
                 }
-                // 员工账号已冻结
+
+                // 账号已冻结
                 if (user.IsFreeze != 0)
                 {
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(220, _localization.ReturnMsg($"{_this}LoginLock"));
+                    return Result<SysUserLoginReturnDto>.Failure(
+                        220,
+                        _localization.ReturnMsg($"{_this}LoginLock")
+                    );
                 }
 
-                var inputHash = HashPasswordWithArgon2id(sysLogin.PassWord, Convert.FromBase64String(user.PwdSalt));
-                // 密码错误
+                // 校验密码
+                var inputHash = HashPasswordWithArgon2id(
+                    sysLogin.PassWord,
+                    Convert.FromBase64String(user.PwdSalt)
+                );
+
                 if (inputHash != user.PassWord)
                 {
-                    // 记录一次“密码错误”的登录日志
+                    // 记录密码错误
                     await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                     {
                         UserId = user.UserId,
-                        StatusId = 2, // 密码错误
+                        StatusId = 2,
                         IP = ip,
-                        LoginDate = now
+                        LoginDate = nowStr
                     });
-                    // 读取当前错误计数
+
+                    // 获取并累加错误次数
                     var lockInfo = await _sysUserOperateRepository.GetUserLockErrorNumberNow(user.UserId);
-                    var currentErrors = lockInfo?.NumberErrors ?? 0;
-                    var newErrors = currentErrors + 1;
+                    var newErrors = (lockInfo?.NumberErrors ?? 0) + 1;
 
                     if (lockInfo == null)
                     {
-                        // 首次失败，创建计数记录
                         await _sysUserOperateRepository.AddUserLock(new UserLockEntity
                         {
                             UserId = user.UserId,
                             NumberErrors = 1,
-                            CreatedDate = now
+                            CreatedDate = nowStr
                         });
                     }
                     else
                     {
-                        // 后续失败，累加计数
                         await _sysUserOperateRepository.AutoUserLockErrorNumber(user.UserId, newErrors);
                     }
-                    // 达到阈值（第 5 次）→ 冻结账号并返回“已锁定”
+
+                    // 达到阈值 → 冻结账号
                     if (newErrors >= 5)
                     {
                         await _sysUserOperateRepository.UpdateUserFreeze(user.UserId);
                         await _db.CommitTranAsync();
-                        return Result<SysUserLoginReturnDto>.Failure(220, _localization.ReturnMsg($"{_this}LoginLock"));
+
+                        return Result<SysUserLoginReturnDto>.Failure(
+                            220,
+                            _localization.ReturnMsg($"{_this}LoginLock")
+                        );
                     }
-                    // 未达阈值，提示登录失败
-                    await _db.CommitTranAsync();
+
+                    // 未达阈值
                     var remain = 5 - newErrors;
-                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}LoginFailed", remain));
+                    await _db.CommitTranAsync();
+
+                    return Result<SysUserLoginReturnDto>.Failure(
+                        500,
+                        _localization.ReturnMsg($"{_this}LoginFailed", remain)
+                    );
                 }
+
                 // 密码是否过期
-                if (Convert.ToDateTime(user.ExpirationTime) < DateTime.Now)
+                if (Convert.ToDateTime(user.ExpirationTime) < now)
                 {
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(210, _localization.ReturnMsg($"{_this}PasswordExpiration"));
+                    return Result<SysUserLoginReturnDto>.Failure(
+                        210,
+                        _localization.ReturnMsg($"{_this}PasswordExpiration")
+                    );
                 }
+
                 // 登录成功日志
                 await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                 {
                     UserId = user.UserId,
                     StatusId = 1,
                     IP = ip,
-                    LoginDate = now
+                    LoginDate = nowStr
                 });
-                // 清空员工锁定记录
+
+                // 清空锁定记录
                 await _sysUserOperateRepository.EmptyUserLock(user.UserId);
+
                 await _db.CommitTranAsync();
 
-                // 生成并设置 JWT Cookie
-                _jwt.SetAuthCookie(httpResponse, userId: user.UserId, userNo: user.UserNo);
-
-                return Result<SysUserLoginReturnDto>.Ok(new SysUserLoginReturnDto
-                {
-                    UserNo = user.UserNo,
-                    UserNameCn = user.UserNameCn,
-                    UserNameEn = user.UserNameEn,
-                    AvatarAddress = user.AvatarAddress
-                }, _localization.ReturnMsg($"{_this}LoginSuccess"));
+                // 返回登录成功信息（JWT Cookie 已在其他层处理）
+                return Result<SysUserLoginReturnDto>.Ok(
+                    new SysUserLoginReturnDto
+                    {
+                        UserNo = user.UserNo,
+                        UserNameCn = user.UserNameCn,
+                        UserNameEn = user.UserNameEn,
+                        AvatarAddress = user.AvatarAddress
+                    },
+                    _localization.ReturnMsg($"{_this}LoginSuccess")
+                );
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
