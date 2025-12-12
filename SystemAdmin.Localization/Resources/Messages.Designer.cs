@@ -79,6 +79,33 @@ namespace SystemAdmin.Localization.Resources {
         }
         
         /// <summary>
+        ///   查找类似 帐号正在重置密码中 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailAccountPasswordEx {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailAccountPasswordEx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 帐号正在解锁中 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailAccountUnlock {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailAccountUnlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 该员工没有邮箱，请联络系统管理员进行配置 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailNotFound {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 该帐号已锁定，请解锁 的本地化字符串。
         /// </summary>
         public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_LoginLock {
@@ -106,11 +133,209 @@ namespace SystemAdmin.Localization.Resources {
         }
         
         /// <summary>
+        ///   查找类似 新密码不能与老密码相同！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_NotEqualOldPassWord {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_NotEqualOldPassWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 账号密码已过期，请及时修改 的本地化字符串。
         /// </summary>
         public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordExpiration {
             get {
                 return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordExpiration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码 {0} 用于重置密码，3分钟内有效，请勿泄漏并转送。如非本人操作，请忽略此信息。 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordExSendVcCodeBody {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordExSendVcCodeBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 该帐号密码未过期，无需重置！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordNotExpiration {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordNotExpiration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码发送失败, 原因：{0}, 请联络系统管理员进行处理 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeFailed {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 操作频繁，请稍后再试！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeFrequently {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeFrequently", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码发送成功，请查看邮箱 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeSuccess {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 帐号解锁失败！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockFailed {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码 {0} 用于帐号解锁，3分钟内有效，请勿泄漏并转送。如非本人操作，请忽略此信息。 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockSendVcCodeBody {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockSendVcCodeBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 帐号解锁成功！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockSuccess {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码修改失败！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UpdatePassWrodFailed {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UpdatePassWrodFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码修改成功，请重新登入！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UpdatePassWrodSuccess {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UpdatePassWrodSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 系统帐号不存在！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UserNotFound {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 该帐号未冻结，无需解锁 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UserNotFreeze {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UserNotFreeze", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码必须为8-16位，包含小写、大写、数字和特殊字符 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_ValidationPassWrodError {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_ValidationPassWrodError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码已过期，请重新发送！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_VcCodeExpired {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_VcCodeExpired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码校验成功，请输入新密码和确认密码！ 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_VcCodeSuccess {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_VcCodeSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 删除部门级别信息失败 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicData_DepartmentLevel_DeleteFailed {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicData_DepartmentLevel_DeleteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 删除部门级别信息成功 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicData_DepartmentLevel_DeleteSuccess {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicData_DepartmentLevel_DeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增部门级别信息失败 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicData_DepartmentLevel_InsertFailed {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicData_DepartmentLevel_InsertFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增部门级别信息成功 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicData_DepartmentLevel_InsertSuccess {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicData_DepartmentLevel_InsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改部门级别信息失败 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicData_DepartmentLevel_UpdateFailed {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicData_DepartmentLevel_UpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改部门级别信息成功 的本地化字符串。
+        /// </summary>
+        public static string SystemBasicMgmt_SystemBasicData_DepartmentLevel_UpdateSuccess {
+            get {
+                return ResourceManager.GetString("SystemBasicMgmt_SystemBasicData_DepartmentLevel_UpdateSuccess", resourceCulture);
             }
         }
     }

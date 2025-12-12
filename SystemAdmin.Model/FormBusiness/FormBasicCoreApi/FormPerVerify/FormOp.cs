@@ -1,4 +1,4 @@
-﻿namespace SystemAdmin.Model.FormBusiness.FormBasicCoreApi.FormPerVerify
+﻿namespace SystemAdmin.Model.FormBusiness.FormAuth.FormPerVerify
 {
     [Flags]
     public enum FormOp

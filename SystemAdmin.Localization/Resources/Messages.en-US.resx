@@ -135,4 +135,79 @@
   <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_LogOutFailed" xml:space="preserve">
     <value>Logout failed!</value>
   </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UserNotFreeze" xml:space="preserve">
+    <value>This account is not frozen and does not require unlocking.</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailNotFound" xml:space="preserve">
+    <value>This employee has no email, please contact system administrator for configuration</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailAccountUnlock" xml:space="preserve">
+    <value>Account is being unlocked</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailAccountPasswordEx" xml:space="preserve">
+    <value>Account password is being reset</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeSuccess" xml:space="preserve">
+    <value>The verification code has been sent successfully. Please check your email.</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeFrequently" xml:space="preserve">
+    <value>Operation too frequent, please try again later!</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeFailed" xml:space="preserve">
+    <value>Verification code sending failed, reason: {0}, please contact system administrator</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockSendVcCodeBody" xml:space="preserve">
+    <value>Verification code {0} for account unlocking, valid for 3 minutes. Do not disclose or forward. If not initiated by you, please ignore this message.</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_VcCodeExpired" xml:space="preserve">
+    <value>The verification code has expired. Please resend it!</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_VcCodeSuccess" xml:space="preserve">
+    <value>Incorrect verification code!</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockSuccess" xml:space="preserve">
+    <value>Account unlocked successfully</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UserNotFound" xml:space="preserve">
+    <value>Account does not exist!</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockFailed" xml:space="preserve">
+    <value>Account unlocking failed</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordNotExpiration" xml:space="preserve">
+    <value>The account password has not expired and does not need to be reset!</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordExSendVcCodeBody" xml:space="preserve">
+    <value>Verification code {0} is used to reset your password. It is valid for 3 minutes. Please do not disclose or forward it. If this was not your action, please ignore this message.</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_ValidationPassWrodError" xml:space="preserve">
+    <value>Passwords must be 8-16 characters long and contain lowercase, uppercase, numbers, and special characters.</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UpdatePassWrodSuccess" xml:space="preserve">
+    <value>Password changed successfully, please log in again!</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UpdatePassWrodFailed" xml:space="preserve">
+    <value>Password change failed!</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_NotEqualOldPassWord" xml:space="preserve">
+    <value>The new password cannot be the same as the old one!</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_InsertSuccess" xml:space="preserve">
+    <value>Added department-level information successfully</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_InsertFailed" xml:space="preserve">
+    <value>Failed to add department-level information</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_DeleteSuccess" xml:space="preserve">
+    <value>Department-level information deleted successfully</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_DeleteFailed" xml:space="preserve">
+    <value>Department-level information deleted successfully</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_UpdateSuccess" xml:space="preserve">
+    <value>Department level information successfully modified</value>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_UpdateFailed" xml:space="preserve">
+    <value>Failed to modify department level information</value>
+  </data>
 </root>

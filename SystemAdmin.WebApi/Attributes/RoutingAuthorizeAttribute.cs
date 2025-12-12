@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using SystemAdmin.CommonSetup.Security;
-using SystemAdmin.Service.SystemBasicMgmt.Auth;
+using SystemAdmin.Service.SystemBasicMgmt.SystemAuth;
 
 namespace SystemAdmin.WebApi.Attributes
 {

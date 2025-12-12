@@ -141,4 +141,104 @@
     <value>安全登出失败！</value>
     <comment>安全登出失败！</comment>
   </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UserNotFreeze" xml:space="preserve">
+    <value>该帐号未冻结，无需解锁</value>
+    <comment>该帐号未冻结，无需解锁</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailNotFound" xml:space="preserve">
+    <value>该员工没有邮箱，请联络系统管理员进行配置</value>
+    <comment>该员工没有邮箱，请联络系统管理员进行配置</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailAccountUnlock" xml:space="preserve">
+    <value>帐号正在解锁中</value>
+    <comment>帐号正在解锁中</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_EmailAccountPasswordEx" xml:space="preserve">
+    <value>帐号正在重置密码中</value>
+    <comment>帐号正在重置密码中</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeSuccess" xml:space="preserve">
+    <value>验证码发送成功，请查看邮箱</value>
+    <comment>验证码发送成功，请查看邮箱</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeFrequently" xml:space="preserve">
+    <value>操作频繁，请稍后再试！</value>
+    <comment>操作频繁，请稍后再试！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_SendVcCodeFailed" xml:space="preserve">
+    <value>验证码发送失败, 原因：{0}, 请联络系统管理员进行处理</value>
+    <comment>验证码发送失败, 原因：{0}, 请联络系统管理员进行处理</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockSendVcCodeBody" xml:space="preserve">
+    <value>验证码 {0} 用于帐号解锁，3分钟内有效，请勿泄漏并转送。如非本人操作，请忽略此信息。</value>
+    <comment>验证码 {0} 用于帐号解锁，3分钟内有效，请勿泄漏并转送。如非本人操作，请忽略此信息。</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_VcCodeExpired" xml:space="preserve">
+    <value>验证码已过期，请重新发送！</value>
+    <comment>验证码已过期，请重新发送！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_VcCodeSuccess" xml:space="preserve">
+    <value>验证码校验成功，请输入新密码和确认密码！</value>
+    <comment>验证码校验成功，请输入新密码和确认密码！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockSuccess" xml:space="preserve">
+    <value>帐号解锁成功！</value>
+    <comment>帐号解锁成功！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UserNotFound" xml:space="preserve">
+    <value>系统帐号不存在！</value>
+    <comment>系统帐号不存在！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UnlockFailed" xml:space="preserve">
+    <value>帐号解锁失败！</value>
+    <comment>帐号解锁失败！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordNotExpiration" xml:space="preserve">
+    <value>该帐号密码未过期，无需重置！</value>
+    <comment>该帐号密码未过期，无需重置！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_PasswordExSendVcCodeBody" xml:space="preserve">
+    <value>验证码 {0} 用于重置密码，3分钟内有效，请勿泄漏并转送。如非本人操作，请忽略此信息。</value>
+    <comment>验证码 {0} 用于重置密码，3分钟内有效，请勿泄漏并转送。如非本人操作，请忽略此信息。</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_ValidationPassWrodError" xml:space="preserve">
+    <value>密码必须为8-16位，包含小写、大写、数字和特殊字符</value>
+    <comment>密码必须为8-16位，包含小写、大写、数字和特殊字符</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UpdatePassWrodSuccess" xml:space="preserve">
+    <value>密码修改成功，请重新登入！</value>
+    <comment>密码修改成功，请重新登入！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_UpdatePassWrodFailed" xml:space="preserve">
+    <value>密码修改失败！</value>
+    <comment>密码修改失败！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicCoreApi_SysLogOut_NotEqualOldPassWord" xml:space="preserve">
+    <value>新密码不能与老密码相同！</value>
+    <comment>新密码不能与老密码相同！</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_InsertSuccess" xml:space="preserve">
+    <value>新增部门级别信息成功</value>
+    <comment>新增部门级别信息成功</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_InsertFailed" xml:space="preserve">
+    <value>新增部门级别信息失败</value>
+    <comment>新增部门级别信息失败</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_DeleteSuccess" xml:space="preserve">
+    <value>删除部门级别信息成功</value>
+    <comment>删除部门级别信息成功</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_DeleteFailed" xml:space="preserve">
+    <value>删除部门级别信息失败</value>
+    <comment>删除部门级别信息失败</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_UpdateSuccess" xml:space="preserve">
+    <value>修改部门级别信息成功</value>
+    <comment>修改部门级别信息成功</comment>
+  </data>
+  <data name="SystemBasicMgmt_SystemBasicData_DepartmentLevel_UpdateFailed" xml:space="preserve">
+    <value>修改部门级别信息失败</value>
+    <comment>修改部门级别信息失败</comment>
+  </data>
 </root>
