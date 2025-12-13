@@ -146,7 +146,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                                                FormGroupId = formgroup.FormGroupId,
                                                FormGroupNameCn = formgroup.FormGroupNameCn,
                                                FormGroupNameEn = formgroup.FormGroupNameEn,
-                                               Description = _lang.Locale == "zh-cn"
+                                               Description = _lang.Locale == "zh-CN"
                                                              ? formgroup.DescriptionCn
                                                              : formgroup.DescriptionEn,
                                            }).ToPageListAsync(getFormGroupPage.PageIndex, getFormGroupPage.PageSize, totalCount);

@@ -69,27 +69,27 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
             {
                 UserId = user.UserId,
                 UserNo = user.UserNo,
-                UserName = _lang.Locale == "zh-cn"
+                UserName = _lang.Locale == "zh-CN"
                            ? user.UserNameCn
                            : user.UserNameEn,
-                DepartmentName = _lang.Locale == "zh-cn"
+                DepartmentName = _lang.Locale == "zh-CN"
                            ? dept.DepartmentNameCn
                            : dept.DepartmentNameEn,
-                PositionName = _lang.Locale == "zh-cn"
+                PositionName = _lang.Locale == "zh-CN"
                            ? userpos.PositionNameCn
                            : userpos.PositionNameEn,
-                LaborName = _lang.Locale == "zh-cn"
+                LaborName = _lang.Locale == "zh-CN"
                            ? userlabor.LaborNameCn
                            : userlabor.LaborNameEn,
-                NationalityName = _lang.Locale == "zh-cn"
+                NationalityName = _lang.Locale == "zh-CN"
                            ? nation.NationNameCn
                            : nation.NationNameEn,
                 IsAgent = user.IsAgent,
-                IsAgentName = _lang.Locale == "zh-cn"
+                IsAgentName = _lang.Locale == "zh-CN"
                            ? agentdic.DicNameCn
                            : agentdic.DicNameEn,
                 IsApproval = user.IsApproval,
-                IsApprovalName = _lang.Locale == "zh-cn"
+                IsApprovalName = _lang.Locale == "zh-CN"
                            ? approvaldic.DicNameCn
                            : approvaldic.DicNameEn
             }).ToPageListAsync(getUserAgentPage.PageIndex, getUserAgentPage.PageSize, totalCount);
@@ -140,22 +140,22 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
             {
                 UserId = user.UserId,
                 UserNo = user.UserNo,
-                UserName = _lang.Locale == "zh-cn"
+                UserName = _lang.Locale == "zh-CN"
                            ? user.UserNameCn
                            : user.UserNameEn,
-                IsApprovalName = _lang.Locale == "zh-cn"
+                IsApprovalName = _lang.Locale == "zh-CN"
                            ? approvaldic.DicNameCn
                            : approvaldic.DicNameEn,
-                DepartmentName = _lang.Locale == "zh-cn"
+                DepartmentName = _lang.Locale == "zh-CN"
                            ? dept.DepartmentNameCn
                            : dept.DepartmentNameEn,
-                PositionName = _lang.Locale == "zh-cn"
+                PositionName = _lang.Locale == "zh-CN"
                            ? userpos.PositionNameCn
                            : userpos.PositionNameEn,
-                LaborName = _lang.Locale == "zh-cn"
+                LaborName = _lang.Locale == "zh-CN"
                            ? userlabor.LaborNameCn
                            : userlabor.LaborNameEn,
-                NationalityName = _lang.Locale == "zh-cn"
+                NationalityName = _lang.Locale == "zh-CN"
                            ? nation.NationNameCn
                            : nation.NationNameEn,
             }).ToPageListAsync(getUserAgentViewPage.PageIndex, getUserAgentViewPage.PageSize, totalCount);
@@ -216,7 +216,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                                                       AgentUserId = useragent.AgentUserId,
                                                       SubstituteUserId = substituteuser.UserId,
                                                       SubstituteUserNo = substituteuser.UserNo,
-                                                      SubstituteUserName = _lang.Locale == "zh-cn"
+                                                      SubstituteUserName = _lang.Locale == "zh-CN"
                                                                            ? substituteuser.UserNameCn
                                                                            : substituteuser.UserNameEn,
                                                       StartTime = useragent.StartTime,
@@ -242,7 +242,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                                              SubstituteUserId = useragent.SubstituteUserId,
                                              AgentUserId = agentuser.UserId,
                                              AgentUserNo = agentuser.UserNo,
-                                             AgentUserName = _lang.Locale == "zh-cn"
+                                             AgentUserName = _lang.Locale == "zh-CN"
                                                              ? agentuser.UserNameCn
                                                              : agentuser.UserNameEn,
                                              StartTime = useragent.StartTime,
@@ -264,7 +264,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {
                                 DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-cn"
+                                DepartmentName = _lang.Locale == "zh-CN"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,

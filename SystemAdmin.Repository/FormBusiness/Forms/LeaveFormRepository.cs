@@ -65,7 +65,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
                                 Description = forminfo.Description,
                                 ImportanceCode = forminfo.ImportanceCode,
                                 FormStatus = forminfo.FormStatus,
-                                FormStatusName = _lang.Locale == "zh-cn"
+                                FormStatusName = _lang.Locale == "zh-CN"
                                                  ? dicinfo.DicNameCn
                                                  : dicinfo.DicNameEn,
                                 FormId = forminfo.FormId,
@@ -99,15 +99,15 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
                             {
                                 UserId = userinfo.UserId,
                                 UserNo = userinfo.UserNo,
-                                UserName = _lang.Locale == "zh-cn"
+                                UserName = _lang.Locale == "zh-CN"
                                            ? userinfo.UserNameCn
                                            : userinfo.UserNameEn,
                                 DetpId = deptinfo.DepartmentId,
-                                DetpName = _lang.Locale == "zh-cn"
+                                DetpName = _lang.Locale == "zh-CN"
                                            ? deptinfo.DepartmentNameCn
                                            : deptinfo.DepartmentNameEn,
                                 PositionNo = position.PositionNo,
-                                PositionName = _lang.Locale == "zh-cn"
+                                PositionName = _lang.Locale == "zh-CN"
                                            ? position.PositionNameCn
                                            : position.PositionNameEn,
                                 PhoneNumber = userinfo.PhoneNumber
@@ -125,7 +125,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
                             .Select(dic => new LeaveTypeDropDto()
                             {
                                 LeaveTypeCode = dic.DicCode,
-                                LeaveTypeName = _lang.Locale == "zh-cn"
+                                LeaveTypeName = _lang.Locale == "zh-CN"
                                                 ? dic.DicNameCn
                                                 : dic.DicNameEn,
                             }).ToListAsync();

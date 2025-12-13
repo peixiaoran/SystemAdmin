@@ -61,7 +61,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemSettings
                 UserNameEn = userinfo.UserNameEn,
                 IP = userloginlog.IP,
                 StatusId = userloginlog.StatusId,
-                StatusName = _lang.Locale == "zh-cn"
+                StatusName = _lang.Locale == "zh-CN"
                              ? loginbehaviordic.DicNameCn
                              : loginbehaviordic.DicNameEn,
                 LoginDate = userloginlog.LoginDate,

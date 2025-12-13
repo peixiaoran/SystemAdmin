@@ -107,7 +107,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                           DepartmentNameEn = dept.DepartmentNameEn,
                                           ParentId = dept.ParentId,
                                           DepartmentLevelId = dept.DepartmentLevelId,
-                                          DepartmentLevelName = _lang.Locale == "zh-cn"
+                                          DepartmentLevelName = _lang.Locale == "zh-CN"
                                                                 ? deptlevel.DepartmentLevelNameCn
                                                                 : deptlevel.DepartmentLevelNameEn,
                                           Description = dept.Description,
@@ -133,7 +133,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {
                                 DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-cn"
+                                DepartmentName = _lang.Locale == "zh-CN"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
@@ -153,7 +153,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select(deptlevel => new DepartmentLevelDropDto
                             {
                                 DepartmentLevelId = deptlevel.DepartmentLevelId,
-                                DepartmentLevelName = _lang.Locale == "zh-cn"
+                                DepartmentLevelName = _lang.Locale == "zh-CN"
                                                       ? deptlevel.DepartmentLevelNameCn
                                                       : deptlevel.DepartmentLevelNameEn
                             }).ToListAsync();

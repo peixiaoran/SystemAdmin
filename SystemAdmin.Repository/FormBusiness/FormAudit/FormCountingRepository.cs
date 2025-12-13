@@ -39,7 +39,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormAudit
             .Select((formtype, formcounting) => new FormCountingDto
             {
                 FormTypeId = formtype.FormTypeId,
-                FormTypeName = _lang.Locale == "zh-cn"
+                FormTypeName = _lang.Locale == "zh-CN"
                                ? formtype.FormTypeNameCn
                                : formtype.FormTypeNameEn,
                 YM = formcounting.YM,

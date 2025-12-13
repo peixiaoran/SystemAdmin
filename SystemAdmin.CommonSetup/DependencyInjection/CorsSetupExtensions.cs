@@ -13,10 +13,12 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
             {
                 options.AddPolicy("DefaultCors", policy =>
                 {
-                    policy.WithOrigins("https://admin.xxx.com")
-                          .AllowAnyHeader()
-                          .WithMethods("POST", "OPTIONS")
-                          .AllowCredentials();
+                    policy.WithOrigins(
+                            "http://localhost:3001"   // ✅ 你的前端
+                        )
+                        .AllowAnyHeader()
+                        .WithMethods("POST", "OPTIONS")
+                        .AllowCredentials();
                 });
             });
 

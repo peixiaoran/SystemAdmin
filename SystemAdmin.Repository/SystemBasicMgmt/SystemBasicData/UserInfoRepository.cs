@@ -231,58 +231,58 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                           Email = userview.Email,
                                           PhoneNumber = userview.PhoneNumber,
                                           LoginNo = userview.LoginNo,
-                                          DepartmentName = _lang.Locale == "zh-cn"
+                                          DepartmentName = _lang.Locale == "zh-CN"
                                                            ? userview.DepartmentNameCn
                                                            : userview.DepartmentNameEn,
-                                          DepartmentLevelName = _lang.Locale == "zh-cn"
+                                          DepartmentLevelName = _lang.Locale == "zh-CN"
                                                            ? userview.DepartmentLevelNameCn
                                                            : userview.DepartmentLevelNameEn,
-                                          PositionName = _lang.Locale == "zh-cn"
+                                          PositionName = _lang.Locale == "zh-CN"
                                                            ? userview.PositionNameCn
                                                            : userview.PositionNameEn,
                                           Gender = userview.Gender,
-                                          GenderName = _lang.Locale == "zh-cn"
+                                          GenderName = _lang.Locale == "zh-CN"
                                                            ? userview.GenderNameCn
                                                            : userview.GenderNameEn,
-                                          RoleName = _lang.Locale == "zh-cn"
+                                          RoleName = _lang.Locale == "zh-CN"
                                                            ? userview.RoleNameCn
                                                            : userview.RoleNameEn,
                                           HireDate = Convert.ToDateTime(userview.HireDate).ToString("yyyy-MM-dd"),
                                           Nationality = userview.Nationality,
-                                          NationalityName = _lang.Locale == "zh-cn"
+                                          NationalityName = _lang.Locale == "zh-CN"
                                                            ? userview.NationalityNameCn
                                                            : userview.NationalityNameEn,
                                           LaborId = userview.LaborId,
-                                          LaborName = _lang.Locale == "zh-cn"
+                                          LaborName = _lang.Locale == "zh-CN"
                                                            ? userview.LaborNameCn
                                                            : userview.LaborNameEn,
                                           AvatarAddress = userview.AvatarAddress,
                                           IsEmployed = userview.IsEmployed,
-                                          IsEmployedName = _lang.Locale == "zh-cn"
+                                          IsEmployedName = _lang.Locale == "zh-CN"
                                                            ? userview.IsEmployedNameCn
                                                            : userview.IsEmployedNameEn,
                                           IsApproval = userview.IsApproval,
-                                          IsApprovalName = _lang.Locale == "zh-cn"
+                                          IsApprovalName = _lang.Locale == "zh-CN"
                                                            ? userview.IsApprovalNameCn
                                                            : userview.IsApprovalNameEn,
                                           IsRealtimeNotification = userview.IsRealtimeNotification,
-                                          IsRealtimeNotificationName = _lang.Locale == "zh-cn"
+                                          IsRealtimeNotificationName = _lang.Locale == "zh-CN"
                                                            ? userview.IsRealtimeNotificationCn
                                                            : userview.IsRealtimeNotificationEn,
                                           IsScheduledNotification = userview.IsScheduledNotification,
-                                          IsScheduledNotificationName = _lang.Locale == "zh-cn"
+                                          IsScheduledNotificationName = _lang.Locale == "zh-CN"
                                                            ? userview.IsScheduledNotificationCn
                                                            : userview.IsScheduledNotificationEn,
                                           IsAgent = userview.IsAgent,
-                                          IsAgentName = _lang.Locale == "zh-cn"
+                                          IsAgentName = _lang.Locale == "zh-CN"
                                                            ? userview.IsAgentNameCn
                                                            : userview.IsAgentNameEn,
                                           IsPartTime = userview.IsPartTime,
-                                          IsPartTimeName = _lang.Locale == "zh-cn"
+                                          IsPartTimeName = _lang.Locale == "zh-CN"
                                                            ? userview.IsParttimeNameCn
                                                            : userview.IsParttimeNameEn,
                                           IsFreeze = userview.IsFreeze,
-                                          IsFreezeName = _lang.Locale == "zh-cn"
+                                          IsFreezeName = _lang.Locale == "zh-CN"
                                                            ? userview.IsFreezeNameCn
                                                            : userview.IsFreezeNameEn,
                                       }).ToPageListAsync(getUserPage.PageIndex, getUserPage.PageSize, totalCount);
@@ -318,7 +318,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select(genderdic => new GenderDropDto
                             {
                                 GenderCode = genderdic.DicCode,
-                                GenderName = _lang.Locale == "zh-cn"
+                                GenderName = _lang.Locale == "zh-CN"
                                              ? genderdic.DicNameCn
                                              : genderdic.DicNameEn
                             }).ToListAsync();
@@ -335,7 +335,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select(nation => new NationalityDropDto
                             {
                                 NationId = nation.NationId,
-                                NationName = _lang.Locale == "zh-cn"
+                                NationName = _lang.Locale == "zh-CN"
                                              ? nation.NationNameCn
                                              : nation.NationNameEn
                             }).ToListAsync();
@@ -352,7 +352,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select(userlabor => new UserLaborDropDto
                             {
                                 LaborId = userlabor.LaborId,
-                                LaborName = _lang.Locale == "zh-cn"
+                                LaborName = _lang.Locale == "zh-CN"
                                             ? userlabor.LaborNameCn
                                             : userlabor.LaborNameEn
                             }).ToListAsync();
@@ -371,7 +371,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {
                                 DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-cn"
+                                DepartmentName = _lang.Locale == "zh-CN"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
@@ -391,7 +391,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select((userpos) => new UserPositionDropDto
                             {
                                 PositionId = userpos.PositionId,
-                                PositionName = _lang.Locale == "zh-cn"
+                                PositionName = _lang.Locale == "zh-CN"
                                                ? userpos.PositionNameCn
                                                : userpos.PositionNameEn
                             }).ToListAsync();
@@ -408,7 +408,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .Select(role => new RoleInfoDropDto
                             {
                                 RoleId = role.RoleId,
-                                RoleName = _lang.Locale == "zh-cn"
+                                RoleName = _lang.Locale == "zh-CN"
                                            ? role.RoleNameCn
                                            : role.RoleNameEn,
                                 Disabled = role.IsEnabled == 0

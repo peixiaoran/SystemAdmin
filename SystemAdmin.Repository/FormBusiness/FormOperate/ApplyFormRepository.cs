@@ -34,11 +34,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                                          .Select((userform, formtype) => new ApplyFormInfoDto()
                                          {
                                              FormTypeId = formtype.FormTypeId,
-                                             FormTypeName = _lang.Locale == "zh-cn"
+                                             FormTypeName = _lang.Locale == "zh-CN"
                                                             ? formtype.FormTypeNameCn
                                                             : formtype.FormTypeNameEn,
                                              ApprovalPath = formtype.ApprovalPath,
-                                             Description = _lang.Locale == "zh-cn"
+                                             Description = _lang.Locale == "zh-CN"
                                                             ? formtype.DescriptionCn
                                                             : formtype.DescriptionEn,
                                          }).ToPageListAsync(getApplyFormPage.PageIndex, getApplyFormPage.PageSize, totalCount);
@@ -57,7 +57,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                             .Select(formgroup => new FormGroupDropDto
                             {
                                 FormGroupId = formgroup.FormGroupId,
-                                FormGroupName = _lang.Locale == "zh-cn"
+                                FormGroupName = _lang.Locale == "zh-CN"
                                                 ? formgroup.FormGroupNameCn
                                                 : formgroup.FormGroupNameEn,
                             }).ToListAsync();

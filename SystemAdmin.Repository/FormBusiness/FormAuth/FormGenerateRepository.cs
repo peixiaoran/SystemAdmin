@@ -122,7 +122,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormAuth
                             .Select(dic => new ImportanceDropDto()
                             {
                                 ImportanceCode = dic.DicCode,
-                                ImportanceName = _lang.Locale == "zh-cn"
+                                ImportanceName = _lang.Locale == "zh-CN"
                                                 ? dic.DicNameCn
                                                 : dic.DicNameEn,
                             }).ToListAsync();

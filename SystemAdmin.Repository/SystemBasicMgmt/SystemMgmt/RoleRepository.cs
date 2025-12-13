@@ -150,7 +150,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                           .Select((module, rolemodule) => new RoleModuleDto
                                           {
                                               ModuleId = module.ModuleId,
-                                              ModuleName = _lang.Locale == "zh-cn"
+                                              ModuleName = _lang.Locale == "zh-CN"
                                                            ? module.ModuleNameCn
                                                            : module.ModuleNameEn,
                                               IsChecked = SqlFunc.IsNull(rolemodule.RoleId, 0) > 0,
@@ -176,7 +176,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                             {
                                 MenuId = menu.MenuId,
                                 ParentMenuId = menu.ParentMenuId,
-                                MenuName = _lang.Locale == "zh-cn"
+                                MenuName = _lang.Locale == "zh-CN"
                                            ? menu.MenuNameCn
                                            : menu.MenuNameEn,
                                 IsChecked = SqlFunc.IsNull(rolemenu.RoleId, 0) > 0,
@@ -246,7 +246,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                             .Select((rolemodule, module) => new RoleModuleDropDto
                             {
                                 ModuleId = module.ModuleId,
-                                ModuleName = _lang.Locale == "zh-cn"
+                                ModuleName = _lang.Locale == "zh-CN"
                                              ? module.ModuleNameCn
                                              : module.ModuleNameEn,
                                 Disabled = module.IsEnabled == 0

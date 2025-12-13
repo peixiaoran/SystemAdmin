@@ -110,7 +110,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemSettings
                                      {
                                          DicId = dicinfo.DicId,
                                          ModuleId = dicinfo.ModuleId,
-                                         ModuleName = _lang.Locale == "zh-cn"
+                                         ModuleName = _lang.Locale == "zh-CN"
                                                       ? moduleinfo.ModuleNameCn
                                                       : moduleinfo.ModuleNameEn,
                                          DicType = dicinfo.DicType,
@@ -134,7 +134,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemSettings
                             .Select(module => new ModuleDropDto
                             {
                                 ModuleId = module.ModuleId,
-                                ModuleName = _lang.Locale == "zh-cn"
+                                ModuleName = _lang.Locale == "zh-CN"
                                              ? module.ModuleNameCn
                                              : module.ModuleNameEn,
                                 Disabled = module.IsEnabled == 0

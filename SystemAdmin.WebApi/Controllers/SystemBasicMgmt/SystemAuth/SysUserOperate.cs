@@ -7,7 +7,7 @@ using SystemAdmin.Service.SystemBasicMgmt.SystemAuth;
 
 namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
 {
-    [Route("api/SystemBasicMgmt/Auth/[controller]/[action]")]
+    [Route("api/SystemBasicMgmt/SystemAuth/[controller]/[action]")]
     [ApiController]
     public class SysUserOperate : ControllerBase
     {

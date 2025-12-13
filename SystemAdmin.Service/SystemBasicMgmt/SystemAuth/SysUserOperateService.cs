@@ -158,6 +158,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
 
                 await _db.CommitTranAsync();
 
+                _jwt.SetAuthCookie(httpResponse, userId: user.UserId, userNo: user.UserNo);
                 // 返回登录成功信息（JWT Cookie 已在其他层处理）
                 return Result<SysUserLoginReturnDto>.Ok(
                     new SysUserLoginReturnDto

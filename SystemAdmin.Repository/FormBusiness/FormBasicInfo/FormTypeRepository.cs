@@ -113,7 +113,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                                           {
                                               FormTypeId = formtype.FormTypeId,
                                               FormGroupId = formtype.FormGroupId,
-                                              FormGroupName = _lang.Locale == "zh-cn"
+                                              FormGroupName = _lang.Locale == "zh-CN"
                                                               ? formgroup.FormGroupNameCn
                                                               : formgroup.FormGroupNameEn,
                                               FormTypeNameCn = formtype.FormTypeNameCn,
@@ -139,7 +139,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                             .Select(formgroup => new FormGroupDropDto
                             {
                                 FormGroupId = formgroup.FormGroupId,
-                                FormGroupName = _lang.Locale == "zh-cn"
+                                FormGroupName = _lang.Locale == "zh-CN"
                                                 ? formgroup.FormGroupNameCn
                                                 : formgroup.FormGroupNameEn
                             }).ToListAsync();

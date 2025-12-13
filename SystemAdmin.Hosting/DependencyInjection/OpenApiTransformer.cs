@@ -53,20 +53,20 @@ namespace SystemAdmin.Hosting.DependencyInjection
             {
                 Name = "Accept-Language",
                 In = ParameterLocation.Header,
-                Description = "语言偏好设置：zh-cn（简体中文）、en-us（英文）",
+                Description = "语言偏好设置：zh-CN（简体中文）、en-US（英文）",
                 Required = false,
                 Schema = new OpenApiSchema
                 {
                     Type = JsonSchemaType.String,
 
                     // 默认值
-                    Default = "zh-cn",
+                    Default = "zh-CN",
 
-                    // 枚举：zh-cn、en-us
+                    // 枚举：zh-CN、en-US
                     Enum = new List<JsonNode>
                     {
-                        JsonValue.Create("zh-cn")!,
-                        JsonValue.Create("en-us")!
+                        JsonValue.Create("zh-CN")!,
+                        JsonValue.Create("en-US")!
                     }
                 }
             };

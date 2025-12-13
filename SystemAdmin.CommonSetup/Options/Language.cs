@@ -3,17 +3,17 @@
     public class Language
     {
         /// <summary>
-        /// 当前请求的 UI 语言，例如 "zh-cn"
+        /// 当前请求的 UI 语言，例如 "zh-CN"
         /// </summary>
         public string Locale { get; }
 
         /// <summary>
-        /// 是否中文（包含 zh-cn, zh-TW 等）
+        /// 是否中文（包含 zh-CN, zh-TW 等）
         /// </summary>
         public bool IsChinese { get; }
 
         /// <summary>
-        /// 是否英文（包含 en-us, en-GB 等）
+        /// 是否英文（包含 en-US, en-GB 等）
         /// </summary>
         public bool IsEnglish { get; }
 

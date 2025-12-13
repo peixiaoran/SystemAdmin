@@ -69,23 +69,23 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
             {
                 UserId = user.UserId,
                 UserNo = user.UserNo,
-                UserName = _lang.Locale == "zh-cn"
+                UserName = _lang.Locale == "zh-CN"
                            ? user.UserNameCn
                            : user.UserNameEn,
-                DepartmentName = _lang.Locale == "zh-cn"
+                DepartmentName = _lang.Locale == "zh-CN"
                            ? dept.DepartmentNameCn
                            : dept.DepartmentNameEn,
-                PositionName = _lang.Locale == "zh-cn"
+                PositionName = _lang.Locale == "zh-CN"
                            ? userpos.PositionNameCn
                            : userpos.PositionNameEn,
-                LaborName = _lang.Locale == "zh-cn"
+                LaborName = _lang.Locale == "zh-CN"
                            ? userlabor.LaborNameCn
                            : userlabor.LaborNameEn,
-                NationalityName = _lang.Locale == "zh-cn"
+                NationalityName = _lang.Locale == "zh-CN"
                            ? nation.NationNameCn
                            : nation.NationNameEn,
                 IsApproval = user.IsApproval,
-                IsApprovalName = _lang.Locale == "zh-cn"
+                IsApprovalName = _lang.Locale == "zh-CN"
                            ? approvaldic.DicNameCn
                            : approvaldic.DicNameEn
             }).ToPageListAsync(getUserFormBindPage.PageIndex, getUserFormBindPage.PageSize, totalCount);
@@ -108,10 +108,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                                          {
                                              ParentId = 0,
                                              FormGroupTypeId = formgroup.FormGroupId,
-                                             FormGroupTypeName = _lang.Locale == "zh-cn"
+                                             FormGroupTypeName = _lang.Locale == "zh-CN"
                                                                  ? formgroup.FormGroupNameCn
                                                                  : formgroup.FormGroupNameEn,
-                                             Description = _lang.Locale == "zh-cn"
+                                             Description = _lang.Locale == "zh-CN"
                                                                  ? formgroup.DescriptionCn
                                                                  : formgroup.DescriptionEn,
                                              Disabled = false,
@@ -127,10 +127,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                                         {
                                             ParentId = formtype.FormGroupId,
                                             FormGroupTypeId = formtype.FormTypeId,
-                                            FormGroupTypeName = _lang.Locale == "zh-cn"
+                                            FormGroupTypeName = _lang.Locale == "zh-CN"
                                                                 ? formtype.FormTypeNameCn
                                                                 : formtype.FormTypeNameEn,
-                                            Description = _lang.Locale == "zh-cn"
+                                            Description = _lang.Locale == "zh-CN"
                                                                 ? formtype.DescriptionCn
                                                                 : formtype.DescriptionEn,
                                             IsChecked = SqlFunc.IsNull(userformbind.UserId, 0) > 0,
@@ -188,7 +188,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemUserConfig
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {
                                 DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-cn"
+                                DepartmentName = _lang.Locale == "zh-CN"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,

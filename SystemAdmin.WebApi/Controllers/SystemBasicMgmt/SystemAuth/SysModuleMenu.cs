@@ -8,7 +8,7 @@ using SystemAdmin.WebApi.Attributes;
 namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
 {
     [JwtAuthorize]
-    [Route("api/SystemBasicMgmt/Auth/[controller]/[action]")]
+    [Route("api/SystemBasicMgmt/SystemAuth/[controller]/[action]")]
     [ApiController]
     public class SysModuleMenu : ControllerBase
     {

@@ -66,11 +66,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                         .Select((stepinfo, assigndic) => new FormStepDto()
                                         {
                                             StepId = stepinfo.StepId,
-                                            StepName = _lang.Locale == "zh-cn"
+                                            StepName = _lang.Locale == "zh-CN"
                                                        ? stepinfo.StepNameCn
                                                        : stepinfo.StepNameEn,
                                             Assignment = stepinfo.Assignment,
-                                            AssignmentName = _lang.Locale == "zh-cn"
+                                            AssignmentName = _lang.Locale == "zh-CN"
                                                        ? assigndic.DicNameCn
                                                        : assigndic.DicNameEn,
                                             SortOrder = stepinfo.SortOrder,
@@ -105,7 +105,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             .Select(formgroup => new FormGroupDropDto
                             {
                                 FormGroupId = formgroup.FormGroupId,
-                                FormGroupName = _lang.Locale == "zh-cn"
+                                FormGroupName = _lang.Locale == "zh-CN"
                                                 ? formgroup.FormGroupNameCn
                                                 : formgroup.FormGroupNameEn,
                             }).ToListAsync();
@@ -124,7 +124,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             .Select(formtype => new FormTypeDropDto
                             {
                                 FormTypeId = formtype.FormTypeId,
-                                FormTypeName = _lang.Locale == "zh-cn"
+                                FormTypeName = _lang.Locale == "zh-CN"
                                                ? formtype.DescriptionCn
                                                : formtype.DescriptionEn,
                             }).ToListAsync();
@@ -141,7 +141,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             .Select(dic => new AssignmentDropDto
                             {
                                 ApproverAssignmentCode = dic.DicCode,
-                                ApproverAssignmentName = _lang.Locale == "zh-cn"
+                                ApproverAssignmentName = _lang.Locale == "zh-CN"
                                                          ? dic.DicNameCn
                                                          : dic.DicNameEn,
                             }).ToListAsync();
@@ -160,7 +160,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {
                                 DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-cn"
+                                DepartmentName = _lang.Locale == "zh-CN"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
@@ -180,7 +180,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             .Select(deptlevel => new DepartmentLevelDropDto
                             {
                                 DepartmentLevelId = deptlevel.DepartmentLevelId,
-                                DepartmentLevelName = _lang.Locale == "zh-cn"
+                                DepartmentLevelName = _lang.Locale == "zh-CN"
                                                       ? deptlevel.DepartmentLevelNameCn
                                                       : deptlevel.DepartmentLevelNameEn
                             }).ToListAsync();
@@ -198,7 +198,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             .Select((userpos) => new UserPositionDropDto
                             {
                                 PositionId = userpos.PositionId,
-                                PositionName = _lang.Locale == "zh-cn"
+                                PositionName = _lang.Locale == "zh-CN"
                                                ? userpos.PositionNameCn
                                                : userpos.PositionNameEn
                             }).ToListAsync();
@@ -215,7 +215,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             .Select(userlabor => new UserLaborDropDto
                             {
                                 LaborId = userlabor.LaborId,
-                                LaborName = _lang.Locale == "zh-cn"
+                                LaborName = _lang.Locale == "zh-CN"
                                             ? userlabor.LaborNameCn
                                             : userlabor.LaborNameEn
                             }).ToListAsync();
