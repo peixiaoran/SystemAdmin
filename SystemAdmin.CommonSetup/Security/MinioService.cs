@@ -38,23 +38,24 @@ namespace SystemAdmin.CommonSetup.Security
 
         public async Task<string> UploadAsync(string objectName, Stream data, string contentType = "application/octet-stream")
         {
-            if (string.IsNullOrWhiteSpace(objectName))
-                throw new ArgumentException("ObjectName cannot be empty", nameof(objectName));
-
             if (data == null || data.Length == 0)
                 throw new ArgumentException("Stream cannot be empty", nameof(data));
 
             var bucket = _settings.DefaultBucket;
 
+            var ext = Path.GetExtension(objectName); // .jpg .png .pdf
+            var timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            var random = Guid.NewGuid().ToString("N")[..8]; // 8位就够
+            var newObjectName = $"{timestamp}_{random}{ext}";
+
             await _client.PutObjectAsync(new PutObjectArgs()
                 .WithBucket(bucket)
-                .WithObject(objectName)
+                .WithObject(newObjectName)
                 .WithStreamData(data)
                 .WithObjectSize(data.Length)
                 .WithContentType(contentType));
 
-            // 拼接完整文件访问 URL
-            return $"{_settings.Endpoint}/{bucket}/{objectName}";
+            return $"{_settings.Endpoint}/{bucket}/{newObjectName}";
         }
 
         #endregion

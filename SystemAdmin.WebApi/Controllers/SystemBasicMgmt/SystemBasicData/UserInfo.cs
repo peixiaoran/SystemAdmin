@@ -24,7 +24,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[文件操作] 上传员工头像")]
+        [EndpointSummary("[员工信息] 上传员工头像")]
         public async Task<Result<string>> UploadAvatarAsync(IFormFile file)
         {
             return await _userInfoService.UploadAvatarAsync(file);
