@@ -12,7 +12,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.CommonSetup.Security;
-using SystemAdmin.Localization.Resources;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Queries;
@@ -32,7 +31,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         private readonly MailKitEmailSender _mailKitEmail;
         private readonly LocalizationService _localization;
         //private readonly HybridCache _cache;
-        private readonly string _this = "SystemBasicMgmt_Auth_SysLogOut_";
+        private readonly string _this = "SystemBasicMgmt.SystemAuth.";
         private const int CodeLength = 6;
         private static readonly Random _random = new Random();
 
