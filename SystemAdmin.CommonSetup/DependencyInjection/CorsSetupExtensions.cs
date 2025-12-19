@@ -14,7 +14,7 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
                 options.AddPolicy("DefaultCors", policy =>
                 {
                     policy.WithOrigins(
-                            "http://localhost:3001"   // ✅ 你的前端
+                            "https://localhost:3001"   // ✅ 你的前端
                         )
                         .AllowAnyHeader()
                         .WithMethods("POST", "OPTIONS")

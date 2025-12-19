@@ -1,26 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace SystemAdmin.WebApi.Attributes
+public class JwtAuthorizeAttribute : Attribute, IAsyncAuthorizationFilter
 {
-    /// <summary>
-    /// 最基础 JWT 验证，判断是否已认证
-    /// 使用：[JwtAuthorize]
-    /// </summary>
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
-    public class JwtAuthorizeAttribute : Attribute, IAsyncAuthorizationFilter
+    public Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
-        public Task OnAuthorizationAsync(AuthorizationFilterContext context)
+        var user = context.HttpContext.User;
+
+        if (user?.Identity?.IsAuthenticated != true)
         {
-            var user = context.HttpContext.User;
-
-            if (user?.Identity?.IsAuthenticated != true)
+            context.Result = new JsonResult(
+                Result<bool>.Failure(401, "Unauthorized: Invalid or expired token.")
+            )
             {
-                // 未认证 => 401
-                context.Result = new UnauthorizedResult();
-            }
-
-            return Task.CompletedTask;
+                StatusCode = StatusCodes.Status401Unauthorized
+            };
         }
+
+        return Task.CompletedTask;
     }
 }
