@@ -117,8 +117,82 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LoginSuccess" xml:space="preserve">
+  <data name="SysUserOperateLoginSuccess" xml:space="preserve">
     <value>登录成功。</value>
-    <comment>登录成功</comment>
+  </data>
+  <data name="SysUserOperateLoginFailedRemainTimes" xml:space="preserve">
+    <value>账号或密码错误，还剩余 {0} 次尝试机会。</value>
+  </data>
+  <data name="SysUserOperateLoginLock" xml:space="preserve">
+    <value>该账号已被锁定，请前往首页进行解锁操作。</value>
+  </data>
+  <data name="SysUserOperatePasswordExpiration" xml:space="preserve">
+    <value>账号密码已过期，请及时修改密码。</value>
+  </data>
+  <data name="SysUserOperateLogOutSuccess" xml:space="preserve">
+    <value>已安全登出。</value>
+  </data>
+  <data name="SysUserOperateLogOutFailed" xml:space="preserve">
+    <value>安全登出失败。</value>
+  </data>
+  <data name="SysUserOperateUserNotFreeze" xml:space="preserve">
+    <value>该账号未处于冻结状态，无需解锁。</value>
+  </data>
+  <data name="SysUserOperateEmailNotFound" xml:space="preserve">
+    <value>该账号未配置邮箱，请联系系统管理员处理。</value>
+  </data>
+  <data name="SysUserOperateEmailAccountUnlock" xml:space="preserve">
+    <value>账号解锁验证邮件已发送。</value>
+  </data>
+  <data name="SysUserOperateEmailAccountPasswordEx" xml:space="preserve">
+    <value>密码重置验证邮件已发送。</value>
+  </data>
+  <data name="SysUserOperateSendVcCodeSuccess" xml:space="preserve">
+    <value>验证码已发送，请前往邮箱查看。</value>
+  </data>
+  <data name="SysUserOperateSendVcCodeFrequently" xml:space="preserve">
+    <value>操作过于频繁，请稍后再试。</value>
+  </data>
+  <data name="SysUserOperateSendVcCodeFailed" xml:space="preserve">
+    <value>验证码发送失败，原因：{0}，请联系系统管理员。</value>
+  </data>
+  <data name="SysUserOperateUnlockSendVcCodeBody" xml:space="preserve">
+    <value>验证码 {0} 用于账号解锁，3 分钟内有效。请勿泄漏或转发。如非本人操作，请忽略此邮件。</value>
+  </data>
+  <data name="SysUserOperateVcCodeExpired" xml:space="preserve">
+    <value>验证码已失效，请重新获取。</value>
+  </data>
+  <data name="SysUserOperateVcCodeSuccess" xml:space="preserve">
+    <value>验证码验证成功，请设置新密码并确认。</value>
+  </data>
+  <data name="SysUserOperateVcCodeError" xml:space="preserve">
+    <value>验证码不正确。</value>
+  </data>
+  <data name="SysUserOperateUnlockSuccess" xml:space="preserve">
+    <value>账号解锁成功。</value>
+  </data>
+  <data name="SysUserOperateUserNotFound" xml:space="preserve">
+    <value>系统中不存在该账号。</value>
+  </data>
+  <data name="SysUserOperateUnlockFailed" xml:space="preserve">
+    <value>账号解锁失败。</value>
+  </data>
+  <data name="SysUserOperatePasswordNotExpiration" xml:space="preserve">
+    <value>账号密码尚未过期，无需重置。</value>
+  </data>
+  <data name="SysUserOperatePasswordExSendVcCodeBody" xml:space="preserve">
+    <value>验证码 {0} 用于重置密码，3 分钟内有效。请勿泄漏或转发。如非本人操作，请忽略此邮件。</value>
+  </data>
+  <data name="SysUserOperateValidationPassWrodError" xml:space="preserve">
+    <value>密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符。</value>
+  </data>
+  <data name="SysUserOperateUpdatePassWrodSuccess" xml:space="preserve">
+    <value>密码修改成功，请重新登录。</value>
+  </data>
+  <data name="SysUserOperateUpdatePassWrodFailed" xml:space="preserve">
+    <value>密码修改失败。</value>
+  </data>
+  <data name="SysUserOperateNotEqualOldPassWord" xml:space="preserve">
+    <value>新密码不可与旧密码相同。</value>
   </data>
 </root>

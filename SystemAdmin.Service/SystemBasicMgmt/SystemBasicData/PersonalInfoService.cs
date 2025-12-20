@@ -5,7 +5,7 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemSettings.Dto;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto;
 using SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData;
 
 namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
@@ -17,7 +17,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly SqlSugarScope _db;
         private readonly PersonalInfoRepository _personalInfoRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt_SystemBasicData_Personal_";
+        private readonly string _this = "SystemBasicMgmt.SystemBasicData.PersonalInfo";
 
         public PersonalInfoService(CurrentUser loginuser, ILogger<PersonalInfoService> logger, SqlSugarScope db, PersonalInfoRepository personalInfoRepository, LocalizationService localization)
         {

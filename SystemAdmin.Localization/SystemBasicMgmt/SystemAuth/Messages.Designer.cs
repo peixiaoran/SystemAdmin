@@ -61,11 +61,236 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemAuth {
         }
         
         /// <summary>
+        ///   查找类似 密码重置验证邮件已发送。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateEmailAccountPasswordEx {
+            get {
+                return ResourceManager.GetString("SysUserOperateEmailAccountPasswordEx", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 账号解锁验证邮件已发送。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateEmailAccountUnlock {
+            get {
+                return ResourceManager.GetString("SysUserOperateEmailAccountUnlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 该账号未配置邮箱，请联系系统管理员处理。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateEmailNotFound {
+            get {
+                return ResourceManager.GetString("SysUserOperateEmailNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 账号或密码错误，还剩余 {0} 次尝试机会。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateLoginFailedRemainTimes {
+            get {
+                return ResourceManager.GetString("SysUserOperateLoginFailedRemainTimes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 该账号已被锁定，请前往首页进行解锁操作。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateLoginLock {
+            get {
+                return ResourceManager.GetString("SysUserOperateLoginLock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 登录成功。 的本地化字符串。
         /// </summary>
-        public static string LoginSuccess {
+        public static string SysUserOperateLoginSuccess {
             get {
-                return ResourceManager.GetString("LoginSuccess", resourceCulture);
+                return ResourceManager.GetString("SysUserOperateLoginSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 安全登出失败。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateLogOutFailed {
+            get {
+                return ResourceManager.GetString("SysUserOperateLogOutFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 已安全登出。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateLogOutSuccess {
+            get {
+                return ResourceManager.GetString("SysUserOperateLogOutSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新密码不可与旧密码相同。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateNotEqualOldPassWord {
+            get {
+                return ResourceManager.GetString("SysUserOperateNotEqualOldPassWord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 账号密码已过期，请及时修改密码。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperatePasswordExpiration {
+            get {
+                return ResourceManager.GetString("SysUserOperatePasswordExpiration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码 {0} 用于重置密码，3 分钟内有效。请勿泄漏或转发。如非本人操作，请忽略此邮件。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperatePasswordExSendVcCodeBody {
+            get {
+                return ResourceManager.GetString("SysUserOperatePasswordExSendVcCodeBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 账号密码尚未过期，无需重置。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperatePasswordNotExpiration {
+            get {
+                return ResourceManager.GetString("SysUserOperatePasswordNotExpiration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码发送失败，原因：{0}，请联系系统管理员。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateSendVcCodeFailed {
+            get {
+                return ResourceManager.GetString("SysUserOperateSendVcCodeFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 操作过于频繁，请稍后再试。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateSendVcCodeFrequently {
+            get {
+                return ResourceManager.GetString("SysUserOperateSendVcCodeFrequently", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码已发送，请前往邮箱查看。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateSendVcCodeSuccess {
+            get {
+                return ResourceManager.GetString("SysUserOperateSendVcCodeSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 账号解锁失败。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateUnlockFailed {
+            get {
+                return ResourceManager.GetString("SysUserOperateUnlockFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码 {0} 用于账号解锁，3 分钟内有效。请勿泄漏或转发。如非本人操作，请忽略此邮件。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateUnlockSendVcCodeBody {
+            get {
+                return ResourceManager.GetString("SysUserOperateUnlockSendVcCodeBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 账号解锁成功。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateUnlockSuccess {
+            get {
+                return ResourceManager.GetString("SysUserOperateUnlockSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码修改失败。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateUpdatePassWrodFailed {
+            get {
+                return ResourceManager.GetString("SysUserOperateUpdatePassWrodFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码修改成功，请重新登录。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateUpdatePassWrodSuccess {
+            get {
+                return ResourceManager.GetString("SysUserOperateUpdatePassWrodSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 系统中不存在该账号。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateUserNotFound {
+            get {
+                return ResourceManager.GetString("SysUserOperateUserNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 该账号未处于冻结状态，无需解锁。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateUserNotFreeze {
+            get {
+                return ResourceManager.GetString("SysUserOperateUserNotFreeze", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateValidationPassWrodError {
+            get {
+                return ResourceManager.GetString("SysUserOperateValidationPassWrodError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码不正确。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateVcCodeError {
+            get {
+                return ResourceManager.GetString("SysUserOperateVcCodeError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码已失效，请重新获取。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateVcCodeExpired {
+            get {
+                return ResourceManager.GetString("SysUserOperateVcCodeExpired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 验证码验证成功，请设置新密码并确认。 的本地化字符串。
+        /// </summary>
+        public static string SysUserOperateVcCodeSuccess {
+            get {
+                return ResourceManager.GetString("SysUserOperateVcCodeSuccess", resourceCulture);
             }
         }
     }

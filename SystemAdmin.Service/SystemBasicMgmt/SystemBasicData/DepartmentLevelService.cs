@@ -16,7 +16,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly SqlSugarScope _db;
         private readonly DepartmentLevelRepository _departmentLevelRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt_SystemBasicData_DepartmentLevel_";
+        private readonly string _this = "SystemBasicMgmt.SystemBasicData.DeptLevel";
 
         public DepartmentLevelService(CurrentUser loginuser, ILogger<DepartmentLevelService> logger, SqlSugarScope db, DepartmentLevelRepository departmentLevelRepository, LocalizationService localization)
         {

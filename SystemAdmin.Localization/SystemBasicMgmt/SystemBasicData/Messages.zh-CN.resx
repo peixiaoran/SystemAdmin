@@ -1,0 +1,240 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="DeptLevelInsertSuccess" xml:space="preserve">
+    <value>部门层级新增成功。</value>
+  </data>
+  <data name="DeptLevelInsertFailed" xml:space="preserve">
+    <value>部门层级新增失败。</value>
+  </data>
+  <data name="DeptLevelDeleteSuccess" xml:space="preserve">
+    <value>部门层级删除成功。</value>
+  </data>
+  <data name="DeptLevelDeleteFailed" xml:space="preserve">
+    <value>部门层级删除失败。</value>
+  </data>
+  <data name="DeptLevelUpdateSuccess" xml:space="preserve">
+    <value>部门层级修改成功。</value>
+  </data>
+  <data name="DeptLevelUpdateFailed" xml:space="preserve">
+    <value>部门层级修改失败。</value>
+  </data>
+  <data name="DeptInfoInsertSuccess" xml:space="preserve">
+    <value>部门信息新增成功。</value>
+  </data>
+  <data name="DeptInfoInsertFailed" xml:space="preserve">
+    <value>部门信息新增失败。</value>
+  </data>
+  <data name="DeptInfoDeleteSuccess" xml:space="preserve">
+    <value>部门信息删除成功。</value>
+  </data>
+  <data name="DeptInfoDeleteFailed" xml:space="preserve">
+    <value>部门信息删除失败。</value>
+  </data>
+  <data name="DeptInfoUpdateSuccess" xml:space="preserve">
+    <value>部门信息修改成功。</value>
+  </data>
+  <data name="DeptInfoUpdateFailed" xml:space="preserve">
+    <value>部门信息修改失败。</value>
+  </data>
+  <data name="UserLaborInsertSuccess" xml:space="preserve">
+    <value>职业信息新增成功。</value>
+  </data>
+  <data name="UserLaborInsertFailed" xml:space="preserve">
+    <value>职业信息新增失败。</value>
+  </data>
+  <data name="UserLaborDeleteSuccess" xml:space="preserve">
+    <value>职业信息删除成功。</value>
+  </data>
+  <data name="UserLaborDeleteFailed" xml:space="preserve">
+    <value>职业信息删除失败。</value>
+  </data>
+  <data name="UserLaborUpdateSuccess" xml:space="preserve">
+    <value>职业信息修改成功。</value>
+  </data>
+  <data name="UserLaborUpdateFailed" xml:space="preserve">
+    <value>职业信息修改失败。</value>
+  </data>
+  <data name="UserInfoDuplicatejobRepeatable" xml:space="preserve">
+    <value>工号或账号已存在，请重新输入。</value>
+  </data>
+  <data name="UserInfoValidationPassWrodError" xml:space="preserve">
+    <value>密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符。</value>
+  </data>
+  <data name="UserInfoInsertSuccess" xml:space="preserve">
+    <value>员工信息新增成功。</value>
+  </data>
+  <data name="UserInfoInsertFailed" xml:space="preserve">
+    <value>员工信息新增失败。</value>
+  </data>
+  <data name="UserInfoDeleteSuccess" xml:space="preserve">
+    <value>员工信息删除成功。</value>
+  </data>
+  <data name="UserInfoDeleteFailed" xml:space="preserve">
+    <value>员工信息删除失败。</value>
+  </data>
+  <data name="UserInfoUpdateSuccess" xml:space="preserve">
+    <value>员工信息修改成功。</value>
+  </data>
+  <data name="UserInfoUpdateFailed" xml:space="preserve">
+    <value>员工信息修改失败。</value>
+  </data>
+  <data name="PersonalUpdateSuccess" xml:space="preserve">
+    <value>个人信息修改成功。</value>
+  </data>
+  <data name="PersonalUpdateFailed" xml:space="preserve">
+    <value>个人信息修改失败。</value>
+  </data>
+  <data name="PersonalValidationPassWrodError" xml:space="preserve">
+    <value>密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符。</value>
+  </data>
+  <data name="NationalityInfoInsertSuccess" xml:space="preserve">
+    <value>国籍信息新增成功。</value>
+  </data>
+  <data name="NationalityInfoInsertFailed" xml:space="preserve">
+    <value>国籍信息新增失败。</value>
+  </data>
+  <data name="NationalityInfoDeleteSuccess" xml:space="preserve">
+    <value>国籍信息删除成功。</value>
+  </data>
+  <data name="NationalityInfoDeleteFailed" xml:space="preserve">
+    <value>国籍信息删除失败。</value>
+  </data>
+  <data name="NationalityInfoUpdateSuccess" xml:space="preserve">
+    <value>国籍信息修改成功。</value>
+  </data>
+  <data name="NationalityInfoUpdateFailed" xml:space="preserve">
+    <value>国籍信息修改失败。</value>
+  </data>
+  <data name="AvatarFileNotNull" xml:space="preserve">
+    <value>请上传头像文件。</value>
+  </data>
+  <data name="AvatarFileTooLarge" xml:space="preserve">
+    <value>头像文件大小不能超过 2MB。</value>
+  </data>
+  <data name="AvatarInvalidImageFormat" xml:space="preserve">
+    <value>头像文件格式不支持，仅支持 .png、.jpg、.jpeg。</value>
+  </data>
+  <data name="UploadSuccess" xml:space="preserve">
+    <value>上传成功。</value>
+  </data>
+  <data name="UploadFailed" xml:space="preserve">
+    <value>上传失败。</value>
+  </data>
+</root>

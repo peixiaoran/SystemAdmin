@@ -15,7 +15,7 @@ using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Queries;
-using SystemAdmin.Model.SystemBasicMgmt.SystemSettings.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 using SystemAdmin.Repository.SystemBasicMgmt.SystemAuth;
 
 namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
@@ -31,7 +31,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         private readonly MailKitEmailSender _mailKitEmail;
         private readonly LocalizationService _localization;
         //private readonly HybridCache _cache;
-        private readonly string _this = "SystemBasicMgmt.SystemAuth.";
+        private readonly string _this = "SystemBasicMgmt.SystemAuth.SysUserOperate";
         private const int CodeLength = 6;
         private static readonly Random _random = new Random();
 

@@ -15,7 +15,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         private readonly SqlSugarScope _db;
         private readonly ModuleRepository _moduleRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt_SystemMgmt_Module_";
+        private readonly string _this = "SystemBasicMgmt.SystemMgmt.Module";
 
         public ModuleInfoService(CurrentUser loginuser, ILogger<ModuleInfoService> logger, SqlSugarScope db, ModuleRepository moduleRepository, LocalizationService localization)
         {

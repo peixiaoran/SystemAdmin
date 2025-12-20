@@ -4,7 +4,7 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemSettings.Dto;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto;
 using SystemAdmin.Service.SystemBasicMgmt.SystemBasicData;
 using SystemAdmin.WebApi.Attributes;
 

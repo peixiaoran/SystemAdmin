@@ -16,7 +16,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly SqlSugarScope _db;
         private readonly NationalityInfoRepository _nationRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt_SystemBasicData_NationalityInfo_";
+        private readonly string _this = "SystemBasicMgmt.SystemBasicData.NationalityInfo";
 
         public NationalityInfoService(CurrentUser loginuser, ILogger<NationalityInfoService> logger, SqlSugarScope db, NationalityInfoRepository nationRepository, LocalizationService localization)
         {

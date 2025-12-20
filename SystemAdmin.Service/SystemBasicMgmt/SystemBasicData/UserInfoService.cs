@@ -11,7 +11,7 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemSettings.Dto;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto;
 using SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData;
 
 namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
@@ -24,7 +24,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly SqlSugarScope _db;
         private readonly UserInfoRepository _userInfoRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt_SystemBasicData_UserInfo_";
+        private readonly string _this = "SystemBasicMgmt.SystemBasicData.UserInfo";
 
         public UserInfoService(CurrentUser loginuser, MinioService minioService, ILogger<UserInfoService> logger, SqlSugarScope db, UserInfoRepository userInfoRepository, LocalizationService localization)
         {
@@ -48,14 +48,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 // 1. 判空
                 if (file == null || file.Length == 0)
                 {
-                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}NotNull"));
+                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarFileNotNull"));
                 }
 
                 // 2. 限制最大 2MB（头像不需要太大）
                 const long maxSize = 2 * 1024 * 1024;
                 if (file.Length > maxSize)
                 {
-                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}FileTooLarge", "2MB"));
+                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarFileTooLarge", "2MB"));
                 }
 
                 // 3. 限制图片格式
@@ -64,7 +64,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
 
                 if (!allowed.Contains(ext))
                 {
-                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}InvalidImageFormat"));
+                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarInvalidImageFormat"));
                 }
 
                 // 4. 上传到 MinIO
@@ -80,7 +80,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 // 禁止把内部报错直接暴露给前端（安全问题）
                 return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
             }
-
         }
 
         /// <summary>

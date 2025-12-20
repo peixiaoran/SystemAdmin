@@ -15,7 +15,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         private readonly SqlSugarScope _db;
         private readonly PMenuRepository _pMenuRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt_SystemMgmt_PMenu_";
+        private readonly string _this = "SystemBasicMgmt.SystemMgmt.PMenu";
 
         public PMenuInfoService(CurrentUser loginuser, ILogger<PMenuInfoService> logger, SqlSugarScope db, PMenuRepository pMenuRepository, LocalizationService localization)
         {

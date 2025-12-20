@@ -16,7 +16,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         private readonly SqlSugarScope _db;
         private readonly RoleRepository _roleRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt_SystemMgmt_Role_";
+        private readonly string _this = "SystemBasicMgmt.SystemMgmt.Role";
 
         public RoleService(CurrentUser loginuser, ILogger<RoleService> logger, SqlSugarScope db, RoleRepository roleRepository, LocalizationService localization)
         {

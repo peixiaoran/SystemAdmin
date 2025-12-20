@@ -16,7 +16,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly SqlSugarScope _db;
         private readonly UserLaborRepository _userLaborRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt_SystemBasicData_UserLabor_";
+        private readonly string _this = "SystemBasicMgmt.SystemBasicData.UserLabor";
 
         public UserLaborService(CurrentUser loginuser, ILogger<UserLaborService> logger, SqlSugarScope db, UserLaborRepository userLaborRepository, LocalizationService localization)
         {

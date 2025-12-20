@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Queries;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.SystemSettings.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
 namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
 {

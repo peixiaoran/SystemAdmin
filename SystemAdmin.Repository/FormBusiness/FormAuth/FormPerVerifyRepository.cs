@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 using SystemAdmin.Model.FormBusiness.FormAuth.FormPerVerify;
-using SystemAdmin.Model.SystemBasicMgmt.SystemUserConfig.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.FormAuth
 {

@@ -6,9 +6,9 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.SystemSettings.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemSettings.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.SystemUserConfig.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity;
 
 namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
 {
