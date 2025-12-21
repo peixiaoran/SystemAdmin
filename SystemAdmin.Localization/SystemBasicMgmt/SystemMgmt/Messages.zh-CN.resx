@@ -100,93 +100,93 @@
 	</resheader>
 	
 	<data name="ModuleInsertSuccess" xml:space="preserve">
-    <value>模块新增成功。</value>
+    <value>模块新增成功</value>
   </data>
   <data name="ModuleInsertFailed" xml:space="preserve">
-    <value>模块新增失败。</value>
+    <value>模块新增失败</value>
   </data>
   <data name="ModuleDeleteSuccess" xml:space="preserve">
-    <value>模块删除成功。</value>
+    <value>模块删除成功</value>
   </data>
   <data name="ModuleDeleteFailed" xml:space="preserve">
-    <value>模块删除失败。</value>
+    <value>模块删除失败</value>
   </data>
   <data name="ModuleUpdateSuccess" xml:space="preserve">
-    <value>模块信息修改成功。</value>
+    <value>模块信息修改成功</value>
   </data>
   <data name="ModuleUpdateFailed" xml:space="preserve">
-    <value>模块信息修改失败。</value>
+    <value>模块信息修改失败</value>
   </data>
 
   <data name="PMenuInsertSuccess" xml:space="preserve">
-    <value>一级菜单新增成功。</value>
+    <value>一级菜单新增成功</value>
   </data>
   <data name="PMenuInsertFailed" xml:space="preserve">
-    <value>一级菜单新增失败。</value>
+    <value>一级菜单新增失败</value>
   </data>
   <data name="PMenuDeleteSuccess" xml:space="preserve">
-    <value>一级菜单删除成功。</value>
+    <value>一级菜单删除成功</value>
   </data>
   <data name="PMenuDeleteFailed" xml:space="preserve">
-    <value>一级菜单删除失败。</value>
+    <value>一级菜单删除失败</value>
   </data>
   <data name="PMenuUpdateSuccess" xml:space="preserve">
-    <value>一级菜单修改成功。</value>
+    <value>一级菜单修改成功</value>
   </data>
   <data name="PMenuUpdateFailed" xml:space="preserve">
-    <value>一级菜单修改失败。</value>
+    <value>一级菜单修改失败</value>
   </data>
 
   <data name="SMenuInsertSuccess" xml:space="preserve">
-    <value>二级菜单新增成功。</value>
+    <value>二级菜单新增成功</value>
   </data>
   <data name="SMenuInsertFailed" xml:space="preserve">
-    <value>二级菜单新增失败。</value>
+    <value>二级菜单新增失败</value>
   </data>
   <data name="SMenuDeleteSuccess" xml:space="preserve">
-    <value>二级菜单删除成功。</value>
+    <value>二级菜单删除成功</value>
   </data>
   <data name="SMenuDeleteFailed" xml:space="preserve">
-    <value>二级菜单删除失败。</value>
+    <value>二级菜单删除失败</value>
   </data>
   <data name="SMenuUpdateSuccess" xml:space="preserve">
-    <value>二级菜单修改成功。</value>
+    <value>二级菜单修改成功</value>
   </data>
   <data name="SMenuUpdateFailed" xml:space="preserve">
-    <value>二级菜单修改失败。</value>
+    <value>二级菜单修改失败</value>
   </data>
 
   <data name="RoleInsertSuccess" xml:space="preserve">
-    <value>角色新增成功。</value>
+    <value>角色新增成功</value>
   </data>
   <data name="RoleInsertFailed" xml:space="preserve">
-    <value>角色新增失败。</value>
+    <value>角色新增失败</value>
   </data>
   <data name="RoleRoleUsed" xml:space="preserve">
-    <value>该角色已被员工使用，请先调整员工角色后再删除。</value>
+    <value>该角色已被员工使用，请先调整员工角色后再删除</value>
   </data>
   <data name="RoleDeleteSuccess" xml:space="preserve">
-    <value>角色删除成功。</value>
+    <value>角色删除成功</value>
   </data>
   <data name="RoleDeleteFailed" xml:space="preserve">
-    <value>角色删除失败。</value>
+    <value>角色删除失败</value>
   </data>
   <data name="RoleUpdateSuccess" xml:space="preserve">
-    <value>角色修改成功。</value>
+    <value>角色修改成功</value>
   </data>
   <data name="RoleUpdateFailed" xml:space="preserve">
-    <value>角色修改失败。</value>
+    <value>角色修改失败</value>
   </data>
   <data name="RoleRoleModuleUpdateSuccess" xml:space="preserve">
-    <value>角色模块绑定成功。</value>
+    <value>角色模块绑定成功</value>
   </data>
   <data name="RoleRoleModuleUpdateFailed" xml:space="preserve">
-    <value>角色模块绑定失败。</value>
+    <value>角色模块绑定失败</value>
   </data>
   <data name="RoleRoleMenuUpdateSuccess" xml:space="preserve">
-    <value>角色菜单绑定成功。</value>
+    <value>角色菜单绑定成功</value>
   </data>
   <data name="RoleRoleMenuUpdateFailed" xml:space="preserve">
-    <value>角色菜单绑定失败。</value>
+    <value>角色菜单绑定失败</value>
   </data>
 </root>

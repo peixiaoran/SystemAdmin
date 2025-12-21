@@ -100,93 +100,93 @@
 	</resheader>
 	
 	<data name="ModuleInsertSuccess" xml:space="preserve">
-    <value>Module created successfully.</value>
+    <value>Module created successfully</value>
   </data>
   <data name="ModuleInsertFailed" xml:space="preserve">
-    <value>Failed to create module.</value>
+    <value>Failed to create module</value>
   </data>
   <data name="ModuleDeleteSuccess" xml:space="preserve">
-    <value>Module deleted successfully.</value>
+    <value>Module deleted successfully</value>
   </data>
   <data name="ModuleDeleteFailed" xml:space="preserve">
-    <value>Failed to delete module.</value>
+    <value>Failed to delete module</value>
   </data>
   <data name="ModuleUpdateSuccess" xml:space="preserve">
-    <value>Module information updated successfully.</value>
+    <value>Module information updated successfully</value>
   </data>
   <data name="ModuleUpdateFailed" xml:space="preserve">
-    <value>Failed to update module information.</value>
+    <value>Failed to update module information</value>
   </data>
 
   <data name="PMenuInsertSuccess" xml:space="preserve">
-    <value>Level-1 menu created successfully.</value>
+    <value>Level-1 menu created successfully</value>
   </data>
   <data name="PMenuInsertFailed" xml:space="preserve">
-    <value>Failed to create level-1 menu.</value>
+    <value>Failed to create level-1 menu</value>
   </data>
   <data name="PMenuDeleteSuccess" xml:space="preserve">
-    <value>Level-1 menu deleted successfully.</value>
+    <value>Level-1 menu deleted successfully</value>
   </data>
   <data name="PMenuDeleteFailed" xml:space="preserve">
-    <value>Failed to delete level-1 menu.</value>
+    <value>Failed to delete level-1 menu</value>
   </data>
   <data name="PMenuUpdateSuccess" xml:space="preserve">
-    <value>Level-1 menu updated successfully.</value>
+    <value>Level-1 menu updated successfully</value>
   </data>
   <data name="PMenuUpdateFailed" xml:space="preserve">
-    <value>Failed to update level-1 menu.</value>
+    <value>Failed to update level-1 menu</value>
   </data>
 
   <data name="SMenuInsertSuccess" xml:space="preserve">
-    <value>Level-2 menu created successfully.</value>
+    <value>Level-2 menu created successfully</value>
   </data>
   <data name="SMenuInsertFailed" xml:space="preserve">
-    <value>Failed to create level-2 menu.</value>
+    <value>Failed to create level-2 menu</value>
   </data>
   <data name="SMenuDeleteSuccess" xml:space="preserve">
-    <value>Level-2 menu deleted successfully.</value>
+    <value>Level-2 menu deleted successfully</value>
   </data>
   <data name="SMenuDeleteFailed" xml:space="preserve">
-    <value>Failed to delete level-2 menu.</value>
+    <value>Failed to delete level-2 menu</value>
   </data>
   <data name="SMenuUpdateSuccess" xml:space="preserve">
-    <value>Level-2 menu updated successfully.</value>
+    <value>Level-2 menu updated successfully</value>
   </data>
   <data name="SMenuUpdateFailed" xml:space="preserve">
-    <value>Failed to update level-2 menu.</value>
+    <value>Failed to update level-2 menu</value>
   </data>
 
   <data name="RoleInsertSuccess" xml:space="preserve">
-    <value>Role created successfully.</value>
+    <value>Role created successfully</value>
   </data>
   <data name="RoleInsertFailed" xml:space="preserve">
-    <value>Failed to create role.</value>
+    <value>Failed to create role</value>
   </data>
   <data name="RoleRoleUsed" xml:space="preserve">
-    <value>This role is assigned to employees. Please reassign employees before deleting it.</value>
+    <value>This role is assigned to employees. Please reassign employees before deleting it</value>
   </data>
   <data name="RoleDeleteSuccess" xml:space="preserve">
-    <value>Role deleted successfully.</value>
+    <value>Role deleted successfully</value>
   </data>
   <data name="RoleDeleteFailed" xml:space="preserve">
-    <value>Failed to delete role.</value>
+    <value>Failed to delete role</value>
   </data>
   <data name="RoleUpdateSuccess" xml:space="preserve">
-    <value>Role updated successfully.</value>
+    <value>Role updated successfully</value>
   </data>
   <data name="RoleUpdateFailed" xml:space="preserve">
-    <value>Failed to update role.</value>
+    <value>Failed to update role</value>
   </data>
   <data name="RoleRoleModuleUpdateSuccess" xml:space="preserve">
-    <value>Role-module binding successful.</value>
+    <value>Role-module binding successful</value>
   </data>
   <data name="RoleRoleModuleUpdateFailed" xml:space="preserve">
-    <value>Failed to bind role to modules.</value>
+    <value>Failed to bind role to modules</value>
   </data>
   <data name="RoleRoleMenuUpdateSuccess" xml:space="preserve">
-    <value>Role-menu binding successful.</value>
+    <value>Role-menu binding successful</value>
   </data>
   <data name="RoleRoleMenuUpdateFailed" xml:space="preserve">
-    <value>Failed to bind role to menus.</value>
+    <value>Failed to bind role to menus</value>
   </data>
 </root>

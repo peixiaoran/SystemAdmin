@@ -118,123 +118,123 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DeptLevelInsertSuccess" xml:space="preserve">
-    <value>Department level created successfully.</value>
+    <value>Department level created successfully</value>
   </data>
   <data name="DeptLevelInsertFailed" xml:space="preserve">
-    <value>Failed to create department level.</value>
+    <value>Failed to create department level</value>
   </data>
   <data name="DeptLevelDeleteSuccess" xml:space="preserve">
-    <value>Department level deleted successfully.</value>
+    <value>Department level deleted successfully</value>
   </data>
   <data name="DeptLevelDeleteFailed" xml:space="preserve">
-    <value>Failed to delete department level.</value>
+    <value>Failed to delete department level</value>
   </data>
   <data name="DeptLevelUpdateSuccess" xml:space="preserve">
-    <value>Department level updated successfully.</value>
+    <value>Department level updated successfully</value>
   </data>
   <data name="DeptLevelUpdateFailed" xml:space="preserve">
-    <value>Failed to update department level.</value>
+    <value>Failed to update department level</value>
   </data>
   <data name="DeptInfoInsertSuccess" xml:space="preserve">
-    <value>Department created successfully.</value>
+    <value>Department created successfully</value>
   </data>
   <data name="DeptInfoInsertFailed" xml:space="preserve">
-    <value>Failed to create department.</value>
+    <value>Failed to create department</value>
   </data>
   <data name="DeptInfoDeleteSuccess" xml:space="preserve">
-    <value>Department deleted successfully.</value>
+    <value>Department deleted successfully</value>
   </data>
   <data name="DeptInfoDeleteFailed" xml:space="preserve">
-    <value>Failed to delete department.</value>
+    <value>Failed to delete department</value>
   </data>
   <data name="DeptInfoUpdateSuccess" xml:space="preserve">
-    <value>Department updated successfully.</value>
+    <value>Department updated successfully</value>
   </data>
   <data name="DeptInfoUpdateFailed" xml:space="preserve">
-    <value>Failed to update department.</value>
+    <value>Failed to update department</value>
   </data>
   <data name="UserLaborInsertSuccess" xml:space="preserve">
-    <value>Occupation information created successfully.</value>
+    <value>Occupation information created successfully</value>
   </data>
   <data name="UserLaborInsertFailed" xml:space="preserve">
-    <value>Failed to create occupation information.</value>
+    <value>Failed to create occupation information</value>
   </data>
   <data name="UserLaborDeleteSuccess" xml:space="preserve">
-    <value>Occupation information deleted successfully.</value>
+    <value>Occupation information deleted successfully</value>
   </data>
   <data name="UserLaborDeleteFailed" xml:space="preserve">
-    <value>Failed to delete occupation information.</value>
+    <value>Failed to delete occupation information</value>
   </data>
   <data name="UserLaborUpdateSuccess" xml:space="preserve">
-    <value>Occupation information updated successfully.</value>
+    <value>Occupation information updated successfully</value>
   </data>
   <data name="UserLaborUpdateFailed" xml:space="preserve">
-    <value>Failed to update occupation information.</value>
+    <value>Failed to update occupation information</value>
   </data>
   <data name="UserInfoDuplicatejobRepeatable" xml:space="preserve">
-    <value>Employee ID or account already exists. Please re-enter.</value>
+    <value>Employee ID or account already exists. Please re-enter</value>
   </data>
   <data name="UserInfoValidationPassWrodError" xml:space="preserve">
-    <value>Password must be 8–16 characters long and include uppercase letters, lowercase letters, numbers, and special characters.</value>
+    <value>Password must be 8–16 characters long and include uppercase letters, lowercase letters, numbers, and special characters</value>
   </data>
   <data name="UserInfoInsertSuccess" xml:space="preserve">
-    <value>Employee information created successfully.</value>
+    <value>Employee information created successfully</value>
   </data>
   <data name="UserInfoInsertFailed" xml:space="preserve">
-    <value>Failed to create employee information.</value>
+    <value>Failed to create employee information</value>
   </data>
   <data name="UserInfoDeleteSuccess" xml:space="preserve">
-    <value>Employee information deleted successfully.</value>
+    <value>Employee information deleted successfully</value>
   </data>
   <data name="UserInfoDeleteFailed" xml:space="preserve">
-    <value>Failed to delete employee information.</value>
+    <value>Failed to delete employee information</value>
   </data>
   <data name="UserInfoUpdateSuccess" xml:space="preserve">
-    <value>Employee information updated successfully.</value>
+    <value>Employee information updated successfully</value>
   </data>
   <data name="UserInfoUpdateFailed" xml:space="preserve">
-    <value>Failed to update employee information.</value>
+    <value>Failed to update employee information</value>
   </data>
   <data name="PersonalUpdateSuccess" xml:space="preserve">
-    <value>Personal information updated successfully.</value>
+    <value>Personal information updated successfully</value>
   </data>
   <data name="PersonalUpdateFailed" xml:space="preserve">
-    <value>Failed to update personal information.</value>
+    <value>Failed to update personal information</value>
   </data>
   <data name="PersonalValidationPassWrodError" xml:space="preserve">
-    <value>Password must be 8–16 characters long and include uppercase letters, lowercase letters, numbers, and special characters.</value>
+    <value>Password must be 8–16 characters long and include uppercase letters, lowercase letters, numbers, and special characters</value>
   </data>
   <data name="NationalityInfoInsertSuccess" xml:space="preserve">
-    <value>Nationality created successfully.</value>
+    <value>Nationality created successfully</value>
   </data>
   <data name="NationalityInfoInsertFailed" xml:space="preserve">
-    <value>Failed to create nationality.</value>
+    <value>Failed to create nationality</value>
   </data>
   <data name="NationalityInfoDeleteSuccess" xml:space="preserve">
-    <value>Nationality deleted successfully.</value>
+    <value>Nationality deleted successfully</value>
   </data>
   <data name="NationalityInfoDeleteFailed" xml:space="preserve">
-    <value>Failed to delete nationality.</value>
+    <value>Failed to delete nationality</value>
   </data>
   <data name="NationalityInfoUpdateSuccess" xml:space="preserve">
-    <value>Nationality updated successfully.</value>
+    <value>Nationality updated successfully</value>
   </data>
   <data name="NationalityInfoUpdateFailed" xml:space="preserve">
-    <value>Failed to update nationality.</value>
+    <value>Failed to update nationality</value>
   </data>
   <data name="AvatarFileNotNull" xml:space="preserve">
-    <value>Please upload an avatar file.</value>
+    <value>Please upload an avatar file</value>
   </data>
   <data name="AvatarFileTooLarge" xml:space="preserve">
-    <value>The avatar file size must not exceed 2MB.</value>
+    <value>The avatar file size must not exceed 2MB</value>
   </data>
   <data name="AvatarInvalidImageFormat" xml:space="preserve">
-    <value>Unsupported avatar file format. Only .png, .jpg, and .jpeg are allowed.</value>
+    <value>Unsupported avatar file format. Only .png, .jpg, and .jpeg are allowed</value>
   </data>
   <data name="UploadSuccess" xml:space="preserve">
-    <value>Upload successful.</value>
+    <value>Upload successful</value>
   </data>
   <data name="UploadFailed" xml:space="preserve">
-    <value>Upload failed.</value>
+    <value>Upload failed</value>
   </data>
 </root>

@@ -118,81 +118,81 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SysUserOperateLoginSuccess" xml:space="preserve">
-    <value>Login successful.</value>
+    <value>Login successful</value>
   </data>
   <data name="SysUserOperateLoginFailedRemainTimes" xml:space="preserve">
-    <value>Invalid username or password. {0} attempt(s) remaining.</value>
+    <value>Invalid username or password. {0} attempt(s) remaining</value>
   </data>
   <data name="SysUserOperateLoginLock" xml:space="preserve">
-    <value>This account has been locked. Please go to the homepage to unlock it.</value>
+    <value>This account has been locked. Please go to the homepage to unlock it</value>
   </data>
   <data name="SysUserOperatePasswordExpiration" xml:space="preserve">
-    <value>Your password has expired. Please update it.</value>
+    <value>Your password has expired. Please update it</value>
   </data>
   <data name="SysUserOperateLogOutSuccess" xml:space="preserve">
-    <value>Successfully logged out.</value>
+    <value>Successfully logged out</value>
   </data>
   <data name="SysUserOperateLogOutFailed" xml:space="preserve">
-    <value>Logout failed.</value>
+    <value>Logout failed</value>
   </data>
   <data name="SysUserOperateUserNotFreeze" xml:space="preserve">
-    <value>This account is not locked and does not require unlocking.</value>
+    <value>This account is not locked and does not require unlocking</value>
   </data>
   <data name="SysUserOperateEmailNotFound" xml:space="preserve">
-    <value>No email is configured for this account. Please contact the system administrator.</value>
+    <value>No email is configured for this account. Please contact the system administrator</value>
   </data>
   <data name="SysUserOperateEmailAccountUnlock" xml:space="preserve">
-    <value>An account unlock verification email has been sent.</value>
+    <value>An account unlock verification email has been sent</value>
   </data>
   <data name="SysUserOperateEmailAccountPasswordEx" xml:space="preserve">
-    <value>A password reset verification email has been sent.</value>
+    <value>A password reset verification email has been sent</value>
   </data>
   <data name="SysUserOperateSendVcCodeSuccess" xml:space="preserve">
-    <value>The verification code has been sent. Please check your email.</value>
+    <value>The verification code has been sent. Please check your email</value>
   </data>
   <data name="SysUserOperateSendVcCodeFrequently" xml:space="preserve">
-    <value>Too many requests. Please try again later.</value>
+    <value>Too many requests. Please try again later</value>
   </data>
   <data name="SysUserOperateSendVcCodeFailed" xml:space="preserve">
-    <value>Failed to send verification code. Reason: {0}. Please contact the system administrator.</value>
+    <value>Failed to send verification code. Reason: {0}. Please contact the system administrator</value>
   </data>
   <data name="SysUserOperateUnlockSendVcCodeBody" xml:space="preserve">
-    <value>Your verification code {0} is used to unlock your account and is valid for 3 minutes. Do not share or forward it. If this was not you, please ignore this email.</value>
+    <value>Your verification code {0} is used to unlock your account and is valid for 3 minutes. Do not share or forward it. If this was not you, please ignore this email</value>
   </data>
   <data name="SysUserOperateVcCodeExpired" xml:space="preserve">
-    <value>The verification code has expired. Please request a new one.</value>
+    <value>The verification code has expired. Please request a new one</value>
   </data>
   <data name="SysUserOperateVcCodeSuccess" xml:space="preserve">
-    <value>Verification successful. Please enter and confirm your new password.</value>
+    <value>Verification successful. Please enter and confirm your new password</value>
   </data>
   <data name="SysUserOperateVcCodeError" xml:space="preserve">
-    <value>Invalid verification code.</value>
+    <value>Invalid verification code</value>
   </data>
   <data name="SysUserOperateUnlockSuccess" xml:space="preserve">
-    <value>Account unlocked successfully.</value>
+    <value>Account unlocked successfully</value>
   </data>
   <data name="SysUserOperateUserNotFound" xml:space="preserve">
-    <value>The account does not exist.</value>
+    <value>The account does not exist</value>
   </data>
   <data name="SysUserOperateUnlockFailed" xml:space="preserve">
-    <value>Failed to unlock the account.</value>
+    <value>Failed to unlock the account</value>
   </data>
   <data name="SysUserOperatePasswordNotExpiration" xml:space="preserve">
-    <value>The password has not expired and does not need to be reset.</value>
+    <value>The password has not expired and does not need to be reset</value>
   </data>
   <data name="SysUserOperatePasswordExSendVcCodeBody" xml:space="preserve">
-    <value>Your verification code {0} is used to reset your password and is valid for 3 minutes. Do not share or forward it. If this was not you, please ignore this email.</value>
+    <value>Your verification code {0} is used to reset your password and is valid for 3 minutes. Do not share or forward it. If this was not you, please ignore this email</value>
   </data>
   <data name="SysUserOperateValidationPassWrodError" xml:space="preserve">
-    <value>Password must be 8–16 characters long and include uppercase letters, lowercase letters, numbers, and special characters.</value>
+    <value>Password must be 8–16 characters long and include uppercase letters, lowercase letters, numbers, and special characters</value>
   </data>
   <data name="SysUserOperateUpdatePassWrodSuccess" xml:space="preserve">
-    <value>Password updated successfully. Please log in again.</value>
+    <value>Password updated successfully. Please log in again</value>
   </data>
   <data name="SysUserOperateUpdatePassWrodFailed" xml:space="preserve">
-    <value>Failed to update password.</value>
+    <value>Failed to update password</value>
   </data>
   <data name="SysUserOperateNotEqualOldPassWord" xml:space="preserve">
-    <value>The new password must not be the same as the old password.</value>
+    <value>The new password must not be the same as the old password</value>
   </data>
 </root>

@@ -101,53 +101,53 @@
 	
 	
   <data name="UserAgentSubAgentSameAsAgent" xml:space="preserve">
-    <value>被代理员工不能与代理员工相同。</value>
+    <value>被代理员工不能与代理员工相同</value>
   </data>
   <data name="UserAgentRelationAlreadyExist" xml:space="preserve">
-    <value>该代理关系已存在。</value>
+    <value>该代理关系已存在</value>
   </data>
   <data name="UserAgentSubAgentAlreadyAgent" xml:space="preserve">
-    <value>被代理员工已作为其他员工的代理人，无法重复设置。</value>
+    <value>被代理员工已作为其他员工的代理人，无法重复设置</value>
   </data>
   <data name="UserAgentAgentAlreadySubAgent" xml:space="preserve">
-    <value>代理员工已作为其他员工的被代理人，无法重复设置。</value>
+    <value>代理员工已作为其他员工的被代理人，无法重复设置</value>
   </data>
   <data name="UserAgentInsertSuccess" xml:space="preserve">
-    <value>代理配置成功。</value>
+    <value>代理配置成功</value>
   </data>
   <data name="UserAgentInsertFailed" xml:space="preserve">
-    <value>代理配置失败。</value>
+    <value>代理配置失败</value>
   </data>
   <data name="UserAgentDeleteSuccess" xml:space="preserve">
-    <value>代理关系删除成功。</value>
+    <value>代理关系删除成功</value>
   </data>
   <data name="UserAgentDeleteFailed" xml:space="preserve">
-    <value>代理关系删除失败。</value>
+    <value>代理关系删除失败</value>
   </data>
 
   <data name="UserPartTimeInsertSuccess" xml:space="preserve">
-    <value>员工兼任新增成功。</value>
+    <value>员工兼任新增成功</value>
   </data>
   <data name="UserPartTimeInsertFailed" xml:space="preserve">
-    <value>员工兼任新增失败。</value>
+    <value>员工兼任新增失败</value>
   </data>
   <data name="UserPartTimeDeleteSuccess" xml:space="preserve">
-    <value>员工兼任删除成功。</value>
+    <value>员工兼任删除成功</value>
   </data>
   <data name="UserPartTimeDeleteFailed" xml:space="preserve">
-    <value>员工兼任删除失败。</value>
+    <value>员工兼任删除失败</value>
   </data>
   <data name="UserPartTimeIsExist" xml:space="preserve">
-    <value>该员工已在此部门兼任该职业，无法重复设置。</value>
+    <value>该员工已在此部门兼任该职业，无法重复设置</value>
   </data>
   <data name="UserPartTimeUpdateSuccess" xml:space="preserve">
-    <value>员工兼任修改成功。</value>
+    <value>员工兼任修改成功</value>
   </data>
   <data name="UserPartTimeUpdateFailed" xml:space="preserve">
-    <value>员工兼任修改失败。</value>
+    <value>员工兼任修改失败</value>
   </data>
 
   <data name="UserFormBindInsertSuccess" xml:space="preserve">
-    <value>表单配置成功。</value>
+    <value>表单配置成功</value>
   </data>
 </root>

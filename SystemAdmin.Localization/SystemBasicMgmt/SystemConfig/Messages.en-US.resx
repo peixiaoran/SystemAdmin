@@ -100,68 +100,68 @@
 	</resheader>
 	
 	 <data name="DictionaryInfoInsertSuccess" xml:space="preserve">
-    <value>System dictionary created successfully.</value>
+    <value>System dictionary created successfully</value>
   </data>
   <data name="DictionaryInfoInsertFailed" xml:space="preserve">
-    <value>Failed to create system dictionary.</value>
+    <value>Failed to create system dictionary</value>
   </data>
   <data name="DictionaryInfoDeleteSuccess" xml:space="preserve">
-    <value>System dictionary deleted successfully.</value>
+    <value>System dictionary deleted successfully</value>
   </data>
   <data name="DictionaryInfoDeleteFailed" xml:space="preserve">
-    <value>Failed to delete system dictionary.</value>
+    <value>Failed to delete system dictionary</value>
   </data>
   <data name="DictionaryInfoUpdateSuccess" xml:space="preserve">
-    <value>System dictionary updated successfully.</value>
+    <value>System dictionary updated successfully</value>
   </data>
   <data name="DictionaryInfoUpdateFailed" xml:space="preserve">
-    <value>Failed to update system dictionary.</value>
+    <value>Failed to update system dictionary</value>
   </data>
   <data name="DictionaryInfoDicTypeCodeIsExist" xml:space="preserve">
-    <value>A dictionary with the same code already exists under this dictionary type.</value>
+    <value>A dictionary with the same code already exists under this dictionary type</value>
   </data>
 
   <data name="CurrencyInfoInsertSuccess" xml:space="preserve">
-    <value>Currency created successfully.</value>
+    <value>Currency created successfully</value>
   </data>
   <data name="CurrencyInfoInsertFailed" xml:space="preserve">
-    <value>Failed to create currency.</value>
+    <value>Failed to create currency</value>
   </data>
   <data name="CurrencyInfoDeleteSuccess" xml:space="preserve">
-    <value>Currency deleted successfully.</value>
+    <value>Currency deleted successfully</value>
   </data>
   <data name="CurrencyInfoDeleteFailed" xml:space="preserve">
-    <value>Failed to delete currency.</value>
+    <value>Failed to delete currency</value>
   </data>
   <data name="CurrencyInfoUpdateSuccess" xml:space="preserve">
-    <value>Currency updated successfully.</value>
+    <value>Currency updated successfully</value>
   </data>
   <data name="CurrencyInfoUpdateFailed" xml:space="preserve">
-    <value>Failed to update currency.</value>
+    <value>Failed to update currency</value>
   </data>
 
   <data name="ExchangeRateInsertSuccess" xml:space="preserve">
-    <value>Exchange rate created successfully.</value>
+    <value>Exchange rate created successfully</value>
   </data>
   <data name="ExchangeRateInsertFailed" xml:space="preserve">
-    <value>Failed to create exchange rate.</value>
+    <value>Failed to create exchange rate</value>
   </data>
   <data name="ExchangeRateDeleteSuccess" xml:space="preserve">
-    <value>Exchange rate deleted successfully.</value>
+    <value>Exchange rate deleted successfully</value>
   </data>
   <data name="ExchangeRateDeleteFailed" xml:space="preserve">
-    <value>Failed to delete exchange rate.</value>
+    <value>Failed to delete exchange rate</value>
   </data>
   <data name="ExchangeRateUpdateSuccess" xml:space="preserve">
-    <value>Exchange rate updated successfully.</value>
+    <value>Exchange rate updated successfully</value>
   </data>
   <data name="ExchangeRateUpdateFailed" xml:space="preserve">
-    <value>Failed to update exchange rate.</value>
+    <value>Failed to update exchange rate</value>
   </data>
   <data name="ExchangeRateIsExist" xml:space="preserve">
-    <value>This exchange rate mapping already exists.</value>
+    <value>This exchange rate mapping already exists</value>
   </data>
   <data name="ExchangeRateIsRepeat" xml:space="preserve">
-    <value>The currency and the target currency cannot be the same.</value>
+    <value>The currency and the target currency cannot be the same</value>
   </data>
 </root>

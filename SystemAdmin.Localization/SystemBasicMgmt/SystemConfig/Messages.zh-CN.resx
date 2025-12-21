@@ -100,68 +100,68 @@
 	</resheader>
 	
   <data name="DictionaryInfoInsertSuccess" xml:space="preserve">
-    <value>系统字典新增成功。</value>
+    <value>系统字典新增成功</value>
   </data>
   <data name="DictionaryInfoInsertFailed" xml:space="preserve">
-    <value>系统字典新增失败。</value>
+    <value>系统字典新增失败</value>
   </data>
   <data name="DictionaryInfoDeleteSuccess" xml:space="preserve">
-    <value>系统字典删除成功。</value>
+    <value>系统字典删除成功</value>
   </data>
   <data name="DictionaryInfoDeleteFailed" xml:space="preserve">
-    <value>系统字典删除失败。</value>
+    <value>系统字典删除失败</value>
   </data>
   <data name="DictionaryInfoUpdateSuccess" xml:space="preserve">
-    <value>系统字典修改成功。</value>
+    <value>系统字典修改成功</value>
   </data>
   <data name="DictionaryInfoUpdateFailed" xml:space="preserve">
-    <value>系统字典修改失败。</value>
+    <value>系统字典修改失败</value>
   </data>
   <data name="DictionaryInfoDicTypeCodeIsExist" xml:space="preserve">
-    <value>该字典类型下已存在相同的字典编码。</value>
+    <value>该字典类型下已存在相同的字典编码</value>
   </data>
 
   <data name="CurrencyInfoInsertSuccess" xml:space="preserve">
-    <value>币别信息新增成功。</value>
+    <value>币别信息新增成功</value>
   </data>
   <data name="CurrencyInfoInsertFailed" xml:space="preserve">
-    <value>币别信息新增失败。</value>
+    <value>币别信息新增失败</value>
   </data>
   <data name="CurrencyInfoDeleteSuccess" xml:space="preserve">
-    <value>币别信息删除成功。</value>
+    <value>币别信息删除成功</value>
   </data>
   <data name="CurrencyInfoDeleteFailed" xml:space="preserve">
-    <value>币别信息删除失败。</value>
+    <value>币别信息删除失败</value>
   </data>
   <data name="CurrencyInfoUpdateSuccess" xml:space="preserve">
-    <value>币别信息修改成功。</value>
+    <value>币别信息修改成功</value>
   </data>
   <data name="CurrencyInfoUpdateFailed" xml:space="preserve">
-    <value>币别信息修改失败。</value>
+    <value>币别信息修改失败</value>
   </data>
 
   <data name="ExchangeRateInsertSuccess" xml:space="preserve">
-    <value>汇率信息新增成功。</value>
+    <value>汇率信息新增成功</value>
   </data>
   <data name="ExchangeRateInsertFailed" xml:space="preserve">
-    <value>汇率信息新增失败。</value>
+    <value>汇率信息新增失败</value>
   </data>
   <data name="ExchangeRateDeleteSuccess" xml:space="preserve">
-    <value>汇率信息删除成功。</value>
+    <value>汇率信息删除成功</value>
   </data>
   <data name="ExchangeRateDeleteFailed" xml:space="preserve">
-    <value>汇率信息删除失败。</value>
+    <value>汇率信息删除失败</value>
   </data>
   <data name="ExchangeRateUpdateSuccess" xml:space="preserve">
-    <value>汇率信息修改成功。</value>
+    <value>汇率信息修改成功</value>
   </data>
   <data name="ExchangeRateUpdateFailed" xml:space="preserve">
-    <value>汇率信息修改失败。</value>
+    <value>汇率信息修改失败</value>
   </data>
   <data name="ExchangeRateIsExist" xml:space="preserve">
-    <value>该币别汇率对照已存在。</value>
+    <value>该币别汇率对照已存在</value>
   </data>
   <data name="ExchangeRateIsRepeat" xml:space="preserve">
-    <value>币别不能与兑换币别相同。</value>
+    <value>币别不能与兑换币别相同</value>
   </data>
 </root>

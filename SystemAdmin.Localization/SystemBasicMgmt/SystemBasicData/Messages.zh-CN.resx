@@ -118,123 +118,123 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="DeptLevelInsertSuccess" xml:space="preserve">
-    <value>部门层级新增成功。</value>
+    <value>部门层级新增成功</value>
   </data>
   <data name="DeptLevelInsertFailed" xml:space="preserve">
-    <value>部门层级新增失败。</value>
+    <value>部门层级新增失败</value>
   </data>
   <data name="DeptLevelDeleteSuccess" xml:space="preserve">
-    <value>部门层级删除成功。</value>
+    <value>部门层级删除成功</value>
   </data>
   <data name="DeptLevelDeleteFailed" xml:space="preserve">
-    <value>部门层级删除失败。</value>
+    <value>部门层级删除失败</value>
   </data>
   <data name="DeptLevelUpdateSuccess" xml:space="preserve">
-    <value>部门层级修改成功。</value>
+    <value>部门层级修改成功</value>
   </data>
   <data name="DeptLevelUpdateFailed" xml:space="preserve">
-    <value>部门层级修改失败。</value>
+    <value>部门层级修改失败</value>
   </data>
   <data name="DeptInfoInsertSuccess" xml:space="preserve">
-    <value>部门信息新增成功。</value>
+    <value>部门信息新增成功</value>
   </data>
   <data name="DeptInfoInsertFailed" xml:space="preserve">
-    <value>部门信息新增失败。</value>
+    <value>部门信息新增失败</value>
   </data>
   <data name="DeptInfoDeleteSuccess" xml:space="preserve">
-    <value>部门信息删除成功。</value>
+    <value>部门信息删除成功</value>
   </data>
   <data name="DeptInfoDeleteFailed" xml:space="preserve">
-    <value>部门信息删除失败。</value>
+    <value>部门信息删除失败</value>
   </data>
   <data name="DeptInfoUpdateSuccess" xml:space="preserve">
-    <value>部门信息修改成功。</value>
+    <value>部门信息修改成功</value>
   </data>
   <data name="DeptInfoUpdateFailed" xml:space="preserve">
-    <value>部门信息修改失败。</value>
+    <value>部门信息修改失败</value>
   </data>
   <data name="UserLaborInsertSuccess" xml:space="preserve">
-    <value>职业信息新增成功。</value>
+    <value>职业信息新增成功</value>
   </data>
   <data name="UserLaborInsertFailed" xml:space="preserve">
-    <value>职业信息新增失败。</value>
+    <value>职业信息新增失败</value>
   </data>
   <data name="UserLaborDeleteSuccess" xml:space="preserve">
-    <value>职业信息删除成功。</value>
+    <value>职业信息删除成功</value>
   </data>
   <data name="UserLaborDeleteFailed" xml:space="preserve">
-    <value>职业信息删除失败。</value>
+    <value>职业信息删除失败</value>
   </data>
   <data name="UserLaborUpdateSuccess" xml:space="preserve">
-    <value>职业信息修改成功。</value>
+    <value>职业信息修改成功</value>
   </data>
   <data name="UserLaborUpdateFailed" xml:space="preserve">
-    <value>职业信息修改失败。</value>
+    <value>职业信息修改失败</value>
   </data>
   <data name="UserInfoDuplicatejobRepeatable" xml:space="preserve">
-    <value>工号或账号已存在，请重新输入。</value>
+    <value>工号或账号已存在，请重新输入</value>
   </data>
   <data name="UserInfoValidationPassWrodError" xml:space="preserve">
-    <value>密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符。</value>
+    <value>密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符</value>
   </data>
   <data name="UserInfoInsertSuccess" xml:space="preserve">
-    <value>员工信息新增成功。</value>
+    <value>员工信息新增成功</value>
   </data>
   <data name="UserInfoInsertFailed" xml:space="preserve">
-    <value>员工信息新增失败。</value>
+    <value>员工信息新增失败</value>
   </data>
   <data name="UserInfoDeleteSuccess" xml:space="preserve">
-    <value>员工信息删除成功。</value>
+    <value>员工信息删除成功</value>
   </data>
   <data name="UserInfoDeleteFailed" xml:space="preserve">
-    <value>员工信息删除失败。</value>
+    <value>员工信息删除失败</value>
   </data>
   <data name="UserInfoUpdateSuccess" xml:space="preserve">
-    <value>员工信息修改成功。</value>
+    <value>员工信息修改成功</value>
   </data>
   <data name="UserInfoUpdateFailed" xml:space="preserve">
-    <value>员工信息修改失败。</value>
+    <value>员工信息修改失败</value>
   </data>
   <data name="PersonalUpdateSuccess" xml:space="preserve">
-    <value>个人信息修改成功。</value>
+    <value>个人信息修改成功</value>
   </data>
   <data name="PersonalUpdateFailed" xml:space="preserve">
-    <value>个人信息修改失败。</value>
+    <value>个人信息修改失败</value>
   </data>
   <data name="PersonalValidationPassWrodError" xml:space="preserve">
-    <value>密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符。</value>
+    <value>密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符</value>
   </data>
   <data name="NationalityInfoInsertSuccess" xml:space="preserve">
-    <value>国籍信息新增成功。</value>
+    <value>国籍信息新增成功</value>
   </data>
   <data name="NationalityInfoInsertFailed" xml:space="preserve">
-    <value>国籍信息新增失败。</value>
+    <value>国籍信息新增失败</value>
   </data>
   <data name="NationalityInfoDeleteSuccess" xml:space="preserve">
-    <value>国籍信息删除成功。</value>
+    <value>国籍信息删除成功</value>
   </data>
   <data name="NationalityInfoDeleteFailed" xml:space="preserve">
-    <value>国籍信息删除失败。</value>
+    <value>国籍信息删除失败</value>
   </data>
   <data name="NationalityInfoUpdateSuccess" xml:space="preserve">
-    <value>国籍信息修改成功。</value>
+    <value>国籍信息修改成功</value>
   </data>
   <data name="NationalityInfoUpdateFailed" xml:space="preserve">
-    <value>国籍信息修改失败。</value>
+    <value>国籍信息修改失败</value>
   </data>
   <data name="AvatarFileNotNull" xml:space="preserve">
-    <value>请上传头像文件。</value>
+    <value>请上传头像文件</value>
   </data>
   <data name="AvatarFileTooLarge" xml:space="preserve">
-    <value>头像文件大小不能超过 2MB。</value>
+    <value>头像文件大小不能超过 2MB</value>
   </data>
   <data name="AvatarInvalidImageFormat" xml:space="preserve">
-    <value>头像文件格式不支持，仅支持 .png、.jpg、.jpeg。</value>
+    <value>头像文件格式不支持，仅支持 .png、.jpg、.jpeg</value>
   </data>
   <data name="UploadSuccess" xml:space="preserve">
-    <value>上传成功。</value>
+    <value>上传成功</value>
   </data>
   <data name="UploadFailed" xml:space="preserve">
-    <value>上传失败。</value>
+    <value>上传失败</value>
   </data>
 </root>

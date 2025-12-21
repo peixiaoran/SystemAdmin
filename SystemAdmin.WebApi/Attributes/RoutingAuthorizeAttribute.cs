@@ -20,7 +20,7 @@ namespace SystemAdmin.WebApi.Attributes
             var acl = http.RequestServices.GetRequiredService<SysPerVerifyService>();
 
             var userId = loginuser.UserId;
-            if (userId >=1)
+            if (userId == 0)
             {
                 SetErrorResponse(context, Result<bool>.Failure(401, "Unauthorized: Invalid or expired token."));
                 return;

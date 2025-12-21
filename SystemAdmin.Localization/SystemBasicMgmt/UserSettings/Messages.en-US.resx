@@ -101,53 +101,53 @@
 	
 	
   <data name="UserAgentSubAgentSameAsAgent" xml:space="preserve">
-    <value>The delegatee cannot be the same as the delegator.</value>
+    <value>The delegatee cannot be the same as the delegator</value>
   </data>
   <data name="UserAgentRelationAlreadyExist" xml:space="preserve">
-    <value>This delegation relationship already exists.</value>
+    <value>This delegation relationship already exists</value>
   </data>
   <data name="UserAgentSubAgentAlreadyAgent" xml:space="preserve">
-    <value>The delegatee is already a delegator for another employee and cannot be set again.</value>
+    <value>The delegatee is already a delegator for another employee and cannot be set again</value>
   </data>
   <data name="UserAgentAgentAlreadySubAgent" xml:space="preserve">
-    <value>The delegator is already a delegatee for another employee and cannot be set again.</value>
+    <value>The delegator is already a delegatee for another employee and cannot be set again</value>
   </data>
   <data name="UserAgentInsertSuccess" xml:space="preserve">
-    <value>Delegation configured successfully.</value>
+    <value>Delegation configured successfully</value>
   </data>
   <data name="UserAgentInsertFailed" xml:space="preserve">
-    <value>Failed to configure delegation.</value>
+    <value>Failed to configure delegation</value>
   </data>
   <data name="UserAgentDeleteSuccess" xml:space="preserve">
-    <value>Delegation relationship deleted successfully.</value>
+    <value>Delegation relationship deleted successfully</value>
   </data>
   <data name="UserAgentDeleteFailed" xml:space="preserve">
-    <value>Failed to delete delegation relationship.</value>
+    <value>Failed to delete delegation relationship</value>
   </data>
 
   <data name="UserPartTimeInsertSuccess" xml:space="preserve">
-    <value>Part-time assignment created successfully.</value>
+    <value>Part-time assignment created successfully</value>
   </data>
   <data name="UserPartTimeInsertFailed" xml:space="preserve">
-    <value>Failed to create part-time assignment.</value>
+    <value>Failed to create part-time assignment</value>
   </data>
   <data name="UserPartTimeDeleteSuccess" xml:space="preserve">
-    <value>Part-time assignment deleted successfully.</value>
+    <value>Part-time assignment deleted successfully</value>
   </data>
   <data name="UserPartTimeDeleteFailed" xml:space="preserve">
-    <value>Failed to delete part-time assignment.</value>
+    <value>Failed to delete part-time assignment</value>
   </data>
   <data name="UserPartTimeIsExist" xml:space="preserve">
-    <value>This employee already holds this part-time position in the department and cannot be set again.</value>
+    <value>This employee already holds this part-time position in the department and cannot be set again</value>
   </data>
   <data name="UserPartTimeUpdateSuccess" xml:space="preserve">
-    <value>Part-time assignment updated successfully.</value>
+    <value>Part-time assignment updated successfully</value>
   </data>
   <data name="UserPartTimeUpdateFailed" xml:space="preserve">
-    <value>Failed to update part-time assignment.</value>
+    <value>Failed to update part-time assignment</value>
   </data>
 
   <data name="UserFormBindInsertSuccess" xml:space="preserve">
-    <value>Form binding configured successfully.</value>
+    <value>Form binding configured successfully</value>
   </data>
 </root>
