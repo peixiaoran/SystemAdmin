@@ -18,7 +18,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         private readonly SqlSugarScope _db;
         private readonly FormStepRepository _formStepRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "FormBusiness_FormWorkflow_FormStep_";
+        private readonly string _this = "FormBusiness.FormWorkflow.FormStep";
 
         public FormStepService(CurrentUser loginuser, ILogger<FormStepService> logger, SqlSugarScope db, FormStepRepository formStepRepository, LocalizationService localization)
         {

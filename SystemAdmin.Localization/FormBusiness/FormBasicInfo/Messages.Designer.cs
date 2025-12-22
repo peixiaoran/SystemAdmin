@@ -59,5 +59,167 @@ namespace SystemAdmin.Localization.FormBusiness.FormBasicInfo {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   查找类似 删除控件失败 的本地化字符串。
+        /// </summary>
+        internal static string ControlInfoDeleteFailed {
+            get {
+                return ResourceManager.GetString("ControlInfoDeleteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 删除控件成功 的本地化字符串。
+        /// </summary>
+        internal static string ControlInfoDeleteSuccess {
+            get {
+                return ResourceManager.GetString("ControlInfoDeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增控件失败 的本地化字符串。
+        /// </summary>
+        internal static string ControlInfoInsertFailed {
+            get {
+                return ResourceManager.GetString("ControlInfoInsertFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增控件成功 的本地化字符串。
+        /// </summary>
+        internal static string ControlInfoInsertSuccess {
+            get {
+                return ResourceManager.GetString("ControlInfoInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改控件失败 的本地化字符串。
+        /// </summary>
+        internal static string ControlInfoUpdateFailed {
+            get {
+                return ResourceManager.GetString("ControlInfoUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改控件成功 的本地化字符串。
+        /// </summary>
+        internal static string ControlInfoUpdateSuccess {
+            get {
+                return ResourceManager.GetString("ControlInfoUpdateSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 删除表单组别失败 的本地化字符串。
+        /// </summary>
+        internal static string FormGroupDeleteFailed {
+            get {
+                return ResourceManager.GetString("FormGroupDeleteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 删除表单组别成功 的本地化字符串。
+        /// </summary>
+        internal static string FormGroupDeleteSuccess {
+            get {
+                return ResourceManager.GetString("FormGroupDeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增表单组别失败 的本地化字符串。
+        /// </summary>
+        internal static string FormGroupInsertFailed {
+            get {
+                return ResourceManager.GetString("FormGroupInsertFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增表单组别成功 的本地化字符串。
+        /// </summary>
+        internal static string FormGroupInsertSuccess {
+            get {
+                return ResourceManager.GetString("FormGroupInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改表单组别失败 的本地化字符串。
+        /// </summary>
+        internal static string FormGroupUpdateFailed {
+            get {
+                return ResourceManager.GetString("FormGroupUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改表单组别成功 的本地化字符串。
+        /// </summary>
+        internal static string FormGroupUpdateSuccess {
+            get {
+                return ResourceManager.GetString("FormGroupUpdateSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 删除表单类别失败 的本地化字符串。
+        /// </summary>
+        internal static string FormTypeDeleteFailed {
+            get {
+                return ResourceManager.GetString("FormTypeDeleteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 删除表单类别成功 的本地化字符串。
+        /// </summary>
+        internal static string FormTypeDeleteSuccess {
+            get {
+                return ResourceManager.GetString("FormTypeDeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增表单类别失败 的本地化字符串。
+        /// </summary>
+        internal static string FormTypeInsertFailed {
+            get {
+                return ResourceManager.GetString("FormTypeInsertFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 新增表单类别成功 的本地化字符串。
+        /// </summary>
+        internal static string FormTypeInsertSuccess {
+            get {
+                return ResourceManager.GetString("FormTypeInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改表单类别失败 的本地化字符串。
+        /// </summary>
+        internal static string FormTypeUpdateFailed {
+            get {
+                return ResourceManager.GetString("FormTypeUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 修改表单类别成功 的本地化字符串。
+        /// </summary>
+        internal static string FormTypeUpdateSuccess {
+            get {
+                return ResourceManager.GetString("FormTypeUpdateSuccess", resourceCulture);
+            }
+        }
     }
 }

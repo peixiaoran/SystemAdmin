@@ -16,7 +16,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         private readonly SqlSugarScope _db;
         private readonly FormGroupRepository _formGroupRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "FormBusiness_FormBasicInfo_FormGroup_";
+        private readonly string _this = "FormBusiness.FormBasicInfo.FormGroup";
 
         public FormGroupService(CurrentUser loginuser, ILogger<FormGroupService> logger, SqlSugarScope db, FormGroupRepository formGroupRepository, LocalizationService localization)
         {

@@ -117,58 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ControlInfoDeleteFailed" xml:space="preserve">
-    <value>删除控件失败</value>
+  <data name="CustomerInfoDeleteFailed" xml:space="preserve">
+    <value>删除客户信息失败</value>
   </data>
-  <data name="ControlInfoDeleteSuccess" xml:space="preserve">
-    <value>删除控件成功</value>
+  <data name="CustomerInfoDeleteSuccess" xml:space="preserve">
+    <value>删除客户信息成功</value>
   </data>
-  <data name="ControlInfoInsertFailed" xml:space="preserve">
-    <value>新增控件失败</value>
+  <data name="CustomerInfoInsertFailed" xml:space="preserve">
+    <value>新增客户信息失败</value>
   </data>
-  <data name="ControlInfoInsertSuccess" xml:space="preserve">
-    <value>新增控件成功</value>
+  <data name="CustomerInfoInsertSuccess" xml:space="preserve">
+    <value>新增客户信息成功</value>
   </data>
-  <data name="ControlInfoUpdateFailed" xml:space="preserve">
-    <value>修改控件失败</value>
+  <data name="CustomerInfoUpdateFailed" xml:space="preserve">
+    <value>修改客户信息失败</value>
   </data>
-  <data name="ControlInfoUpdateSuccess" xml:space="preserve">
-    <value>修改控件成功</value>
+  <data name="CustomerInfoUpdateSuccess" xml:space="preserve">
+    <value>修改客户信息成功</value>
   </data>
-  <data name="FormGroupDeleteFailed" xml:space="preserve">
-    <value>删除表单组别失败</value>
+  <data name="ManufacturerInfoDeleteFailed" xml:space="preserve">
+    <value>删除厂商信息失败</value>
   </data>
-  <data name="FormGroupDeleteSuccess" xml:space="preserve">
-    <value>删除表单组别成功</value>
+  <data name="ManufacturerInfoDeleteSuccess" xml:space="preserve">
+    <value>删除厂商信息成功</value>
   </data>
-  <data name="FormGroupInsertFailed" xml:space="preserve">
-    <value>新增表单组别失败</value>
+  <data name="ManufacturerInfoInsertFailed" xml:space="preserve">
+    <value>新增厂商信息失败</value>
   </data>
-  <data name="FormGroupInsertSuccess" xml:space="preserve">
-    <value>新增表单组别成功</value>
+  <data name="ManufacturerInfoInsertSuccess" xml:space="preserve">
+    <value>新增厂商信息成功</value>
   </data>
-  <data name="FormGroupUpdateFailed" xml:space="preserve">
-    <value>修改表单组别失败</value>
+  <data name="ManufacturerInfoUpdateFailed" xml:space="preserve">
+    <value>修改厂商信息失败</value>
   </data>
-  <data name="FormGroupUpdateSuccess" xml:space="preserve">
-    <value>修改表单组别成功</value>
-  </data>
-  <data name="FormTypeDeleteFailed" xml:space="preserve">
-    <value>删除表单类别失败</value>
-  </data>
-  <data name="FormTypeDeleteSuccess" xml:space="preserve">
-    <value>删除表单类别成功</value>
-  </data>
-  <data name="FormTypeInsertFailed" xml:space="preserve">
-    <value>新增表单类别失败</value>
-  </data>
-  <data name="FormTypeInsertSuccess" xml:space="preserve">
-    <value>新增表单类别成功</value>
-  </data>
-  <data name="FormTypeUpdateFailed" xml:space="preserve">
-    <value>修改表单类别失败</value>
-  </data>
-  <data name="FormTypeUpdateSuccess" xml:space="preserve">
-    <value>修改表单类别成功</value>
+  <data name="ManufacturerInfoUpdateSuccess" xml:space="preserve">
+    <value>修改厂商信息成功</value>
   </data>
 </root>

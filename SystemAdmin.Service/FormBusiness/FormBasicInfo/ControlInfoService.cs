@@ -16,7 +16,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         private readonly SqlSugarScope _db;
         private readonly ControlInfoRepository _controlInfoRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "FormBusiness_FormBasicInfo_ControlInfo_";
+        private readonly string _this = "FormBusiness.FormBasicInfo.ControlInfo";
 
         public ControlInfoService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, ControlInfoRepository controlInfoRepository, LocalizationService localization)
         {
@@ -44,21 +44,13 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                // 判断控件编码是否存在
-                bool contorlInfoIsExist = await _controlInfoRepository.GetControlInfoIsExist(controlInfoUpsert.ControlCode);
-                if (contorlInfoIsExist)
-                {
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsExist"));
-                }
-                else
-                {
-                    await _db.BeginTranAsync();
-                    int insertControlInfoCount = await _controlInfoRepository.InsertControlInfo(insertFromGroupEntity);
-                    await _db.CommitTranAsync();
-                    return insertControlInfoCount >= 1
+
+                await _db.BeginTranAsync();
+                int insertControlInfoCount = await _controlInfoRepository.InsertControlInfo(insertFromGroupEntity);
+                await _db.CommitTranAsync();
+                return insertControlInfoCount >= 1
                         ? Result<int>.Ok(insertControlInfoCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
-                }
             }
             catch (Exception ex)
             {

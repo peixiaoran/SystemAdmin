@@ -16,7 +16,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         private readonly SqlSugarScope _db;
         private readonly FormTypeRepository _formTypeRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "FormBusiness_FormBasicInfo_FormType_";
+        private readonly string _this = "FormBusiness.FormBasicInfo.FormType";
 
         public FormTypeService(CurrentUser loginuser, ILogger<FormTypeService> logger, SqlSugarScope db, FormTypeRepository formTypeRepository, LocalizationService localization)
         {

@@ -91,18 +91,5 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
             var controlInfoPage = await query.ToPageListAsync(getControlInfoPage.PageIndex, getControlInfoPage.PageSize, totalCount);
             return ResultPaged<ControlInfoDto>.Ok(controlInfoPage.Adapt<List<ControlInfoDto>>(), totalCount, "");
         }
-
-        /// <summary>
-        /// 查询控件信息是否存在
-        /// </summary>
-        /// <param name="controlCode"></param>
-        /// <returns></returns>
-        public async Task<bool> GetControlInfoIsExist(string controlCode)
-        {
-            return await _db.Queryable<ControlInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(formcontrol => formcontrol.ControlCode == controlCode)
-                            .AnyAsync();
-        }
     }
 }

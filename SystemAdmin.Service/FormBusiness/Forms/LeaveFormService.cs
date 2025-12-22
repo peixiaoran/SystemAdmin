@@ -21,7 +21,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly FormGenerateRepository _formGenerateRepository;
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "FormBusiness_Forms_LeaveForm_";
+        private readonly string _this = "FormBusiness.Forms.LeaveForm";
 
         public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormPerVerifyRepository formPerVerifyRepository, FormGenerateRepository formGenerateRepository, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
@@ -75,7 +75,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                 var leaveFormDto = initleaveFormEntity.Adapt<LeaveFormDto>();
                 leaveFormDto.ImportanceCode = -1;
-                leaveFormDto.FormTypeId = long.Parse(formTypeId); //表单类别Is
+                leaveFormDto.FormTypeId = long.Parse(formTypeId); //表单类别Id
                 return Result<LeaveFormDto>.Ok(leaveFormDto);
             }
             catch (Exception ex)
