@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001160 (16.00.1160)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001160 (16.00.1160)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 21/12/2025 18:24:19
+ Date: 22/12/2025 17:52:04
 */
 
 
@@ -121,128 +121,6 @@ INSERT INTO [Form].[ControlInfo] ([ControlCode], [ControlName], [Description], [
 GO
 
 INSERT INTO [Form].[ControlInfo] ([ControlCode], [ControlName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-switch', N'el-switch', N'开关', N'1903486709602062336', N'2025-11-09 00:13:35.000', NULL, NULL)
-GO
-
-
--- ----------------------------
--- Table structure for EventInfo
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[EventInfo]') AND type IN ('U'))
-	DROP TABLE [Form].[EventInfo]
-GO
-
-CREATE TABLE [Form].[EventInfo] (
-  [ControlCode] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [EventCode] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [EventName] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [Description] nvarchar(100) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
-  [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime  NULL
-)
-GO
-
-ALTER TABLE [Form].[EventInfo] SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'控件编码',
-'SCHEMA', N'Form',
-'TABLE', N'EventInfo',
-'COLUMN', N'ControlCode'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'事件编码',
-'SCHEMA', N'Form',
-'TABLE', N'EventInfo',
-'COLUMN', N'EventCode'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'事件名称',
-'SCHEMA', N'Form',
-'TABLE', N'EventInfo',
-'COLUMN', N'EventName'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'事件描述',
-'SCHEMA', N'Form',
-'TABLE', N'EventInfo',
-'COLUMN', N'Description'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建人',
-'SCHEMA', N'Form',
-'TABLE', N'EventInfo',
-'COLUMN', N'CreatedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'Form',
-'TABLE', N'EventInfo',
-'COLUMN', N'CreatedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改人',
-'SCHEMA', N'Form',
-'TABLE', N'EventInfo',
-'COLUMN', N'ModifiedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改时间',
-'SCHEMA', N'Form',
-'TABLE', N'EventInfo',
-'COLUMN', N'ModifiedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'控件事件绑定表',
-'SCHEMA', N'Form',
-'TABLE', N'EventInfo'
-GO
-
-
--- ----------------------------
--- Records of EventInfo
--- ----------------------------
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-input', N'input', N'input', N'在 Input 值改变时触发', N'0', N'2025-11-05 14:25:21.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-input', N'change', N'change', N'仅当 modelValue 改变时，当输入框失去焦点或用户按Enter时触发', N'0', N'2025-11-05 14:36:35.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-radio-group', N'change', N'change', N'当绑定值变化时触发的事件', N'1903486709602062336', N'2025-11-05 15:06:22.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-checkbox', N'change', N'change', N'当绑定值变化时触发的事件', N'1903486709602062336', N'2025-11-05 15:11:32.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-select', N'change', N'change', N'选择值变更', N'1903486709602062336', N'2025-11-05 14:55:23.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-input', N'keydown', N'keydown', N'按下键时触发', N'1903486709602062336', N'2025-11-05 15:01:50.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-checkbox-group', N'change', N'change', N'当绑定值变化时触发的事件', N'1903486709602062336', N'2025-11-05 15:12:08.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-date-picker', N'change', N'change', N'当绑定值变化时触发的事件', N'1903486709602062336', N'2025-11-05 15:13:22.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-switch', N'change', N'change', N'当绑定值变化时触发的事件', N'1903486709602062336', N'2025-11-05 15:15:15.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-button', N'click', N'click', N'点击触发', N'1903486709602062336', N'2025-11-05 16:03:12.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[EventInfo] ([ControlCode], [EventCode], [EventName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-input-number', N'change', N'change', N'值变动', N'0', N'2025-11-05 14:37:11.000', NULL, NULL)
 GO
 
 
@@ -366,10 +244,7 @@ GO
 -- ----------------------------
 -- Records of FormCounting
 -- ----------------------------
-INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2511  ', N'1', N'0', N'0', N'0', N'0', N'0', N'0', N'1900-01-01 00:00:00.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2512  ', N'3', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2025-12-13 11:53:02.000', NULL, NULL)
+INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2511  ', N'0', N'0', N'0', N'0', N'0', N'0', N'0', N'1900-01-01 00:00:00.000', NULL, NULL)
 GO
 
 
@@ -626,18 +501,6 @@ GO
 -- ----------------------------
 -- Records of FormInfo
 -- ----------------------------
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [FormOpenTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1992924616259145728', N'1987217256446300160', N'LVR-25110001', N'', N'-1', N'1', N'2025-11-24 19:53:49.000', N'1903486709602062336', N'2025-11-24 19:53:49.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [FormOpenTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1999688990411853824', N'1987217256446300160', N'LVR-25120001', N'', N'1', N'1', N'2025-12-13 11:53:02.000', N'1903486709602062336', N'2025-12-13 11:53:02.000', N'1903486709602062336', N'2025-12-13 11:53:19.000')
-GO
-
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [FormOpenTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1999693429336051712', N'1987217256446300160', N'LVR-25120002', N'', N'-1', N'1', N'2025-12-13 12:10:40.000', N'1903486709602062336', N'2025-12-13 12:10:40.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [FormOpenTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1999694871455207424', N'1987217256446300160', N'LVR-25120003', N'', N'-1', N'1', N'2025-12-13 12:16:24.000', N'1903486709602062336', N'2025-12-13 12:16:24.000', NULL, NULL)
-GO
-
 
 -- ----------------------------
 -- Table structure for FormStep
@@ -652,7 +515,6 @@ CREATE TABLE [Form].[FormStep] (
   [StepNameCn] nvarchar(20) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [StepNameEn] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [Assignment] int  NOT NULL,
-  [SortOrder] int  NOT NULL,
   [Description] nvarchar(100) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime DEFAULT getdate() NOT NULL,
@@ -700,13 +562,6 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'排序',
-'SCHEMA', N'Form',
-'TABLE', N'FormStep',
-'COLUMN', N'SortOrder'
-GO
-
-EXEC sp_addextendedproperty
 'MS_Description', N'步骤描述',
 'SCHEMA', N'Form',
 'TABLE', N'FormStep',
@@ -741,25 +596,28 @@ EXEC sp_addextendedproperty
 'COLUMN', N'ModifiedDate'
 GO
 
+EXEC sp_addextendedproperty
+'MS_Description', N'表单签核步骤表',
+'SCHEMA', N'Form',
+'TABLE', N'FormStep'
+GO
+
 
 -- ----------------------------
 -- Records of FormStep
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for FormStepStructure
+-- Table structure for FormStepApproverRule
 -- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormStepStructure]') AND type IN ('U'))
-	DROP TABLE [Form].[FormStepStructure]
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormStepApproverRule]') AND type IN ('U'))
+	DROP TABLE [Form].[FormStepApproverRule]
 GO
 
-CREATE TABLE [Form].[FormStepStructure] (
-  [StepStructureId] bigint  NOT NULL,
-  [StepId] bigint  NOT NULL,
-  [StructureDeptLeaveIds] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [StructurePositionIds] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [StructureLaborIds] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [SortOrder] int  NOT NULL,
+CREATE TABLE [Form].[FormStepApproverRule] (
+  [StepApproverRuleId] bigint  NOT NULL,
+  [Mark] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [LogicalExplanation] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime DEFAULT getdate() NOT NULL,
   [ModifiedBy] bigint  NULL,
@@ -767,82 +625,342 @@ CREATE TABLE [Form].[FormStepStructure] (
 )
 GO
 
-ALTER TABLE [Form].[FormStepStructure] SET (LOCK_ESCALATION = TABLE)
+ALTER TABLE [Form].[FormStepApproverRule] SET (LOCK_ESCALATION = TABLE)
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'签核步骤组织结构Id',
+'MS_Description', N'签核步骤自定义Id',
 'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
-'COLUMN', N'StepStructureId'
+'TABLE', N'FormStepApproverRule',
+'COLUMN', N'StepApproverRuleId'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'步骤Id',
+'MS_Description', N'代码标记',
 'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
-'COLUMN', N'StepId'
+'TABLE', N'FormStepApproverRule',
+'COLUMN', N'Mark'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'部门级别Ids',
+'MS_Description', N'逻辑说明',
 'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
-'COLUMN', N'StructureDeptLeaveIds'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'员工职级Ids',
-'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
-'COLUMN', N'StructurePositionIds'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'员工职业Ids',
-'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
-'COLUMN', N'StructureLaborIds'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'排序',
-'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
-'COLUMN', N'SortOrder'
+'TABLE', N'FormStepApproverRule',
+'COLUMN', N'LogicalExplanation'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'创建人',
 'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
+'TABLE', N'FormStepApproverRule',
 'COLUMN', N'CreatedBy'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'创建时间',
 'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
+'TABLE', N'FormStepApproverRule',
 'COLUMN', N'CreatedDate'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'修改人',
 'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
+'TABLE', N'FormStepApproverRule',
 'COLUMN', N'ModifiedBy'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'修改时间',
 'SCHEMA', N'Form',
-'TABLE', N'FormStepStructure',
+'TABLE', N'FormStepApproverRule',
 'COLUMN', N'ModifiedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单签核步骤人员来源表-依照自定义',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepApproverRule'
 GO
 
 
 -- ----------------------------
--- Records of FormStepStructure
+-- Records of FormStepApproverRule
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for FormStepDeptCriteria
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormStepDeptCriteria]') AND type IN ('U'))
+	DROP TABLE [Form].[FormStepDeptCriteria]
+GO
+
+CREATE TABLE [Form].[FormStepDeptCriteria] (
+  [StepDeptUserId] int  NOT NULL,
+  [StepId] bigint  NOT NULL,
+  [DeptIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [PositionIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [LaborIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime  NULL
+)
+GO
+
+ALTER TABLE [Form].[FormStepDeptCriteria] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'签核步骤指定部门员工级别Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria',
+'COLUMN', N'StepDeptUserId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria',
+'COLUMN', N'StepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'部门Ids',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria',
+'COLUMN', N'DeptIds'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工职级Ids',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria',
+'COLUMN', N'PositionIds'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工职业Ids',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria',
+'COLUMN', N'LaborIds'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria',
+'COLUMN', N'ModifiedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单签核步骤人员来源表-依照指定部门员工职级职业',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepDeptCriteria'
+GO
+
+
+-- ----------------------------
+-- Records of FormStepDeptCriteria
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for FormStepOrg
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormStepOrg]') AND type IN ('U'))
+	DROP TABLE [Form].[FormStepOrg]
+GO
+
+CREATE TABLE [Form].[FormStepOrg] (
+  [StepOrgId] bigint  NOT NULL,
+  [StepId] bigint  NOT NULL,
+  [DeptLeaveIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [PositionIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [LaborIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime  NULL
+)
+GO
+
+ALTER TABLE [Form].[FormStepOrg] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'签核步骤依照组织架构Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg',
+'COLUMN', N'StepOrgId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg',
+'COLUMN', N'StepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'部门级别Ids',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg',
+'COLUMN', N'DeptLeaveIds'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工职级Ids',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg',
+'COLUMN', N'PositionIds'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工职业Ids',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg',
+'COLUMN', N'LaborIds'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg',
+'COLUMN', N'ModifiedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单签核步骤人员来源表-依照组织架构',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepOrg'
+GO
+
+
+-- ----------------------------
+-- Records of FormStepOrg
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for FormStepUser
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormStepUser]') AND type IN ('U'))
+	DROP TABLE [Form].[FormStepUser]
+GO
+
+CREATE TABLE [Form].[FormStepUser] (
+  [StepUserId] bigint  NOT NULL,
+  [StepId] bigint  NOT NULL,
+  [UserIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime  NULL
+)
+GO
+
+ALTER TABLE [Form].[FormStepUser] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'签核步骤指定员工Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepUser',
+'COLUMN', N'StepUserId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepUser',
+'COLUMN', N'StepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工Ids',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepUser',
+'COLUMN', N'UserIds'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepUser',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepUser',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepUser',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepUser',
+'COLUMN', N'ModifiedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单签核步骤人员来源表-依照指定员工',
+'SCHEMA', N'Form',
+'TABLE', N'FormStepUser'
+GO
+
+
+-- ----------------------------
+-- Records of FormStepUser
 -- ----------------------------
 
 -- ----------------------------
@@ -1145,18 +1263,6 @@ GO
 -- ----------------------------
 -- Records of LeaveForm
 -- ----------------------------
-INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantUserNo], [ApplicantUserName], [ApplicantDeptId], [ApplicantDeptName], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [LeaveHandoverUserName], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1992924616259145728', N'LVR-25110001', N'2025-11-24 19:53:49.0000000', N'E347473', N'xiaoran.pei', N'1929535196076576906', N'Software Development Team', N'-1', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2025-11-24 19:53:49.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantUserNo], [ApplicantUserName], [ApplicantDeptId], [ApplicantDeptName], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [LeaveHandoverUserName], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1999688990411853824', N'LVR-25120001', N'2025-12-13 11:53:02.0000000', N'E215396', N'Tsai', N'1929535196076576800', N'Chairman''s Office', N'1', N'1', N'2025-12-13 00:00:00.0000000', N'2026-01-14 00:00:00.0000000', N'768.00', N'1', N'1903486709602062336', N'2025-12-13 11:53:02.000', N'1903486709602062336', N'2025-12-13 11:53:19.000')
-GO
-
-INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantUserNo], [ApplicantUserName], [ApplicantDeptId], [ApplicantDeptName], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [LeaveHandoverUserName], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1999693429336051712', N'LVR-25120002', N'2025-12-13 12:10:40.0000000', N'E215396', N'蔡嘉祥', N'1929535196076576768', N'董事长室', N'-1', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2025-12-13 12:10:40.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantUserNo], [ApplicantUserName], [ApplicantDeptId], [ApplicantDeptName], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [LeaveHandoverUserName], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1999694871455207424', N'LVR-25120003', N'2025-12-13 12:16:24.0000000', N'E215396', N'Tsai', N'1929535196076576768', N'Chairman''s Office', N'-1', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2025-12-13 12:16:24.000', NULL, NULL)
-GO
-
 
 -- ----------------------------
 -- Primary Key structure for table ControlInfo
@@ -1195,9 +1301,36 @@ GO
 
 
 -- ----------------------------
--- Primary Key structure for table FormStepStructure
+-- Primary Key structure for table FormStepApproverRule
 -- ----------------------------
-ALTER TABLE [Form].[FormStepStructure] ADD CONSTRAINT [PK__ss__B8A87239617A131F] PRIMARY KEY CLUSTERED ([StepStructureId])
+ALTER TABLE [Form].[FormStepApproverRule] ADD CONSTRAINT [PK__FormStep__0A0392F2D13B9AA7] PRIMARY KEY CLUSTERED ([StepApproverRuleId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table FormStepDeptCriteria
+-- ----------------------------
+ALTER TABLE [Form].[FormStepDeptCriteria] ADD CONSTRAINT [PK__FormStep__0E5287F3D58490B5] PRIMARY KEY CLUSTERED ([StepDeptUserId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table FormStepOrg
+-- ----------------------------
+ALTER TABLE [Form].[FormStepOrg] ADD CONSTRAINT [PK__ss__B8A87239617A131F] PRIMARY KEY CLUSTERED ([StepOrgId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table FormStepUser
+-- ----------------------------
+ALTER TABLE [Form].[FormStepUser] ADD CONSTRAINT [PK__FormStep__8AB6E1C4820E75E2] PRIMARY KEY CLUSTERED ([StepUserId])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
 ON [PRIMARY]
 GO

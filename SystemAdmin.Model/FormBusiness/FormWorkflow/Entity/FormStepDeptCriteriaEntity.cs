@@ -5,6 +5,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
     /// <summary>
     /// 签核步骤指定部门人员级别来源表
     /// </summary>
+    [SugarTable("[Form].[FormStepDeptCriteria]")]
     public class FormStepDeptCriteriaEntity
     {
         /// <summary>
@@ -32,11 +33,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// 职业Ids
         /// </summary>
         public string LaborIds { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 排序
-        /// </summary>
-        public int SortOrder { get; set; }
 
         /// <summary>
         /// 创建人

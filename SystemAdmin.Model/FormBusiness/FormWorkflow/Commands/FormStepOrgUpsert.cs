@@ -3,7 +3,7 @@
     public class FormStepOrgUpsert
     {
         /// <summary>
-        /// 签核步骤组织结构Id
+        /// 签核步骤组织架构Id
         /// </summary>
         public string StepOrgId { get; set; } = string.Empty;
 

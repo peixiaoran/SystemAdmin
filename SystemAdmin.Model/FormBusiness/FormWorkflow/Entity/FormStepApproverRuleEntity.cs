@@ -3,36 +3,25 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 签核步骤组织架构来源表
+    /// 签核步骤自定义来源表
     /// </summary>
-    [SugarTable("[Form].[FormStepOrg]")]
-    public class FormStepOrgEntity
+    public class FormStepApproverRuleEntity
     {
         /// <summary>
-        /// 签核步骤组织架构Id
+        /// 签核步骤自定义Id
         /// </summary>
         [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
-        public long StepOrgId { get; set; }
+        public long StepApproverRule { get; set; }
 
         /// <summary>
-        /// 步骤Id
+        /// 代码标记
         /// </summary>
-        public long StepId { get; set; }
+        public long Mark { get; set; }
 
         /// <summary>
-        /// 部门级别Ids
+        /// 逻辑说明
         /// </summary>
-        public string DeptLeaveIds { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 职级Ids
-        /// </summary>
-        public string PositionIds { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 职业Ids
-        /// </summary>
-        public string LaborIds { get; set; } = string.Empty;
+        public string LogicalExplanation { get; set; } = string.Empty;
 
         /// <summary>
         /// 创建人

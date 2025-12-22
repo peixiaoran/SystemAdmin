@@ -20,7 +20,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public string StepName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 审批人选取方式（依组织结构、指定部门人员级别、指定人员、自定义）
+        /// 审批人选取方式（依组织架构、指定部门人员级别、指定人员、自定义）
         /// </summary>
         public int Assignment { get; set; }
 
@@ -28,11 +28,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// 审批人选取方式名称
         /// </summary>
         public string AssignmentName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 审批顺序
-        /// </summary>
-        public int SortOrder { get; set; }
 
         /// <summary>
         /// 步骤描述

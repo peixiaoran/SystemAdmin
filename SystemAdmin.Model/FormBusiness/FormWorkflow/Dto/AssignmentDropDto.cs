@@ -12,11 +12,11 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// 审批人选取方式编码
         /// </summary>
         [JsonConverter(typeof(IntToStringConverter))]
-        public int ApproverAssignmentCode { get; set; }
+        public int AssignmentCode { get; set; }
 
         /// <summary>
         /// 审批人选取方式名称
         /// </summary>
-        public string ApproverAssignmentName { get; set; } = string.Empty;
+        public string AssignmentName { get; set; } = string.Empty;
     }
 }

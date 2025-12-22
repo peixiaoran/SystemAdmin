@@ -45,7 +45,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     StepNameCn = formStepUpsert.StepNameCn,
                     StepNameEn = formStepUpsert.StepNameEn,
                     Assignment = formStepUpsert.Assignment,
-                    SortOrder = formStepUpsert.SortOrder,
                     Description = formStepUpsert.Description,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
@@ -82,7 +81,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     StepNameCn = formStepUpsert.StepNameCn,
                     StepNameEn = formStepUpsert.StepNameEn,
                     Assignment = formStepUpsert.Assignment,
-                    SortOrder = formStepUpsert.SortOrder,
                     Description = formStepUpsert.Description,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
@@ -254,13 +252,31 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var LaborDrop = await _formStepRepository.GetLaborDropDown();
-                return Result<List<UserLaborDropDto>>.Ok(LaborDrop, "");
+                var laborDrop = await _formStepRepository.GetLaborDropDown();
+                return Result<List<UserLaborDropDto>>.Ok(laborDrop, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<List<UserLaborDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 职业下拉框
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ResultPaged<StepAssignUserInfoDto>> GetLaborDropDown(GetStepAssignUserInfoPage getUserInfoPage)
+        {
+            try
+            {
+                var userPage = await _formStepRepository.GetUserInfoPage(getUserInfoPage);
+                return userPage;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return ResultPaged<StepAssignUserInfoDto>.Failure(500, ex.Message.ToString());
             }
         }
     }

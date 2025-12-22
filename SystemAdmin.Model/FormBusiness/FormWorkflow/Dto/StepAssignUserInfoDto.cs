@@ -1,12 +1,9 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
+namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
-    /// <summary>
-    /// 员工分页Dto
-    /// </summary>
-    public class UserAgentDto
+    public class StepAssignUserInfoDto
     {
         /// <summary>
         /// 员工Id
@@ -54,16 +51,5 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         /// 是否签核描述
         /// </summary>
         public string IsApprovalName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否代理
-        /// </summary>
-        [JsonConverter(typeof(IntToStringConverter))]
-        public int IsAgent { get; set; }
-
-        /// <summary>
-        /// 是否代理其他员工描述
-        /// </summary>
-        public string IsAgentName { get; set; } = string.Empty;
     }
 }

@@ -4,12 +4,12 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 签核步骤组织结构来源Dto
+    /// 签核步骤组织架构来源Dto
     /// </summary>
     public class FormStepOrgDto
     {
         /// <summary>
-        /// 签核步骤组织结构Id
+        /// 签核步骤组织架构Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
         public long StepOrgId { get; set; }
@@ -23,21 +23,16 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// <summary>
         /// 部门来源Ids
         /// </summary>
-        public string OrgDeptLeaveIds { get; set; } = string.Empty;
+        public string DeptLeaveIds { get; set; } = string.Empty;
 
         /// <summary>
         /// 职级来源Ids
         /// </summary>
-        public string OrgPositionIds { get; set; } = string.Empty;
+        public string PositionIds { get; set; } = string.Empty;
 
         /// <summary>
         /// 职业来源Ids
         /// </summary>
-        public string OrgLaborIds { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 排序
-        /// </summary>
-        public int SortOrder { get; set; }
+        public string LaborIds { get; set; } = string.Empty;
     }
 }

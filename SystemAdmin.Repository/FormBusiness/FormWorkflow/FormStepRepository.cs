@@ -8,6 +8,7 @@ using SystemAdmin.Model.FormBusiness.FormWorkflow.Queries;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto;
 
 namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
 {
@@ -62,7 +63,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                         .With(SqlWith.NoLock)
                                         .InnerJoin<DictionaryInfoEntity>((stepinfo, assigndic) => assigndic.DicType == "ApproverAssignment" && stepinfo.Assignment == assigndic.DicCode)
                                         .Where((stepinfo, assigndic) => stepinfo.FormTypeId == long.Parse(getFormStepPage.FormTypeId))
-                                        .OrderBy((stepinfo, assigndic) => stepinfo.SortOrder)
+                                        .OrderBy((stepinfo, assigndic) => stepinfo.CreatedDate)
                                         .Select((stepinfo, assigndic) => new FormStepDto()
                                         {
                                             StepId = stepinfo.StepId,
@@ -73,7 +74,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                             AssignmentName = _lang.Locale == "zh-CN"
                                                        ? assigndic.DicNameCn
                                                        : assigndic.DicNameEn,
-                                            SortOrder = stepinfo.SortOrder,
                                             Description = stepinfo.Description,
                                         }).ToPageListAsync(getFormStepPage.PageIndex, getFormStepPage.PageSize, totalCount);
             return ResultPaged<FormStepDto>.Ok(formStepPage.Adapt<List<FormStepDto>>(), totalCount);
@@ -88,7 +88,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         {
             var formStepEntity = await _db.Queryable<FormStepEntity>()
                                           .Where(step => step.FormTypeId == long.Parse(getFormStepEntity.StepId))
-                                          .OrderBy(step => step.SortOrder)
+                                          .OrderBy(step => step.CreatedDate)
                                           .ToListAsync();
             return formStepEntity.Adapt<FormStepDto>();
         }
@@ -140,8 +140,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             .Where(dic => dic.DicType == "ApproverAssignment")
                             .Select(dic => new AssignmentDropDto
                             {
-                                ApproverAssignmentCode = dic.DicCode,
-                                ApproverAssignmentName = _lang.Locale == "zh-CN"
+                                AssignmentCode = dic.DicCode,
+                                AssignmentName = _lang.Locale == "zh-CN"
                                                          ? dic.DicNameCn
                                                          : dic.DicNameEn,
                             }).ToListAsync();
@@ -219,6 +219,81 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                             ? userlabor.LaborNameCn
                                             : userlabor.LaborNameEn
                             }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 查询选取员工分页
+        /// </summary>
+        /// <param name="getUserInfoPag"></param>
+        /// <returns></returns>
+        public async Task<ResultPaged<StepAssignUserInfoDto>> GetUserInfoPage(GetStepAssignUserInfoPage getUserInfoPag)
+        {
+            RefAsync<int> totalCount = 0;
+            var query = _db.Queryable<UserInfoEntity>()
+                           .With(SqlWith.NoLock)
+                           .InnerJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
+                           .InnerJoin<UserPositionEntity>((user, dept, userpos) => user.PositionId == userpos.PositionId)
+                           .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
+                           .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) =>
+                            user.Nationality == nation.NationId)
+                           .InnerJoin<DictionaryInfoEntity>((user, dept, userpos, userlabor, nation, approvaldic) =>
+                            approvaldic.DicType == "ApprovalState" && user.IsApproval == approvaldic.DicCode)
+                           .InnerJoin<DictionaryInfoEntity>((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                            agentdic.DicType == "IsAgent" && user.IsAgent == agentdic.DicCode)
+                           .Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) => user.IsEmployed == 1 && user.IsFreeze == 0);
+
+            // 员工工号
+            if (!string.IsNullOrEmpty(getUserInfoPag.UserNo))
+            {
+                query = query.Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                    user.UserNo.Contains(getUserInfoPag.UserNo));
+            }
+            // 员工姓名
+            if (!string.IsNullOrEmpty(getUserInfoPag.UserName))
+            {
+                query = query.Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                    user.UserNameCn.Contains(getUserInfoPag.UserName) ||
+                    user.UserNameEn.Contains(getUserInfoPag.UserName));
+            }
+            // 部门Id（仅在工号与姓名都为空时）
+            if (!string.IsNullOrEmpty(getUserInfoPag.DepartmentId)
+                && string.IsNullOrEmpty(getUserInfoPag.UserNo)
+                && string.IsNullOrEmpty(getUserInfoPag.UserName))
+            {
+                query = query.Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                    user.DepartmentId == long.Parse(getUserInfoPag.DepartmentId));
+            }
+
+            var userPage = await query.OrderBy((user, dept, userpos, userlabor, nation, approvaldic, agentdic) => new { userpos.PositionOrderBy, user.HireDate })
+            .Select((user, dept, userpos, userlabor, nation, approvaldic, agentdic) => new UserAgentDto
+            {
+                UserId = user.UserId,
+                UserNo = user.UserNo,
+                UserName = _lang.Locale == "zh-CN"
+                           ? user.UserNameCn
+                           : user.UserNameEn,
+                DepartmentName = _lang.Locale == "zh-CN"
+                           ? dept.DepartmentNameCn
+                           : dept.DepartmentNameEn,
+                PositionName = _lang.Locale == "zh-CN"
+                           ? userpos.PositionNameCn
+                           : userpos.PositionNameEn,
+                LaborName = _lang.Locale == "zh-CN"
+                           ? userlabor.LaborNameCn
+                           : userlabor.LaborNameEn,
+                NationalityName = _lang.Locale == "zh-CN"
+                           ? nation.NationNameCn
+                           : nation.NationNameEn,
+                IsAgent = user.IsAgent,
+                IsAgentName = _lang.Locale == "zh-CN"
+                           ? agentdic.DicNameCn
+                           : agentdic.DicNameEn,
+                IsApproval = user.IsApproval,
+                IsApprovalName = _lang.Locale == "zh-CN"
+                           ? approvaldic.DicNameCn
+                           : approvaldic.DicNameEn
+            }).ToPageListAsync(getUserInfoPag.PageIndex, getUserInfoPag.PageSize, totalCount);
+            return ResultPaged<StepAssignUserInfoDto>.Ok(userPage.Adapt<List<UserAgentDto>>(), totalCount, "");
         }
     }
 }

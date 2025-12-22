@@ -3,16 +3,16 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 签核步骤组织架构来源表
+    /// 签核步骤指定员工来源表
     /// </summary>
-    [SugarTable("[Form].[FormStepOrg]")]
-    public class FormStepOrgEntity
+    [SugarTable("[Form].[FormStepUser]")]
+    public class FormStepUserEntity
     {
         /// <summary>
-        /// 签核步骤组织架构Id
+        /// 签核步骤指定员工Id
         /// </summary>
         [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
-        public long StepOrgId { get; set; }
+        public long StepUserId { get; set; }
 
         /// <summary>
         /// 步骤Id
@@ -20,19 +20,9 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long StepId { get; set; }
 
         /// <summary>
-        /// 部门级别Ids
+        /// 用户Ids
         /// </summary>
-        public string DeptLeaveIds { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 职级Ids
-        /// </summary>
-        public string PositionIds { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 职业Ids
-        /// </summary>
-        public string LaborIds { get; set; } = string.Empty;
+        public string UserIds { get; set; } = string.Empty;
 
         /// <summary>
         /// 创建人

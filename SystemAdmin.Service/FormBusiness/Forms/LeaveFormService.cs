@@ -8,6 +8,7 @@ using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
 using SystemAdmin.Repository.FormBusiness.FormAuth;
 using SystemAdmin.Repository.FormBusiness.Forms;
+using SystemAdmin.Repository.FormBusiness.WorkflowLifecycle;
 using SystemAdmin.Service.FormBusiness.FormBasicInfo;
 
 namespace SystemAdmin.Service.FormBusiness.Forms
@@ -18,18 +19,18 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly ILogger<ControlInfoService> _logger;
         private readonly SqlSugarScope _db;
         private readonly FormPerVerifyRepository _formPerVerifyRepository;
-        private readonly FormGenerateRepository _formGenerateRepository;
+        private readonly WorkflowStartOperator _workflowStart;
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.Forms.LeaveForm";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormPerVerifyRepository formPerVerifyRepository, FormGenerateRepository formGenerateRepository, LeaveFormRepository leaveFormRepository, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormPerVerifyRepository formPerVerifyRepository, WorkflowStartOperator workflowStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
             _formPerVerifyRepository = formPerVerifyRepository;
-            _formGenerateRepository = formGenerateRepository;
+            _workflowStart = workflowStart;
             _leaveFormRepository = leaveFormRepository;
             _localization = localization;
         }
@@ -51,7 +52,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                 await _db.BeginTranAsync();
                 // 初始化表单
-                var initFormInfo = await _formGenerateRepository.InitFormInfo(_loginuser.UserId, long.Parse(formTypeId));
+                var initFormInfo = await _workflowStart.InitFormInfo(_loginuser.UserId, long.Parse(formTypeId));
                 // 初始化请假表
                 var userInfo = await _leaveFormRepository.GetUserInfo(_loginuser.UserId);
                 LeaveFormEntity initleaveFormEntity = new LeaveFormEntity()
@@ -103,8 +104,8 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                 await _db.BeginTranAsync();
                 // 保存主表单
-                var saveFormInfo = await _formGenerateRepository.SaveFormInfo(long.Parse(leaveFormSave.FormId), leaveFormSave.Description, 1, leaveFormSave.ImportanceCode, _loginuser.UserId);
-                LeaveFormEntity SaveLeaveFormEntity = new LeaveFormEntity()
+                var saveFormInfo = await _workflowStart.SaveFormInfo(long.Parse(leaveFormSave.FormId), leaveFormSave.Description, 1, leaveFormSave.ImportanceCode, _loginuser.UserId);
+                LeaveFormEntity saveLeaveFormEntity = new LeaveFormEntity()
                 {
                     FormId = long.Parse(leaveFormSave.FormId),
                     FormNo = leaveFormSave.FormNo,
@@ -123,10 +124,10 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
                 // 保存请假表单
-                int SaveLeaveFormCount = await _leaveFormRepository.SaveLeaveForm(SaveLeaveFormEntity);
+                int saveLeaveFormCount = await _leaveFormRepository.SaveLeaveForm(saveLeaveFormEntity);
                 await _db.CommitTranAsync();
-                return saveFormInfo >= 1 && SaveLeaveFormCount >= 1
-                       ? Result<int>.Ok(SaveLeaveFormCount, _localization.ReturnMsg($"{_this}SaveSuccess"))
+                return saveFormInfo >= 1 && saveLeaveFormCount >= 1
+                       ? Result<int>.Ok(saveLeaveFormCount, _localization.ReturnMsg($"{_this}SaveSuccess"))
                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}SaveFailed"));
             }
             catch (Exception ex)
@@ -166,14 +167,13 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             return Result<List<LeaveTypeDropDto>>.Ok(leaveTypeDrop);
         }
 
-
         /// <summary>
         /// 重要程度下拉框
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<ImportanceDropDto>>> GetImportanceDropDown()
         {
-            var leaveTypeDrop = await _formGenerateRepository.GetImportanceDropDown();
+            var leaveTypeDrop = await _workflowStart.GetImportanceDropDown();
             return Result<List<ImportanceDropDto>>.Ok(leaveTypeDrop);
         }
     }
