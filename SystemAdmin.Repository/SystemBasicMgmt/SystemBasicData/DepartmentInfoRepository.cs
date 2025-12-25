@@ -115,7 +115,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                           Landline = dept.Landline,
                                           Email = dept.Email,
                                           Address = dept.Address,
-                                          IsEnabled = dept.IsEnabled,
                                       }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
             return deptTree;
         }
@@ -137,7 +136,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
-                                Disabled = dept.IsEnabled == 0
                             }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
         }
 

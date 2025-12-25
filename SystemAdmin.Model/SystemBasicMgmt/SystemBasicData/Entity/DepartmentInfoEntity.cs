@@ -65,11 +65,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         public string Address { get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否启用（1：启用，0：停用）
-        /// </summary>
-        public int IsEnabled { get; set; }
-
-        /// <summary>
         /// 创建人Id
         /// </summary>
         public long CreatedBy { get; set; }

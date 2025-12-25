@@ -105,7 +105,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 查询审批步骤分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<FormStepDto>> GetFormStepPage(GetFormStepPage getFormStepPage)
+        public async Task<ResultPaged<FormStepPageDto>> GetFormStepPage(GetFormStepPage getFormStepPage)
         {
             try
             {
@@ -114,7 +114,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<FormStepDto>.Failure(500, ex.Message);
+                return ResultPaged<FormStepPageDto>.Failure(500, ex.Message);
             }
         }
 
@@ -122,17 +122,21 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 查询审批步骤实体
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<FormStepDto>> GetFormStepEntity(GetFormStepEntity getFormStepEntity)
+        public async Task<Result<FormStepEntityDto>> GetFormStepEntity(GetFormStepEntity getFormStepEntity)
         {
             try
             {
-                var formStepEntity = await _formStepRepository.GetFormStepEntity(getFormStepEntity);
-                return Result<FormStepDto>.Ok(formStepEntity);
+                var formStepEntity = await _formStepRepository.GetFormStepEntity(long.Parse(getFormStepEntity.StepId));
+                formStepEntity.formStepOrgEntity = await _formStepRepository.GetFormStepOrgEntity(long.Parse(getFormStepEntity.StepId));
+                formStepEntity.formStepDeptCriteriaEntity = await _formStepRepository.GetStepDeptCriteriaEntity(long.Parse(getFormStepEntity.StepId));
+                formStepEntity.formStepUserEntity = await _formStepRepository.GetStepUserEntity(long.Parse(getFormStepEntity.StepId));
+                formStepEntity.formStepApproverRuleEntity = await _formStepRepository.GetStepApproverRuleEntity(long.Parse(getFormStepEntity.StepId));
+                return Result<FormStepEntityDto>.Ok(formStepEntity);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<FormStepDto>.Failure(500, ex.Message);
+                return Result<FormStepEntityDto>.Failure(500, ex.Message);
             }
         }
 

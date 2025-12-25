@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
@@ -6,7 +7,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
     /// <summary>
     /// 表单审批步骤Dto
     /// </summary>
-    public class FormStepDto
+    public class FormStepPageDto
     {
         /// <summary>
         /// 步骤Id
@@ -20,7 +21,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public string StepName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 审批人选取方式（依组织架构、指定部门人员级别、指定人员、自定义）
+        /// 审批人选取方式（依组织架构、指定部门员工级别、指定员工、自定义）
         /// </summary>
         public int Assignment { get; set; }
 

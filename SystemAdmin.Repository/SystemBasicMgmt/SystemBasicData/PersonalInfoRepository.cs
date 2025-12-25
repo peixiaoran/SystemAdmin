@@ -159,7 +159,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
-                                Disabled = dept.IsEnabled == 0
                             }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
         }
 
@@ -194,7 +193,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                 RoleName = _lang.Locale == "zh-CN"
                                            ? role.RoleNameCn
                                            : role.RoleNameEn,
-                                Disabled = role.IsEnabled == 0
                             }).ToListAsync();
         }
 

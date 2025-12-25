@@ -3,13 +3,13 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 签核步骤组织架构来源表
+    /// 审批步骤组织架构来源表
     /// </summary>
     [SugarTable("[Form].[FormStepOrg]")]
     public class FormStepOrgEntity
     {
         /// <summary>
-        /// 签核步骤组织架构Id
+        /// 审批步骤组织架构Id
         /// </summary>
         [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
         public long StepOrgId { get; set; }

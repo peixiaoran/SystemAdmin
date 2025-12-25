@@ -56,7 +56,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="getFormStepPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<FormStepDto>> GetFormStepPage(GetFormStepPage getFormStepPage)
+        public async Task<ResultPaged<FormStepPageDto>> GetFormStepPage(GetFormStepPage getFormStepPage)
         {
             RefAsync<int> totalCount = 0;
             var formStepPage = await _db.Queryable<FormStepEntity>()
@@ -64,7 +64,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                         .InnerJoin<DictionaryInfoEntity>((stepinfo, assigndic) => assigndic.DicType == "ApproverAssignment" && stepinfo.Assignment == assigndic.DicCode)
                                         .Where((stepinfo, assigndic) => stepinfo.FormTypeId == long.Parse(getFormStepPage.FormTypeId))
                                         .OrderBy((stepinfo, assigndic) => stepinfo.CreatedDate)
-                                        .Select((stepinfo, assigndic) => new FormStepDto()
+                                        .Select((stepinfo, assigndic) => new FormStepPageDto()
                                         {
                                             StepId = stepinfo.StepId,
                                             StepName = _lang.Locale == "zh-CN"
@@ -76,7 +76,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                                        : assigndic.DicNameEn,
                                             Description = stepinfo.Description,
                                         }).ToPageListAsync(getFormStepPage.PageIndex, getFormStepPage.PageSize, totalCount);
-            return ResultPaged<FormStepDto>.Ok(formStepPage.Adapt<List<FormStepDto>>(), totalCount);
+            return ResultPaged<FormStepPageDto>.Ok(formStepPage.Adapt<List<FormStepPageDto>>(), totalCount);
         }
 
         /// <summary>
@@ -84,13 +84,65 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="getFormStepEntity"></param>
         /// <returns></returns>
-        public async Task<FormStepDto> GetFormStepEntity(GetFormStepEntity getFormStepEntity)
+        public async Task<FormStepEntityDto> GetFormStepEntity(long stepId)
         {
             var formStepEntity = await _db.Queryable<FormStepEntity>()
-                                          .Where(step => step.FormTypeId == long.Parse(getFormStepEntity.StepId))
+                                          .Where(step => step.FormTypeId == stepId)
                                           .OrderBy(step => step.CreatedDate)
                                           .ToListAsync();
-            return formStepEntity.Adapt<FormStepDto>();
+            return formStepEntity.Adapt<FormStepEntityDto>();
+        }
+
+        /// <summary>
+        /// 查询签核步骤组织架构来源实体
+        /// </summary>
+        /// <param name="stepId"></param>
+        /// <returns></returns>
+        public async Task<FormStepOrgEntity> GetFormStepOrgEntity(long stepId)
+        {
+            var stepOrgEntity = await _db.Queryable<FormStepOrgEntity>()
+                                         .Where(steporg => steporg.StepId == stepId)
+                                         .ToListAsync();
+            return stepOrgEntity.Adapt<FormStepOrgEntity>();
+        }
+
+        /// <summary>
+        /// 查询签核步骤指定部门员工级别来源实体
+        /// </summary>
+        /// <param name="stepId"></param>
+        /// <returns></returns>
+        public async Task<FormStepDeptCriteriaEntity> GetStepDeptCriteriaEntity(long stepId)
+        {
+            var stepDeptCriteriaEntity = await _db.Queryable<FormStepDeptCriteriaEntity>()
+                                                  .Where(stepdeptcri => stepdeptcri.StepId == stepId)
+                                                  .ToListAsync();
+            return stepDeptCriteriaEntity.Adapt<FormStepDeptCriteriaEntity>();
+        }
+
+        /// <summary>
+        /// 查询签核步骤指定员工来源表实体
+        /// </summary>
+        /// <param name="stepId"></param>
+        /// <returns></returns>
+        public async Task<FormStepUserEntity> GetStepUserEntity(long stepId)
+        {
+            var stepUserEntity = await _db.Queryable<FormStepUserEntity>()
+                                          .Where(stepuser => stepuser.StepId == stepId)
+                                          .ToListAsync();
+            return stepUserEntity.Adapt<FormStepUserEntity>();
+        }
+
+        /// <summary>
+        /// 查询签核步骤指定员工来源表实体
+        /// </summary>
+        /// <param name="stepId"></param>
+        /// <returns></returns>
+        public async Task<FormStepApproverRuleEntity> GetStepApproverRuleEntity(long stepId)
+        {
+            var stepApproverRuleEntity = await _db.Queryable<FormStepApproverRuleEntity>()
+                                                  .Where(stepapprule => stepapprule.StepId == stepId)
+                                                  .ToListAsync();
+            return stepApproverRuleEntity.Adapt<FormStepApproverRuleEntity>();
         }
 
         /// <summary>
@@ -164,7 +216,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
-                                Disabled = dept.IsEnabled == 0
                             }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
         }
 
@@ -293,7 +344,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                            ? approvaldic.DicNameCn
                            : approvaldic.DicNameEn
             }).ToPageListAsync(getUserInfoPag.PageIndex, getUserInfoPag.PageSize, totalCount);
-            return ResultPaged<StepAssignUserInfoDto>.Ok(userPage.Adapt<List<UserAgentDto>>(), totalCount, "");
+            return ResultPaged<StepAssignUserInfoDto>.Ok(userPage.Adapt<List<StepAssignUserInfoDto>>(), totalCount, "");
         }
     }
 }

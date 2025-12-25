@@ -30,7 +30,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
                             .With(SqlWith.NoLock)
                             .LeftJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
                             .LeftJoin<RoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
-                            .Where((user, userrole, role) => user.LoginNo == sysLogin.LoginNo && user.IsEmployed == 1 && role.IsEnabled == 1)
+                            .Where((user, userrole, role) => user.LoginNo == sysLogin.LoginNo && user.IsEmployed == 1)
                             .FirstAsync();
         }
 

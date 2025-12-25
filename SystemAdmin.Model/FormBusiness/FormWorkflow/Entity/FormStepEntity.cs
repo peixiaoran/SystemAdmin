@@ -3,7 +3,7 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 表单审批步骤实体类
+    /// 审批步骤实体类
     /// </summary>
     [SugarTable("[Form].[FormStep]")]
     public class FormStepEntity
@@ -30,7 +30,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public string StepNameEn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 审批人选取方式（依组织架构、指定部门人员级别、指定人员、自定义）
+        /// 审批人选取方式（依组织架构、指定部门员工级别、指定员工、自定义）
         /// </summary>
         public int Assignment { get; set; }
 

@@ -40,7 +40,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单流程步骤] 查询表单步骤分页")]
-        public async Task<ResultPaged<FormStepDto>> GetFormStepPage(GetFormStepPage getFormStepPage)
+        public async Task<ResultPaged<FormStepPageDto>> GetFormStepPage(GetFormStepPage getFormStepPage)
         {
             return await _formStepService.GetFormStepPage(getFormStepPage);
         }
@@ -48,7 +48,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单流程步骤] 查询表单步骤实体")]
-        public async Task<Result<FormStepDto>> GetFormStepEntity(GetFormStepEntity getFormStepEntity)
+        public async Task<Result<FormStepEntityDto>> GetFormStepEntity(GetFormStepEntity getFormStepEntity)
         {
             return await _formStepService.GetFormStepEntity(getFormStepEntity);
         }

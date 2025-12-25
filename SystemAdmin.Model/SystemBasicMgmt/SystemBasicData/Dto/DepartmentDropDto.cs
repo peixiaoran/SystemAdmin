@@ -28,11 +28,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public long ParentId { get; set; }
 
         /// <summary>
-        /// 是否禁用
-        /// </summary>
-        public bool Disabled { get; set; }
-
-        /// <summary>
         /// 子节点集合
         /// </summary>
         [SugarColumn(IsIgnore = true, IsTreeKey = true)]

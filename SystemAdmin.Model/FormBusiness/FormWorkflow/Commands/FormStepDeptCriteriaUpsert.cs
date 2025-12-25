@@ -1,23 +1,19 @@
-﻿using SqlSugar;
-
-namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
+﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 审批步骤指定部门员工级别来源表
+    /// 审批步骤指定部门员工级别新增/修改类
     /// </summary>
-    [SugarTable("[Form].[FormStepDeptCriteria]")]
-    public class FormStepDeptCriteriaEntity
+    public class FormStepDeptCriteriaUpsert
     {
         /// <summary>
         /// 审批步骤指定部门员工级别Id
         /// </summary>
-        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
-        public long StepDeptUserId { get; set; }
+        public string StepDeptUserId { get; set; } = string.Empty;
 
         /// <summary>
         /// 步骤Id
         /// </summary>
-        public long StepId { get; set; }
+        public string StepId { get; set; } = string.Empty;
 
         /// <summary>
         /// 部门Ids

@@ -44,7 +44,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     RoleNameCn = roleUpsert.RoleNameCn,
                     RoleNameEn = roleUpsert.RoleNameEn,
                     Description = roleUpsert.Description,
-                    IsEnabled = roleUpsert.IsEnabled,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     Remark = roleUpsert.Remark
@@ -121,7 +120,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     RoleNameCn = roleUpsert.RoleNameCn,
                     RoleNameEn = roleUpsert.RoleNameEn,
                     Description = roleUpsert.Description,
-                    IsEnabled = roleUpsert.IsEnabled,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     Remark = roleUpsert.Remark

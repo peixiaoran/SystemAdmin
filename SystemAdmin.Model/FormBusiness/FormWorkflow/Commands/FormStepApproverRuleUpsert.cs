@@ -1,14 +1,19 @@
-﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
+﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 
+    /// 审批步骤自定义来源新增/修改类
     /// </summary>
-    public class FormStepApproverRuleDto
+    public class FormStepApproverRuleUpsert
     {
         /// <summary>
-        /// 签核步骤自定义Id
+        /// 审批步骤自定义Id
         /// </summary>
         public long StepApproverRule { get; set; }
+
+        /// <summary>
+        /// 步骤Id
+        /// </summary>
+        public long StepId { get; set; }
 
         /// <summary>
         /// 代码标记

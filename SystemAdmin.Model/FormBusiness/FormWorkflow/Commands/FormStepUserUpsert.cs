@@ -1,17 +1,14 @@
-﻿using SqlSugar;
-
-namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
+﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 审批步骤自定义来源表
+    /// 审批步骤指定员工来源表
     /// </summary>
-    public class FormStepApproverRuleEntity
+    public class FormStepUserUpsert
     {
         /// <summary>
-        /// 审批步骤自定义Id
+        /// 审批步骤指定员工Id
         /// </summary>
-        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
-        public long StepApproverRule { get; set; }
+        public long StepUserId { get; set; }
 
         /// <summary>
         /// 步骤Id
@@ -19,14 +16,9 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long StepId { get; set; }
 
         /// <summary>
-        /// 代码标记
+        /// 用户Ids
         /// </summary>
-        public long Mark { get; set; }
-
-        /// <summary>
-        /// 逻辑说明
-        /// </summary>
-        public string LogicalExplanation { get; set; } = string.Empty;
+        public string UserIds { get; set; } = string.Empty;
 
         /// <summary>
         /// 创建人

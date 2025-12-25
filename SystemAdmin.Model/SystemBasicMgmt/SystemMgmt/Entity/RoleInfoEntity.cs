@@ -35,11 +35,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否启用
-        /// </summary>
-        public int IsEnabled { get; set; }
-
-        /// <summary>
         /// 备注
         /// </summary>
         public string Remark { get; set; } = string.Empty;

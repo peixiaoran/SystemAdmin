@@ -74,11 +74,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public string Address { get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否启用（1：启用，0：停用）
-        /// </summary>
-        public int IsEnabled { get; set; }
-
-        /// <summary>
         /// 子节点集合
         /// </summary>
         [SugarColumn(IsIgnore = true, IsTreeKey = true)]

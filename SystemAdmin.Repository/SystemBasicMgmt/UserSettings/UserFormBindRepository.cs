@@ -192,7 +192,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
-                                Disabled = dept.IsEnabled == 0
                             }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
         }
     }

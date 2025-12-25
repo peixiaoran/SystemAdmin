@@ -56,11 +56,6 @@
         public string Address { get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否启用（1：启用，0：停用）
-        /// </summary>
-        public int IsEnabled { get; set; }
-
-        /// <summary>
         /// 部门描述
         /// </summary>
         public string Description { get; set; } = string.Empty;

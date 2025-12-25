@@ -1,9 +1,12 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
+    /// <summary>
+    /// 审批步骤组织架构新增/修改类
+    /// </summary>
     public class FormStepOrgUpsert
     {
         /// <summary>
-        /// 签核步骤组织架构Id
+        /// 审批步骤组织架构Id
         /// </summary>
         public string StepOrgId { get; set; } = string.Empty;
 

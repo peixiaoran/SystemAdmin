@@ -33,10 +33,5 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
         /// 角色描述
         /// </summary>
         public string Description { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否启用
-        /// </summary>
-        public int IsEnabled { get; set; }
     }
 }
