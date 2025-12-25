@@ -263,10 +263,10 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 职业下拉框
+        /// 用户信息分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<StepAssignUserInfoDto>> GetLaborDropDown(GetStepAssignUserInfoPage getUserInfoPage)
+        public async Task<ResultPaged<StepAssignUserInfoDto>> GetUserInfoPage(GetStepAssignUserInfoPage getUserInfoPage)
         {
             try
             {
