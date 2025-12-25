@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 22/12/2025 17:52:04
+ Date: 25/12/2025 16:59:43
 */
 
 
@@ -515,6 +515,9 @@ CREATE TABLE [Form].[FormStep] (
   [StepNameCn] nvarchar(20) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [StepNameEn] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [Assignment] int  NOT NULL,
+  [ApproveMode] int  NOT NULL,
+  [IsReminderEnabled] int  NOT NULL,
+  [ReminderIntervalMinutes] int  NOT NULL,
   [Description] nvarchar(100) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime DEFAULT getdate() NOT NULL,
@@ -559,6 +562,27 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'Form',
 'TABLE', N'FormStep',
 'COLUMN', N'Assignment'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'签核方式（单签、会签）',
+'SCHEMA', N'Form',
+'TABLE', N'FormStep',
+'COLUMN', N'ApproveMode'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'是否催签',
+'SCHEMA', N'Form',
+'TABLE', N'FormStep',
+'COLUMN', N'IsReminderEnabled'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'催签间隔分钟',
+'SCHEMA', N'Form',
+'TABLE', N'FormStep',
+'COLUMN', N'ReminderIntervalMinutes'
 GO
 
 EXEC sp_addextendedproperty
