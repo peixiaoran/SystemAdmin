@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="../SystemAdmin.Common/SystemAdmin.Common.csproj" Id="e5ddfeac-524f-451b-9261-83ee2412c446" />
   <Project Path="../SystemAdmin.CommonSetup/SystemAdmin.CommonSetup.csproj" />
   <Project Path="../SystemAdmin.Hosting/SystemAdmin.Hosting.csproj" />
   <Project Path="../SystemAdmin.Localization/SystemAdmin.Localization.csproj" Id="2505ce6f-a6c9-45b0-948e-2e69efb3a6e2" />

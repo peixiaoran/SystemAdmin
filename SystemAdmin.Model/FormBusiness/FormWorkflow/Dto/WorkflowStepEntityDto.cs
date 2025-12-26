@@ -1,0 +1,60 @@
+﻿using System.Text.Json.Serialization;
+using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
+using SystemAdmin.Model.ModelHelper.ModelConverter;
+
+namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
+{
+    public class WorkflowStepEntityDto
+    {
+        /// <summary>
+        /// 步骤Id
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long StepId { get; set; }
+
+        /// <summary>
+        /// 表单步骤名称
+        /// </summary>
+        public string StepName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 是否为开始步骤
+        /// </summary>
+        public string IsStartStep { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 审批人选取方式（依组织架构、指定部门员工级别、指定员工、自定义）
+        /// </summary>
+        public int Assignment { get; set; }
+
+        /// <summary>
+        /// 签核方式（单签、会签）
+        /// </summary>
+        public int ApproveMode { get; set; }
+
+        /// <summary>
+        /// 步骤描述
+        /// </summary>
+        public string Description { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 签核步骤组织架构来源实体
+        /// </summary>
+        public WorkflowStepOrgEntity workflowStepOrgEntity { get; set; } = new WorkflowStepOrgEntity();
+
+        /// <summary>
+        /// 签核步骤组织架构来源实体
+        /// </summary>
+        public WorkflowStepDeptUserEntity workflowStepDeptUserEntity { get; set; } = new WorkflowStepDeptUserEntity();
+
+        /// <summary>
+        /// 签核步骤指定员工来源实体
+        /// </summary>
+        public WorkflowStepUserEntity workflowStepUserEntity { get; set; } = new WorkflowStepUserEntity();
+
+        /// <summary>
+        /// 签核步骤自定义来源实体
+        /// </summary>
+        public WorkflowStepRuleEntity workflowStepApproverRuleEntity { get; set; } = new WorkflowStepRuleEntity();
+    }
+}

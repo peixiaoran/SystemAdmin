@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SystemAdmin.CommonSetup\SystemAdmin.CommonSetup.csproj" />
+    <ProjectReference Include="..\SystemAdmin.Common\SystemAdmin.Common.csproj" />
     <ProjectReference Include="..\SystemAdmin.Model\SystemAdmin.Model.csproj" />
     <ProjectReference Include="..\SystemAdmin.Repository\SystemAdmin.Repository.csproj" />
   </ItemGroup>

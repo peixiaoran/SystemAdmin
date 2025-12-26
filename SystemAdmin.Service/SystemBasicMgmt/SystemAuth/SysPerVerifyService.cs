@@ -16,7 +16,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         }
 
         /// <summary>
-        /// 验证员工是否有权限访问页面接口
+        /// 验证是否有权限访问接口
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="routePath"></param>

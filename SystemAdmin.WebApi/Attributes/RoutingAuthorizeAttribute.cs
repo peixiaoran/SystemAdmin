@@ -40,6 +40,7 @@ namespace SystemAdmin.WebApi.Attributes
                 return;
             }
         }
+
         private static string BuildResourceKey(AuthorizationFilterContext context)
         {
             var cad = context.ActionDescriptor as ControllerActionDescriptor;

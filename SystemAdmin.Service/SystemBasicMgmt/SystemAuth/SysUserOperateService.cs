@@ -132,7 +132,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     var remain = 5 - newErrors;
                     await _db.CommitTranAsync();
 
-                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}LoginFailed", remain)
+                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}LoginFailedRemainTimes", remain)
                     );
                 }
 

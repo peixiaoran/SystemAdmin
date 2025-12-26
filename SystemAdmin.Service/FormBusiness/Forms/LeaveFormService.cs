@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Logging;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Security;
-using SystemAdmin.Model.FormBusiness.FormAuth.FormPerVerify;
+using SystemAdmin.Model.FormBusiness.Enum;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
-using SystemAdmin.Repository.FormBusiness.FormAuth;
+using SystemAdmin.Repository.FormBusiness.Enum;
 using SystemAdmin.Repository.FormBusiness.Forms;
 using SystemAdmin.Repository.FormBusiness.WorkflowLifecycle;
 using SystemAdmin.Service.FormBusiness.FormBasicInfo;
@@ -18,13 +18,13 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly CurrentUser _loginuser;
         private readonly ILogger<ControlInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly FormPerVerifyRepository _formPerVerifyRepository;
-        private readonly WorkflowStartOperator _workflowStart;
+        private readonly FormAuthRepository _formPerVerifyRepository;
+        private readonly ApproverSelectionHandler _workflowStart;
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.Forms.LeaveForm";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormPerVerifyRepository formPerVerifyRepository, WorkflowStartOperator workflowStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formPerVerifyRepository, ApproverSelectionHandler workflowStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;

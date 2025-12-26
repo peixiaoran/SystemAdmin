@@ -37,7 +37,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 上传文件
+        /// 上传头像图片文件
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
