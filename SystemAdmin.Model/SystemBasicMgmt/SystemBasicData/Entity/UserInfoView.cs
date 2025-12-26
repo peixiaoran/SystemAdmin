@@ -71,16 +71,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         public int Gender { get; set; }
 
         /// <summary>
-        /// 性别文字描述（中文）
-        /// </summary>
-        public string GenderNameCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 性别文字描述（英文）
-        /// </summary>
-        public string GenderNameEn { get; set; } = string.Empty;
-
-        /// <summary>
         /// 登录账号
         /// </summary>
         public string LoginNo { get; set; } = string.Empty;
@@ -179,29 +169,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         public int IsEmployed { get; set; }
 
         /// <summary>
-        /// 是否在职文字描述（中文）
-        /// </summary>
-        public string IsEmployedNameCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否在职文字描述（英文）
-        /// </summary>
-        public string IsEmployedNameEn { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否签核
         /// </summary>
         public int IsApproval { get; set; }
-
-        /// <summary>
-        /// 是否签核文字描述（中文）
-        /// </summary>
-        public string IsApprovalNameCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否签核文字描述（英文）
-        /// </summary>
-        public string IsApprovalNameEn { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否实时通知邮件
@@ -209,29 +179,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         public int IsRealtimeNotification { get; set; }
 
         /// <summary>
-        /// 是否实时通知邮件（中文）
-        /// </summary>
-        public string IsRealtimeNotificationCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否实时通知邮件（英文）
-        /// </summary>
-        public string IsRealtimeNotificationEn { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否实时通知邮件
         /// </summary>
         public int IsScheduledNotification { get; set; }
-
-        /// <summary>
-        /// 是否定时通知邮件（中文）
-        /// </summary>
-        public string IsScheduledNotificationCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否定时通知邮件（英文）
-        /// </summary>
-        public string IsScheduledNotificationEn { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否代理其他员工
@@ -239,44 +189,14 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         public int IsAgent { get; set; }
 
         /// <summary>
-        /// 是否代理其他员工（中文）
-        /// </summary>
-        public string IsAgentNameCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否代理其他员工（英文）
-        /// </summary>
-        public string IsAgentNameEn { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否兼任
         /// </summary>
         public int IsPartTime { get; set; }
 
         /// <summary>
-        /// 是否兼任文字描述（中文）
-        /// </summary>
-        public string IsParttimeNameCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否兼任文字描述（英文）
-        /// </summary>
-        public string IsParttimeNameEn { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否冻结
         /// </summary>
         public int IsFreeze { get; set; }
-
-        /// <summary>
-        /// 是否冻结文字描述（中文）
-        /// </summary>
-        public string IsFreezeNameCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否冻结文字描述（英文）
-        /// </summary>
-        public string IsFreezeNameEn { get; set; } = string.Empty;
 
         /// <summary>
         /// 备注

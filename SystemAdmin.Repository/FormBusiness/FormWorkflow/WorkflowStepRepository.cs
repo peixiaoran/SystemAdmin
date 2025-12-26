@@ -462,22 +462,18 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                            .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
                            .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) =>
                             user.Nationality == nation.NationId)
-                           .InnerJoin<DictionaryInfoEntity>((user, dept, userpos, userlabor, nation, approvaldic) =>
-                            approvaldic.DicType == "ApprovalState" && user.IsApproval == approvaldic.DicCode)
-                           .InnerJoin<DictionaryInfoEntity>((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
-                            agentdic.DicType == "IsAgent" && user.IsAgent == agentdic.DicCode)
-                           .Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) => user.IsEmployed == 1 && user.IsFreeze == 0);
+                           .Where((user, dept, userpos, userlabor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getUserInfoPage.UserNo))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.UserNo.Contains(getUserInfoPage.UserNo));
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getUserInfoPage.UserName))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.UserNameCn.Contains(getUserInfoPage.UserName) ||
                     user.UserNameEn.Contains(getUserInfoPage.UserName));
             }
@@ -486,12 +482,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                 && string.IsNullOrEmpty(getUserInfoPage.UserNo)
                 && string.IsNullOrEmpty(getUserInfoPage.UserName))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.DepartmentId == long.Parse(getUserInfoPage.DepartmentId));
             }
 
-            var userPage = await query.OrderBy((user, dept, userpos, userlabor, nation, approvaldic, agentdic) => new { userpos.PositionOrderBy, user.HireDate })
-            .Select((user, dept, userpos, userlabor, nation, approvaldic, agentdic) => new UserAgentDto
+            var userPage = await query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.PositionOrderBy, user.HireDate })
+            .Select((user, dept, userpos, userlabor, nation) => new UserAgentDto
             {
                 UserId = user.UserId,
                 UserNo = user.UserNo,
@@ -511,13 +507,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                            ? nation.NationNameCn
                            : nation.NationNameEn,
                 IsAgent = user.IsAgent,
-                IsAgentName = _lang.Locale == "zh-CN"
-                           ? agentdic.DicNameCn
-                           : agentdic.DicNameEn,
                 IsApproval = user.IsApproval,
-                IsApprovalName = _lang.Locale == "zh-CN"
-                           ? approvaldic.DicNameCn
-                           : approvaldic.DicNameEn
             }).ToPageListAsync(getUserInfoPage.PageIndex, getUserInfoPage.PageSize, totalCount);
             return ResultPaged<Model.FormBusiness.FormWorkflow.Dto.UserInfoDto>.Ok(userPage.Adapt<List<Model.FormBusiness.FormWorkflow.Dto.UserInfoDto>>(), totalCount, "");
         }

@@ -57,9 +57,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                  ? parsonal.PositionNameCn
                                                  : parsonal.PositionNameEn,
                                 Gender = parsonal.Gender,
-                                GenderName = _lang.Locale == "zh-CN"
-                                                 ? parsonal.GenderNameCn
-                                                 : parsonal.GenderNameEn,
                                 RoleName = _lang.Locale == "zh-CN"
                                                  ? parsonal.RoleNameCn
                                                  : parsonal.RoleNameEn,
@@ -70,9 +67,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                 HireDate = Convert.ToDateTime(parsonal.HireDate).ToString("yyyy-MM-dd"),
                                 AvatarAddress = parsonal.AvatarAddress,
                                 IsEmployed = parsonal.IsEmployed,
-                                IsEmployedName = _lang.Locale == "zh-CN"
-                                                 ? parsonal.IsEmployedNameCn
-                                                 : parsonal.IsEmployedNameEn,
                                 IsApproval = parsonal.IsApproval,
                                 IsRealtimeNotification = parsonal.IsRealtimeNotification,
                                 IsScheduledNotification = parsonal.IsScheduledNotification,
@@ -105,24 +99,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                 user.IsScheduledNotification
                             }).Where(personal => personal.UserId == loginUserId)
                             .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 性别字典下拉框
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<GenderDropDto>> GetGenderDropDown()
-        {
-            return await _db.Queryable<DictionaryInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(genderdic => genderdic.DicType == "Gender")
-                            .Select(genderdic => new GenderDropDto
-                            {
-                                GenderCode = genderdic.DicCode,
-                                GenderName = _lang.Locale == "zh-CN"
-                                             ? genderdic.DicNameCn
-                                             : genderdic.DicNameEn
-                            }).ToListAsync();
         }
 
         /// <summary>

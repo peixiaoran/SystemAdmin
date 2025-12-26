@@ -241,9 +241,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                            ? userview.PositionNameCn
                                                            : userview.PositionNameEn,
                                           Gender = userview.Gender,
-                                          GenderName = _lang.Locale == "zh-CN"
-                                                           ? userview.GenderNameCn
-                                                           : userview.GenderNameEn,
                                           RoleName = _lang.Locale == "zh-CN"
                                                            ? userview.RoleNameCn
                                                            : userview.RoleNameEn,
@@ -258,33 +255,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                            : userview.LaborNameEn,
                                           AvatarAddress = userview.AvatarAddress,
                                           IsEmployed = userview.IsEmployed,
-                                          IsEmployedName = _lang.Locale == "zh-CN"
-                                                           ? userview.IsEmployedNameCn
-                                                           : userview.IsEmployedNameEn,
                                           IsApproval = userview.IsApproval,
-                                          IsApprovalName = _lang.Locale == "zh-CN"
-                                                           ? userview.IsApprovalNameCn
-                                                           : userview.IsApprovalNameEn,
                                           IsRealtimeNotification = userview.IsRealtimeNotification,
-                                          IsRealtimeNotificationName = _lang.Locale == "zh-CN"
-                                                           ? userview.IsRealtimeNotificationCn
-                                                           : userview.IsRealtimeNotificationEn,
                                           IsScheduledNotification = userview.IsScheduledNotification,
-                                          IsScheduledNotificationName = _lang.Locale == "zh-CN"
-                                                           ? userview.IsScheduledNotificationCn
-                                                           : userview.IsScheduledNotificationEn,
                                           IsAgent = userview.IsAgent,
-                                          IsAgentName = _lang.Locale == "zh-CN"
-                                                           ? userview.IsAgentNameCn
-                                                           : userview.IsAgentNameEn,
                                           IsPartTime = userview.IsPartTime,
-                                          IsPartTimeName = _lang.Locale == "zh-CN"
-                                                           ? userview.IsParttimeNameCn
-                                                           : userview.IsParttimeNameEn,
                                           IsFreeze = userview.IsFreeze,
-                                          IsFreezeName = _lang.Locale == "zh-CN"
-                                                           ? userview.IsFreezeNameCn
-                                                           : userview.IsFreezeNameEn,
                                       }).ToPageListAsync(getUserPage.PageIndex, getUserPage.PageSize, totalCount);
             return ResultPaged<UserInfoDto>.Ok(userPage, totalCount, "");
         }
@@ -304,24 +280,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                 PassWord = user.PassWord,
                                 PwdSalt = user.PwdSalt
                             }).FirstAsync();
-        }
-
-        /// <summary>
-        /// 性别字典下拉框
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<GenderDropDto>> GetGenderDropDown()
-        {
-            return await _db.Queryable<DictionaryInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(genderdic => genderdic.DicType == "Gender")
-                            .Select(genderdic => new GenderDropDto
-                            {
-                                GenderCode = genderdic.DicCode,
-                                GenderName = _lang.Locale == "zh-CN"
-                                             ? genderdic.DicNameCn
-                                             : genderdic.DicNameEn
-                            }).ToListAsync();
         }
 
         /// <summary>

@@ -31,11 +31,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         public int IsApproval { get; set; }
 
         /// <summary>
-        /// 是否签核文字描述
-        /// </summary>
-        public string IsApprovalName { get; set; } = string.Empty;
-
-        /// <summary>
         /// 部门Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]

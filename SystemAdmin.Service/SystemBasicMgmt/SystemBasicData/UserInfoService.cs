@@ -324,25 +324,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 return ResultPaged<UserInfoDto>.Failure(500, ex.Message.ToString());
             }
         }
-
-        /// <summary>
-        /// 性别字典下拉框
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<GenderDropDto>>> GetGenderDropDown()
-        {
-            try
-            {
-                var genderDrop = await _userInfoRepository.GetGenderDropDown();
-                return Result<List<GenderDropDto>>.Ok(genderDrop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<GenderDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
         /// <summary>
         /// 国籍字典下拉框
         /// </summary>

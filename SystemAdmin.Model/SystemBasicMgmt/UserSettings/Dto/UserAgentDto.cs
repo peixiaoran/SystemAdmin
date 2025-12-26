@@ -51,19 +51,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         public int IsApproval { get; set; }
 
         /// <summary>
-        /// 是否签核描述
-        /// </summary>
-        public string IsApprovalName { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否代理
         /// </summary>
         [JsonConverter(typeof(IntToStringConverter))]
         public int IsAgent { get; set; }
-
-        /// <summary>
-        /// 是否代理其他员工描述
-        /// </summary>
-        public string IsAgentName { get; set; } = string.Empty;
     }
 }

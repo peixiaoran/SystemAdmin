@@ -38,14 +38,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[个人信息] 性别下拉框")]
-        public async Task<Result<List<GenderDropDto>>> GetGenderDropDown()
-        {
-            return await _personalInfoService.GetGenderDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[个人信息] 职业下拉框")]
         public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
         {

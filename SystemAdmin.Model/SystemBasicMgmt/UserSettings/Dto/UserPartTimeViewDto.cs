@@ -49,10 +49,5 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         /// </summary>
         [JsonConverter(typeof(IntToStringConverter))]
         public int IsApproval { get; set; }
-
-        /// <summary>
-        /// 是否签核名称
-        /// </summary>
-        public string IsApprovalName { get; set; } = string.Empty;
     }
 }

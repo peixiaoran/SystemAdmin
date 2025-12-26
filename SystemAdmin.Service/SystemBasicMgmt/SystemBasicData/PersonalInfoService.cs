@@ -17,7 +17,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly SqlSugarScope _db;
         private readonly PersonalInfoRepository _personalInfoRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt.SystemBasicData.PersonalInfo";
+        private readonly string _this = "SystemBasicMgmt.SystemBasicData.Personal";
 
         public PersonalInfoService(CurrentUser loginuser, ILogger<PersonalInfoService> logger, SqlSugarScope db, PersonalInfoRepository personalInfoRepository, LocalizationService localization)
         {
@@ -107,24 +107,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 性别字典下拉框
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<GenderDropDto>>> GetGenderDropDown()
-        {
-            try
-            {
-                var genderDrop = await _personalInfoRepository.GetGenderDropDown();
-                return Result<List<GenderDropDto>>.Ok(genderDrop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<GenderDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
 

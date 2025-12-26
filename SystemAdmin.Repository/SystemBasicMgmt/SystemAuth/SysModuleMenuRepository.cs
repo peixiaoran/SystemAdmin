@@ -38,9 +38,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
                                       .Select((user, userrole, role, rolemodule, module) => new SysModuleInfoDto
                                       {
                                           ModuleId = module.ModuleId,
-                                          ModuleName = _lang.Locale == "zh-CN"
-                                                       ? module.ModuleNameCn
-                                                       : module.ModuleNameEn,
+                                          ModuleNameCn = module.ModuleNameCn,
+                                          ModuleNameEn = module.ModuleNameEn,
                                           ModuleIcon = module.ModuleIcon,
                                           Path = module.Path,
                                           Remark = _lang.Locale == "zh-CN"

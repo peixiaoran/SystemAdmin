@@ -72,14 +72,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 性别下拉框")]
-        public async Task<Result<List<GenderDropDto>>> GetGenderDropDown()
-        {
-            return await _userInfoService.GetGenderDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 国籍下拉框")]
         public async Task<Result<List<NationalityDropDto>>> GetNationalityDropDown()
         {

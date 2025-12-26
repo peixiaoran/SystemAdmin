@@ -36,22 +36,18 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
                            .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) =>
                             user.Nationality == nation.NationId)
-                           .InnerJoin<DictionaryInfoEntity>((user, dept, userpos, userlabor, nation, approvaldic) =>
-                            approvaldic.DicType == "ApprovalState" && user.IsApproval == approvaldic.DicCode)
-                           .InnerJoin<DictionaryInfoEntity>((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
-                            agentdic.DicType == "IsAgent" && user.IsAgent == agentdic.DicCode)
-                           .Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) => user.IsEmployed == 1 && user.IsFreeze == 0);
+                           .Where((user, dept, userpos, userlabor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getUserAgentPage.UserNo))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.UserNo.Contains(getUserAgentPage.UserNo));
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getUserAgentPage.UserName))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.UserNameCn.Contains(getUserAgentPage.UserName) ||
                     user.UserNameEn.Contains(getUserAgentPage.UserName));
             }
@@ -60,12 +56,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 && string.IsNullOrEmpty(getUserAgentPage.UserNo)
                 && string.IsNullOrEmpty(getUserAgentPage.UserName))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation, approvaldic, agentdic) =>
+                query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.DepartmentId == long.Parse(getUserAgentPage.DepartmentId));
             }
 
-            var userPage = await query.OrderBy((user, dept, userpos, userlabor, nation, approvaldic, agentdic) => new { userpos.PositionOrderBy, user.HireDate })
-            .Select((user, dept, userpos, userlabor, nation, approvaldic, agentdic) => new UserAgentDto
+            var userPage = await query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.PositionOrderBy, user.HireDate })
+            .Select((user, dept, userpos, userlabor, nation) => new UserAgentDto
             {
                 UserId = user.UserId,
                 UserNo = user.UserNo,
@@ -85,13 +81,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            ? nation.NationNameCn
                            : nation.NationNameEn,
                 IsAgent = user.IsAgent,
-                IsAgentName = _lang.Locale == "zh-CN"
-                           ? agentdic.DicNameCn
-                           : agentdic.DicNameEn,
                 IsApproval = user.IsApproval,
-                IsApprovalName = _lang.Locale == "zh-CN"
-                           ? approvaldic.DicNameCn
-                           : approvaldic.DicNameEn
             }).ToPageListAsync(getUserAgentPage.PageIndex, getUserAgentPage.PageSize, totalCount);
             return ResultPaged<UserAgentDto>.Ok(userPage.Adapt<List<UserAgentDto>>(), totalCount, "");
         }
@@ -106,23 +96,22 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserInfoEntity>()
                            .With(SqlWith.NoLock)
-                           .InnerJoin<DictionaryInfoEntity>((user, approvaldic) => approvaldic.DicType == "ApprovalState" && user.IsApproval == approvaldic.DicCode)
-                           .InnerJoin<DepartmentInfoEntity>((user, approvaldic, dept) => user.DepartmentId == dept.DepartmentId)
-                           .InnerJoin<UserPositionEntity>((user, approvaldic, dept, userpos) => user.PositionId == userpos.PositionId)
-                           .InnerJoin<UserLaborEntity>((user, approvaldic, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
-                           .InnerJoin<NationalityInfoEntity>((user, approvaldic, dept, userpos, userlabor, nation) => user.Nationality == nation.NationId)
-                           .Where((user, approvaldic, dept, userpos, userlabor, nation) => user.IsAgent == 0 && user.UserId != long.Parse(getUserAgentViewPage.SubstituteUserId) && user.IsFreeze == 0);
+                           .InnerJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
+                           .InnerJoin<UserPositionEntity>((user, dept, userpos) => user.PositionId == userpos.PositionId)
+                           .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
+                           .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) => user.Nationality == nation.NationId)
+                           .Where((user, dept, userpos, userlabor, nation) => user.IsAgent == 0 && user.UserId != long.Parse(getUserAgentViewPage.SubstituteUserId) && user.IsFreeze == 0);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getUserAgentViewPage.UserNo))
             {
-                query = query.Where((user, approvaldic, dept, userpos, userlabor, nation) =>
+                query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.UserNo == getUserAgentViewPage.UserNo);
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getUserAgentViewPage.UserName))
             {
-                query = query.Where((user, approvaldic, dept, userpos, userlabor, nation) =>
+                query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.UserNameCn.Contains(getUserAgentViewPage.UserName) ||
                     user.UserNameEn.Contains(getUserAgentViewPage.UserName));
             }
@@ -131,21 +120,18 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 && string.IsNullOrEmpty(getUserAgentViewPage.UserNo)
                 && string.IsNullOrEmpty(getUserAgentViewPage.UserName))
             {
-                query = query.Where((user, approvaldic, dept, userpos, userlabor, nation) =>
+                query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.DepartmentId == long.Parse(getUserAgentViewPage.DepartmentId));
             }
 
-            var userAgentPage = await query.OrderBy((user, approvaldic, dept, userpos, userlabor, nation) => user.UserId)
-            .Select((user, approvaldic, dept, userpos, userlabor, nation) => new UserAgentViewDto
+            var userAgentPage = await query.OrderBy((user, dept, userpos, userlabor, nation) => user.UserId)
+            .Select((user, dept, userpos, userlabor, nation) => new UserAgentViewDto
             {
                 UserId = user.UserId,
                 UserNo = user.UserNo,
                 UserName = _lang.Locale == "zh-CN"
                            ? user.UserNameCn
                            : user.UserNameEn,
-                IsApprovalName = _lang.Locale == "zh-CN"
-                           ? approvaldic.DicNameCn
-                           : approvaldic.DicNameEn,
                 DepartmentName = _lang.Locale == "zh-CN"
                            ? dept.DepartmentNameCn
                            : dept.DepartmentNameEn,

@@ -135,19 +135,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public int IsRealtimeNotification { get; set; }
 
         /// <summary>
-        /// 是否实时邮件通知文字描述
-        /// </summary>
-        public string IsRealtimeNotificationName { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否定时邮件通知
         /// </summary>
         public int IsScheduledNotification { get; set; }
-
-        /// <summary>
-        /// 是否定时邮件通知文字描述
-        /// </summary>
-        public string IsScheduledNotificationName { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否代理其他员工
