@@ -33,7 +33,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto
         /// <summary>
         /// 字典编码
         /// </summary>
-        public int DicCode { get; set; }
+        public string DicCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 字典名称（中文）

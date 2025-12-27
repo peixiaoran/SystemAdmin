@@ -229,7 +229,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
             RefAsync<int> totalCount = 0;
             var workflowStepPage = await _db.Queryable<WorkflowStepEntity>()
                                             .With(SqlWith.NoLock)
-                                            .InnerJoin<DictionaryInfoEntity>((stepinfo, assigndic) => assigndic.DicType == " ApproverAssignment" && int.Parse(stepinfo.Assignment) == assigndic.DicCode)
+                                            .InnerJoin<DictionaryInfoEntity>((stepinfo, assigndic) => assigndic.DicType == " ApproverAssignment" && stepinfo.Assignment == assigndic.DicCode)
                                             .Where((stepinfo, assigndic) => stepinfo.FormTypeId == long.Parse(getWorkflowStep.FormTypeId))
                                             .OrderBy((stepinfo, assigndic) => stepinfo.CreatedDate)
                                             .Select((stepinfo, assigndic) => new WorkflowStepPageDto()

@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
+using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.Enum;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
@@ -18,18 +19,18 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly CurrentUser _loginuser;
         private readonly ILogger<ControlInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly FormAuthRepository _formPerVerifyRepository;
+        private readonly FormAuthRepository _formAuthRepository;
         private readonly ApproverSelectionHandler _workflowStart;
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.Forms.LeaveForm";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formPerVerifyRepository, ApproverSelectionHandler workflowStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formAuthRepository, ApproverSelectionHandler workflowStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _formPerVerifyRepository = formPerVerifyRepository;
+            _formAuthRepository = formAuthRepository;
             _workflowStart = workflowStart;
             _leaveFormRepository = leaveFormRepository;
             _localization = localization;
@@ -44,7 +45,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                bool isCanApply = await _formPerVerifyRepository.HasUserApplyFormType(_loginuser.UserId, long.Parse(formTypeId), FormOp.Apply);
+                bool isCanApply = await _formAuthRepository.HasUserApplyFormType(_loginuser.UserId, long.Parse(formTypeId), FormOp.Apply);
                 if (!isCanApply)
                 {
                     return Result<LeaveFormDto>.Failure(404, "");
@@ -52,7 +53,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                 await _db.BeginTranAsync();
                 // 初始化表单
-                var initFormInfo = await _workflowStart.InitFormInfo(_loginuser.UserId, long.Parse(formTypeId));
+                var initFormInfo = await _formAuthRepository.InitFormInfo(_loginuser.UserId, long.Parse(formTypeId));
                 // 初始化请假表
                 var userInfo = await _leaveFormRepository.GetUserInfo(_loginuser.UserId);
                 LeaveFormEntity initleaveFormEntity = new LeaveFormEntity()
@@ -64,7 +65,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     ApplicantUserName = userInfo.UserName,
                     ApplicantDeptId = userInfo.DetpId,
                     ApplicantDeptName = userInfo.DetpName,
-                    LeaveTypeCode = -1,
+                    LeaveTypeCode = "",
                     LeaveReason = "",
                     LeaveHours = 0,
                     LeaveHandoverUserName = "",
@@ -75,7 +76,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 await _db.CommitTranAsync();
 
                 var leaveFormDto = initleaveFormEntity.Adapt<LeaveFormDto>();
-                leaveFormDto.ImportanceCode = -1;
+                leaveFormDto.ImportanceCode = ImportanceType.Normal.ToEnumString();
                 leaveFormDto.FormTypeId = long.Parse(formTypeId); //表单类别Id
                 return Result<LeaveFormDto>.Ok(leaveFormDto);
             }
@@ -96,7 +97,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                bool isCanApply = await _formPerVerifyRepository.HasUserApplyFormType(_loginuser.UserId, long.Parse(leaveFormSave.FormTypeId), FormOp.Apply);
+                bool isCanApply = await _formAuthRepository.HasUserApplyFormType(_loginuser.UserId, long.Parse(leaveFormSave.FormTypeId), FormOp.Apply);
                 if (!isCanApply)
                 {
                     return Result<int>.Failure(404, "");
@@ -104,7 +105,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                 await _db.BeginTranAsync();
                 // 保存主表单
-                var saveFormInfo = await _workflowStart.SaveFormInfo(long.Parse(leaveFormSave.FormId), leaveFormSave.Description, 1, leaveFormSave.ImportanceCode, _loginuser.UserId);
+                var saveFormInfo = await _formAuthRepository.SaveFormInfo(long.Parse(leaveFormSave.FormId), leaveFormSave.Description, FormStatus.PendingSubmission.ToEnumString(), leaveFormSave.ImportanceCode, _loginuser.UserId);
                 LeaveFormEntity saveLeaveFormEntity = new LeaveFormEntity()
                 {
                     FormId = long.Parse(leaveFormSave.FormId),
@@ -173,7 +174,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// <returns></returns>
         public async Task<Result<List<ImportanceDropDto>>> GetImportanceDropDown()
         {
-            var leaveTypeDrop = await _workflowStart.GetImportanceDropDown();
+            var leaveTypeDrop = await _formAuthRepository.GetImportanceDropDown();
             return Result<List<ImportanceDropDto>>.Ok(leaveTypeDrop);
         }
     }

@@ -1,7 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using SystemAdmin.Model.ModelHelper.ModelConverter;
-
-namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
+﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
     /// 审批人选取方式下拉框Dto
@@ -11,8 +8,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// <summary>
         /// 审批人选取方式编码
         /// </summary>
-        [JsonConverter(typeof(IntToStringConverter))]
-        public int AssignmentCode { get; set; }
+        public string AssignmentCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 审批人选取方式名称

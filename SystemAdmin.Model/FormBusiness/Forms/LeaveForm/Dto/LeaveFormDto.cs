@@ -22,14 +22,12 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
         /// <summary>
         /// 重要程度
         /// </summary>
-        [JsonConverter(typeof(IntToStringConverter))]
-        public int ImportanceCode { get; set; }
+        public string ImportanceCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 表单状态
         /// </summary>
-        [JsonConverter(typeof(IntToStringConverter))]
-        public int FormStatus { get; set; }
+        public string FormStatus { get; set; } = string.Empty;
 
         /// <summary>
         /// 表单状态名称
@@ -76,8 +74,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
         /// <summary>
         /// 假别编码
         /// </summary>
-        [JsonConverter(typeof(IntToStringConverter))]
-        public int LeaveTypeCode { get; set; }
+        public string LeaveTypeCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 请假事由

@@ -119,7 +119,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         {
             var menuEntity = await _db.Queryable<MenuInfoEntity>()
                                       .With(SqlWith.NoLock)
-                                      .Where(pmenu => pmenu.MenuType == 2 && pmenu.MenuId == pmenuId)
+                                      .Where(pmenu => pmenu.MenuType == "PrimaryMenu" && pmenu.MenuId == pmenuId)
                                       .FirstAsync();
             return menuEntity.Adapt<MenuInfoDto>();
         }
@@ -136,7 +136,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                            .With(SqlWith.NoLock)
                            .LeftJoin<DictionaryInfoEntity>((pmenu, dic) => dic.DicType == "MenuType" && pmenu.MenuType == dic.DicCode)
                            .LeftJoin<UserInfoEntity>((pmenu, dic, user) => pmenu.CreatedBy == user.UserId)
-                           .Where(pmenu => pmenu.MenuType == 2);
+                           .Where(pmenu => pmenu.MenuType == "PrimaryMenu");
 
             // 一级菜单编码
             if (!string.IsNullOrEmpty(getMenuPage.MenuCode))

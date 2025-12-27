@@ -1,5 +1,8 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.Enum
 {
+    /// <summary>
+    /// 流程审批步骤选取人员来源方式枚举
+    /// </summary>
     public enum StepAssignment
     {
         /// <summary>

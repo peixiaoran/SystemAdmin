@@ -1,15 +1,11 @@
-﻿using System.Text.Json.Serialization;
-using SystemAdmin.Model.ModelHelper.ModelConverter;
-
-namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
+﻿namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
 {
     public class ImportanceDropDto
     {
         /// <summary>
         /// 重要程度编码
         /// </summary>
-        [JsonConverter(typeof(IntToStringConverter))]
-        public int ImportanceCode { get; set; }
+        public string ImportanceCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 重要程度名称

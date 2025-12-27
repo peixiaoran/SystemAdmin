@@ -1,11 +1,13 @@
 ﻿using Mapster;
 using SqlSugar;
-using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
+using SystemAdmin.Common.Utilities;
+using SystemAdmin.CommonSetup.Options;
+using SystemAdmin.Model.SystemBasicMgmt.Enum;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Queries;
-using SystemAdmin.CommonSetup.Options;
 
 namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
 {
@@ -81,7 +83,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         {
             var smenuEntity = await _db.Queryable<MenuInfoEntity>()
                                        .With(SqlWith.NoLock)
-                                       .Where(smenu => smenu.MenuType == 3 && smenu.MenuId == smenuId)
+                                       .Where(smenu => smenu.MenuType == MenuType.SecondaryMenu.ToEnumString() && smenu.MenuId == smenuId)
                                        .FirstAsync();
             return smenuEntity.Adapt<MenuInfoDto>();
         }
@@ -98,7 +100,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                            .With(SqlWith.NoLock)
                            .LeftJoin<DictionaryInfoEntity>((pmenu, dic) => dic.DicType == "MenuType" && pmenu.MenuType == dic.DicCode)
                            .LeftJoin<UserInfoEntity>((pmenu, dic, user) => pmenu.CreatedBy == user.UserId)
-                           .Where((pmenu, dic, user) => pmenu.MenuType == 3);
+                           .Where((pmenu, dic, user) => pmenu.MenuType == "SecondaryMenu");
 
             // 二级菜单编码
             if (!string.IsNullOrEmpty(getMenuPage.MenuCode))
@@ -172,7 +174,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             return await _db.Queryable<MenuInfoEntity>()
                             .With(SqlWith.NoLock)
                             .OrderBy(pmenu => pmenu.SortOrder)
-                            .Where(pmenu => pmenu.MenuType == 2 && pmenu.ModuleId == moduleId)
+                            .Where(pmenu => pmenu.MenuType == "PrimaryMenu" && pmenu.ModuleId == moduleId)
                             .Select(pmenu => new MenuDropDto
                             {
                                 MenuId = pmenu.MenuId,

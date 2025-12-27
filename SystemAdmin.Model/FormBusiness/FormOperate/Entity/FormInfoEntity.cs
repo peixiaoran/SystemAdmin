@@ -32,12 +32,12 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         /// <summary>
         /// 重要程度
         /// </summary>
-        public int ImportanceCode { get; set; }
+        public string ImportanceCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 表单状态
         /// </summary>
-        public int FormStatus { get; set; }
+        public string FormStatus { get; set; } = string.Empty;
 
         /// <summary>
         /// 开单时间

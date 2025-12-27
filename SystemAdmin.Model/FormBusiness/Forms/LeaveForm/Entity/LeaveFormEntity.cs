@@ -47,7 +47,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
         /// <summary>
         /// 假别类型Id
         /// </summary>
-        public int LeaveTypeCode { get; set; }
+        public string LeaveTypeCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 请假事由

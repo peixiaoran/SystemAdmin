@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using SqlSugar;
+using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Security;
+using SystemAdmin.Model.SystemBasicMgmt.Enum;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Queries;
@@ -44,7 +46,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     MenuNameEn = menuUpsert.MenuNameEn,
                     ParentMenuId = long.Parse(menuUpsert.ParentMenuId),
                     ModuleId = long.Parse(menuUpsert.ModuleId),
-                    MenuType = 3,
+                    MenuType = MenuType.SecondaryMenu.ToEnumString(),
                     RoutePath = menuUpsert.RoutePath,
                     MenuIcon = menuUpsert.MenuIcon,
                     SortOrder = menuUpsert.SortOrder,

@@ -72,6 +72,52 @@ namespace SystemAdmin.Common.Utilities
 
         #endregion
 
+        #region 枚举转字符串
+
+        /// <summary>
+        /// 将枚举转换为数据库使用的字符串
+        /// 普通枚举： End
+        /// Flags 枚举： Org,User
+        /// </summary>
+        public static string ToEnumString<TEnum>(this TEnum value, bool ignoreZero = true)
+            where TEnum : struct, Enum
+        {
+            // 非 Flags 枚举，直接返回名称
+            if (!IsFlagsEnum<TEnum>())
+            {
+                return value.ToString();
+            }
+
+            long numericValue = Convert.ToInt64(value);
+
+            // Flags 枚举为 0 的情况
+            if (numericValue == 0)
+            {
+                return ignoreZero ? string.Empty : value.ToString();
+            }
+
+            var names = new List<string>();
+
+            foreach (var enumValue in Enum.GetValues(typeof(TEnum)))
+            {
+                var flag = (Enum)enumValue;
+                long flagValue = Convert.ToInt64(flag);
+
+                if (flagValue == 0 && ignoreZero)
+                    continue;
+
+                if ((numericValue & flagValue) == flagValue)
+                {
+                    names.Add(flag.ToString());
+                }
+            }
+
+            return string.Join(",", names);
+        }
+
+        #endregion
+
+
         #region Flags 枚举判断
 
         /// <summary>

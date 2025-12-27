@@ -10,8 +10,10 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.CommonSetup.Security;
+using SystemAdmin.Model.SystemBasicMgmt.Enum;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Queries;
@@ -70,7 +72,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                     {
                         UserId = 0,
-                        StatusId = 3,
+                        StatusId = "",
                         IP = ip,
                         LoginDate = nowStr
                     });
@@ -96,7 +98,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                     {
                         UserId = user.UserId,
-                        StatusId = 2,
+                        StatusId = LoginBehavior.IncorrectPassword.ToEnumString(),
                         IP = ip,
                         LoginDate = nowStr
                     });
@@ -147,7 +149,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                 {
                     UserId = user.UserId,
-                    StatusId = 1,
+                    StatusId = LoginBehavior.LoginSuccessful.ToEnumString(),
                     IP = ip,
                     LoginDate = nowStr
                 });
@@ -197,7 +199,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 var logOutLog = new UserLogOutEntity
                 {
                     UserId = user.UserId,
-                    StatusId = 4, // 状态码 4 = 登出
+                    StatusId = LoginBehavior.LoggedOut.ToEnumString(), // 状态码 4 = 登出
                     IP = GetLocalIPv4(),
                     LoginDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };

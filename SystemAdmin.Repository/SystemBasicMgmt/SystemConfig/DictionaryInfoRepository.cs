@@ -165,7 +165,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <param name="dicType"></param>
         /// <param name="dicCode"></param>
         /// <returns></returns>
-        public async Task<bool> GetDictionaryInfoIsExist(string dicType, int dicCode)
+        public async Task<bool> GetDictionaryInfoIsExist(string dicType, string dicCode)
         {
             return await _db.Queryable<DictionaryInfoEntity>()
                             .With(SqlWith.NoLock)

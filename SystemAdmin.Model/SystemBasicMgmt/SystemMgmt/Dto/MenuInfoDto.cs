@@ -44,7 +44,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
         /// <summary>
         /// 菜单级别
         /// </summary>
-        public int MenuType { get; set; }
+        public string MenuType { get; set; } = string.Empty;
 
         /// <summary>
         /// 菜单级别名称

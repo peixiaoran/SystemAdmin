@@ -42,7 +42,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity
         /// <summary>
         /// 菜单类型（2、一级菜单 3、二级菜单）
         /// </summary>
-        public int MenuType { get; set; }
+        public string MenuType { get; set; } = string.Empty;
 
         /// <summary>
         /// 菜单路径

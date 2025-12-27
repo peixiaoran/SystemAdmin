@@ -1,7 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using SystemAdmin.Model.ModelHelper.ModelConverter;
-
-namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
+﻿namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
 {
     /// <summary>
     /// 假别下拉框Dto
@@ -11,8 +8,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
         /// <summary>
         /// 假别编码
         /// </summary>
-        [JsonConverter(typeof(IntToStringConverter))]
-        public int LeaveTypeCode { get; set; }
+        public string LeaveTypeCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 假别名称

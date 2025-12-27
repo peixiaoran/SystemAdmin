@@ -18,7 +18,7 @@
         /// <summary>
         /// 重要程度
         /// </summary>
-        public int ImportanceCode { get; set; }
+        public string ImportanceCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 请假单Id
@@ -58,7 +58,7 @@
         /// <summary>
         /// 假别编码
         /// </summary>
-        public int LeaveTypeCode { get; set; }
+        public string LeaveTypeCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 请假事由

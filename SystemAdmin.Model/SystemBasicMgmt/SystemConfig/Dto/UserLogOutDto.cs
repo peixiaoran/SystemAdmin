@@ -33,7 +33,7 @@
         /// <summary>
         /// 登录状态Id
         /// </summary>
-        public int StatusId { get; set; }
+        public string StatusId { get; set; } = string.Empty;
 
         /// <summary>
         /// 登录状态名称

@@ -21,7 +21,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity
         /// <summary>
         /// 操作状态（1：登录成功，2：密码错误，3：未找到工号，4：登出）
         /// </summary>
-        public int StatusId { get; set; }
+        public string StatusId { get; set; } = string.Empty;
 
         /// <summary>
         /// 登录时间
