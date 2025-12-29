@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001000 (16.00.1000)
- Source Host           : 127.0.0.1:1433
+ Source Server Version : 16001160 (16.00.1160)
+ Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001000 (16.00.1000)
+ Target Server Version : 16001160 (16.00.1160)
  File Encoding         : 65001
 
- Date: 26/12/2025 16:59:35
+ Date: 28/12/2025 19:17:49
 */
 
 
@@ -244,7 +244,7 @@ GO
 -- ----------------------------
 -- Records of FormCounting
 -- ----------------------------
-INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2511  ', N'0', N'0', N'0', N'0', N'0', N'0', N'0', N'1900-01-01 00:00:00.000', NULL, NULL)
+INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2512  ', N'1', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2025-12-27 15:11:03.000', NULL, NULL)
 GO
 
 
@@ -401,8 +401,8 @@ CREATE TABLE [Form].[FormInfo] (
   [FormTypeId] bigint  NOT NULL,
   [FormNo] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [Description] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [ImportanceCode] int  NULL,
-  [FormStatus] int  NULL,
+  [ImportanceCode] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
+  [FormStatus] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [FormOpenTime] datetime  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime DEFAULT getdate() NOT NULL,
@@ -501,6 +501,9 @@ GO
 -- ----------------------------
 -- Records of FormInfo
 -- ----------------------------
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [FormOpenTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2004812253567782912', N'1987217256446300160', N'LVR-25120001', N'1', N'Important', N'PendingSubmission', N'2025-12-27 15:11:03.000', N'1903486709602062336', N'2025-12-27 15:11:03.000', N'1903486709602062336', N'2025-12-27 15:11:56.000')
+GO
+
 
 -- ----------------------------
 -- Table structure for FormType
@@ -657,7 +660,7 @@ CREATE TABLE [Form].[LeaveForm] (
   [ApplicantUserName] nvarchar(100) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [ApplicantDeptId] bigint  NOT NULL,
   [ApplicantDeptName] nvarchar(40) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [LeaveTypeCode] int  NOT NULL,
+  [LeaveTypeCode] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [LeaveReason] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [LeaveStartTime] datetime2(7)  NULL,
   [LeaveEndTime] datetime2(7)  NULL,
@@ -802,6 +805,9 @@ GO
 -- ----------------------------
 -- Records of LeaveForm
 -- ----------------------------
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantUserNo], [ApplicantUserName], [ApplicantDeptId], [ApplicantDeptName], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [LeaveHandoverUserName], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2004812253567782912', N'LVR-25120001', N'2025-12-27 15:11:03.0000000', N'E347473', N'裴小然', N'1929535196076577000', N'软体开发组', N'5', N'1', N'2025-12-27 00:00:00.0000000', N'2026-01-21 00:00:00.0000000', N'600.00', N'1', N'1903486709602062336', N'2025-12-27 15:11:03.000', N'1903486709602062336', N'2025-12-27 15:11:56.000')
+GO
+
 
 -- ----------------------------
 -- Table structure for WorkflowCondition
