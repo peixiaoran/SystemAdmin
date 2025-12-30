@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Queries;
 using SystemAdmin.Service.SystemBasicMgmt.SystemAuth;
-using SystemAdmin.WebApi.Attributes;
 
 namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
 {

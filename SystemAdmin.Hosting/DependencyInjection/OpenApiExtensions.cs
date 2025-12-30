@@ -20,7 +20,7 @@ namespace SystemAdmin.WebApi.DependencyInjection
             services.AddOpenApi(documentName, options =>
             {
                 // 如需指定 OpenAPI 规范版本，可取消注释：
-                // options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
+                options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
 
                 // 文档元信息
                 options.AddDocumentTransformer((document, context, cancellationToken) =>
@@ -43,7 +43,7 @@ namespace SystemAdmin.WebApi.DependencyInjection
         {
             document.Info ??= new OpenApiInfo();
             document.Info.Title = "SystemAdmin";
-            document.Info.Version = documentName;          // 与文档名一致，更直观
+            document.Info.Version = documentName; // 与文档名一致，更直观
             document.Info.Description = "Systems API documentation";
         }
     }

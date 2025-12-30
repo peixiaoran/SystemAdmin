@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.CommonSetup.Options
 {
     /// <summary>
-    /// 邮件发送配置，对应 appsettings: EmailSettings
+    /// 发送邮件配置选项
     /// </summary>
     public class EmailOptions
     {

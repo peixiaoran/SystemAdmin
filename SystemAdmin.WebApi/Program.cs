@@ -15,7 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 
 // 注入 Cors
-builder.Services.AddCorsSetup();
+builder.Services.AddCorsSetup(builder.Configuration);
 
 // 注入 OpenApi
 builder.Services.AddOpenApi();
@@ -57,9 +57,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseRouting();
-app.UseCorsSetup();
+app.UseCorsSetup(builder.Configuration);
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
-await app.RunAsync();
+app.Run();

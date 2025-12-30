@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 
+/// <summary>
+/// JWT 配置选项
+/// </summary>
 public class JwtSettings
 {
     /// <summary>

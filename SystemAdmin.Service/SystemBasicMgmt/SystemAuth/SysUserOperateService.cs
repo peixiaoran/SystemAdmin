@@ -1,7 +1,5 @@
-﻿using Azure;
-using Konscious.Security.Cryptography;
+﻿using Konscious.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
 using System.Net;
@@ -78,8 +76,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     });
 
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFound")
-                    );
+                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFound"));
                 }
 
                 // 账号已冻结

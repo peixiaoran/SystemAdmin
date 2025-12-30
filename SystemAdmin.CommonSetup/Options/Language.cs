@@ -1,5 +1,8 @@
 ﻿namespace SystemAdmin.CommonSetup.Options
 {
+    /// <summary>
+    /// 语言配置类
+    /// </summary>
     public class Language
     {
         /// <summary>
@@ -8,12 +11,12 @@
         public string Locale { get; }
 
         /// <summary>
-        /// 是否中文（包含 zh-CN, zh-TW 等）
+        /// 是否中文（包含 zh-CN等）
         /// </summary>
         public bool IsChinese { get; }
 
         /// <summary>
-        /// 是否英文（包含 en-US, en-GB 等）
+        /// 是否英文（包含 en-US等）
         /// </summary>
         public bool IsEnglish { get; }
 
