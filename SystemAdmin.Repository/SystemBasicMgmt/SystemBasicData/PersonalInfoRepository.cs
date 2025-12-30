@@ -8,8 +8,6 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
 namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
 {
@@ -31,50 +29,64 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<PersonalInfoDto> GetPersonalInfoEntity(long loginUserId)
         {
-            return await _db.Queryable<UserInfoView>()
+            return await _db.Queryable<UserInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .Where(parsonal => parsonal.UserId == loginUserId)
-                            .Select((parsonal) => new PersonalInfoDto
-                            {
-                                UserId = parsonal.UserId,
-                                UserNo = parsonal.UserNo,
-                                UserNameCn = parsonal.UserNameCn,
-                                UserNameEn = parsonal.UserNameEn,
-                                Email = parsonal.Email,
-                                PhoneNumber = parsonal.PhoneNumber,
-                                LoginNo = parsonal.LoginNo,
-                                DepartmentId = parsonal.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-CN"
-                                                 ? parsonal.DepartmentNameCn
-                                                 : parsonal.DepartmentNameEn,
-                                DepartmentLevelId = parsonal.DepartmentLevelId,
-                                DepartmentLevelName = _lang.Locale == "zh-CN"
-                                                 ? parsonal.DepartmentLevelNameCn
-                                                 : parsonal.DepartmentLevelNameEn,
-                                RoleId = parsonal.RoleId,
-                                PositionId = parsonal.PositionId,
-                                PositionName = _lang.Locale == "zh-CN"
-                                                 ? parsonal.PositionNameCn
-                                                 : parsonal.PositionNameEn,
-                                Gender = parsonal.Gender,
-                                RoleName = _lang.Locale == "zh-CN"
-                                                 ? parsonal.RoleNameCn
-                                                 : parsonal.RoleNameEn,
-                                LaborId = parsonal.LaborId,
-                                LaborName = _lang.Locale == "zh-CN"
-                                                 ? parsonal.LaborNameCn
-                                                 : parsonal.LaborNameEn,
-                                HireDate = Convert.ToDateTime(parsonal.HireDate).ToString("yyyy-MM-dd"),
-                                AvatarAddress = parsonal.AvatarAddress,
-                                IsEmployed = parsonal.IsEmployed,
-                                IsApproval = parsonal.IsApproval,
-                                IsRealtimeNotification = parsonal.IsRealtimeNotification,
-                                IsScheduledNotification = parsonal.IsScheduledNotification,
-                                IsAgent = parsonal.IsAgent,
-                                IsPartTime = parsonal.IsPartTime,
-                                IsFreeze = parsonal.IsFreeze,
-                                Remark = parsonal.Remark,
-                            }).FirstAsync();
+                            
+                            .InnerJoin<UserRoleEntity>(
+                                (userinfo, userrole) =>
+                                    userinfo.UserId == userrole.UserId)
+                            
+                            .InnerJoin<RoleInfoEntity>(
+                                (userinfo, userrole, roleinfo) =>
+                                    userrole.RoleId == roleinfo.RoleId)
+                            
+                            .InnerJoin<DepartmentInfoEntity>(
+                                (userinfo, userrole, roleinfo, deptinfo) =>
+                                    userinfo.DepartmentId == deptinfo.DepartmentId)
+                            
+                            .InnerJoin<DepartmentLevelEntity>(
+                                (userinfo, userrole, roleinfo, deptinfo, deptlevelinfo) =>
+                                    deptinfo.DepartmentLevelId == deptlevelinfo.DepartmentLevelId)
+                            
+                            .InnerJoin<UserPositionEntity>(
+                                (userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition) =>
+                                    userinfo.PositionId == userposition.PositionId)
+                            
+                            .InnerJoin<UserLaborEntity>(
+                                (userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor) =>
+                                    userinfo.LaborId == userlabor.LaborId)
+                            
+                            .InnerJoin<NationalityInfoEntity>(
+                                (userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) =>
+                                    userinfo.Nationality == nation.NationId)
+                            
+                             .Where((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) => userinfo.UserId ==  loginUserId)
+                             .Select((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) => new PersonalInfoDto
+                             {
+                                 UserId = userinfo.UserId,
+                                 UserNo = userinfo.UserNo,
+                                 UserNameCn = userinfo.UserNameCn,
+                                 UserNameEn = userinfo.UserNameEn,
+                                 Email = userinfo.Email,
+                                 PhoneNumber = userinfo.PhoneNumber,
+                                 LoginNo = userinfo.LoginNo,
+                                 DepartmentId = userinfo.DepartmentId,
+                                 DepartmentLevelId = deptlevelinfo.DepartmentLevelId,
+                                 RoleId = roleinfo.RoleId,
+                                 PositionId = userposition.PositionId,
+                                 Gender = userinfo.Gender,
+                                 LaborId = userlabor.LaborId,
+                                 HireDate = Convert.ToDateTime(userinfo.HireDate).ToString("yyyy-MM-dd"),
+                                 AvatarAddress = userinfo.AvatarAddress,
+                                 IsEmployed = userinfo.IsEmployed,
+                                 IsApproval = userinfo.IsApproval,
+                                 IsRealtimeNotification = userinfo.IsRealtimeNotification,
+                                 IsScheduledNotification = userinfo.IsScheduledNotification,
+                                 IsAgent = userinfo.IsAgent,
+                                 IsPartTime = userinfo.IsPartTime,
+                                 IsFreeze = userinfo.IsFreeze,
+                                 Remark = userinfo.Remark,
+                             }).FirstAsync();
         }
 
         /// <summary>

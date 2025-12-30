@@ -55,7 +55,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 查询员工实体")]
-        public async Task<Result<UserInfoDto>> GetUserInfoEntity([FromBody] GetUserInfoEntity getUserEntity)
+        public async Task<Result<UserInfoEntityDto>> GetUserInfoEntity([FromBody] GetUserInfoEntity getUserEntity)
         {
             return await _userInfoService.GetUserInfoEntity(getUserEntity);
         }
@@ -63,7 +63,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 查询员工分页")]
-        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage([FromBody] GetUserInfoPage getUserPage)
+        public async Task<ResultPaged<UserInfoPageDto>> GetUserInfoPage([FromBody] GetUserInfoPage getUserPage)
         {
             return await _userInfoService.GetUserInfoPage(getUserPage);
         }

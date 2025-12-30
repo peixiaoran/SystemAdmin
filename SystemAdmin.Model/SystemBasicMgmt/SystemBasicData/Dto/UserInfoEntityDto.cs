@@ -6,7 +6,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
     /// <summary>
     /// 员工Dto
     /// </summary>
-    public class UserInfoDto
+    public class UserInfoEntityDto
     {
         /// <summary>
         /// 员工Id

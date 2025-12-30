@@ -20,7 +20,7 @@ namespace SystemAdmin.WebApi.DependencyInjection
             services.AddOpenApi(documentName, options =>
             {
                 // 如需指定 OpenAPI 规范版本，可取消注释：
-                options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
+                //options.OpenApiVersion = Microsoft.OpenApi.OpenApiSpecVersion.OpenApi3_0;
 
                 // 文档元信息
                 options.AddDocumentTransformer((document, context, cancellationToken) =>

@@ -293,17 +293,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="getUserEntity"></param>
         /// <returns></returns>
-        public async Task<Result<UserInfoDto>> GetUserInfoEntity(GetUserInfoEntity getUserEntity)
+        public async Task<Result<UserInfoEntityDto>> GetUserInfoEntity(GetUserInfoEntity getUserEntity)
         {
             try
             {
                 var userEntity = await _userInfoRepository.GetUserInfoEntity(long.Parse(getUserEntity.UserId));
-                return Result<UserInfoDto>.Ok(userEntity, "");
+                return Result<UserInfoEntityDto>.Ok(userEntity, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<UserInfoDto>.Failure(500, ex.Message.ToString());
+                return Result<UserInfoEntityDto>.Failure(500, ex.Message.ToString());
             }
         }
 
@@ -312,7 +312,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="getUserPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getUserPage)
+        public async Task<ResultPaged<UserInfoPageDto>> GetUserInfoPage(GetUserInfoPage getUserPage)
         {
             try
             {
@@ -321,7 +321,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<UserInfoDto>.Failure(500, ex.Message.ToString());
+                return ResultPaged<UserInfoPageDto>.Failure(500, ex.Message.ToString());
             }
         }
         /// <summary>

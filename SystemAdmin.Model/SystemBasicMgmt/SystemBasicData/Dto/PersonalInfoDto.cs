@@ -36,20 +36,10 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public long DepartmentId { get; set; }
 
         /// <summary>
-        /// 所属部门名称
-        /// </summary>
-        public string DepartmentName { get; set; } = string.Empty;
-
-        /// <summary>
         /// 所属部门级别Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
         public long DepartmentLevelId { get; set; }
-
-        /// <summary>
-        /// 所属部门级别名称
-        /// </summary>
-        public string DepartmentLevelName { get; set; } = string.Empty;
 
         /// <summary>
         /// 职级Id
@@ -58,9 +48,10 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public long PositionId { get; set; }
 
         /// <summary>
-        /// 职级名称
+        /// 职业编码
         /// </summary>
-        public string PositionName { get; set; } = string.Empty;
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long LaborId { get; set; }
 
         /// <summary>
         /// 角色Id
@@ -69,20 +60,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public long RoleId { get; set; }
 
         /// <summary>
-        /// 角色名称
-        /// </summary>
-        public string RoleName { get; set; } = string.Empty;
-
-        /// <summary>
         /// 性别
         /// </summary>
-        [JsonConverter(typeof(IntToStringConverter))]
         public int Gender { get; set; }
-
-        /// <summary>
-        /// 性别描述
-        /// </summary>
-        public string GenderName { get; set; } = string.Empty;
 
         /// <summary>
         /// 入职日期
@@ -115,19 +95,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public int IsEmployed { get; set; }
 
         /// <summary>
-        /// 是否在职文字描述
-        /// </summary>
-        public string IsEmployedName { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否签核
         /// </summary>
         public int IsApproval { get; set; }
-
-        /// <summary>
-        /// 是否签核文字描述
-        /// </summary>
-        public string IsApprovalName { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否实时邮件通知
@@ -153,17 +123,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         /// 是否冻结
         /// </summary>
         public int IsFreeze { get; set; }
-
-        /// <summary>
-        /// 职业编码
-        /// </summary>
-        [JsonConverter(typeof(LongToStringConverter))]
-        public long LaborId { get; set; }
-
-        /// <summary>
-        /// 职业文字描述
-        /// </summary>
-        public string LaborName { get; set; } = string.Empty;
 
         /// <summary>
         /// 备注

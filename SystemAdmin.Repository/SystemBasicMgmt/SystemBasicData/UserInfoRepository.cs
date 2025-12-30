@@ -4,10 +4,9 @@ using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity;
 
 namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
@@ -152,14 +151,14 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<UserInfoDto> GetUserInfoEntity(long userId)
+        public async Task<UserInfoEntityDto> GetUserInfoEntity(long userId)
         {
             var userEntity = await _db.Queryable<UserInfoEntity>()
                                       .With(SqlWith.NoLock)
                                       .InnerJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
                                       .InnerJoin<RoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
                                       .Where(user => user.UserId == userId)
-                                      .Select((user, userrole, role) => new UserInfoDto
+                                      .Select((user, userrole, role) => new UserInfoEntityDto
                                       {
                                           UserId = user.UserId,
                                           UserNo = user.UserNo,
@@ -186,7 +185,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                           ExpirationDays = user.ExpirationDays,
                                           ExpirationTime = user.ExpirationTime
                                       }).FirstAsync();
-            return userEntity.Adapt<UserInfoDto>();
+            return userEntity.Adapt<UserInfoEntityDto>();
         }
 
         /// <summary>
@@ -194,75 +193,74 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="getUserPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getUserPage)
+        public async Task<ResultPaged<UserInfoPageDto>> GetUserInfoPage(GetUserInfoPage getUserPage)
         {
             RefAsync<int> totalCount = 0;
-            var query = _db.Queryable<UserInfoView>()
-                           .With(SqlWith.NoLock);
+            var query = _db.Queryable<UserInfoEntity>()
+                           .With(SqlWith.NoLock)
+                           
+                           .InnerJoin<UserRoleEntity>(
+                               (userinfo, userrole) =>
+                                   userinfo.UserId == userrole.UserId)
+
+                           .InnerJoin<DepartmentInfoEntity>(
+                               (userinfo, userrole, deptinfo) =>
+                                   userinfo.DepartmentId == deptinfo.DepartmentId)
+                           
+                           .InnerJoin<UserPositionEntity>(
+                               (userinfo, userrole, deptinfo, userposition) =>
+                                   userinfo.PositionId == userposition.PositionId)
+                           
+                           .InnerJoin<NationalityInfoEntity>(
+                               (userinfo, userrole, deptinfo, userposition, nation) =>
+                                   userinfo.Nationality == nation.NationId);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getUserPage.UserNo))
             {
-                query = query.Where(user =>
-                    user.UserNo.Contains(getUserPage.UserNo));
+                query = query.Where(userinfo =>
+                    userinfo.UserNo.Contains(getUserPage.UserNo));
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getUserPage.UserName))
             {
-                query = query.Where(user =>
-                    user.UserNameCn.Contains(getUserPage.UserName) ||
-                    user.UserNameEn.Contains(getUserPage.UserName));
+                query = query.Where(userinfo =>
+                    userinfo.UserNameCn.Contains(getUserPage.UserName) ||
+                    userinfo.UserNameEn.Contains(getUserPage.UserName));
             }
             // 部门Id（仅在工号与姓名都为空时才筛选）
             if (!string.IsNullOrEmpty(getUserPage.DepartmentId)
                 && string.IsNullOrEmpty(getUserPage.UserNo)
                 && string.IsNullOrEmpty(getUserPage.UserName))
             {
-                query = query.Where(user => user.DepartmentId == long.Parse(getUserPage.DepartmentId));
+                query = query.Where(userinfo => userinfo.DepartmentId == long.Parse(getUserPage.DepartmentId));
             }
 
-            var userPage = await query.OrderBy(userview => new { userview.PositionOrderBy, userview.HireDate })
-                                      .Select(userview => new UserInfoDto
-                                      {
-                                          UserId = userview.UserId,
-                                          UserNo = userview.UserNo,
-                                          UserNameCn = userview.UserNameCn,
-                                          UserNameEn = userview.UserNameEn,
-                                          Email = userview.Email,
-                                          PhoneNumber = userview.PhoneNumber,
-                                          LoginNo = userview.LoginNo,
-                                          DepartmentName = _lang.Locale == "zh-CN"
-                                                           ? userview.DepartmentNameCn
-                                                           : userview.DepartmentNameEn,
-                                          DepartmentLevelName = _lang.Locale == "zh-CN"
-                                                           ? userview.DepartmentLevelNameCn
-                                                           : userview.DepartmentLevelNameEn,
-                                          PositionName = _lang.Locale == "zh-CN"
-                                                           ? userview.PositionNameCn
-                                                           : userview.PositionNameEn,
-                                          Gender = userview.Gender,
-                                          RoleName = _lang.Locale == "zh-CN"
-                                                           ? userview.RoleNameCn
-                                                           : userview.RoleNameEn,
-                                          HireDate = Convert.ToDateTime(userview.HireDate).ToString("yyyy-MM-dd"),
-                                          Nationality = userview.Nationality,
-                                          NationalityName = _lang.Locale == "zh-CN"
-                                                           ? userview.NationalityNameCn
-                                                           : userview.NationalityNameEn,
-                                          LaborId = userview.LaborId,
-                                          LaborName = _lang.Locale == "zh-CN"
-                                                           ? userview.LaborNameCn
-                                                           : userview.LaborNameEn,
-                                          AvatarAddress = userview.AvatarAddress,
-                                          IsEmployed = userview.IsEmployed,
-                                          IsApproval = userview.IsApproval,
-                                          IsRealtimeNotification = userview.IsRealtimeNotification,
-                                          IsScheduledNotification = userview.IsScheduledNotification,
-                                          IsAgent = userview.IsAgent,
-                                          IsPartTime = userview.IsPartTime,
-                                          IsFreeze = userview.IsFreeze,
-                                      }).ToPageListAsync(getUserPage.PageIndex, getUserPage.PageSize, totalCount);
-            return ResultPaged<UserInfoDto>.Ok(userPage, totalCount, "");
+            var userPage = await query.OrderBy((userinfo, userrole, deptinfo, userposition, nation) =>
+                    new { userposition.PositionOrderBy, userinfo.HireDate })
+                    .Select((userinfo, userrole, deptinfo, userposition, nation) =>
+                    new UserInfoPageDto
+                    {
+                        UserId = userinfo.UserId,
+                        DepartmentId = userinfo.DepartmentId,
+                        DepartmentName = _lang.Locale == "zh-CN"
+                                         ? deptinfo.DepartmentNameCn
+                                         : deptinfo.DepartmentNameEn,
+                        UserNo = userinfo.UserNo,
+                        UserNameCn = userinfo.UserNameCn,
+                        UserNameEn = userinfo.UserNameEn,
+                        PositionName = _lang.Locale == "zh-CN"
+                                         ? userposition.PositionNameCn
+                                         : userposition.PositionNameEn, 
+                        Gender = userinfo.Gender,
+                        IsEmployed = userinfo.IsEmployed,
+                        IsApproval = userinfo.IsApproval,
+                        IsFreeze = userinfo.IsFreeze,
+                        Remark = userinfo.Remark
+                    })
+                .ToPageListAsync(getUserPage.PageIndex, getUserPage.PageSize, totalCount);
+
+            return ResultPaged<UserInfoPageDto>.Ok(userPage, totalCount, "");
         }
 
         /// <summary>

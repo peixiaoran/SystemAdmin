@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001160 (16.00.1160)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Basic
 
  Target Server Type    : SQL Server
- Target Server Version : 16001160 (16.00.1160)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 28/12/2025 19:17:56
+ Date: 30/12/2025 16:48:20
 */
 
 
@@ -2913,6 +2913,12 @@ GO
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoggedOut', N'2025-12-27 15:32:39.000')
 GO
 
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2025-12-30 15:00:51.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2025-12-30 16:28:28.000')
+GO
+
 
 -- ----------------------------
 -- Table structure for UserPartTime
@@ -3331,69 +3337,6 @@ INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [Cre
 GO
 
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969084580594061312', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-09-20 01:02:02.000', N'1903486709602062336', N'2025-09-20 01:03:56.000')
-GO
-
-
--- ----------------------------
--- View structure for V_UserInfo
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Basic].[V_UserInfo]') AND type IN ('V'))
-	DROP VIEW [Basic].[V_UserInfo]
-GO
-
-CREATE VIEW [Basic].[V_UserInfo] AS SELECT
-  [userInfo].[UserId], --用户Id
-  [userInfo].[DepartmentId], --部门Id
-  [deptInfo].[DepartmentNameCn], --部门名称（中文）
-  [deptInfo].[DepartmentNameEn], --部门名称（英文）
-  [deptlevelInfo].[DepartmentLevelId], --部门等级Id
-  [deptlevelInfo].[DepartmentLevelNameCn], --部门等级（中文）
-  [deptlevelInfo].[DepartmentLevelNameEn], --部门等级（英文）
-  [userInfo].[UserNo], --工号
-  [userInfo].[UserNameCn], --姓名（中文）
-  [userInfo].[UserNameEn], --姓名（英文）
-  [userInfo].[Gender], --性别
-  [userInfo].[LoginNo], --登录账号
-  [userInfo].[HireDate], --入职日期
-  [userInfo].[Nationality], --国籍编码
-  [nation].[NationNameCn] AS NationalityNameCn, --国籍名称（中文）
-  [nation].[NationNameEn] AS NationalityNameEn, --国籍名称（英文）
-  [userInfo].[Email], --邮件
-  [userInfo].[PhoneNumber], --手机号
-  [userInfo].[AvatarAddress], --头像图片地址
-  [userposition].[PositionId], --职级
-  [userposition].[PositionNameCn], --职级名称（中文）
-  [userposition].[PositionNameEn], --职级名称（英文）
-  [userposition].[PositionOrderBy], --职级排序
-  [userInfo].[LaborId], --职业Id
-  [userlabor].[LaborNameCn] AS LaborNameCn, --职业名称（中文）
-  [userlabor].[LaborNameEn] AS LaborNameEn, --职业名称（英文）
-  [roleInfo].[RoleId], --角色Id
-  [roleInfo].[RoleNameCn], --角色名称（中文）
-  [roleInfo].[RoleNameEn], --角色名称（英文）
-  [userInfo].[IsEmployed], --是否在职
-  [userinfo].[IsApproval], --是否签核
-  [userInfo].[IsRealtimeNotification] AS IsRealtimeNotification, --是否实时通知邮件
-  [userInfo].[IsScheduledNotification] AS IsScheduledNotification, --是否定时通知邮件
-  [userinfo].[IsAgent] AS IsAgent, --是否代理
-  [userinfo].[IsPartTime], --是否兼职
-  [userinfo].[IsFreeze], --是否冻结
-  [userInfo].[Remark] --备注
-FROM
-  [Basic].[UserInfo] [userInfo] WITH (NOLOCK)
-  INNER JOIN [Basic].[UserRole] [userRole] WITH (NOLOCK) ON ([userInfo].[UserId] = [userRole].[UserId])
-  INNER JOIN [Basic].[RoleInfo] [roleInfo] WITH (NOLOCK) ON ([userRole].[RoleId] = [roleInfo].[RoleId])
-  INNER JOIN [Basic].[DepartmentInfo] [deptInfo] WITH (NOLOCK) ON ([userInfo].[DepartmentId] = [deptInfo].[DepartmentId])
-  INNER JOIN [Basic].[DepartmentLevel] [deptlevelInfo] WITH (NOLOCK) ON ([deptInfo].[DepartmentLevelId] = [deptlevelInfo].[DepartmentLevelId])
-  INNER JOIN [Basic].[UserPosition] [userposition] WITH (NOLOCK) ON ([userInfo].[PositionId] = [userposition].[PositionId])
-  INNER JOIN [Basic].[UserLabor] [userlabor] WITH (NOLOCK) ON ([userInfo].[LaborId] = [userlabor].[LaborId])
-  INNER JOIN [Basic].[NationalityInfo] [nation] WITH (NOLOCK) ON (([userInfo].[Nationality] = [nation].[NationId]))
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'员工信息视图',
-'SCHEMA', N'Basic',
-'VIEW', N'V_UserInfo'
 GO
 
 
