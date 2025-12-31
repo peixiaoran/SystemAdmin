@@ -258,19 +258,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
-        /// 查询被代理员工和代理员工是否已有代理关系
-        /// </summary>
-        /// <param name="substituteUserId"></param>
-        /// <param name="agentUserId"></param>
-        /// <returns></returns>
-        public async Task<bool> GetSubAgentIsExist(long substituteUserId, long agentUserId)
-        {
-            return await _db.Queryable<UserAgentEntity>()
-                            .With(SqlWith.NoLock)
-                            .AnyAsync(useragent => useragent.SubstituteUserId == substituteUserId && useragent.AgentUserId == agentUserId);
-        }
-
-        /// <summary>
         /// 查询被代理员工是否代理了其他员工
         /// </summary>
         /// <param name="substituteUserId"></param>
@@ -283,6 +270,18 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
+        /// 查询被代理员工是否被代理
+        /// </summary>
+        /// <param name="substituteUserId"></param>
+        /// <returns></returns>
+        public async Task<bool> GetSubAgentIsSubAgent(long substituteUserId)
+        {
+            return await _db.Queryable<UserAgentEntity>()
+                            .With(SqlWith.NoLock)
+                            .AnyAsync(useragent => useragent.SubstituteUserId == substituteUserId);
+        }
+
+        /// <summary>
         /// 查询代理员工是否被代理
         /// </summary>
         /// <param name="agentUserId"></param>
@@ -292,6 +291,18 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             return await _db.Queryable<UserAgentEntity>()
                             .With(SqlWith.NoLock)
                             .AnyAsync(useragent => useragent.SubstituteUserId == agentUserId);
+        }
+
+        /// <summary>
+        /// 查询代理员工是否代理了其他员工
+        /// </summary>
+        /// <param name="agentUserId"></param>
+        /// <returns></returns>
+        public async Task<bool> GetAgentIsAgent(long agentUserId)
+        {
+            return await _db.Queryable<UserAgentEntity>()
+                            .With(SqlWith.NoLock)
+                            .AnyAsync(useragent => useragent.AgentUserId == agentUserId);
         }
     }
 }

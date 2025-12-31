@@ -78,35 +78,38 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 {
                     // 被代理员工不能和代理员工相同
                     await _db.RollbackTranAsync();
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}SubAgentSameAsAgent"));
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentSameEmployee"));
                 }
 
-                await _db.BeginTranAsync();
-                // 检查被代理员工和代理员工是否已有代理关系
-                bool subAgentIsExist = await _userAgentRepository.GetSubAgentIsExist(long.Parse(userAgentUpsert.SubstituteUserId), long.Parse(userAgentUpsert.AgentUserId));
-                if (subAgentIsExist)
-                {
-                    // 该代理关系已存在
-                    await _db.RollbackTranAsync();
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}RelationAlreadyExist"));
-                }
-
-                // 查询被代理员工是否代理了其他员工
+                // 查询被代理员工已代理其他员工
                 bool subAgentIsAgent = await _userAgentRepository.GetSubAgentIsAgent(long.Parse(userAgentUpsert.SubstituteUserId));
                 if (subAgentIsAgent)
                 {
-                    // 被代理员工已是其他员工的代理
-                    await _db.RollbackTranAsync();
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}SubAgentAlreadyAgent"));
+                    // 被代理员工已代理其他员工，不能嵌套代理
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}TargetHasAgentRole"));
                 }
 
-                // 查询代理员工是否被代理
+                // 查询被代理员工已被其他员工代理
+                bool subAgentIsSubAgent = await _userAgentRepository.GetSubAgentIsSubAgent(long.Parse(userAgentUpsert.SubstituteUserId));
+                if (subAgentIsSubAgent)
+                {
+                    // 被代理员工已被其他员工代理，不可多人员代理
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}TargetAlreadyAgented"));
+                }
+
+                // 查询代理员工已被其他员工代理
                 bool agentIsSubAgent = await _userAgentRepository.GetAgentIsSubAgent(long.Parse(userAgentUpsert.AgentUserId));
                 if (agentIsSubAgent)
                 {
-                    // 代理员工已被其他员工代理
-                    await _db.RollbackTranAsync();
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentAlreadySubAgent"));
+                    // 代理员工已被其他员工代理，不能作为代理员工
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentAlreadyAgented"));
+                }
+                // 查询代理员工已代理其他员工
+                bool agentIsAgent = await _userAgentRepository.GetAgentIsAgent(long.Parse(userAgentUpsert.AgentUserId));
+                if (agentIsAgent)
+                {
+                    // 代理员工已代理其他员工，不可多人员代理
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentHasMultipleTargets"));
                 }
                 else
                 {

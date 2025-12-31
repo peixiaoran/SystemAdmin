@@ -61,16 +61,52 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 代理员工已作为其他员工的被代理人，无法重复设置。 的本地化字符串。
+        ///   查找类似 代理员工已被其他员工代理，不能作为代理员工 的本地化字符串。
         /// </summary>
-        internal static string UserAgentAgentAlreadySubAgent {
+        internal static string AgentAlreadyAgented {
             get {
-                return ResourceManager.GetString("UserAgentAgentAlreadySubAgent", resourceCulture);
+                return ResourceManager.GetString("AgentAlreadyAgented", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 代理关系删除失败。 的本地化字符串。
+        ///   查找类似 代理员工已代理其他员工，不可多人员代理 的本地化字符串。
+        /// </summary>
+        internal static string AgentHasMultipleTargets {
+            get {
+                return ResourceManager.GetString("AgentHasMultipleTargets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 被代理员工与代理员工不能为同一人 的本地化字符串。
+        /// </summary>
+        internal static string AgentSameEmployee {
+            get {
+                return ResourceManager.GetString("AgentSameEmployee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 被代理员工已被其他员工代理，不可多人员代理 的本地化字符串。
+        /// </summary>
+        internal static string TargetAlreadyAgented {
+            get {
+                return ResourceManager.GetString("TargetAlreadyAgented", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 被代理员工已代理其他员工，不能嵌套代理 的本地化字符串。
+        /// </summary>
+        internal static string TargetHasAgentRole {
+            get {
+                return ResourceManager.GetString("TargetHasAgentRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 代理关系删除失败 的本地化字符串。
         /// </summary>
         internal static string UserAgentDeleteFailed {
             get {
@@ -79,7 +115,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 代理关系删除成功。 的本地化字符串。
+        ///   查找类似 代理关系删除成功 的本地化字符串。
         /// </summary>
         internal static string UserAgentDeleteSuccess {
             get {
@@ -88,7 +124,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 代理配置失败。 的本地化字符串。
+        ///   查找类似 代理配置失败 的本地化字符串。
         /// </summary>
         internal static string UserAgentInsertFailed {
             get {
@@ -97,7 +133,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 代理配置成功。 的本地化字符串。
+        ///   查找类似 代理配置成功 的本地化字符串。
         /// </summary>
         internal static string UserAgentInsertSuccess {
             get {
@@ -106,34 +142,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 该代理关系已存在。 的本地化字符串。
-        /// </summary>
-        internal static string UserAgentRelationAlreadyExist {
-            get {
-                return ResourceManager.GetString("UserAgentRelationAlreadyExist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 被代理员工已作为其他员工的代理人，无法重复设置。 的本地化字符串。
-        /// </summary>
-        internal static string UserAgentSubAgentAlreadyAgent {
-            get {
-                return ResourceManager.GetString("UserAgentSubAgentAlreadyAgent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 被代理员工不能与代理员工相同。 的本地化字符串。
-        /// </summary>
-        internal static string UserAgentSubAgentSameAsAgent {
-            get {
-                return ResourceManager.GetString("UserAgentSubAgentSameAsAgent", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 表单配置成功。 的本地化字符串。
+        ///   查找类似 表单配置成功 的本地化字符串。
         /// </summary>
         internal static string UserFormBindInsertSuccess {
             get {
@@ -142,7 +151,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 员工兼任删除失败。 的本地化字符串。
+        ///   查找类似 员工兼任删除失败 的本地化字符串。
         /// </summary>
         internal static string UserPartTimeDeleteFailed {
             get {
@@ -151,7 +160,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 员工兼任删除成功。 的本地化字符串。
+        ///   查找类似 员工兼任删除成功 的本地化字符串。
         /// </summary>
         internal static string UserPartTimeDeleteSuccess {
             get {
@@ -160,7 +169,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 员工兼任新增失败。 的本地化字符串。
+        ///   查找类似 员工兼任新增失败 的本地化字符串。
         /// </summary>
         internal static string UserPartTimeInsertFailed {
             get {
@@ -169,7 +178,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 员工兼任新增成功。 的本地化字符串。
+        ///   查找类似 员工兼任新增成功 的本地化字符串。
         /// </summary>
         internal static string UserPartTimeInsertSuccess {
             get {
@@ -178,7 +187,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 该员工已在此部门兼任该职业，无法重复设置。 的本地化字符串。
+        ///   查找类似 该员工已在此部门兼任该职业，无法重复设置 的本地化字符串。
         /// </summary>
         internal static string UserPartTimeIsExist {
             get {
@@ -187,7 +196,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 员工兼任修改失败。 的本地化字符串。
+        ///   查找类似 员工兼任修改失败 的本地化字符串。
         /// </summary>
         internal static string UserPartTimeUpdateFailed {
             get {
@@ -196,7 +205,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
-        ///   查找类似 员工兼任修改成功。 的本地化字符串。
+        ///   查找类似 员工兼任修改成功 的本地化字符串。
         /// </summary>
         internal static string UserPartTimeUpdateSuccess {
             get {

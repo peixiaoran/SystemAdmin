@@ -452,7 +452,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="getUserInfoPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<Model.FormBusiness.FormWorkflow.Dto.UserInfoDto>> GetUserInfoPage(GetUserInfoPage getUserInfoPage)
+        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getUserInfoPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserInfoEntity>()
@@ -509,7 +509,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                 IsAgent = user.IsAgent,
                 IsApproval = user.IsApproval,
             }).ToPageListAsync(getUserInfoPage.PageIndex, getUserInfoPage.PageSize, totalCount);
-            return ResultPaged<Model.FormBusiness.FormWorkflow.Dto.UserInfoDto>.Ok(userPage.Adapt<List<Model.FormBusiness.FormWorkflow.Dto.UserInfoDto>>(), totalCount, "");
+            return ResultPaged<UserInfoDto>.Ok(userPage.Adapt<List<UserInfoDto>>(), totalCount, "");
         }
     }
 }
