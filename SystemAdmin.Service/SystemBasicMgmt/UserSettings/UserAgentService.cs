@@ -77,7 +77,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 if (userAgentUpsert.SubstituteUserId == userAgentUpsert.AgentUserId)
                 {
                     // 被代理员工不能和代理员工相同
-                    await _db.RollbackTranAsync();
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentSameEmployee"));
                 }
 
@@ -113,6 +112,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 }
                 else
                 {
+                    await _db.BeginTranAsync();
                     // 重新配置代理人
                     UserAgentEntity userAgentEntity = new UserAgentEntity
                     {

@@ -1,5 +1,6 @@
 ﻿using Konscious.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
 using System.Net;
@@ -30,12 +31,12 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         private readonly SysUserOperateRepository _sysUserOperateRepository;
         private readonly MailKitEmailSender _mailKitEmail;
         private readonly LocalizationService _localization;
-        //private readonly HybridCache _cache;
+        private readonly HybridCache _cache;
         private readonly string _this = "SystemBasicMgmt.SystemAuth.SysUserOperate";
         private const int CodeLength = 6;
         private static readonly Random _random = new Random();
 
-        public SysUserOperateService(CurrentUser loginuser, JwtTokenService jwt, ILogger<SysUserOperateService> logger, SqlSugarScope db, SysUserOperateRepository sysUserOperateRepository, MailKitEmailSender mailKitEmail, LocalizationService localization)
+        public SysUserOperateService(CurrentUser loginuser, JwtTokenService jwt, ILogger<SysUserOperateService> logger, SqlSugarScope db, SysUserOperateRepository sysUserOperateRepository, MailKitEmailSender mailKitEmail, LocalizationService localization, HybridCache cache)
         {
             _loginuser = loginuser;
             _jwt = jwt;
@@ -44,19 +45,19 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             _sysUserOperateRepository = sysUserOperateRepository;
             _mailKitEmail = mailKitEmail;
             _localization = localization;
+            _cache = cache;
         }
 
         /// <summary>
         /// 员工登录
         /// </summary>
+        /// <param name="httpResponse"></param>
         /// <param name="sysLogin"></param>
         /// <returns></returns>
         public async Task<Result<SysUserLoginReturnDto>> UserLogin(HttpResponse httpResponse, SysLogin sysLogin)
         {
             try
             {
-                await _db.BeginTranAsync();
-
                 var ip = GetLocalIPv4();
                 var now = DateTime.Now;
                 var nowStr = now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -66,16 +67,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
 
                 if (user == null)
                 {
+                    await _db.BeginTranAsync();
                     // 员工不存在
                     await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                     {
                         UserId = 0,
-                        StatusId = "",
+                        StatusId = LoginBehavior.AccountNotExist.ToEnumString(),
                         IP = ip,
                         LoginDate = nowStr
                     });
-
                     await _db.CommitTranAsync();
+
                     return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFound"));
                 }
 
@@ -236,11 +238,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFreeze"));
                 }
 
-                //await _cache.RemoveAsync(userNo); // 先清除旧缓存（HybridCache 不支持直接覆盖）
+                await _cache.RemoveAsync(userNo); // 先清除旧缓存（HybridCache 不支持直接覆盖）
 
                 // 正常发送验证码流程
                 var code = GenerateRandomCode();
-                //await _cache.SetAsync(userNo, code);
+                await _cache.SetAsync(userNo, code);
 
                 // 发送邮件
                 EmailMessage emailMsg = new EmailMessage
@@ -270,16 +272,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             try
             {
                 // 判断是否频繁发送：通过第一次调用返回非 null 判定
-                //var cacheValue = await _cache.GetOrCreateAsync(
-                //      userUnlock.UserNo,
-                //      ct => new ValueTask<string>("")
-                //);
-                if (string.IsNullOrEmpty("11111"))
+                var cacheCode = await _cache.GetOrCreateAsync(
+                      userUnlock.UserNo,
+                      ct => new ValueTask<string>("")
+                );
+                if (string.IsNullOrEmpty(userUnlock.VerificationCode))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}VcCodeExpired"));
                 }
 
-                if ("11111" != userUnlock.VerificationCode)
+                if (!string.Equals(cacheCode, userUnlock.VerificationCode))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}VcCodeError"));
                 }
@@ -314,7 +316,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     await _sysUserOperateRepository.DeleleUserLockLog(user.UserId);
                     await _db.CommitTranAsync();
 
-                    //await _cache.RemoveAsync(userUnlock.UserNo); // 验证通过，清除缓存
+                    await _cache.RemoveAsync(userUnlock.UserNo); // 验证通过，清除缓存
 
                     return unlockFreezeCount >= 1
                         ? Result<int>.Ok(unlockFreezeCount, _localization.ReturnMsg($"{_this}UnlockSuccess"))
@@ -352,11 +354,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}PasswordNotExpiration"));
                 }
 
-                //await _cache.RemoveAsync(userNo); // 先清除旧缓存（HybridCache 不支持直接覆盖）
+                await _cache.RemoveAsync(userNo); // 先清除旧缓存（HybridCache 不支持直接覆盖）
 
                 // 正常发送验证码流程
                 var code = GenerateRandomCode();
-                //await _cache.SetAsync(userNo, code);
+                await _cache.SetAsync(userNo, code);
 
                 // 发送邮件
                 EmailMessage emailMsg = new EmailMessage
@@ -396,19 +398,19 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
 
                 // 获取缓存中的验证码（注意不是创建）
                 // 查询存入缓存中的验证码
-                //var cachedCode = await _cache.GetOrCreateAsync(
-                //    pwdExpirationUpsert.UserNo,
-                //    ct => new ValueTask<string>("")
-                //);
+                var cachedCode = await _cache.GetOrCreateAsync(
+                    pwdExpirationUpsert.UserNo,
+                    ct => new ValueTask<string>("")
+                );
 
                 // 如果缓存中没有验证码，说明验证码已过期或未发送
-                if (string.IsNullOrEmpty("11111"))
+                if (string.IsNullOrEmpty(pwdExpirationUpsert.VerificationCode))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}VcCodeExpired"));
                 }
 
                 // 验证验证码是否匹配
-                if (!string.Equals("11111", pwdExpirationUpsert.VerificationCode))
+                if (!string.Equals(cachedCode, pwdExpirationUpsert.VerificationCode))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}VcCodeError"));
                 }

@@ -52,6 +52,9 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     StepNameCn = workflowStep.StepNameCn,
                     StepNameEn = workflowStep.StepNameEn,
                     Assignment = workflowStep.Assignment,
+                    ArchitectureLevel = workflowStep.ArchitectureLevel,
+                    IsStartStep = workflowStep.IsStartStep,
+                    ApproveMode = workflowStep.ApproveMode,
                     Description = workflowStep.Description,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
@@ -178,7 +181,10 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     FormTypeId = long.Parse(workflowStep.FormTypeId),
                     StepNameCn = workflowStep.StepNameCn,
                     StepNameEn = workflowStep.StepNameEn,
+                    ArchitectureLevel = workflowStep.ArchitectureLevel,
+                    IsStartStep = workflowStep.IsStartStep,
                     Assignment = workflowStep.Assignment,
+                    ApproveMode = workflowStep.ApproveMode,
                     Description = workflowStep.Description,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")

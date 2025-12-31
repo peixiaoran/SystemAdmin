@@ -11,7 +11,6 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto;
 using SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData;
 
 namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData

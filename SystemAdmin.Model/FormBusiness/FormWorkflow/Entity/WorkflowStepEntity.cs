@@ -30,9 +30,14 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public string StepNameEn { get; set; } = string.Empty;
 
         /// <summary>
+        /// 架构级别（组织架构、执行级）
+        /// </summary>
+        public string ArchitectureLevel { get; set; } = string.Empty;
+
+        /// <summary>
         /// 是否为开始步骤
         /// </summary>
-        public string IsStartStep { get; set; } = string.Empty;
+        public int IsStartStep { get; set; }
 
         /// <summary>
         /// 审批人选取方式（依组织架构、指定部门员工级别、指定员工、自定义）
