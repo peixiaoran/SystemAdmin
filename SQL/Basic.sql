@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 02/01/2026 16:24:29
+ Date: 02/01/2026 17:00:55
 */
 
 
@@ -2486,7 +2486,7 @@ GO
 -- ----------------------------
 -- Records of UserInfo
 -- ----------------------------
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1903486709602062336', N'1929535196076576906', N'1351602631784529920', N'E347473', N'裴小然', N'Xiaoran Pei', N'1', N'2024-07-01', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'18815384916', N'E347473', N'EUH6DgP1a6QBh5ItIuK6dFEDVtcrxniMS4PBeEKBv9k=', N'PlbqCzx2SVjMusR84tx1pQ==', N'127.0.0.1:9000/systemadmin/20251227004216542_918e9c0a.jpg', N'1', N'1', N'1', N'1', N'0', N'1', N'1', N'180', N'2026-07-01 10:25:14.000', N'', N'1903486709602062336', N'2025-03-23 00:39:31.000', N'1903486709602062336', N'2025-12-27 00:42:31.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1903486709602062336', N'1929535196076576906', N'1351602631784529920', N'E347473', N'裴小然', N'Xiaoran Pei', N'1', N'2024-07-01', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'18815384916', N'E347473', N'QQ8VvNaTsr53fRQPTOpaFd4rPLIuqPc6a8DJjM18S9E=', N'r7FNzqUAkY8TmD6mjl7UCA==', N'127.0.0.1:9000/systemadmin/20251227004216542_918e9c0a.jpg', N'1', N'1', N'1', N'1', N'0', N'1', N'1', N'180', N'2026-07-01 16:47:27.000', N'', N'1903486709602062336', N'2025-03-23 00:39:31.000', N'1903486709602062336', N'2025-12-27 00:42:31.000')
 GO
 
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961651950017712128', N'1929535196076576830', N'1351581732096180224', N'E327852', N'黃仁華', N'Paul Huang', N'1', N'2025-08-30', N'1972220728019390464', N'1956396264467861504', N'3841510708@qq.com', N'13616266055', N'E327852', N'T9ncvVo1LGia8KNoUeYR8IcuJzDeZomXWmpZpBkYalQ=', N'8aKznfX78xIhh7FjgfmpuQ==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110631504.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-10-29 12:47:25.000', N'', N'1903486709602062336', N'2025-08-30 12:47:25.000', N'1903486709602062336', N'2025-10-03 19:06:32.000')
@@ -2813,7 +2813,7 @@ GO
 -- ----------------------------
 -- Records of UserLock
 -- ----------------------------
-INSERT INTO [Basic].[UserLock] ([UserId], [NumberErrors], [CreatedDate]) VALUES (N'1903486709602062336', N'5', N'2026-01-02 14:52:54.000')
+INSERT INTO [Basic].[UserLock] ([UserId], [NumberErrors], [CreatedDate]) VALUES (N'1903486709602062336', N'5', N'2026-01-02 16:49:42.000')
 GO
 
 
@@ -2924,6 +2924,27 @@ INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUE
 GO
 
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:59.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:47:32.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 16:47:39.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:42.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:43.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:44.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:44.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:45.000')
 GO
 
 

@@ -8,8 +8,8 @@ using SystemAdmin.Model.FormBusiness.FormWorkflow.Dto;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Queries;
 using SystemAdmin.Repository.FormBusiness.FormWorkflow;
-using SystemAdmin.Model.FormBusiness.Enum;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
+using SystemAdmin.Common.Enums.FormBusiness;
 
 namespace SystemAdmin.Service.FormBusiness.FormWorkflow
 {

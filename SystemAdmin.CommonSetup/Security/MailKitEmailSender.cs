@@ -10,7 +10,6 @@ namespace SystemAdmin.CommonSetup.Security
     public class MailKitEmailSender
     {
         private readonly EmailOptions _options;
-        private readonly ILogger<MailKitEmailSender> _logger;
 
         /// <summary>
         /// 构造函数，由依赖注入框架调用。
@@ -21,7 +20,6 @@ namespace SystemAdmin.CommonSetup.Security
         public MailKitEmailSender(IOptions<EmailOptions> options, ILogger<MailKitEmailSender> logger)
         {
             _options = options.Value;
-            _logger = logger;
         }
 
         /// <summary>
@@ -44,50 +42,33 @@ namespace SystemAdmin.CommonSetup.Security
             // MailKit SmtpClient 实例
             using var client = new SmtpClient();
 
-            try
+            // 设置超时时间（毫秒）
+            client.Timeout = _options.Timeout;
+
+            // 依据配置选择加密方式
+            var secureOption = GetSecureSocketOptions();
+
+            // 连接到 SMTP 服务器
+            await client.ConnectAsync(
+                _options.SmtpServer,
+                _options.Port,
+                secureOption,
+                cancellationToken);
+
+            // 如果配置了用户名，则进行 SMTP 身份认证
+            if (!string.IsNullOrWhiteSpace(_options.UserName))
             {
-                // 设置超时时间（毫秒）
-                client.Timeout = _options.Timeout;
-
-                // 依据配置选择加密方式
-                var secureOption = GetSecureSocketOptions();
-
-                // 连接到 SMTP 服务器
-                await client.ConnectAsync(
-                    _options.SmtpServer,
-                    _options.Port,
-                    secureOption,
+                await client.AuthenticateAsync(
+                    _options.UserName,
+                    _options.Password,
                     cancellationToken);
-
-                // 如果配置了用户名，则进行 SMTP 身份认证
-                if (!string.IsNullOrWhiteSpace(_options.UserName))
-                {
-                    await client.AuthenticateAsync(
-                        _options.UserName,
-                        _options.Password,
-                        cancellationToken);
-                }
-
-                // 发送邮件
-                await client.SendAsync(mimeMessage, cancellationToken);
-
-                // 正常断开连接
-                await client.DisconnectAsync(true, cancellationToken);
-
-                _logger.LogInformation(
-                    "邮件发送成功，收件人：{To}，主题：{Subject}",
-                    string.Join(",", message.To),
-                    message.Subject);
             }
-            catch (Exception ex)
-            {
-                // 记录错误日志，并将异常抛给上层，由上层决定是否重试等策略
-                _logger.LogError(ex,
-                    "邮件发送失败，收件人：{To}，主题：{Subject}",
-                    string.Join(",", message.To),
-                    message.Subject);
-                throw;
-            }
+
+            // 发送邮件
+            await client.SendAsync(mimeMessage, cancellationToken);
+
+            // 正常断开连接
+            await client.DisconnectAsync(true, cancellationToken);
         }
 
         /// <summary>

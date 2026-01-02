@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using SqlSugar;
+using SystemAdmin.Common.Enums.SystemBasicMgmt;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Security;
-using SystemAdmin.Model.SystemBasicMgmt.Enum;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Queries;

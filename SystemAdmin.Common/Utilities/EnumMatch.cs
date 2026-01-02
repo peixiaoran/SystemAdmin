@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SystemAdmin.Common.Utilities
+﻿namespace SystemAdmin.Common.Utilities
 {
     /// <summary>
     /// 枚举字符串匹配工具类

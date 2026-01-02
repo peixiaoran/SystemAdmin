@@ -9,10 +9,10 @@ using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using SystemAdmin.Common.Enums.SystemBasicMgmt;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.CommonSetup.Security;
-using SystemAdmin.Model.SystemBasicMgmt.Enum;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Queries;
@@ -133,8 +133,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     var remain = 5 - newErrors;
                     await _db.CommitTranAsync();
 
-                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}LoginFailedRemainTimes", remain)
-                    );
+                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}LoginFailedRemainTimes", remain));
                 }
 
                 // 密码是否过期

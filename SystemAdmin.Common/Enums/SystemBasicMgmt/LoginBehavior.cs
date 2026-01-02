@@ -1,4 +1,4 @@
-﻿namespace SystemAdmin.Model.SystemBasicMgmt.Enum
+﻿namespace SystemAdmin.Common.Enums.SystemBasicMgmt
 {
     /// <summary>
     /// 登录行为枚举

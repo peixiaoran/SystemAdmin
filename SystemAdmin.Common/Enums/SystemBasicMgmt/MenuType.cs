@@ -1,4 +1,4 @@
-﻿namespace SystemAdmin.Model.SystemBasicMgmt.Enum
+﻿namespace SystemAdmin.Common.Enums.SystemBasicMgmt
 {
     /// <summary>
     /// 菜单类型枚举

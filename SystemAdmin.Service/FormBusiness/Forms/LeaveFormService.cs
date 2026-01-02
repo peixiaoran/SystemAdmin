@@ -1,9 +1,9 @@
 ﻿using Mapster;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
+using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Security;
-using SystemAdmin.Model.FormBusiness.Enum;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;

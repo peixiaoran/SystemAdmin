@@ -1,4 +1,4 @@
-﻿namespace SystemAdmin.Model.FormBusiness.Enum
+﻿namespace SystemAdmin.Common.Enums.FormBusiness
 {
     public enum FormOp
     {

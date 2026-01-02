@@ -1,4 +1,4 @@
-﻿namespace SystemAdmin.Model.FormBusiness.Enum
+﻿namespace SystemAdmin.Common.Enums.FormBusiness
 {
     /// <summary>
     /// 流程审批步骤选取人员来源方式枚举

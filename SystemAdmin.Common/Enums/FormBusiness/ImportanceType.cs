@@ -1,4 +1,4 @@
-﻿namespace SystemAdmin.Model.FormBusiness.Enum
+﻿namespace SystemAdmin.Common.Enums.FormBusiness
 {
     /// <summary>
     /// 表单重要程度枚举
