@@ -62,11 +62,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
         public string MenuIcon { get; set; } = string.Empty;
 
         /// <summary>
-        /// 排序
-        /// </summary>
-        public int SortOrder { get; set; }
-
-        /// <summary>
         /// 是否可见
         /// </summary>
         public int IsEnabled { get; set; }
@@ -77,28 +72,8 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
         public int IsVisible { get; set; }
 
         /// <summary>
-        /// 对应API路由
-        /// </summary>
-        public string RoutePath { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 前端重定向
-        /// </summary>
-        public string Redirect { get; set; } = string.Empty;
-
-        /// <summary>
         /// 备注
         /// </summary>
         public string Remark { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 创建人姓名
-        /// </summary>
-        public string CreatedName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 创建日期
-        /// </summary>
-        public string CreatedDate { get; set; } = string.Empty;
     }
 }

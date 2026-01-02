@@ -14,10 +14,5 @@
         /// 币别名称
         /// </summary>
         public string CurrencyName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否禁用
-        /// </summary>
-        public bool Disabled { get; set; }
     }
 }

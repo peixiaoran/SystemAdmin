@@ -89,7 +89,11 @@ namespace SystemAdmin.Repository.CustMat.CustMatBasicInfo
             {
                 query.Where(customer => customer.CustomerNameCn.Contains(getCustomerPage.CustomerName) || customer.CustomerNameEn.Contains(getCustomerPage.CustomerName));
             }
-            var customerPage = await query.OrderBy(customer => customer.CreatedDate).ToPageListAsync(getCustomerPage.PageIndex, getCustomerPage.PageSize, totalCount);
+
+            // 排序
+            query = query.OrderBy(customer => customer.CreatedDate);
+
+            var customerPage = await query.ToPageListAsync(getCustomerPage.PageIndex, getCustomerPage.PageSize, totalCount);
             return ResultPaged<CustomerInfoDto>.Ok(customerPage.Adapt<List<CustomerInfoDto>>(), totalCount, "");
         }
     }

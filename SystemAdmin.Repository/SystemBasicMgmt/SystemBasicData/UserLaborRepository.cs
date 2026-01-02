@@ -87,7 +87,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                     userlabor.LaborNameEn.Contains(getUserLaborPage.LaborName));
             }
 
-            var userLaborPage = await query.OrderBy(userlabor => userlabor.LaborNameCn).ToPageListAsync(getUserLaborPage.PageIndex, getUserLaborPage.PageSize, totalCount);
+            // 排序
+            query = query.OrderBy(userlabor => userlabor.LaborNameCn);
+
+            var userLaborPage = await query.ToPageListAsync(getUserLaborPage.PageIndex, getUserLaborPage.PageSize, totalCount);
             return ResultPaged<UserLaborDto>.Ok(userLaborPage.Adapt<List<UserLaborDto>>(), totalCount, "");
         }
     }

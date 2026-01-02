@@ -34,15 +34,5 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto
         /// 币别名称（英文）
         /// </summary>
         public string CurrencyNameEn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否有效
-        /// </summary>
-        public int IsEnabled { get; set; }
-
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string Remark { get; set; } = string.Empty;
     }
 }

@@ -32,6 +32,28 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
+        /// 查询所有员工信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<UserInfoEntity>> GetUserInfoList()
+        {
+            return await _db.Queryable<UserInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .ToListAsync();
+        }
+
+        /// <summary>
+        /// 查询所有部门信息
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DepartmentInfoEntity>> GetDepartmentInfoList()
+        {
+            return await _db.Queryable<DepartmentInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .ToListAsync();
+        }
+
+        /// <summary>
         /// 删除部门信息
         /// </summary>
         /// <param name="deptId"></param>
@@ -82,40 +104,77 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         public async Task<List<DepartmentInfoDto>> GetDepartmentInfoTree(GetDepartmentTree getDeptTree)
         {
             var query = _db.Queryable<DepartmentInfoEntity>()
-                           .With(SqlWith.NoLock)
-                           .LeftJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId);
+                           .With(SqlWith.NoLock);
 
-            // 部门编码
             if (!string.IsNullOrEmpty(getDeptTree.DepartmentCode))
-            {
                 query = query.Where(dept => dept.DepartmentCode.Contains(getDeptTree.DepartmentCode));
-            }
-            // 部门名称
+
             if (!string.IsNullOrEmpty(getDeptTree.DepartmentName))
+                query = query.Where(dept => dept.DepartmentNameCn.Contains(getDeptTree.DepartmentName)
+                                      || dept.DepartmentNameEn.Contains(getDeptTree.DepartmentName));
+
+            var matchedNodes = await query.Select(dept => new DepartmentInfoEntity
             {
-                query = query.Where(dept =>
-                    dept.DepartmentNameCn.Contains(getDeptTree.DepartmentName) ||
-                    dept.DepartmentNameEn.Contains(getDeptTree.DepartmentName));
+                DepartmentId = dept.DepartmentId,
+                ParentId = dept.ParentId
+            }).ToListAsync();
+
+            if (!matchedNodes.Any()) return new List<DepartmentInfoDto>();
+
+            var allDeptIds = matchedNodes.Select(dept => dept.DepartmentId).ToHashSet();
+            var parentIds = matchedNodes.Select(dept => dept.ParentId).Where(pid => pid != 0).ToList();
+
+            while (parentIds.Any())
+            {
+                var parents = await _db.Queryable<DepartmentInfoEntity>()
+                                       .Where(dept => parentIds.Contains(dept.DepartmentId))
+                                       .Select(dept => new DepartmentInfoEntity { DepartmentId = dept.DepartmentId, ParentId = dept.ParentId })
+                                       .ToListAsync();
+
+                foreach (var p in parents)
+                {
+                    allDeptIds.Add(p.DepartmentId);
+                }
+
+                parentIds = parents.Select(p => p.ParentId).Where(pid => pid != 0).ToList();
             }
 
-            var deptTree = await query.OrderBy(dept => dept.SortOrder)
-                                      .Select((dept, deptlevel) => new DepartmentInfoDto
-                                      {
-                                          DepartmentId = dept.DepartmentId,
-                                          DepartmentCode = dept.DepartmentCode,
-                                          DepartmentNameCn = dept.DepartmentNameCn,
-                                          DepartmentNameEn = dept.DepartmentNameEn,
-                                          ParentId = dept.ParentId,
-                                          DepartmentLevelId = dept.DepartmentLevelId,
-                                          DepartmentLevelName = _lang.Locale == "zh-CN"
-                                                                ? deptlevel.DepartmentLevelNameCn
-                                                                : deptlevel.DepartmentLevelNameEn,
-                                          Description = dept.Description,
-                                          SortOrder = dept.SortOrder,
-                                          Landline = dept.Landline,
-                                          Email = dept.Email,
-                                          Address = dept.Address,
-                                      }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
+            var deptList = await _db.Queryable<DepartmentInfoEntity>()
+                                    .With(SqlWith.NoLock)
+                                    .LeftJoin<DepartmentLevelEntity>((dept, level) => dept.DepartmentLevelId == level.DepartmentLevelId)
+                                    .Where((dept, level) => allDeptIds.Contains(dept.DepartmentId))
+                                    .OrderBy(dept => dept.SortOrder)
+                                    .Select((dept, level) => new DepartmentInfoDto
+                                    {
+                                        DepartmentId = dept.DepartmentId,
+                                        DepartmentCode = dept.DepartmentCode,
+                                        DepartmentNameCn = dept.DepartmentNameCn,
+                                        DepartmentNameEn = dept.DepartmentNameEn,
+                                        ParentId = dept.ParentId,
+                                        DepartmentLevelId = dept.DepartmentLevelId,
+                                        DepartmentLevelName = _lang.Locale == "zh-CN"
+                                                            ? level.DepartmentLevelNameCn
+                                                            : level.DepartmentLevelNameEn,
+                                        Description = dept.Description,
+                                        SortOrder = dept.SortOrder,
+                                        Landline = dept.Landline,
+                                        Email = dept.Email,
+                                        Address = dept.Address,
+                                    }).ToListAsync();
+
+            List<DepartmentInfoDto> BuildTree(List<DepartmentInfoDto> list, long parentId = 0)
+            {
+                var result = list.Where(dept => dept.ParentId == parentId)
+                                 .OrderBy(dept => dept.SortOrder)
+                                 .ToList();
+
+                foreach (var item in result)
+                {
+                    item.DepartmentChildList = BuildTree(list, item.DepartmentId);
+                }
+                return result;
+            }
+            var deptTree = BuildTree(deptList);
             return deptTree;
         }
 

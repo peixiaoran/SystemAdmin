@@ -140,8 +140,10 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                     formgroup.FormGroupNameEn.Contains(getFormGroupPage.FormGroupName));
             }
 
-            var formGroupPage = await query.OrderBy(formgroup => formgroup.SortOrder)
-                                           .Select(formgroup=> new FormGroupDto
+            // 排序
+            query = query.OrderBy(formgroup => formgroup.SortOrder);
+
+            var formGroupPage = await query.Select(formgroup=> new FormGroupDto
                                            {
                                                FormGroupId = formgroup.FormGroupId,
                                                FormGroupNameCn = formgroup.FormGroupNameCn,

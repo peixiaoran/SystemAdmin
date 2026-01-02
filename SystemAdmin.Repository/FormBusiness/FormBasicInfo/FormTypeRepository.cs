@@ -108,8 +108,10 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                     formtype.FormTypeNameEn.Contains(getFormTypePage.FormTypeName));
             }
 
-            var formTypePage = await query.OrderBy((formtype, formgroup) => formtype.SortOrder)
-                                          .Select((formtype, formgroup) => new FormTypeDto
+            // 排序
+            query = query.OrderBy((formtype, formgroup) => formtype.SortOrder);
+
+            var formTypePage = await query.Select((formtype, formgroup) => new FormTypeDto
                                           {
                                               FormTypeId = formtype.FormTypeId,
                                               FormGroupId = formtype.FormGroupId,

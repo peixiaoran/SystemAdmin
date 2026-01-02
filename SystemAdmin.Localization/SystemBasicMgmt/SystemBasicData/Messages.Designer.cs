@@ -61,7 +61,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 请上传头像文件。 的本地化字符串。
+        ///   查找类似 请上传头像文件 的本地化字符串。
         /// </summary>
         internal static string AvatarFileNotNull {
             get {
@@ -70,7 +70,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 头像文件大小不能超过 2MB。 的本地化字符串。
+        ///   查找类似 头像文件大小不能超过 2MB 的本地化字符串。
         /// </summary>
         internal static string AvatarFileTooLarge {
             get {
@@ -79,7 +79,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 头像文件格式不支持，仅支持 .png、.jpg、.jpeg。 的本地化字符串。
+        ///   查找类似 头像文件格式不支持，仅支持 .png、.jpg、.jpeg 的本地化字符串。
         /// </summary>
         internal static string AvatarInvalidImageFormat {
             get {
@@ -88,7 +88,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门信息删除失败。 的本地化字符串。
+        ///   查找类似 部门信息删除失败 的本地化字符串。
         /// </summary>
         internal static string DeptInfoDeleteFailed {
             get {
@@ -97,7 +97,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门信息删除成功。 的本地化字符串。
+        ///   查找类似 部门信息删除成功 的本地化字符串。
         /// </summary>
         internal static string DeptInfoDeleteSuccess {
             get {
@@ -106,7 +106,16 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门信息新增失败。 的本地化字符串。
+        ///   查找类似 无法删除部门，因为该部门或其子部门下存在人员 的本地化字符串。
+        /// </summary>
+        internal static string DeptInfoDepartmentHasUsers {
+            get {
+                return ResourceManager.GetString("DeptInfoDepartmentHasUsers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 部门信息新增失败 的本地化字符串。
         /// </summary>
         internal static string DeptInfoInsertFailed {
             get {
@@ -115,7 +124,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门信息新增成功。 的本地化字符串。
+        ///   查找类似 部门信息新增成功 的本地化字符串。
         /// </summary>
         internal static string DeptInfoInsertSuccess {
             get {
@@ -124,7 +133,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门信息修改失败。 的本地化字符串。
+        ///   查找类似 部门信息修改失败 的本地化字符串。
         /// </summary>
         internal static string DeptInfoUpdateFailed {
             get {
@@ -133,7 +142,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门信息修改成功。 的本地化字符串。
+        ///   查找类似 部门信息修改成功 的本地化字符串。
         /// </summary>
         internal static string DeptInfoUpdateSuccess {
             get {
@@ -142,7 +151,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门层级删除失败。 的本地化字符串。
+        ///   查找类似 部门层级删除失败 的本地化字符串。
         /// </summary>
         internal static string DeptLevelDeleteFailed {
             get {
@@ -151,7 +160,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门层级删除成功。 的本地化字符串。
+        ///   查找类似 部门层级删除成功 的本地化字符串。
         /// </summary>
         internal static string DeptLevelDeleteSuccess {
             get {
@@ -160,7 +169,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门层级新增失败。 的本地化字符串。
+        ///   查找类似 部门层级新增失败 的本地化字符串。
         /// </summary>
         internal static string DeptLevelInsertFailed {
             get {
@@ -169,7 +178,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门层级新增成功。 的本地化字符串。
+        ///   查找类似 部门层级新增成功 的本地化字符串。
         /// </summary>
         internal static string DeptLevelInsertSuccess {
             get {
@@ -178,7 +187,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门层级修改失败。 的本地化字符串。
+        ///   查找类似 部门层级修改失败 的本地化字符串。
         /// </summary>
         internal static string DeptLevelUpdateFailed {
             get {
@@ -187,7 +196,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门层级修改成功。 的本地化字符串。
+        ///   查找类似 部门层级修改成功 的本地化字符串。
         /// </summary>
         internal static string DeptLevelUpdateSuccess {
             get {
@@ -196,7 +205,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 国籍信息删除失败。 的本地化字符串。
+        ///   查找类似 国籍信息删除失败 的本地化字符串。
         /// </summary>
         internal static string NationalityInfoDeleteFailed {
             get {
@@ -205,7 +214,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 国籍信息删除成功。 的本地化字符串。
+        ///   查找类似 国籍信息删除成功 的本地化字符串。
         /// </summary>
         internal static string NationalityInfoDeleteSuccess {
             get {
@@ -214,7 +223,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 国籍信息新增失败。 的本地化字符串。
+        ///   查找类似 国籍信息新增失败 的本地化字符串。
         /// </summary>
         internal static string NationalityInfoInsertFailed {
             get {
@@ -223,7 +232,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 国籍信息新增成功。 的本地化字符串。
+        ///   查找类似 国籍信息新增成功 的本地化字符串。
         /// </summary>
         internal static string NationalityInfoInsertSuccess {
             get {
@@ -232,7 +241,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 国籍信息修改失败。 的本地化字符串。
+        ///   查找类似 国籍信息修改失败 的本地化字符串。
         /// </summary>
         internal static string NationalityInfoUpdateFailed {
             get {
@@ -241,7 +250,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 国籍信息修改成功。 的本地化字符串。
+        ///   查找类似 国籍信息修改成功 的本地化字符串。
         /// </summary>
         internal static string NationalityInfoUpdateSuccess {
             get {
@@ -250,7 +259,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 个人信息修改失败。 的本地化字符串。
+        ///   查找类似 个人信息修改失败 的本地化字符串。
         /// </summary>
         internal static string PersonalUpdateFailed {
             get {
@@ -259,7 +268,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 个人信息修改成功。 的本地化字符串。
+        ///   查找类似 个人信息修改成功 的本地化字符串。
         /// </summary>
         internal static string PersonalUpdateSuccess {
             get {
@@ -268,7 +277,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符。 的本地化字符串。
+        ///   查找类似 密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符 的本地化字符串。
         /// </summary>
         internal static string PersonalValidationPassWrodError {
             get {
@@ -277,7 +286,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 上传失败。 的本地化字符串。
+        ///   查找类似 上传失败 的本地化字符串。
         /// </summary>
         internal static string UploadFailed {
             get {
@@ -286,7 +295,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 上传成功。 的本地化字符串。
+        ///   查找类似 上传成功 的本地化字符串。
         /// </summary>
         internal static string UploadSuccess {
             get {
@@ -295,7 +304,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 员工信息删除失败。 的本地化字符串。
+        ///   查找类似 员工信息删除失败 的本地化字符串。
         /// </summary>
         internal static string UserInfoDeleteFailed {
             get {
@@ -304,7 +313,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 员工信息删除成功。 的本地化字符串。
+        ///   查找类似 员工信息删除成功 的本地化字符串。
         /// </summary>
         internal static string UserInfoDeleteSuccess {
             get {
@@ -313,7 +322,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 工号或账号已存在，请重新输入。 的本地化字符串。
+        ///   查找类似 工号或账号已存在，请重新输入 的本地化字符串。
         /// </summary>
         internal static string UserInfoDuplicatejobRepeatable {
             get {
@@ -322,7 +331,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 员工信息新增失败。 的本地化字符串。
+        ///   查找类似 员工信息新增失败 的本地化字符串。
         /// </summary>
         internal static string UserInfoInsertFailed {
             get {
@@ -331,7 +340,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 员工信息新增成功。 的本地化字符串。
+        ///   查找类似 员工信息新增成功 的本地化字符串。
         /// </summary>
         internal static string UserInfoInsertSuccess {
             get {
@@ -340,7 +349,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 员工信息修改失败。 的本地化字符串。
+        ///   查找类似 员工信息修改失败 的本地化字符串。
         /// </summary>
         internal static string UserInfoUpdateFailed {
             get {
@@ -349,7 +358,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 员工信息修改成功。 的本地化字符串。
+        ///   查找类似 员工信息修改成功 的本地化字符串。
         /// </summary>
         internal static string UserInfoUpdateSuccess {
             get {
@@ -358,7 +367,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符。 的本地化字符串。
+        ///   查找类似 密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符 的本地化字符串。
         /// </summary>
         internal static string UserInfoValidationPassWrodError {
             get {
@@ -367,7 +376,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 职业信息删除失败。 的本地化字符串。
+        ///   查找类似 职业信息删除失败 的本地化字符串。
         /// </summary>
         internal static string UserLaborDeleteFailed {
             get {
@@ -376,7 +385,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 职业信息删除成功。 的本地化字符串。
+        ///   查找类似 职业信息删除成功 的本地化字符串。
         /// </summary>
         internal static string UserLaborDeleteSuccess {
             get {
@@ -385,7 +394,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 职业信息新增失败。 的本地化字符串。
+        ///   查找类似 职业信息新增失败 的本地化字符串。
         /// </summary>
         internal static string UserLaborInsertFailed {
             get {
@@ -394,7 +403,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 职业信息新增成功。 的本地化字符串。
+        ///   查找类似 职业信息新增成功 的本地化字符串。
         /// </summary>
         internal static string UserLaborInsertSuccess {
             get {
@@ -403,7 +412,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 职业信息修改失败。 的本地化字符串。
+        ///   查找类似 职业信息修改失败 的本地化字符串。
         /// </summary>
         internal static string UserLaborUpdateFailed {
             get {
@@ -412,7 +421,7 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 职业信息修改成功。 的本地化字符串。
+        ///   查找类似 职业信息修改成功 的本地化字符串。
         /// </summary>
         internal static string UserLaborUpdateSuccess {
             get {

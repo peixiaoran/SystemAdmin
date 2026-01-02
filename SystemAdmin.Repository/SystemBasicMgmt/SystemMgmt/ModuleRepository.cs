@@ -139,8 +139,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                 query = query.Where(module => module.ModuleNameCn.Contains(getModulePage.ModuleName));
             }
 
-            var modulePage = await query.OrderBy(module => module.SortOrder)
-                                        .Select((module) => new ModuleInfoDto
+            // 排序
+            query = query.OrderBy(module => module.SortOrder);
+
+            var modulePage = await query.Select((module) => new ModuleInfoDto
                                         {
                                             ModuleId = module.ModuleId,
                                             ModuleCode = module.ModuleCode,

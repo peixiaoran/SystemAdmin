@@ -35,7 +35,10 @@ namespace SystemAdmin.Repository.FormBusiness.FormAudit
                 query = query.Where(formtype => formtype.FormTypeId == long.Parse(getFormCountingPage.FormTypeId));
             }
 
-            var formCountingPage = await query.OrderBy((formtype, formcounting) => formcounting.YM)
+            // 排序
+            query = query.OrderBy((formtype, formcounting) => formcounting.YM);
+
+            var formCountingPage = await query
             .Select((formtype, formcounting) => new FormCountingDto
             {
                 FormTypeId = formtype.FormTypeId,

@@ -26,13 +26,8 @@
         public string CurrencyNameEn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否有效
+        /// 币别排序
         /// </summary>
-        public int IsEnabled { get; set; }
-
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string Remark { get; set; } = string.Empty;
+        public int SortOrder { get; set; }
     }
 }

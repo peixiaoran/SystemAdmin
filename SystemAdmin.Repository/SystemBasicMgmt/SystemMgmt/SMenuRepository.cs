@@ -99,32 +99,33 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             var query = _db.Queryable<MenuInfoEntity>()
                            .With(SqlWith.NoLock)
                            .LeftJoin<DictionaryInfoEntity>((pmenu, dic) => dic.DicType == "MenuType" && pmenu.MenuType == dic.DicCode)
-                           .LeftJoin<UserInfoEntity>((pmenu, dic, user) => pmenu.CreatedBy == user.UserId)
-                           .Where((pmenu, dic, user) => pmenu.MenuType == "SecondaryMenu");
+                           .Where((pmenu, dic) => pmenu.MenuType == "SecondaryMenu");
 
             // 二级菜单编码
             if (!string.IsNullOrEmpty(getMenuPage.MenuCode))
             {
-                query = query.Where((pmenu, dic, user) => pmenu.MenuCode.Contains(getMenuPage.MenuCode));
+                query = query.Where((pmenu, dic) => pmenu.MenuCode.Contains(getMenuPage.MenuCode));
             }
             // 二级菜单名称
             if (!string.IsNullOrEmpty(getMenuPage.MenuName))
             {
-                query = query.Where((pmenu, dic, user) => pmenu.MenuNameCn.Contains(getMenuPage.MenuName) || pmenu.MenuNameEn.Contains(getMenuPage.MenuName));
+                query = query.Where((pmenu, dic) => pmenu.MenuNameCn.Contains(getMenuPage.MenuName) || pmenu.MenuNameEn.Contains(getMenuPage.MenuName));
             }
             // 所属模块
             if (long.Parse(getMenuPage.ModuleId) > 0)
             {
-                query = query.Where((pmenu, dic, user) => pmenu.ModuleId == long.Parse(getMenuPage.ModuleId));
+                query = query.Where((pmenu, dic) => pmenu.ModuleId == long.Parse(getMenuPage.ModuleId));
             }
             // 所属一级菜单
             if (long.Parse(getMenuPage.ParentMenuId) > 0)
             {
-                query = query.Where((pmenu, dic, user) => pmenu.ParentMenuId == long.Parse(getMenuPage.ParentMenuId));
+                query = query.Where((pmenu, dic) => pmenu.ParentMenuId == long.Parse(getMenuPage.ParentMenuId));
             }
 
-            var smenuPage = await query.OrderBy((pmenu, dic, user) => pmenu.SortOrder)
-                                       .Select((pmenu, dic, user) => new MenuInfoDto
+            // 排序
+            query.OrderBy((pmenu, dic) => pmenu.SortOrder);
+
+            var smenuPage = await query.Select((pmenu, dic) => new MenuInfoDto
                                        {
                                            MenuId = pmenu.MenuId,
                                            MenuCode = pmenu.MenuCode,
@@ -138,8 +139,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                            IsEnabled = pmenu.IsEnabled,
                                            IsVisible = pmenu.IsVisible,
                                            Path = pmenu.Path,
-                                           CreatedName = SqlFunc.IsNull(user.UserNameCn, "") + " " + SqlFunc.IsNull(user.UserNameEn, ""),
-                                           CreatedDate = pmenu.CreatedDate,
                                            Remark = pmenu.Remark,
                                        }).ToPageListAsync(getMenuPage.PageIndex, getMenuPage.PageSize, totalCount);
             return ResultPaged<MenuInfoDto>.Ok(smenuPage.Adapt<List<MenuInfoDto>>(), totalCount, "");

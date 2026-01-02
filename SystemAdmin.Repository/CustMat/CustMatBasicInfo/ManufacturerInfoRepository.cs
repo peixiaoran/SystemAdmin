@@ -92,7 +92,10 @@ namespace SystemAdmin.Repository.CustMat.CustMatBasicInfo
                     manufacturer.ManufacturerNameEn.Contains(getManufacturerPage.ManufacturerName));
             }
 
-            var manufacturerPage = await query.OrderBy(manufacturer => manufacturer.CreatedDate).ToPageListAsync(getManufacturerPage.PageIndex, getManufacturerPage.PageSize, totalCount);
+            // 排序
+            query = query.OrderBy(manufacturer => manufacturer.CreatedDate);
+
+            var manufacturerPage = await query.ToPageListAsync(getManufacturerPage.PageIndex, getManufacturerPage.PageSize, totalCount);
             return ResultPaged<ManufacturerInfoDto>.Ok(manufacturerPage.Adapt<List<ManufacturerInfoDto>>(), totalCount, "");
         }
     }

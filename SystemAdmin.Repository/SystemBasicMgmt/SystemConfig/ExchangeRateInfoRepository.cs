@@ -51,8 +51,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<ExchangeRateEntity>()
-                           .With(SqlWith.NoLock)
-                           .OrderByDescending(exchangerate => exchangerate.CreatedDate);
+                           .With(SqlWith.NoLock);
 
             // 本位币别
             if (!string.IsNullOrEmpty(ExchangeRatePage.CurrencyCode))
@@ -64,6 +63,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
             {
                 query = query.Where(exchangerate => exchangerate.YearMonth == ExchangeRatePage.YearMonth);
             }
+
+            // 排序
+            query = query.OrderByDescending(exchangerate => exchangerate.CreatedDate);
 
             var exchangeratePage = await query.ToPageListAsync(ExchangeRatePage.PageIndex, ExchangeRatePage.PageSize, totalCount);
             return ResultPaged<ExchangeRateDto>.Ok(exchangeratePage.Adapt<List<ExchangeRateDto>>(), totalCount, "");
@@ -91,13 +93,13 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         {
             return await _db.Queryable<CurrencyInfoEntity>()
                             .With(SqlWith.NoLock)
+                            .OrderBy(currency => currency.SortOrder)
                             .Select(currency => new CurrencyInfoDropDto
                             {
                                 CurrencyCode = currency.CurrencyCode,
                                 CurrencyName = _lang.Locale == "zh-CN"
                                                ? currency.CurrencyNameCn
                                                : currency.CurrencyNameEn,
-                                Disabled = currency.IsEnabled == 0
                             }).ToListAsync();
         }
 

@@ -14,12 +14,12 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         public long UserId { get; set; }
 
         /// <summary>
-        /// 部门Id
+        /// 所属部门Id
         /// </summary>
         public long DepartmentId { get; set; }
 
         /// <summary>
-        /// 职级Id
+        /// 所属职级Id
         /// </summary>
         public long PositionId { get; set; }
 

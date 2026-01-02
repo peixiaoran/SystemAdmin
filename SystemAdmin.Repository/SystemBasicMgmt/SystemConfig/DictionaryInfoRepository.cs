@@ -105,8 +105,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                 query = query.Where((dicinfo, moduleinfo) => dicinfo.DicType == getDicPage.DicType);
             }
 
-            var dicPage = await query.OrderBy((dicinfo, moduleinfo) => dicinfo.SortOrder)
-                                     .Select((dicinfo, moduleinfo) => new DictionaryInfoDto
+            // 排序
+            query = query.OrderBy((dicinfo, moduleinfo) => dicinfo.SortOrder);
+
+            var dicPage = await query.Select((dicinfo, moduleinfo) => new DictionaryInfoDto
                                      {
                                          DicId = dicinfo.DicId,
                                          ModuleId = dicinfo.ModuleId,

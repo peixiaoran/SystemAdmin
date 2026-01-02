@@ -10,55 +10,42 @@ namespace SystemAdmin.Hosting.DependencyInjection
         {
             host.UseSerilog((context, services, logger) =>
             {
-                var logRoot = Path.Combine(AppContext.BaseDirectory, "Logs");
-                Directory.CreateDirectory(logRoot);
+                var logRoot = Path.Combine(
+                    context.HostingEnvironment.ContentRootPath,
+                    "Logs",
+                    DateTime.Now.ToString("yyyy-MM-dd"));
 
-                // 每天一个文件夹 Logs/yyyy-MM-dd/
-                string dayFolder = Path.Combine(logRoot, DateTime.Now.ToString("yyyy-MM-dd"));
-                Directory.CreateDirectory(dayFolder);
+                Directory.CreateDirectory(logRoot);
 
                 logger
                     .MinimumLevel.Debug()
                     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                    .MinimumLevel.Override("System", LogEventLevel.Warning)
                     .Enrich.FromLogContext()
 
-                    // Console（开发使用）
-                    .WriteTo.Console()
+                    // Information
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Information)
+                        .WriteTo.File(Path.Combine(logRoot, "info.log"))
+                    )
 
-                    // 信息日志
-                    .WriteTo.File(
-                        Path.Combine(dayFolder, "info.log"),
-                        restrictedToMinimumLevel: LogEventLevel.Information,
-                        rollingInterval: RollingInterval.Day,
-                        retainedFileCountLimit: 30,
-                        shared: true)
+                    // Warning
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Warning)
+                        .WriteTo.File(Path.Combine(logRoot, "warning.log"))
+                    )
 
-                    // 错误日志
-                    .WriteTo.File(
-                        Path.Combine(dayFolder, "error.log"),
-                        restrictedToMinimumLevel: LogEventLevel.Error,
-                        rollingInterval: RollingInterval.Day,
-                        retainedFileCountLimit: 30,
-                        shared: true)
+                    // Error
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error)
+                        .WriteTo.File(Path.Combine(logRoot, "error.log"))
+                    )
 
-                    // Fatal 致命日志
-                    .WriteTo.File(
-                        Path.Combine(dayFolder, "fatal.log"),
-                        restrictedToMinimumLevel: LogEventLevel.Fatal,
-                        rollingInterval: RollingInterval.Day,
-                        retainedFileCountLimit: 30,
-                        shared: true)
-
-                    // 捕获异常日志
-                    .WriteTo.File(
-                        Path.Combine(dayFolder, "exceptions.log"),
-                        restrictedToMinimumLevel: LogEventLevel.Error,
-                        rollingInterval: RollingInterval.Day,
-                        retainedFileCountLimit: 30,
-                        shared: true);
+                    // Critical / Fatal
+                    .WriteTo.Logger(lc => lc
+                        .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Fatal)
+                        .WriteTo.File(Path.Combine(logRoot, "fatal.log"))
+                    );
             });
-
             return host;
         }
     }

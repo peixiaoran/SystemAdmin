@@ -85,7 +85,10 @@ namespace SystemAdmin.Repository.CustMat.CustMatBasicInfo
                 query = query.Where(partnumber => partnumber.PartNumberNo.Contains(getPartNumberPage.PartNumberNo));
             }
 
-            var partNumberPage = await query.OrderBy(partNumber => partNumber.CreatedDate).ToPageListAsync(getPartNumberPage.PageIndex, getPartNumberPage.PageSize, totalCount);
+            // 排序
+            query = query.OrderBy(partNumber => partNumber.CreatedDate);
+
+            var partNumberPage = await query.ToPageListAsync(getPartNumberPage.PageIndex, getPartNumberPage.PageSize, totalCount);
             return ResultPaged<PartNumberInfoDto>.Ok(partNumberPage.Adapt<List<PartNumberInfoDto>>(), totalCount, "");
         }
 

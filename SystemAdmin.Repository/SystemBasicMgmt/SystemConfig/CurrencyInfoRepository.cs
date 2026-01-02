@@ -85,13 +85,15 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                 query = query.Where(currency => currency.CurrencyCode.Contains(getCurrencyPage.CurrencyCode));
             }
 
+            // 排序
+            query = query.OrderBy(currency => currency.SortOrder);
+
             var currencyPage = await query.Select((currency) => new CurrencyInfoDto
             {
                 CurrencyId = currency.CurrencyId,
                 CurrencyCode = currency.CurrencyCode,
                 CurrencyNameCn = currency.CurrencyNameCn,
                 CurrencyNameEn = currency.CurrencyNameEn,
-                IsEnabled = currency.IsEnabled,
             }).ToPageListAsync(getCurrencyPage.PageIndex, getCurrencyPage.PageSize, totalCount);
             return ResultPaged<CurrencyInfoDto>.Ok(currencyPage, totalCount);
         }

@@ -78,12 +78,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                int delDeptCount = await _departmentInfoRepository.DeleteDepartmentInfo(long.Parse(deptUpsert.DepartmentId));
-                await _db.CommitTranAsync();
+                int delDeptCount = await DeleteDepartmentWithChildrenAsync(long.Parse(deptUpsert.DepartmentId));
 
-                return delDeptCount >= 1
-                    ? Result<int>.Ok(delDeptCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                if (delDeptCount == 0)
+                {
+                    await _db.RollbackTranAsync();
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DepartmentHasUsers"));
+                }
+
+                await _db.CommitTranAsync();
+                return Result<int>.Ok(delDeptCount, _localization.ReturnMsg($"{_this}DeleteSuccess"));
             }
             catch (Exception ex)
             {
@@ -91,6 +95,67 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message.ToString());
             }
+        }
+
+        /// <summary>
+        /// 删除部门及其子部门（只有当部门及子部门下没有人员时才删除）
+        /// </summary>
+        /// <param name="departmentId"></param>
+        /// <returns></returns>
+        private async Task<int> DeleteDepartmentWithChildrenAsync(long departmentId)
+        {
+            // 获取所有人员和部门信息
+            var userList = await _departmentInfoRepository.GetUserInfoList();
+            var deptList = await _departmentInfoRepository.GetDepartmentInfoList();
+
+            // 构建部门树字典，Parent -> List<Dept>
+            var deptChildrenMap = deptList
+                .GroupBy(dept => dept.ParentId)
+                .ToDictionary(g => g.Key, g => g.ToList());
+
+            // 判断部门及子部门是否可以删除
+            bool CanDelete(long deptId)
+            {
+                // dept 下是否有人员
+                if (userList.Any(user => user.DepartmentId == deptId)) return false;
+
+                // 递归判断子部门
+                if (deptChildrenMap.TryGetValue(deptId, out var children))
+                {
+                    foreach (var child in children)
+                    {
+                        if (!CanDelete(child.DepartmentId)) return false;
+                    }
+                }
+                return true;
+            }
+
+            // 递归删除部门
+            async Task<int> DeleteRecursive(long deptId)
+            {
+                int deleteCount = 0;
+
+                if (deptChildrenMap.TryGetValue(deptId, out var children))
+                {
+                    foreach (var child in children)
+                    {
+                        deleteCount += await DeleteRecursive(child.DepartmentId);
+                    }
+                }
+
+                // 删除当前部门
+                deleteCount += await _departmentInfoRepository.DeleteDepartmentInfo(deptId);
+                return deleteCount;
+            }
+
+            // 判断是否可以删除
+            if (!CanDelete(departmentId))
+            {
+                return 0; // 有人员，不允许删除
+            }
+
+            // 执行删除
+            return await DeleteRecursive(departmentId);
         }
 
         /// <summary>

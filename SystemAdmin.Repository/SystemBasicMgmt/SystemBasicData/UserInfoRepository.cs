@@ -200,33 +200,33 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                            .With(SqlWith.NoLock)
                            
                            .InnerJoin<UserRoleEntity>(
-                               (userinfo, userrole) =>
-                                   userinfo.UserId == userrole.UserId)
+                               (user, userrole) =>
+                                   user.UserId == userrole.UserId)
 
                            .InnerJoin<DepartmentInfoEntity>(
-                               (userinfo, userrole, deptinfo) =>
-                                   userinfo.DepartmentId == deptinfo.DepartmentId)
+                               (user, userrole, deptinfo) =>
+                                   user.DepartmentId == deptinfo.DepartmentId)
                            
                            .InnerJoin<UserPositionEntity>(
-                               (userinfo, userrole, deptinfo, userposition) =>
-                                   userinfo.PositionId == userposition.PositionId)
+                               (user, userrole, deptinfo, userposition) =>
+                                   user.PositionId == userposition.PositionId)
                            
                            .InnerJoin<NationalityInfoEntity>(
-                               (userinfo, userrole, deptinfo, userposition, nation) =>
-                                   userinfo.Nationality == nation.NationId);
+                               (user, userrole, deptinfo, userposition, nation) =>
+                                   user.Nationality == nation.NationId);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getUserPage.UserNo))
             {
-                query = query.Where(userinfo =>
-                    userinfo.UserNo.Contains(getUserPage.UserNo));
+                query = query.Where(user =>
+                    user.UserNo.Contains(getUserPage.UserNo));
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getUserPage.UserName))
             {
-                query = query.Where(userinfo =>
-                    userinfo.UserNameCn.Contains(getUserPage.UserName) ||
-                    userinfo.UserNameEn.Contains(getUserPage.UserName));
+                query = query.Where(user =>
+                    user.UserNameCn.Contains(getUserPage.UserName) ||
+                    user.UserNameEn.Contains(getUserPage.UserName));
             }
             // 部门Id（仅在工号与姓名都为空时才筛选）
             if (!string.IsNullOrEmpty(getUserPage.DepartmentId)
@@ -236,30 +236,32 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                 query = query.Where(userinfo => userinfo.DepartmentId == long.Parse(getUserPage.DepartmentId));
             }
 
-            var userPage = await query.OrderBy((userinfo, userrole, deptinfo, userposition, nation) =>
-                    new { userposition.PositionOrderBy, userinfo.HireDate })
-                    .Select((userinfo, userrole, deptinfo, userposition, nation) =>
+            // 排序
+            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) =>
+                    new { userposition.PositionOrderBy, user.HireDate });
+
+            var userPage = await query
+                    .Select((user, userrole, deptinfo, userposition, nation) =>
                     new UserInfoPageDto
                     {
-                        UserId = userinfo.UserId,
-                        DepartmentId = userinfo.DepartmentId,
+                        UserId = user.UserId,
+                        DepartmentId = user.DepartmentId,
                         DepartmentName = _lang.Locale == "zh-CN"
                                          ? deptinfo.DepartmentNameCn
                                          : deptinfo.DepartmentNameEn,
-                        UserNo = userinfo.UserNo,
-                        UserNameCn = userinfo.UserNameCn,
-                        UserNameEn = userinfo.UserNameEn,
+                        UserNo = user.UserNo,
+                        UserNameCn = user.UserNameCn,
+                        UserNameEn = user.UserNameEn,
                         PositionName = _lang.Locale == "zh-CN"
                                          ? userposition.PositionNameCn
                                          : userposition.PositionNameEn, 
-                        Gender = userinfo.Gender,
-                        IsEmployed = userinfo.IsEmployed,
-                        IsApproval = userinfo.IsApproval,
-                        IsFreeze = userinfo.IsFreeze,
-                        Remark = userinfo.Remark
+                        Gender = user.Gender,
+                        IsEmployed = user.IsEmployed,
+                        IsApproval = user.IsApproval,
+                        IsFreeze = user.IsFreeze,
+                        Remark = user.Remark
                     })
                 .ToPageListAsync(getUserPage.PageIndex, getUserPage.PageSize, totalCount);
-
             return ResultPaged<UserInfoPageDto>.Ok(userPage, totalCount, "");
         }
 
@@ -322,7 +324,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .LeftJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
                             .OrderBy(dept => dept.SortOrder)
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {

@@ -60,7 +60,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                     user.DepartmentId == long.Parse(getUserAgentPage.DepartmentId));
             }
 
-            var userPage = await query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.PositionOrderBy, user.HireDate })
+            //排序
+            query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.PositionOrderBy, user.HireDate });
+
+            var userPage = await query
             .Select((user, dept, userpos, userlabor, nation) => new UserAgentDto
             {
                 UserId = user.UserId,
@@ -124,7 +127,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                     user.DepartmentId == long.Parse(getUserAgentViewPage.DepartmentId));
             }
 
-            var userAgentPage = await query.OrderBy((user, dept, userpos, userlabor, nation) => user.UserId)
+            // 排序
+            query = query.OrderBy((user, dept, userpos, userlabor, nation) => user.UserId);
+
+            var userAgentPage = await query
             .Select((user, dept, userpos, userlabor, nation) => new UserAgentViewDto
             {
                 UserId = user.UserId,
@@ -245,7 +251,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .LeftJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
                             .OrderBy((dept, deptlevel) => deptlevel.SortOrder)
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {

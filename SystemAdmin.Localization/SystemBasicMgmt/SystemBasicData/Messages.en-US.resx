@@ -237,4 +237,7 @@
   <data name="UploadFailed" xml:space="preserve">
     <value>Upload failed</value>
   </data>
+  <data name="DeptInfoDepartmentHasUsers" xml:space="preserve">
+    <value>Cannot delete department because it or its sub-departments have users</value>
+  </data>
 </root>

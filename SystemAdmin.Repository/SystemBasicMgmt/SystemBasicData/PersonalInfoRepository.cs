@@ -138,7 +138,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .LeftJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
                             .OrderBy(dept => dept.SortOrder)
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {
@@ -157,7 +157,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
         {
             return await _db.Queryable<UserPositionEntity>()
-                            .With(SqlWith.NoLock).OrderBy(userpos => userpos.CreatedDate)
+                            .With(SqlWith.NoLock)
+                            .OrderBy(userpos => userpos.CreatedDate)
                             .Select((userpos) => new UserPositionDropDto
                             {
                                 PositionId = userpos.PositionId,

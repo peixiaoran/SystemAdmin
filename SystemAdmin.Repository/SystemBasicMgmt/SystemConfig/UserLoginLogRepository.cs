@@ -55,15 +55,14 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
 
             var userLoginLogPage = await query.Select((userloginlog, userinfo, loginbehaviordic) => new UserLogOutDto
             {
-                UserId = userloginlog.UserId,
                 UserNo = userinfo.UserNo,
-                UserNameCn = userinfo.UserNameCn,
-                UserNameEn = userinfo.UserNameEn,
+                UserName = _lang.Locale == "zh-CN"
+                           ? userinfo.UserNameCn
+                           : userinfo.UserNameEn,
                 IP = userloginlog.IP,
-                StatusId = userloginlog.StatusId,
                 StatusName = _lang.Locale == "zh-CN"
-                             ? loginbehaviordic.DicNameCn
-                             : loginbehaviordic.DicNameEn,
+                           ? loginbehaviordic.DicNameCn
+                           : loginbehaviordic.DicNameEn,
                 LoginDate = userloginlog.LoginDate,
             }).ToPageListAsync(getUserLoginLogPage.PageIndex, getUserLoginLogPage.PageSize, totalCount);
             return ResultPaged<UserLogOutDto>.Ok(userLoginLogPage, totalCount, "");

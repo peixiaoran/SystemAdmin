@@ -43,7 +43,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                     CurrencyCode = currencyUpsert.CurrencyCode,
                     CurrencyNameCn = currencyUpsert.CurrencyNameCn,
                     CurrencyNameEn = currencyUpsert.CurrencyNameEn,
-                    IsEnabled = currencyUpsert.IsEnabled,
+                    SortOrder = currencyUpsert.SortOrder,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
@@ -103,7 +103,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                     CurrencyCode = currencyUpsert.CurrencyCode,
                     CurrencyNameCn = currencyUpsert.CurrencyNameCn,
                     CurrencyNameEn = currencyUpsert.CurrencyNameEn,
-                    IsEnabled = currencyUpsert.IsEnabled,
+                    SortOrder = currencyUpsert.SortOrder,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };

@@ -237,4 +237,7 @@
   <data name="UploadFailed" xml:space="preserve">
     <value>上传失败</value>
   </data>
+  <data name="DeptInfoDepartmentHasUsers" xml:space="preserve">
+    <value>无法删除部门，因为该部门或其子部门下存在人员</value>
+  </data>
 </root>

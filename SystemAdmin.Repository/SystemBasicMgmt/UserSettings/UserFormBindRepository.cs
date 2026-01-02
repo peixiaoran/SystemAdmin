@@ -60,7 +60,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                     user.DepartmentId == long.Parse(getUserFormBindPage.DepartmentId));
             }
 
-            var userPage = await query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.PositionOrderBy, user.HireDate })
+            // 排序
+            query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.PositionOrderBy, user.HireDate });
+
+            var userPage = await query
             .Select((user, dept, userpos, userlabor, nation) => new UserFormBindDto
             {
                 UserId = user.UserId,
@@ -176,8 +179,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
                             .LeftJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                            .OrderBy((dept, deptlevel) => deptlevel.DepartmentLevelCode)
-                            .OrderBy(dept => dept.SortOrder)
+                            .OrderBy((dept, deptlevel) => new { deptlevel.DepartmentLevelCode, dept.SortOrder })
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {
                                 DepartmentId = dept.DepartmentId,

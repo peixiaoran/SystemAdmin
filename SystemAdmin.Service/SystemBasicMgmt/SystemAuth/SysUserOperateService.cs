@@ -198,7 +198,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 var logOutLog = new UserLogOutEntity
                 {
                     UserId = user.UserId,
-                    StatusId = LoginBehavior.LoggedOut.ToEnumString(), // 状态码 4 = 登出
+                    StatusId = LoginBehavior.LoggedOut.ToEnumString(),
                     IP = GetLocalIPv4(),
                     LoginDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
@@ -271,7 +271,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         {
             try
             {
-                // 判断是否频繁发送：通过第一次调用返回非 null 判定
                 var cacheCode = await _cache.GetOrCreateAsync(
                       userUnlock.UserNo,
                       ct => new ValueTask<string>("")
@@ -379,7 +378,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         }
 
         /// <summary>
-        ///  密码过期（重置密码）
+        /// 密码过期（重置密码）
         /// </summary>
         /// <param name="pwdExpirationUpsert"></param>
         /// <returns></returns>
@@ -442,7 +441,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     await _db.CommitTranAsync();
 
                     // 清除验证码缓存
-                    //await _cache.RemoveAsync(pwdExpirationUpsert.UserNo);
+                    await _cache.RemoveAsync(pwdExpirationUpsert.UserNo);
 
                     return updateCount >= 1
                         ? Result<int>.Ok(updateCount, _localization.ReturnMsg($"{_this}UpdatePassWrodSuccess"))

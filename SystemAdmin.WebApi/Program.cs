@@ -47,6 +47,9 @@ builder.Services.SqlSugarScopeSetup(builder.Configuration);
 // 注入 业务服务和仓储
 builder.Services.AddServiceAndRepository();
 
+// 注入 AddHybridCache缓存服务
+builder.Services.AddCache();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

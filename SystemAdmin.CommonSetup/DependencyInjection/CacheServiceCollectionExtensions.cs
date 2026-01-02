@@ -1,12 +1,11 @@
 ﻿using Microsoft.Extensions.Caching.Hybrid;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
     public static class CacheServiceCollectionExtensions
     {
-        public static IServiceCollection AddCache(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddCache(this IServiceCollection services)
         {
             // 只注册 HybridCache（内部使用本地 MemoryCache）
             services.AddHybridCache(options =>

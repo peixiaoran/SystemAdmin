@@ -62,7 +62,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) => p_userdept.DepartmentId == long.Parse(getUserPartTimePage.DepartmentId));
             }
 
-            var userPartTimePage = await query.OrderBy((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) => new { UserPositionOrder = userpos.PositionOrderBy, user.HireDate, PartTimePositionOrder = p_userpos.PositionOrderBy })
+            // 排序
+            query = query.OrderBy((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) => new { UserPositionOrder = userpos.PositionOrderBy, user.HireDate, PartTimePositionOrder = p_userpos.PositionOrderBy });
+
+            var userPartTimePage = await query
             .Select((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) => new UserPartTimeDto
             {
                 UserId = user.UserId,
@@ -141,7 +144,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                     user.DepartmentId == long.Parse(getUserPage.DepartmentId));
             }
 
-            var userPartTimeViewPage = await query.OrderBy((user, dept, userpos, nation, userlabor) => new { userpos.PositionOrderBy, user.HireDate })
+            // 排序
+            query = query.OrderBy((user, dept, userpos, nation, userlabor) => new { userpos.PositionOrderBy, user.HireDate });
+
+            var userPartTimeViewPage = await query
             .Select((user, dept, userpos, nation, userlabor) => new UserPartTimeViewDto
             {
                  UserId = user.UserId,
