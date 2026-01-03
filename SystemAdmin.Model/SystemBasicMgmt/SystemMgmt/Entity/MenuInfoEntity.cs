@@ -70,7 +70,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity
         public int IsVisible { get; set; }
 
         /// <summary>
-        /// 菜单Url
+        /// 对应API路由
         /// </summary>
         public string RoutePath { get; set; } = string.Empty;
 

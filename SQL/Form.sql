@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001000 (16.00.1000)
- Source Host           : 127.0.0.1:1433
+ Source Server Version : 16001160 (16.00.1160)
+ Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001000 (16.00.1000)
+ Target Server Version : 16001160 (16.00.1160)
  File Encoding         : 65001
 
- Date: 02/01/2026 17:01:01
+ Date: 03/01/2026 21:16:19
 */
 
 
@@ -245,6 +245,9 @@ GO
 -- Records of FormCounting
 -- ----------------------------
 INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2512  ', N'1', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2025-12-27 15:11:03.000', NULL, NULL)
+GO
+
+INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2601  ', N'1', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2026-01-03 21:09:52.000', NULL, NULL)
 GO
 
 
@@ -502,6 +505,9 @@ GO
 -- Records of FormInfo
 -- ----------------------------
 INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [FormOpenTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2004812253567782912', N'1987217256446300160', N'LVR-25120001', N'1', N'Important', N'PendingSubmission', N'2025-12-27 15:11:03.000', N'1903486709602062336', N'2025-12-27 15:11:03.000', N'1903486709602062336', N'2025-12-27 15:11:56.000')
+GO
+
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [FormOpenTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2007439266724057088', N'1987217256446300160', N'LVR-26010001', N'', N'Normal', N'PendingSubmission', N'2026-01-03 21:09:52.000', N'1903486709602062336', N'2026-01-03 21:09:52.000', NULL, NULL)
 GO
 
 
@@ -806,6 +812,9 @@ GO
 -- Records of LeaveForm
 -- ----------------------------
 INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantUserNo], [ApplicantUserName], [ApplicantDeptId], [ApplicantDeptName], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [LeaveHandoverUserName], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2004812253567782912', N'LVR-25120001', N'2025-12-27 15:11:03.0000000', N'E347473', N'裴小然', N'1929535196076577000', N'软体开发组', N'5', N'1', N'2025-12-27 00:00:00.0000000', N'2026-01-21 00:00:00.0000000', N'600.00', N'1', N'1903486709602062336', N'2025-12-27 15:11:03.000', N'1903486709602062336', N'2025-12-27 15:11:56.000')
+GO
+
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantUserNo], [ApplicantUserName], [ApplicantDeptId], [ApplicantDeptName], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [LeaveHandoverUserName], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2007439266724057088', N'LVR-26010001', N'2026-01-03 21:09:52.0000000', N'E347473', N'Xiaoran Pei', N'1929535196076576906', N'Software Development Team', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-01-03 21:09:52.000', NULL, NULL)
 GO
 
 

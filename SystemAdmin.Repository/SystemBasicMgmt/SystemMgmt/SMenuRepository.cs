@@ -65,7 +65,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             return await _db.Updateable(menuEntity)
                             .IgnoreColumns(smenu => new
                             {
-                                smenu.MenuCode,
                                 smenu.MenuType,
                                 smenu.CreatedBy,
                                 smenu.CreatedDate,
@@ -135,6 +134,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                                           ? dic.DicNameCn
                                                           : dic.DicNameEn,
                                            MenuIcon = pmenu.MenuIcon,
+                                           SortOrder = pmenu.SortOrder,
                                            IsEnabled = pmenu.IsEnabled,
                                            IsVisible = pmenu.IsVisible,
                                            Path = pmenu.Path,

@@ -169,6 +169,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                                           ? dic.DicNameCn
                                                           : dic.DicNameEn,
                                            MenuIcon = pmenu.MenuIcon,
+                                           SortOrder = pmenu.SortOrder,
                                            IsEnabled = pmenu.IsEnabled,
                                            IsVisible = pmenu.IsVisible,
                                            Path = pmenu.Path,

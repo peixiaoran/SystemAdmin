@@ -75,7 +75,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Entity
         public int Level { get; set; }
 
         /// <summary>
-        /// 菜单序Url
+        /// 对应API路由
         /// </summary>
         public string RoutePath { get; set; } = string.Empty;
 

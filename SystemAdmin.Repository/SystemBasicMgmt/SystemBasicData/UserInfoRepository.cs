@@ -233,7 +233,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                 && string.IsNullOrEmpty(getUserPage.UserNo)
                 && string.IsNullOrEmpty(getUserPage.UserName))
             {
-                query = query.Where(userinfo => userinfo.DepartmentId == long.Parse(getUserPage.DepartmentId));
+                query = query.Where(user => user.DepartmentId == long.Parse(getUserPage.DepartmentId));
             }
 
             // 排序
@@ -381,7 +381,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         {
             return await _db.Queryable<UserInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .Where(userinfo => userinfo.UserNo == userNo || userinfo.LoginNo == loginNo)
+                            .Where(user => user.UserNo == userNo || user.LoginNo == loginNo)
                             .AnyAsync();
         }
     }
