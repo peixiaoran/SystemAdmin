@@ -21,6 +21,14 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
+        [EndpointSummary("[个人信息] 上传员工头像")]
+        public async Task<Result<string>> UploadAvatarAsync([FromForm] string userId, IFormFile file)
+        {
+            return await _personalInfoService.UploadAvatarAsync(userId, file);
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[个人信息] 查询个人信息实体")]
         public async Task<Result<PersonalInfoDto>> GetPersonalInfoEntity()
         {

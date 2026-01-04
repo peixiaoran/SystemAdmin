@@ -196,10 +196,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         public async Task<int> PwdExpirationUpdate(long userId, string passWord, string pwdSalt, string expirationTime)
         {
             return await _db.Updateable<UserInfoEntity>()
-                            .SetColumns(user => user.PassWord == passWord)
-                            .SetColumns(user => user.PwdSalt == pwdSalt)
-                            .SetColumns(user => user.ExpirationTime == expirationTime)
-                            .Where(user => user.UserId == userId)
+                            .SetColumns(user => new UserInfoEntity
+                            {
+                                PassWord = passWord,
+                                PwdSalt = pwdSalt,
+                                ExpirationTime = expirationTime
+                            }).Where(user => user.UserId == userId)
                             .ExecuteCommandAsync();
         }
     }

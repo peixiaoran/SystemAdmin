@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="EmailTemplates\Application\" />
+    <Folder Include="EmailTemplates\Common\" />
+  </ItemGroup>
+
 </Project>

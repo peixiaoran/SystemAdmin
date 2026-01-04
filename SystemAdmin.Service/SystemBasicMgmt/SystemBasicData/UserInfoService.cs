@@ -36,11 +36,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 上传头像图片文件
+        /// 上传员工头像
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public async Task<Result<string>> UploadAvatarAsync(IFormFile file)
+        public async Task<Result<string>> UploadAvatarAsync(string userId, IFormFile file)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarFileNotNull"));
                 }
 
-                // 2. 限制最大 2MB（头像不需要太大）
+                // 2. 限制最大 2MB
                 const long maxSize = 2 * 1024 * 1024;
                 if (file.Length > maxSize)
                 {
@@ -58,7 +58,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
 
                 // 3. 限制图片格式
-                var allowed = new[] { ".png", ".jpg", ".jpeg", ".webp" };
+                var allowed = new[] { ".png", ".jpg", ".jpeg"};
                 var ext = Path.GetExtension(file.FileName)?.ToLowerInvariant();
 
                 if (!allowed.Contains(ext))
@@ -69,14 +69,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 // 4. 上传到 MinIO
                 var avatarUrl = await _minioService.UploadAsync(file.FileName, file.OpenReadStream(), file.ContentType);
 
-                // 5. 返回成功
-                return Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"));
+                // 5. 更新用户头像地址
+                var updateAvatarCount = await _userInfoRepository.UpdateUserAvatar(long.Parse(userId), avatarUrl);
+
+                // 6. 返回
+                return updateAvatarCount >= 1
+                              ? Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"))
+                              : Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Avatar upload failed: {Message}", ex.Message);
-
-                // 禁止把内部报错直接暴露给前端（安全问题）
                 return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
             }
         }
@@ -264,7 +267,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
                 int updateUserCount = await _userInfoRepository.UpdateUserInfo(updateUserEntity);
 
-                // 修改员工权限
+                // 修改员工角色
                 UserRoleEntity updateUserRoleEntity = new UserRoleEntity()
                 {
                     UserId = long.Parse(userUpsert.UserId),

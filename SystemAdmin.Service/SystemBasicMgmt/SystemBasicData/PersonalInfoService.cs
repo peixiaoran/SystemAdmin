@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Commands;
@@ -12,20 +13,73 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
     public class PersonalInfoService
     {
         private readonly CurrentUser _loginuser;
+        private readonly MinioService _minioService;
         private readonly ILogger<PersonalInfoService> _logger;
         private readonly SqlSugarScope _db;
         private readonly PersonalInfoRepository _personalInfoRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.Personal";
 
-        public PersonalInfoService(CurrentUser loginuser, ILogger<PersonalInfoService> logger, SqlSugarScope db, PersonalInfoRepository personalInfoRepository, LocalizationService localization)
+        public PersonalInfoService(CurrentUser loginuser, MinioService minioService, ILogger<PersonalInfoService> logger, SqlSugarScope db, PersonalInfoRepository personalInfoRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
+            _minioService = minioService;
             _logger = logger;
             _db = db;
             _personalInfoRepository = personalInfoRepository;
             _localization = localization;
         }
+
+        /// <summary>
+        /// 上传员工头像
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public async Task<Result<string>> UploadAvatarAsync(string userId, IFormFile file)
+        {
+            try
+            {
+                // 1. 判空
+                if (file == null || file.Length == 0)
+                {
+                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarFileNotNull"));
+                }
+
+                // 2. 限制最大 2MB
+                const long maxSize = 2 * 1024 * 1024;
+                if (file.Length > maxSize)
+                {
+                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarFileTooLarge", "2MB"));
+                }
+
+                // 3. 限制图片格式
+                var allowed = new[] { ".png", ".jpg", ".jpeg"};
+                var ext = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+
+                if (!allowed.Contains(ext))
+                {
+                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarInvalidImageFormat"));
+                }
+
+                // 4. 上传到 MinIO
+                var avatarUrl = await _minioService.UploadAsync(file.FileName, file.OpenReadStream(), file.ContentType);
+
+                // 5. 更新用户头像地址
+                var updateAvatarCount = await _personalInfoRepository.UpdateUserAvatar(long.Parse(userId), avatarUrl);
+
+                // 6. 返回
+                return updateAvatarCount >= 1
+                              ? Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"))
+                              : Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Avatar upload failed: {Message}", ex.Message);
+                return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
+            }
+        }
+
 
         /// <summary>
         /// 查询个人信息实体
@@ -84,15 +138,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 var updatePersonalEntity = new UserInfoEntity
                 {
                     UserId = personalUpdate.UserId,
-                    UserNameCn = personalUpdate.UserNameCn,
-                    UserNameEn = personalUpdate.UserNameEn,
-                    Email = personalUpdate.Email,
                     PhoneNumber = personalUpdate.PhoneNumber,
                     PassWord = updatePassWord,
                     PwdSalt = updateSaltString,
                     IsRealtimeNotification = personalUpdate.IsRealtimeNotification,
                     IsScheduledNotification = personalUpdate.IsScheduledNotification,
-                    AvatarAddress = personalUpdate.AvatarAddress
+                    AvatarAddress = personalUpdate.AvatarAddress,
+                    ModifiedBy = _loginuser.UserId,
+                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
                 var updatePersonalCount = await _personalInfoRepository.UpdatePersonalInfo(_loginuser.UserId, updatePersonalEntity);
                 await _db.CommitTranAsync();

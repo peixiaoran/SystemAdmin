@@ -100,16 +100,32 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             return await _db.Updateable(userEntity)
                             .UpdateColumns(user => new
                             {
-                                user.UserNameCn,
-                                user.UserNameEn,
-                                user.Email,
-                                user.PhoneNumber,
                                 user.PassWord,
                                 user.PwdSalt,
                                 user.AvatarAddress,
                                 user.IsRealtimeNotification,
-                                user.IsScheduledNotification
+                                user.IsScheduledNotification,
+                                user.ModifiedBy,
+                                user.ModifiedDate
                             }).Where(personal => personal.UserId == loginUserId)
+                            .ExecuteCommandAsync();
+        }
+
+        /// <summary>
+        /// 修改员工头像
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="userAvatar"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateUserAvatar(long userId, string userAvatar)
+        {
+            return await _db.Updateable<UserInfoEntity>()
+                            .SetColumns(userinfo => new UserInfoEntity
+                            {
+                                AvatarAddress = userAvatar,
+                                ModifiedBy = userId,
+                                ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                            }).Where(user => user.UserId == userId)
                             .ExecuteCommandAsync();
         }
 

@@ -228,11 +228,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <param name="partTimePositionId"></param>
         /// <param name="partTimeLaborId"></param>
         /// <returns></returns>
-        public async Task<int> GetUserPartTimeCount(long userId, long partTimeDeptId, long partTimePositionId, long partTimeLaborId)
+        public async Task<bool> GetUserPartTimeCount(long userId, long partTimeDeptId, long partTimePositionId, long partTimeLaborId)
         {
             return await _db.Queryable<UserPartTimeEntity>()
                             .Where(userparttime => userparttime.UserId == userId && userparttime.PartTimeDeptId == partTimeDeptId && userparttime.PartTimePositionId == partTimePositionId && userparttime.PartTimeLaborId == partTimeLaborId)
-                            .CountAsync();
+                            .AnyAsync();
         }
 
         /// <summary>

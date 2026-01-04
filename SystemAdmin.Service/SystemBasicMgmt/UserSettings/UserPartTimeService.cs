@@ -88,8 +88,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
 
                 await _db.BeginTranAsync();
                 // 判断员工是否有重复（按照员工Id、兼任部门、兼任职业）
-                var userpartTimeCount = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeInsert.UserId), long.Parse(userPartTimeInsert.PartTimeDeptId), long.Parse(userPartTimeInsert.PartTimePositionId), long.Parse(userPartTimeInsert.PartTimeLaborId));
-                if (userpartTimeCount == 0)
+                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeInsert.UserId), long.Parse(userPartTimeInsert.PartTimeDeptId), long.Parse(userPartTimeInsert.PartTimePositionId), long.Parse(userPartTimeInsert.PartTimeLaborId));
+                if (userpartTimeAny)
                 {
                     var insertUserPartTimeCount = await _userPartTimeRepository.InsertUserPartTime(insertUserPartTimeEntity);
                     await _userPartTimeRepository.UpdateUserPartTime(long.Parse(userPartTimeInsert.UserId), 1);
@@ -174,8 +174,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
             try
             {
                 // 判断员工是否有重复（按照员工Id、新兼任部门、新兼任职业）
-                var userpartTimeCount = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeUpdateDel.UserId), long.Parse(userPartTimeUpdateDel.PartTimeDeptId), long.Parse(userPartTimeUpdateDel.PartTimePositionId), long.Parse(userPartTimeUpdateDel.PartTimeLaborId));
-                if (userpartTimeCount <= 1)
+                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeUpdateDel.UserId), long.Parse(userPartTimeUpdateDel.PartTimeDeptId), long.Parse(userPartTimeUpdateDel.PartTimePositionId), long.Parse(userPartTimeUpdateDel.PartTimeLaborId));
+                if (userpartTimeAny)
                 {
                     await _db.BeginTranAsync();
                     UserPartTimeEntity updateUserPartTimeEntity = new UserPartTimeEntity()

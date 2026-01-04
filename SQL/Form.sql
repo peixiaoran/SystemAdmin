@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001160 (16.00.1160)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001160 (16.00.1160)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 03/01/2026 21:16:19
+ Date: 04/01/2026 16:54:41
 */
 
 
@@ -1069,143 +1069,6 @@ GO
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for WorkflowStep_copy1
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[WorkflowStep_copy1]') AND type IN ('U'))
-	DROP TABLE [Form].[WorkflowStep_copy1]
-GO
-
-CREATE TABLE [Form].[WorkflowStep_copy1] (
-  [StepId] bigint  NOT NULL,
-  [FormTypeId] bigint  NOT NULL,
-  [StepNameCn] nvarchar(20) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [StepNameEn] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [IsStartStep] int  NOT NULL,
-  [Assignment] nvarchar(15) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [ApproveMode] nvarchar(15) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [IsReminderEnabled] int  NOT NULL,
-  [ReminderIntervalMinutes] int  NOT NULL,
-  [Description] nvarchar(100) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
-  [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime  NULL
-)
-GO
-
-ALTER TABLE [Form].[WorkflowStep_copy1] SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'步骤Id',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'StepId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单类型Id',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'FormTypeId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'步骤名称（中文）',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'StepNameCn'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'步骤名称（英文）',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'StepNameEn'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'是否为开始步骤',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'IsStartStep'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'审批人选取方式（依部门人员组织结构、指定员工、自定义）',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'Assignment'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'签核方式（单签、会签）',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'ApproveMode'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'是否催签',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'IsReminderEnabled'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'催签间隔分钟',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'ReminderIntervalMinutes'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'步骤描述',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'Description'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建人',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'CreatedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'CreatedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改人',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'ModifiedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改时间',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1',
-'COLUMN', N'ModifiedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'流程审批步骤表',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep_copy1'
-GO
-
-
--- ----------------------------
--- Records of WorkflowStep_copy1
--- ----------------------------
-
--- ----------------------------
 -- Table structure for WorkflowStepDeptUser
 -- ----------------------------
 IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[WorkflowStepDeptUser]') AND type IN ('U'))
@@ -1619,15 +1482,6 @@ GO
 -- Primary Key structure for table WorkflowStep
 -- ----------------------------
 ALTER TABLE [Form].[WorkflowStep] ADD CONSTRAINT [PK__FormAppr__243433573D582151] PRIMARY KEY CLUSTERED ([StepId])
-WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
-ON [PRIMARY]
-GO
-
-
--- ----------------------------
--- Primary Key structure for table WorkflowStep_copy1
--- ----------------------------
-ALTER TABLE [Form].[WorkflowStep_copy1] ADD CONSTRAINT [PK__Workflow__243433579A6AA5C6] PRIMARY KEY CLUSTERED ([StepId])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
 ON [PRIMARY]
 GO

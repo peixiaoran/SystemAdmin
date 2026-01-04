@@ -130,7 +130,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 修改员工
+        /// 修改员工角色
         /// </summary>
         /// <param name="userEntity"></param>
         /// <returns></returns>
@@ -143,6 +143,20 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                 userrole.CreatedBy,
                                 userrole.CreatedDate,
                             }).Where(userrole => userrole.UserId == userEntity.UserId)
+                            .ExecuteCommandAsync();
+        }
+
+        /// <summary>
+        /// 修改员工头像
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="userAvatar"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateUserAvatar(long userId, string userAvatar)
+        {
+            return await _db.Updateable<UserInfoEntity>()
+                            .SetColumns(user => user.AvatarAddress == userAvatar)
+                            .Where(user => user.UserId == userId)
                             .ExecuteCommandAsync();
         }
 

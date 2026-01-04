@@ -16,24 +16,6 @@ namespace SystemAdmin.CommonSetup.Security
             _settings = options.Value;
         }
 
-        #region Bucket 操作
-
-        private async Task CreateBucketIfNotExistsAsync()
-        {
-            bool exists = await _client.BucketExistsAsync(
-                new BucketExistsArgs().WithBucket(_settings.DefaultBucket)
-            );
-
-            if (!exists)
-            {
-                await _client.MakeBucketAsync(
-                    new MakeBucketArgs().WithBucket(_settings.DefaultBucket)
-                );
-            }
-        }
-
-        #endregion
-
         #region 上传 Upload
 
         public async Task<string> UploadAsync(string objectName, Stream data, string contentType = "application/octet-stream")
@@ -49,11 +31,11 @@ namespace SystemAdmin.CommonSetup.Security
             var newObjectName = $"{timestamp}_{random}{ext}";
 
             await _client.PutObjectAsync(new PutObjectArgs()
-                .WithBucket(bucket)
-                .WithObject(newObjectName)
-                .WithStreamData(data)
-                .WithObjectSize(data.Length)
-                .WithContentType(contentType));
+                         .WithBucket(bucket)
+                         .WithObject(newObjectName)
+                         .WithStreamData(data)
+                         .WithObjectSize(data.Length)
+                         .WithContentType(contentType));
 
             return $"{_settings.Endpoint}/{bucket}/{newObjectName}";
         }

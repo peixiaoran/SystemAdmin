@@ -20,12 +20,12 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly ILogger<ControlInfoService> _logger;
         private readonly SqlSugarScope _db;
         private readonly FormAuthRepository _formAuthRepository;
-        private readonly ApproverSelectionHandler _workflowStart;
+        private readonly StepSelectionHandler _workflowStart;
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.Forms.LeaveForm";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formAuthRepository, ApproverSelectionHandler workflowStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formAuthRepository, StepSelectionHandler workflowStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
@@ -77,7 +77,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                 var leaveFormDto = initleaveFormEntity.Adapt<LeaveFormDto>();
                 leaveFormDto.ImportanceCode = ImportanceType.Normal.ToEnumString();
-                leaveFormDto.FormTypeId = long.Parse(formTypeId); //表单类别Id
+                leaveFormDto.FormTypeId = long.Parse(formTypeId);
                 return Result<LeaveFormDto>.Ok(leaveFormDto);
             }
             catch (Exception ex)
@@ -127,6 +127,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 // 保存请假表单
                 int saveLeaveFormCount = await _leaveFormRepository.SaveLeaveForm(saveLeaveFormEntity);
                 await _db.CommitTranAsync();
+
                 return saveFormInfo >= 1 && saveLeaveFormCount >= 1
                        ? Result<int>.Ok(saveLeaveFormCount, _localization.ReturnMsg($"{_this}SaveSuccess"))
                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}SaveFailed"));

@@ -222,22 +222,37 @@
   <data name="NationalityInfoUpdateFailed" xml:space="preserve">
     <value>国籍信息修改失败</value>
   </data>
-  <data name="AvatarFileNotNull" xml:space="preserve">
+  <data name="UserInfoAvatarFileNotNull" xml:space="preserve">
     <value>请上传头像文件</value>
   </data>
-  <data name="AvatarFileTooLarge" xml:space="preserve">
+  <data name="UserInfoAvatarFileTooLarge" xml:space="preserve">
     <value>头像文件大小不能超过 2MB</value>
   </data>
-  <data name="AvatarInvalidImageFormat" xml:space="preserve">
+  <data name="UserInfoAvatarInvalidImageFormat" xml:space="preserve">
     <value>头像文件格式不支持，仅支持 .png、.jpg、.jpeg</value>
   </data>
-  <data name="UploadSuccess" xml:space="preserve">
+  <data name="UserInfoUploadSuccess" xml:space="preserve">
     <value>上传成功</value>
   </data>
-  <data name="UploadFailed" xml:space="preserve">
+  <data name="UserInfoUploadFailed" xml:space="preserve">
     <value>上传失败</value>
   </data>
   <data name="DeptInfoDepartmentHasUsers" xml:space="preserve">
     <value>无法删除部门，因为该部门或其子部门下存在人员</value>
+  </data>
+  <data name="PersonalAvatarFileNotNull" xml:space="preserve">
+    <value>请上传头像文件</value>
+  </data>
+  <data name="PersonalAvatarFileTooLarge" xml:space="preserve">
+    <value>头像文件大小不能超过 2MB</value>
+  </data>
+  <data name="PersonalAvatarInvalidImageFormat" xml:space="preserve">
+    <value>头像文件格式不支持，仅支持 .png、.jpg、.jpeg</value>
+  </data>
+  <data name="PersonalUploadSuccess" xml:space="preserve">
+    <value>上传成功</value>
+  </data>
+  <data name="PersonalUploadFailed" xml:space="preserve">
+    <value>上传失败</value>
   </data>
 </root>

@@ -15,26 +15,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Commands
         public long UserId { get; set; }
 
         /// <summary>
-        /// 员工姓名（中文）
-        /// </summary>
-        public string UserNameCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 员工姓名（英文）
-        /// </summary>
-        public string UserNameEn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 性别
-        /// </summary>
-        public int Gender { get; set; }
-
-        /// <summary>
-        /// 邮箱地址
-        /// </summary>
-        public string Email { get; set; } = string.Empty;
-
-        /// <summary>
         /// 电话号码
         /// </summary>
         public string PhoneNumber { get; set; } = string.Empty;

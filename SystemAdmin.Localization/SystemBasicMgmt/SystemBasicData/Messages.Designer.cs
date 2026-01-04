@@ -61,33 +61,6 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 请上传头像文件 的本地化字符串。
-        /// </summary>
-        internal static string AvatarFileNotNull {
-            get {
-                return ResourceManager.GetString("AvatarFileNotNull", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 头像文件大小不能超过 2MB 的本地化字符串。
-        /// </summary>
-        internal static string AvatarFileTooLarge {
-            get {
-                return ResourceManager.GetString("AvatarFileTooLarge", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 头像文件格式不支持，仅支持 .png、.jpg、.jpeg 的本地化字符串。
-        /// </summary>
-        internal static string AvatarInvalidImageFormat {
-            get {
-                return ResourceManager.GetString("AvatarInvalidImageFormat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 部门信息删除失败 的本地化字符串。
         /// </summary>
         internal static string DeptInfoDeleteFailed {
@@ -259,6 +232,33 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
+        ///   查找类似 请上传头像文件 的本地化字符串。
+        /// </summary>
+        internal static string PersonalAvatarFileNotNull {
+            get {
+                return ResourceManager.GetString("PersonalAvatarFileNotNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 头像文件大小不能超过 2MB 的本地化字符串。
+        /// </summary>
+        internal static string PersonalAvatarFileTooLarge {
+            get {
+                return ResourceManager.GetString("PersonalAvatarFileTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 头像文件格式不支持，仅支持 .png、.jpg、.jpeg 的本地化字符串。
+        /// </summary>
+        internal static string PersonalAvatarInvalidImageFormat {
+            get {
+                return ResourceManager.GetString("PersonalAvatarInvalidImageFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 个人信息修改失败 的本地化字符串。
         /// </summary>
         internal static string PersonalUpdateFailed {
@@ -277,6 +277,24 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
+        ///   查找类似 上传失败 的本地化字符串。
+        /// </summary>
+        internal static string PersonalUploadFailed {
+            get {
+                return ResourceManager.GetString("PersonalUploadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 上传成功 的本地化字符串。
+        /// </summary>
+        internal static string PersonalUploadSuccess {
+            get {
+                return ResourceManager.GetString("PersonalUploadSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 密码长度需为 8–16 位，并包含大小写字母、数字及特殊字符 的本地化字符串。
         /// </summary>
         internal static string PersonalValidationPassWrodError {
@@ -286,20 +304,29 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 上传失败 的本地化字符串。
+        ///   查找类似 请上传头像文件 的本地化字符串。
         /// </summary>
-        internal static string UploadFailed {
+        internal static string UserInfoAvatarFileNotNull {
             get {
-                return ResourceManager.GetString("UploadFailed", resourceCulture);
+                return ResourceManager.GetString("UserInfoAvatarFileNotNull", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 上传成功 的本地化字符串。
+        ///   查找类似 头像文件大小不能超过 2MB 的本地化字符串。
         /// </summary>
-        internal static string UploadSuccess {
+        internal static string UserInfoAvatarFileTooLarge {
             get {
-                return ResourceManager.GetString("UploadSuccess", resourceCulture);
+                return ResourceManager.GetString("UserInfoAvatarFileTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 头像文件格式不支持，仅支持 .png、.jpg、.jpeg 的本地化字符串。
+        /// </summary>
+        internal static string UserInfoAvatarInvalidImageFormat {
+            get {
+                return ResourceManager.GetString("UserInfoAvatarInvalidImageFormat", resourceCulture);
             }
         }
         
@@ -363,6 +390,24 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         internal static string UserInfoUpdateSuccess {
             get {
                 return ResourceManager.GetString("UserInfoUpdateSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 上传失败 的本地化字符串。
+        /// </summary>
+        internal static string UserInfoUploadFailed {
+            get {
+                return ResourceManager.GetString("UserInfoUploadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 上传成功 的本地化字符串。
+        /// </summary>
+        internal static string UserInfoUploadSuccess {
+            get {
+                return ResourceManager.GetString("UserInfoUploadSuccess", resourceCulture);
             }
         }
         
