@@ -351,8 +351,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             {
                                 FormTypeId = formtype.FormTypeId,
                                 FormTypeName = _lang.Locale == "zh-CN"
-                                               ? formtype.DescriptionCn
-                                               : formtype.DescriptionEn,
+                                               ? formtype.FormTypeNameCn
+                                               : formtype.FormTypeNameEn,
                             }).ToListAsync();
         }
 

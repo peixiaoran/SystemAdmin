@@ -19,7 +19,7 @@
         /// <summary>
         /// 允许的 HTTP 方法（需包含 OPTIONS 以支持预检请求）。
         /// </summary>
-        public string[] Methods { get; set; } = new[] { "POST", "OPTIONS" };
+        public string[] Methods { get; set; } = { "POST", "OPTIONS" };
 
         /// <summary>
         /// 是否允许任意请求头（如 Authorization、Accept-Language 等）。

@@ -29,7 +29,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
+                _logger.LogCritical(ex, ex.Message);
                 return false;
             }
         }

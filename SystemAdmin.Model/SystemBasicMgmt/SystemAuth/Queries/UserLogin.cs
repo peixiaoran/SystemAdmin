@@ -3,7 +3,7 @@
     /// <summary>
     /// 员工登录请求参数
     /// </summary>
-    public class SysLogin
+    public class UserLogin
     {
         /// <summary>
         /// 登录账号

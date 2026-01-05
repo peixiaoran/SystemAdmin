@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 04/01/2026 16:54:35
+ Date: 05/01/2026 14:21:00
 */
 
 
@@ -1368,7 +1368,6 @@ CREATE TABLE [Basic].[ModuleInfo] (
   [Path] nvarchar(100) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [ModuleIcon] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [SortOrder] int  NOT NULL,
-  [IsEnabled] int  NOT NULL,
   [IsVisible] int  NOT NULL,
   [RemarkCh] nvarchar(1000) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [RemarkEn] nvarchar(1000) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
@@ -1432,13 +1431,6 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'是否启用：1=启用，0=不启用',
-'SCHEMA', N'Basic',
-'TABLE', N'ModuleInfo',
-'COLUMN', N'IsEnabled'
-GO
-
-EXEC sp_addextendedproperty
 'MS_Description', N'是否可见：1=可见，0=不可见',
 'SCHEMA', N'Basic',
 'TABLE', N'ModuleInfo',
@@ -1497,13 +1489,13 @@ GO
 -- ----------------------------
 -- Records of ModuleInfo
 -- ----------------------------
-INSERT INTO [Basic].[ModuleInfo] ([ModuleId], [ModuleCode], [ModuleNameCn], [ModuleNameEn], [Path], [ModuleIcon], [SortOrder], [IsEnabled], [IsVisible], [RemarkCh], [RemarkEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1350161679034934501', N'SystemBasicMgmt', N'系统基本管理', N'SystemBasic Mgmt', N'systembasicmgmt/index', N'Setting', N'1', N'1', N'1', N'系统管理模组用于统一管理系统的基本资讯、权限配置和资料字典。它支援系统参数维护、使用者和角色权限分配，以及业务字典的集中管理，提升系统的安全性与可维护性。', N'The System Management Module is used for the centralized management of the system''s basic information, permission configurations, and data dictionaries. It supports system parameter maintenance, user and role permission allocation, and centralized management of business dictionaries, thereby enhancing system security and maintainability.', N'1903486709602062336', N'2025-01-20 16:31:57.000', N'1903486709602062336', N'2025-11-03 21:36:33.000')
+INSERT INTO [Basic].[ModuleInfo] ([ModuleId], [ModuleCode], [ModuleNameCn], [ModuleNameEn], [Path], [ModuleIcon], [SortOrder], [IsVisible], [RemarkCh], [RemarkEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1350161679034934501', N'SystemBasicMgmt', N'系统基本管理', N'SystemBasic Mgmt', N'systembasicmgmt/index', N'Setting', N'1', N'1', N'系统管理模组用于统一管理系统的基本资讯、权限配置和资料字典。它支援系统参数维护、使用者和角色权限分配，以及业务字典的集中管理，提升系统的安全性与可维护性。', N'The System Management Module is used for the centralized management of the system''s basic information, permission configurations, and data dictionaries. It supports system parameter maintenance, user and role permission allocation, and centralized management of business dictionaries, thereby enhancing system security and maintainability.', N'1903486709602062336', N'2025-01-20 16:31:57.000', N'1903486709602062336', N'2025-11-03 21:36:33.000')
 GO
 
-INSERT INTO [Basic].[ModuleInfo] ([ModuleId], [ModuleCode], [ModuleNameCn], [ModuleNameEn], [Path], [ModuleIcon], [SortOrder], [IsEnabled], [IsVisible], [RemarkCh], [RemarkEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1968271760889614336', N'FormBusiness', N'表单签核业务', N'Form Business', N'formbusiness/index', N'Notebook', N'2', N'1', N'1', N'表单签核模块用于处理企业内部各类业务表单（如请假单、用印申请、采购申请等）的审批流程。', N'The Form Approval Module is designed to manage the approval workflow of various business forms (such as leave requests, stamping applications, purchase requests, etc.) within the organization.', N'1903486709602062336', N'2025-09-17 19:12:11.000', N'1903486709602062336', N'2025-10-19 01:47:57.000')
+INSERT INTO [Basic].[ModuleInfo] ([ModuleId], [ModuleCode], [ModuleNameCn], [ModuleNameEn], [Path], [ModuleIcon], [SortOrder], [IsVisible], [RemarkCh], [RemarkEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1968271760889614336', N'FormBusiness', N'表单签核业务', N'Form Business', N'formbusiness/index', N'Notebook', N'2', N'1', N'表单签核模块用于处理企业内部各类业务表单（如请假单、用印申请、采购申请等）的审批流程。', N'The Form Approval Module is designed to manage the approval workflow of various business forms (such as leave requests, stamping applications, purchase requests, etc.) within the organization.', N'1903486709602062336', N'2025-09-17 19:12:11.000', N'1903486709602062336', N'2025-10-19 01:47:57.000')
 GO
 
-INSERT INTO [Basic].[ModuleInfo] ([ModuleId], [ModuleCode], [ModuleNameCn], [ModuleNameEn], [Path], [ModuleIcon], [SortOrder], [IsEnabled], [IsVisible], [RemarkCh], [RemarkEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1982707658716745728', N'CustMat', N'客户生产计划', N'Customer Production Plan', N'custmat/index', N'Promotion', N'3', N'1', N'1', N'生产计划模块用于根据销售订单、库存状态、物料供应及产能情况，自动生成和调整生产计划，确保生产过程高效、有序、可控。', N'The Production Planning Module is designed to automatically generate and adjust production schedules based on sales orders, inventory status, material availability, and production capacity, ensuring an efficient, organized, and controllable manufacturing process.', N'1903486709602062336', N'2025-10-27 15:15:17.000', N'1903486709602062336', N'2025-11-03 20:48:30.000')
+INSERT INTO [Basic].[ModuleInfo] ([ModuleId], [ModuleCode], [ModuleNameCn], [ModuleNameEn], [Path], [ModuleIcon], [SortOrder], [IsVisible], [RemarkCh], [RemarkEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1982707658716745728', N'CustMat', N'客户生产计划', N'Customer Production Plan', N'custmat/index', N'Promotion', N'3', N'1', N'生产计划模块用于根据销售订单、库存状态、物料供应及产能情况，自动生成和调整生产计划，确保生产过程高效、有序、可控。', N'The Production Planning Module is designed to automatically generate and adjust production schedules based on sales orders, inventory status, material availability, and production capacity, ensuring an efficient, organized, and controllable manufacturing process.', N'1903486709602062336', N'2025-10-27 15:15:17.000', N'1903486709602062336', N'2025-11-03 20:48:30.000')
 GO
 
 

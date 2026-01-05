@@ -41,9 +41,9 @@
         public string From { get; set; } = string.Empty;
 
         /// <summary>
-        /// 默认发件人显示名称，例如：Systems Admin
+        /// 默认发件人显示名称，例如：System Admin
         /// </summary>
-        public string DisplayName { get; set; } = "Systems Admin";
+        public string DisplayName { get; set; } = "System Admin";
 
         /// <summary>
         /// 邮件发送超时时间（毫秒），包括连接和发送过程

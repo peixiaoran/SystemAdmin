@@ -24,11 +24,9 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
 
             // 修正 JSON 里的 \n
             settings.PublicKey = (settings.PublicKey ?? string.Empty)
-                .Replace("\\n", "\n")
                 .Trim();
 
             settings.PrivateKey = (settings.PrivateKey ?? string.Empty)
-                .Replace("\\n", "\n")
                 .Trim();
 
             if (string.IsNullOrEmpty(settings.PrivateKey))

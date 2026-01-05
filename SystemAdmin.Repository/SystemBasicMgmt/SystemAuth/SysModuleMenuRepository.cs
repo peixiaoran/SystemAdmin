@@ -29,10 +29,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
                                       .InnerJoin<SysUserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
                                       .InnerJoin<SysRoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
                                       .InnerJoin<SysRoleModuleEntity>((user, userrole, role, rolemodule) => role.RoleId == rolemodule.RoleId)
-                                      .InnerJoin<SysModuleInfoEntity>((user, userrole, role, rolemodule, module) =>
-                                          rolemodule.ModuleId == module.ModuleId &&
-                                          module.IsEnabled == 1 &&
-                                          module.IsVisible == 1)
+                                      .InnerJoin<SysModuleInfoEntity>((user, userrole, role, rolemodule, module) => rolemodule.ModuleId == module.ModuleId && module.IsVisible == 1)
                                       .Where((user, userrole, role, rolemodule, module) => user.UserId == loginUserId)
                                       .OrderBy((user, userrole, role, rolemodule, module) => module.SortOrder)
                                       .Select((user, userrole, role, rolemodule, module) => new SysModuleInfoDto
@@ -46,7 +43,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
                                                        ? module.RemarkCh
                                                        : module.RemarkEn,
                                       }).ToListAsync();
-
             return moduleList;
         }
 
@@ -64,7 +60,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
                                      .LeftJoin<SysRoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
                                      .InnerJoin<SysRoleMenuEntity>((user, userrole, role, rolemenu) => role.RoleId == rolemenu.RoleId)
                                      .InnerJoin<SysMenuInfoEntity>((user, userrole, role, rolemenu, menu) => rolemenu.MenuId == menu.MenuId)
-                                     .Where((user, userrole, role, rolemenu, menu) => user.UserId == userId && menu.ModuleId == long.Parse(getSysMenu.ModuleId) && menu.IsEnabled && menu.IsVisible)
+                                     .Where((user, userrole, role, rolemenu, menu) => user.UserId == userId && menu.ModuleId == long.Parse(getSysMenu.ModuleId) && menu.IsVisible)
                                      .OrderBy((user, userrole, role, rolemenu, menu) => menu.SortOrder)
                                      .Select((user, userrole, role, rolemenu, menu) => new SysMenuInfoDto
                                      {
@@ -72,8 +68,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
                                          ParentMenuId = menu.ParentMenuId,
                                          MenuCode = menu.MenuCode,
                                          MenuName = _lang.Locale == "zh-CN"
-                                                         ? menu.MenuNameCn
-                                                         : menu.MenuNameEn,
+                                                    ? menu.MenuNameCn
+                                                    : menu.MenuNameEn,
                                          Path = menu.Path,
                                          MenuIcon = menu.MenuIcon
                                      }).ToTreeAsync(menu => menu.MenuChildList, menu => menu.ParentMenuId, 0);

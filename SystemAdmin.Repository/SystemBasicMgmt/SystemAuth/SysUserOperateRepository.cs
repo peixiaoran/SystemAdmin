@@ -24,7 +24,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         /// </summary>
         /// <param name="sysLogin"></param>
         /// <returns></returns>
-        public async Task<UserInfoEntity> LoginGetUserInfo(SysLogin sysLogin)
+        public async Task<UserInfoEntity> LoginGetUserInfo(UserLogin sysLogin)
         {
             return await _db.Queryable<UserInfoEntity>()
                             .With(SqlWith.NoLock)

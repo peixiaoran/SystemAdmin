@@ -22,7 +22,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         [Tags("系统基础管理-系统接口")]
         [EndpointSummary("[系统接口] 员工登录")]
         [AllowAnonymous]
-        public async Task<Result<SysUserLoginReturnDto>> UserLogin([FromBody] SysLogin sysLogin)
+        public async Task<Result<SysUserLoginReturnDto>> UserLogin([FromBody] UserLogin sysLogin)
         {
             return await _sysUserOperateService.UserLogin(Response, sysLogin);
         }

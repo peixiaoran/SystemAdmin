@@ -56,9 +56,9 @@ if (app.Environment.IsDevelopment())
 {
     app.MapScalarApiReference("/systemadmin");
     app.MapOpenApi();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
 app.UseRouting();
 app.UseCorsSetup(builder.Configuration);
 app.UseAuthentication();

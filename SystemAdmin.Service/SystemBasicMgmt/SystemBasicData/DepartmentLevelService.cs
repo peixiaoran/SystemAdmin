@@ -14,16 +14,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly CurrentUser _loginuser;
         private readonly ILogger<DepartmentLevelService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly DepartmentLevelRepository _departmentLevelRepository;
+        private readonly DepartmentLevelRepository _deptLevelRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.DeptLevel";
 
-        public DepartmentLevelService(CurrentUser loginuser, ILogger<DepartmentLevelService> logger, SqlSugarScope db, DepartmentLevelRepository departmentLevelRepository, LocalizationService localization)
+        public DepartmentLevelService(CurrentUser loginuser, ILogger<DepartmentLevelService> logger, SqlSugarScope db, DepartmentLevelRepository deptLevelRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _departmentLevelRepository = departmentLevelRepository;
+            _deptLevelRepository = deptLevelRepository;
             _localization = localization;
         }
 
@@ -48,7 +48,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int insertDeptLevelCount = await _departmentLevelRepository.InsertDepartmentLevel(insertDeptLevelEntity);
+                int insertDeptLevelCount = await _deptLevelRepository.InsertDepartmentLevel(insertDeptLevelEntity);
                 await _db.CommitTranAsync();
 
                 return insertDeptLevelCount >= 1
@@ -73,7 +73,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                int delDeptLevelCount = await _departmentLevelRepository.DeleteDepartmentLevel(long.Parse(deptLevelUpsert.DepartmentLevelId));
+                int delDeptLevelCount = await _deptLevelRepository.DeleteDepartmentLevel(long.Parse(deptLevelUpsert.DepartmentLevelId));
                 await _db.CommitTranAsync();
 
                 return delDeptLevelCount >= 1
@@ -109,7 +109,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                int updateDeptLevelcount = await _departmentLevelRepository.UpdateDepartmentLevel(updateDeptLevelEntity);
+                int updateDeptLevelcount = await _deptLevelRepository.UpdateDepartmentLevel(updateDeptLevelEntity);
                 await _db.CommitTranAsync();
 
                 return updateDeptLevelcount >= 1
@@ -133,7 +133,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var depatLevelEntity = await _departmentLevelRepository.GetDepartmentLevelEntity(long.Parse(getDeptLevelEntity.DepartmentLevelId));
+                var depatLevelEntity = await _deptLevelRepository.GetDepartmentLevelEntity(long.Parse(getDeptLevelEntity.DepartmentLevelId));
                 return Result<DepartmentLevelDto>.Ok(depatLevelEntity, "");
             }
             catch (Exception ex)
@@ -151,7 +151,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var deptLevelList = await _departmentLevelRepository.GetDepartmentLevelList();
+                var deptLevelList = await _deptLevelRepository.GetDepartmentLevelList();
                 return Result<List<DepartmentLevelDto>>.Ok(deptLevelList, "");
             }
             catch (Exception ex)
