@@ -135,7 +135,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     updatePassWord = user.PassWord;
                 }
 
-                var updatePersonalEntity = new UserInfoEntity
+                var updatePersonal = new UserInfoEntity
                 {
                     UserId = personalUpdate.UserId,
                     PhoneNumber = personalUpdate.PhoneNumber,
@@ -147,7 +147,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                var updatePersonalCount = await _personalInfoRepository.UpdatePersonalInfo(_loginuser.UserId, updatePersonalEntity);
+                var updatePersonalCount = await _personalInfoRepository.UpdatePersonalInfo(_loginuser.UserId, updatePersonal);
                 await _db.CommitTranAsync();
 
                 return updatePersonalCount >= 1

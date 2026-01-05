@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                ControlInfoEntity insertFromGroupEntity = new ControlInfoEntity()
+                ControlInfoEntity insertFromGroup = new ControlInfoEntity()
                 {
                     ControlCode = controlInfoUpsert.ControlCode,
                     ControlName = controlInfoUpsert.ControlName,
@@ -46,7 +46,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                 };
 
                 await _db.BeginTranAsync();
-                int insertControlInfoCount = await _controlInfoRepository.InsertControlInfo(insertFromGroupEntity);
+                int insertControlInfoCount = await _controlInfoRepository.InsertControlInfo(insertFromGroup);
                 await _db.CommitTranAsync();
                 return insertControlInfoCount >= 1
                         ? Result<int>.Ok(insertControlInfoCount, _localization.ReturnMsg($"{_this}InsertSuccess"))

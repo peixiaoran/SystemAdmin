@@ -37,7 +37,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                NationalityInfoEntity insertNationEntity = new NationalityInfoEntity()
+                NationalityInfoEntity insertNation = new NationalityInfoEntity()
                 {
                     NationId = SnowFlakeSingle.Instance.NextId(),
                     NationNameCn = nationUpsert.NationNameCn,
@@ -46,7 +46,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int insertNationCount = await _nationRepository.InsertNationalityInfo(insertNationEntity);
+                int insertNationCount = await _nationRepository.InsertNationalityInfo(insertNation);
                 await _db.CommitTranAsync();
 
                 return insertNationCount >= 1
@@ -97,7 +97,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                NationalityInfoEntity updateNationEntity = new NationalityInfoEntity()
+                NationalityInfoEntity updateNation = new NationalityInfoEntity()
                 {
                     NationId = long.Parse(nationUpsert.NationId),
                     NationNameCn = nationUpsert.NationNameCn,
@@ -106,7 +106,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int updateNationCount = await _nationRepository.UpdateNationalityInfo(updateNationEntity);
+                int updateNationCount = await _nationRepository.UpdateNationalityInfo(updateNation);
                 await _db.CommitTranAsync();
 
                 return updateNationCount >= 1

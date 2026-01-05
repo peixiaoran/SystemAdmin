@@ -37,7 +37,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
             try
             {
                 await _db.BeginTranAsync();
-                FormTypeEntity insertFromGroupEntity = new FormTypeEntity()
+                FormTypeEntity insertFromGroup = new FormTypeEntity()
                 {
                     FormTypeId = SnowFlakeSingle.Instance.NextId(),
                     FormGroupId = long.Parse(formTypeUpsert.FormGroupId),
@@ -52,7 +52,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int insertFormTypeCount = await _formTypeRepository.InsertFormTypeInfo(insertFromGroupEntity);
+                int insertFormTypeCount = await _formTypeRepository.InsertFormTypeInfo(insertFromGroup);
                 await _db.CommitTranAsync();
 
                 return insertFormTypeCount >= 1
@@ -103,7 +103,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
             try
             {
                 await _db.BeginTranAsync();
-                FormTypeEntity updateFormTypeEntity = new FormTypeEntity()
+                FormTypeEntity updateFormType = new FormTypeEntity()
                 {
                     FormTypeId = long.Parse(formTypeUpsert.FormTypeId),
                     FormGroupId = long.Parse(formTypeUpsert.FormGroupId),
@@ -118,7 +118,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int updateFormTypeCount = await _formTypeRepository.UpdateFormTypeInfo(updateFormTypeEntity);
+                int updateFormTypeCount = await _formTypeRepository.UpdateFormTypeInfo(updateFormType);
                 await _db.CommitTranAsync();
 
                 return updateFormTypeCount >= 1

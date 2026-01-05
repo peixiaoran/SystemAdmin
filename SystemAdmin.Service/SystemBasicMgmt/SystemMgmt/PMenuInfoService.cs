@@ -38,7 +38,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             try
             {
                 await _db.BeginTranAsync();
-                MenuInfoEntity insertPMenuEntity = new MenuInfoEntity
+                MenuInfoEntity insertPMenu = new MenuInfoEntity
                 {
                     MenuId = SnowFlakeSingle.Instance.NextId(),
                     ParentMenuId = 0,
@@ -56,7 +56,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     Remark = menuUpsert.Remark
                 };
-                int insertPMenuCount = await _pMenuRepository.InsertPMenu(insertPMenuEntity);
+                int insertPMenuCount = await _pMenuRepository.InsertPMenu(insertPMenu);
                 await _db.CommitTranAsync();
 
                 return Result<int>.Ok(insertPMenuCount, _localization.ReturnMsg($"{_this}InsertSuccess"));
@@ -111,7 +111,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             try
             {
                 await _db.BeginTranAsync();
-                var updatePMenuEntity = new MenuInfoEntity
+                var updatePMenu = new MenuInfoEntity
                 {
                     MenuId = long.Parse(menuUpsert.MenuId),
                     ModuleId = long.Parse(menuUpsert.ModuleId),
@@ -127,7 +127,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     Redirect = menuUpsert.Redirect,
                     Remark = menuUpsert.Remark
                 };
-                int updatePMenuCount = await _pMenuRepository.UpdatePMenu(updatePMenuEntity);
+                int updatePMenuCount = await _pMenuRepository.UpdatePMenu(updatePMenu);
                 await _db.CommitTranAsync();
 
                 return updatePMenuCount >= 1

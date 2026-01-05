@@ -111,7 +111,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
 
                 await _db.BeginTranAsync();
                 // 新增员工信息
-                UserInfoEntity insertUserEntity = new UserInfoEntity()
+                UserInfoEntity insertUser = new UserInfoEntity()
                 {
                     UserId = userId,
                     DepartmentId = long.Parse(userUpsert.DepartmentId),
@@ -140,7 +140,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                int insertUserCount = await _userInfoRepository.InsertUserInfo(insertUserEntity);
+                int insertUserCount = await _userInfoRepository.InsertUserInfo(insertUser);
 
                 // 新增员工权限
                 UserRoleEntity insertUserRoleEntity = new UserRoleEntity()
@@ -236,7 +236,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
                 
                 // 修改员工信息
-                var updateUserEntity = new UserInfoEntity
+                var updateUser = new UserInfoEntity
                 {
                     UserId = long.Parse(userUpsert.UserId),
                     UserNo = userUpsert.UserNo,
@@ -265,17 +265,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                int updateUserCount = await _userInfoRepository.UpdateUserInfo(updateUserEntity);
+                int updateUserCount = await _userInfoRepository.UpdateUserInfo(updateUser);
 
                 // 修改员工角色
-                UserRoleEntity updateUserRoleEntity = new UserRoleEntity()
+                UserRoleEntity updateUserRole = new UserRoleEntity()
                 {
                     UserId = long.Parse(userUpsert.UserId),
                     RoleId = long.Parse(userUpsert.RoleId),
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                int updateUserRoleCount = await _userInfoRepository.UpdateUserRoleInfo(updateUserRoleEntity);
+                int updateUserRoleCount = await _userInfoRepository.UpdateUserRoleInfo(updateUserRole);
                 await _db.CommitTranAsync();
 
                 return updateUserCount >= 1 || updateUserRoleCount >= 1

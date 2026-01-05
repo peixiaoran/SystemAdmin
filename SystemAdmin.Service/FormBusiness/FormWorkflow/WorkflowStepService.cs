@@ -304,6 +304,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 workflowStepEntity.workflowStepDeptUserEntity = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(getWorkflowStep.StepId));
                 workflowStepEntity.workflowStepUserEntity = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(getWorkflowStep.StepId));
                 workflowStepEntity.workflowStepApproverRuleEntity = await _workflowStepRepository.GetWorkflowStepRuleEntity(long.Parse(getWorkflowStep.StepId));
+
                 return Result<WorkflowStepEntityDto>.Ok(workflowStepEntity);
             }
             catch (Exception ex)
@@ -443,7 +444,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 查询用户信息分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<Model.FormBusiness.FormWorkflow.Dto.UserInfoDto>> GetUserInfoPage(GetUserInfoPage getUserInfoPage)
+        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getUserInfoPage)
         {
             try
             {
@@ -453,7 +454,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<Model.FormBusiness.FormWorkflow.Dto.UserInfoDto>.Failure(500, ex.Message.ToString());
+                return ResultPaged<UserInfoDto>.Failure(500, ex.Message.ToString());
             }
         }
     }

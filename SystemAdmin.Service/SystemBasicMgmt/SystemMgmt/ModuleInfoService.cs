@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             try
             {
                 await _db.BeginTranAsync();
-                ModuleInfoEntity insertModuleEntity = new ModuleInfoEntity()
+                ModuleInfoEntity insertModule = new ModuleInfoEntity()
                 {
                     ModuleId = SnowFlakeSingle.Instance.NextId(),
                     ModuleNameCn = moduleUpsert.ModuleNameCn,
@@ -51,7 +51,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     RemarkCh = moduleUpsert.RemarkCh,
                     RemarkEn = moduleUpsert.RemarkEn
                 };
-                int insertModuleCount = await _moduleRepository.InsertModule(insertModuleEntity);
+                int insertModuleCount = await _moduleRepository.InsertModule(insertModule);
                 await _db.CommitTranAsync();
 
                 return insertModuleCount >= 1
@@ -110,7 +110,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             try
             {
                 await _db.BeginTranAsync();
-                ModuleInfoEntity EntityInsert = new ModuleInfoEntity()
+                ModuleInfoEntity insertModule = new ModuleInfoEntity()
                 {
                     ModuleId = long.Parse(moduleUpsert.ModuleId),
                     ModuleNameCn = moduleUpsert.ModuleNameCn,
@@ -124,7 +124,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     RemarkCh = moduleUpsert.RemarkCh,
                     RemarkEn = moduleUpsert.RemarkEn
                 };
-                int updateModuleCount = await _moduleRepository.UpdateModule(EntityInsert);
+                int updateModuleCount = await _moduleRepository.UpdateModule(insertModule);
                 await _db.CommitTranAsync();
 
                 return updateModuleCount >= 1

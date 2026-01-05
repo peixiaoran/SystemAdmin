@@ -37,7 +37,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             try
             {
                 await _db.BeginTranAsync();
-                var insertRoleEntity = new RoleInfoEntity
+                var insertRole = new RoleInfoEntity
                 {
                     RoleId = SnowFlakeSingle.Instance.NextId(),
                     RoleCode = roleUpsert.RoleCode,
@@ -48,7 +48,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                     Remark = roleUpsert.Remark
                 };
-                int insertRoleCount = await _roleRepository.InsertRole(insertRoleEntity);
+                int insertRoleCount = await _roleRepository.InsertRole(insertRole);
                 await _db.CommitTranAsync();
 
                 return insertRoleCount >= 1
@@ -113,7 +113,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             try
             {
                 await _db.BeginTranAsync();
-                var updateRoleEntity = new RoleInfoEntity
+                var updateRole = new RoleInfoEntity
                 {
                     RoleId = long.Parse(roleUpsert.RoleId),
                     RoleCode = roleUpsert.RoleCode,
@@ -125,7 +125,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     Remark = roleUpsert.Remark
                 };
 
-                int updateRoleCount = await _roleRepository.UpdateRole(updateRoleEntity);
+                int updateRoleCount = await _roleRepository.UpdateRole(updateRole);
                 await _db.CommitTranAsync();
 
                 return updateRoleCount >= 1
@@ -225,12 +225,12 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                List<long> UnSelectdModuleIds = roleModuleUpsert.UnSelectedModuleIds
+                List<long> unSelectdModuleIds = roleModuleUpsert.UnSelectedModuleIds
                                                        .Where(moduleId => long.TryParse(moduleId, out _))
                                                        .Select(long.Parse)
                                                        .ToList();
                 // 查询未选中模块下的菜单Id
-                var delMenuIds = await _roleRepository.GetMenuIds(UnSelectdModuleIds);
+                var delMenuIds = await _roleRepository.GetMenuIds(unSelectdModuleIds);
                 // 删除角色菜单绑定
                 var delRoleMenuCount = await _roleRepository.DeleleRoleMenu(long.Parse(roleModuleUpsert.RoleId), delMenuIds);
                 // 删除角色全部模块绑定

@@ -37,7 +37,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                DepartmentInfoEntity insertDeptEntity = new DepartmentInfoEntity()
+                DepartmentInfoEntity insertDept = new DepartmentInfoEntity()
                 {
                     DepartmentId = SnowFlakeSingle.Instance.NextId(),
                     DepartmentCode = deptUpsert.DepartmentCode,
@@ -53,7 +53,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int insertDeptCount = await _departmentInfoRepository.InsertDepartmentInfo(insertDeptEntity);
+                int insertDeptCount = await _departmentInfoRepository.InsertDepartmentInfo(insertDept);
 
                 await _db.CommitTranAsync();
                 return insertDeptCount >= 1
@@ -79,14 +79,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             {
                 await _db.BeginTranAsync();
                 int delDeptCount = await DeleteDepartmentWithChildrenAsync(long.Parse(deptUpsert.DepartmentId));
-
                 if (delDeptCount == 0)
                 {
                     await _db.RollbackTranAsync();
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DepartmentHasUsers"));
                 }
-
                 await _db.CommitTranAsync();
+
                 return Result<int>.Ok(delDeptCount, _localization.ReturnMsg($"{_this}DeleteSuccess"));
             }
             catch (Exception ex)
@@ -168,7 +167,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                DepartmentInfoEntity updateDeptEntity = new DepartmentInfoEntity()
+                DepartmentInfoEntity updateDept = new DepartmentInfoEntity()
                 {
                     DepartmentId = long.Parse(deptUpsert.DepartmentId),
                     DepartmentCode = deptUpsert.DepartmentCode,
@@ -184,7 +183,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int updateDeptCount = await _departmentInfoRepository.UpdateDepartmentInfo(updateDeptEntity);
+                int updateDeptCount = await _departmentInfoRepository.UpdateDepartmentInfo(updateDept);
                 await _db.CommitTranAsync();
 
                 return updateDeptCount >= 1

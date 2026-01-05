@@ -38,7 +38,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
             try
             {
                 var dicTypeCodeExist = await _dictionaryRepository.GetDictionaryInfoIsExist(dicUpsert.DicType, dicUpsert.DicCode);
-
                 if (dicTypeCodeExist)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DicTypeCodeIsExist"));

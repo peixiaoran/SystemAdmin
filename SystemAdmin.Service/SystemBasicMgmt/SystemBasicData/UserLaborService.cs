@@ -37,7 +37,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                UserLaborEntity insertUserLaborEntity = new UserLaborEntity()
+                UserLaborEntity insertUserLabor = new UserLaborEntity()
                 {
                     LaborId = SnowFlakeSingle.Instance.NextId(),
                     LaborNameCn = userLaborUpsert.LaborNameCn,
@@ -46,7 +46,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                var insertUserLaborCount = await _userLaborRepository.InsertUserLabor(insertUserLaborEntity);
+                var insertUserLaborCount = await _userLaborRepository.InsertUserLabor(insertUserLabor);
                 await _db.CommitTranAsync();
 
                 return insertUserLaborCount >= 1
@@ -96,7 +96,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                UserLaborEntity updateUserLaborEntity = new UserLaborEntity()
+                UserLaborEntity updateUserLabor = new UserLaborEntity()
                 {
                     LaborId = long.Parse(userLaborUpsert.LaborId),
                     LaborNameCn = userLaborUpsert.LaborNameCn,
@@ -105,7 +105,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                var updateUserLaborCount = await _userLaborRepository.UpdateUserLabor(updateUserLaborEntity);
+                var updateUserLaborCount = await _userLaborRepository.UpdateUserLabor(updateUserLabor);
                 await _db.CommitTranAsync();
 
                 return updateUserLaborCount >= 1

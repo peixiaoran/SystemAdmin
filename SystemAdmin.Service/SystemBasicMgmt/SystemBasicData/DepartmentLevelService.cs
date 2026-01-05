@@ -37,7 +37,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                DepartmentLevelEntity insertDeptLevelEntity = new DepartmentLevelEntity()
+                DepartmentLevelEntity insertDeptLevel = new DepartmentLevelEntity()
                 {
                     DepartmentLevelId = SnowFlakeSingle.Instance.NextId(),
                     DepartmentLevelCode = deptLevelUpsert.DepartmentLevelCode,
@@ -48,7 +48,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int insertDeptLevelCount = await _deptLevelRepository.InsertDepartmentLevel(insertDeptLevelEntity);
+                int insertDeptLevelCount = await _deptLevelRepository.InsertDepartmentLevel(insertDeptLevel);
                 await _db.CommitTranAsync();
 
                 return insertDeptLevelCount >= 1
@@ -98,7 +98,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                DepartmentLevelEntity updateDeptLevelEntity = new DepartmentLevelEntity()
+                DepartmentLevelEntity updateDeptLevel = new DepartmentLevelEntity()
                 {
                     DepartmentLevelId = long.Parse(deptLevelUpsert.DepartmentLevelId),
                     DepartmentLevelCode = deptLevelUpsert.DepartmentLevelCode,
@@ -109,7 +109,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                int updateDeptLevelcount = await _deptLevelRepository.UpdateDepartmentLevel(updateDeptLevelEntity);
+                int updateDeptLevelcount = await _deptLevelRepository.UpdateDepartmentLevel(updateDeptLevel);
                 await _db.CommitTranAsync();
 
                 return updateDeptLevelcount >= 1

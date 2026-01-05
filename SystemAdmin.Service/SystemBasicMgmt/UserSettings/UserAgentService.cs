@@ -114,7 +114,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 {
                     await _db.BeginTranAsync();
                     // 重新配置代理人
-                    UserAgentEntity userAgentEntity = new UserAgentEntity
+                    UserAgentEntity insertUserAgent = new UserAgentEntity
                     {
                         SubstituteUserId = long.Parse(userAgentUpsert.SubstituteUserId),
                         AgentUserId = long.Parse(userAgentUpsert.AgentUserId),
@@ -126,7 +126,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                         ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     };
                     // 新增员工代理人配置
-                    int insertUserAgentCount = await _userAgentRepository.InsertUserAgent(userAgentEntity);
+                    int insertUserAgentCount = await _userAgentRepository.InsertUserAgent(insertUserAgent);
                     // 更新员工代理状态
                     var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(userAgentUpsert.AgentUserId), 1);
                     await _db.CommitTranAsync();
