@@ -171,9 +171,6 @@
   <data name="SysUserOperateUnlockSuccess" xml:space="preserve">
     <value>Account unlocked successfully</value>
   </data>
-  <data name="SysUserOperateUserNotFound" xml:space="preserve">
-    <value>The account does not exist</value>
-  </data>
   <data name="SysUserOperateUnlockFailed" xml:space="preserve">
     <value>Failed to unlock the account</value>
   </data>
@@ -194,5 +191,8 @@
   </data>
   <data name="SysUserOperateNotEqualOldPassWord" xml:space="preserve">
     <value>The new password must not be the same as the old password</value>
+  </data>
+  <data name="SysUserOperateUserNotFound" xml:space="preserve">
+    <value>Incorrect username or password</value>
   </data>
 </root>

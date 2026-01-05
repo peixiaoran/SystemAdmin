@@ -170,7 +170,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                                           : dic.DicNameEn,
                                            MenuIcon = pmenu.MenuIcon,
                                            SortOrder = pmenu.SortOrder,
-                                           IsEnabled = pmenu.IsEnabled,
                                            IsVisible = pmenu.IsVisible,
                                            Path = pmenu.Path,
                                            Remark = pmenu.Remark,
@@ -192,8 +191,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                 ModuleId = module.ModuleId,
                                 ModuleName = _lang.Locale == "zh-CN"
                                              ? module.ModuleNameCn
-                                             : module.ModuleNameEn,
-                                Disabled = module.IsEnabled == 0
+                                             : module.ModuleNameEn
                             }).ToListAsync();
         }
     }

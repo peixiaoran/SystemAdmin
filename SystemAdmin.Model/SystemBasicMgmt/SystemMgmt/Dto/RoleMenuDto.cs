@@ -30,11 +30,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
         public bool IsChecked { get; set; }
 
         /// <summary>
-        /// 是否启用
-        /// </summary>
-        public bool IsEnabled { get; set; }
-
-        /// <summary>
         /// 角色菜单子集合
         /// </summary>
         [SugarColumn(IsIgnore = true, IsTreeKey = true)]

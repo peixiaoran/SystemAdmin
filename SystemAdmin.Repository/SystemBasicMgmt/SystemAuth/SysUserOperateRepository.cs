@@ -73,11 +73,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         /// <summary>
         /// 新增员工密码错误记录
         /// </summary>
-        /// <param name="UserLockEntity"></param>
+        /// <param name="userLockEntity"></param>
         /// <returns></returns>
-        public async Task<int> AddUserLock(UserLockEntity UserLockEntity)
+        public async Task<int> AddUserLock(UserLockEntity userLockEntity)
         {
-            return await _db.Insertable(UserLockEntity).ExecuteCommandAsync();
+            return await _db.Insertable(userLockEntity).ExecuteCommandAsync();
         }
 
         /// <summary>

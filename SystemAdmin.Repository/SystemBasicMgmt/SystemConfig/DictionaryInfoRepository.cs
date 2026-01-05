@@ -24,11 +24,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 新增系统字典
         /// </summary>
-        /// <param name="dictionaryEntity"></param>
+        /// <param name="dicEntity"></param>
         /// <returns></returns>
-        public async Task<int> InsertDictionaryInfo(DictionaryInfoEntity dictionaryEntity)
+        public async Task<int> InsertDictionaryInfo(DictionaryInfoEntity dicEntity)
         {
-            return await _db.Insertable(dictionaryEntity).ExecuteCommandAsync();
+            return await _db.Insertable(dicEntity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -78,9 +78,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 查询字典分页
         /// </summary>
-        /// <param name="getDicPage"></param>
+        /// <param name="getdicPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<DictionaryInfoDto>> GetDictionaryInfoPage(GetDictionaryInfoPage getDicPage)
+        public async Task<ResultPaged<DictionaryInfoDto>> GetDictionaryInfoPage(GetDictionaryInfoPage getdicPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<DictionaryInfoEntity>()
@@ -88,21 +88,21 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                            .LeftJoin<ModuleInfoEntity>((dicinfo, moduleinfo) => dicinfo.ModuleId == moduleinfo.ModuleId);
 
             // 所属模块Id
-            if (!string.IsNullOrEmpty(getDicPage.ModuleId))
+            if (!string.IsNullOrEmpty(getdicPage.ModuleId))
             {
-                query = query.Where((dicinfo, moduleinfo) => dicinfo.ModuleId == long.Parse(getDicPage.ModuleId));
+                query = query.Where((dicinfo, moduleinfo) => dicinfo.ModuleId == long.Parse(getdicPage.ModuleId));
             }
             // 字典名称
-            if (!string.IsNullOrEmpty(getDicPage.DicName))
+            if (!string.IsNullOrEmpty(getdicPage.DicName))
             {
                 query = query.Where((dicinfo, moduleinfo) =>
-                    dicinfo.DicNameCn.Contains(getDicPage.DicName) ||
-                    dicinfo.DicNameEn.Contains(getDicPage.DicName));
+                    dicinfo.DicNameCn.Contains(getdicPage.DicName) ||
+                    dicinfo.DicNameEn.Contains(getdicPage.DicName));
             }
             // 字典类型
-            if (!string.IsNullOrEmpty(getDicPage.DicType))
+            if (!string.IsNullOrEmpty(getdicPage.DicType))
             {
-                query = query.Where((dicinfo, moduleinfo) => dicinfo.DicType == getDicPage.DicType);
+                query = query.Where((dicinfo, moduleinfo) => dicinfo.DicType == getdicPage.DicType);
             }
 
             // 排序
@@ -120,7 +120,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                                          DicNameCn = dicinfo.DicNameCn,
                                          DicNameEn = dicinfo.DicNameEn,
                                          SortOrder = dicinfo.SortOrder,
-                                     }).ToPageListAsync(getDicPage.PageIndex, getDicPage.PageSize, totalCount);
+                                     }).ToPageListAsync(getdicPage.PageIndex, getdicPage.PageSize, totalCount);
             return ResultPaged<DictionaryInfoDto>.Ok(dicPage.Adapt<List<DictionaryInfoDto>>(), totalCount, "");
         }
 
@@ -138,8 +138,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                                 ModuleId = module.ModuleId,
                                 ModuleName = _lang.Locale == "zh-CN"
                                              ? module.ModuleNameCn
-                                             : module.ModuleNameEn,
-                                Disabled = module.IsEnabled == 0
+                                             : module.ModuleNameEn
                             }).ToListAsync();
         }
 

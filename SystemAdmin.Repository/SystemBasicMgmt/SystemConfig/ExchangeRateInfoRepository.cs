@@ -45,29 +45,29 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 查询汇率对照信息分页
         /// </summary>
-        /// <param name="ExchangeRatePage"></param>
+        /// <param name="getExchangeRatePage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ExchangeRateDto>> GetExchangeRatePage(GetExchangeRatePage ExchangeRatePage)
+        public async Task<ResultPaged<ExchangeRateDto>> GetExchangeRatePage(GetExchangeRatePage getExchangeRatePage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<ExchangeRateEntity>()
                            .With(SqlWith.NoLock);
 
             // 本位币别
-            if (!string.IsNullOrEmpty(ExchangeRatePage.CurrencyCode))
+            if (!string.IsNullOrEmpty(getExchangeRatePage.CurrencyCode))
             {
-                query = query.Where(exchangerate => exchangerate.CurrencyCode == ExchangeRatePage.CurrencyCode);
+                query = query.Where(exchangerate => exchangerate.CurrencyCode == getExchangeRatePage.CurrencyCode);
             }
             // 年月
-            if (!string.IsNullOrEmpty(ExchangeRatePage.YearMonth))
+            if (!string.IsNullOrEmpty(getExchangeRatePage.YearMonth))
             {
-                query = query.Where(exchangerate => exchangerate.YearMonth == ExchangeRatePage.YearMonth);
+                query = query.Where(exchangerate => exchangerate.YearMonth == getExchangeRatePage.YearMonth);
             }
 
             // 排序
             query = query.OrderByDescending(exchangerate => exchangerate.CreatedDate);
 
-            var exchangeratePage = await query.ToPageListAsync(ExchangeRatePage.PageIndex, ExchangeRatePage.PageSize, totalCount);
+            var exchangeratePage = await query.ToPageListAsync(getExchangeRatePage.PageIndex, getExchangeRatePage.PageSize, totalCount);
             return ResultPaged<ExchangeRateDto>.Ok(exchangeratePage.Adapt<List<ExchangeRateDto>>(), totalCount, "");
         }
 

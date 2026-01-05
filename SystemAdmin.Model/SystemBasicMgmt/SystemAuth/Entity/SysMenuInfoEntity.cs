@@ -65,7 +65,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Entity
         public bool IsEnabled { get; set; }
 
         /// <summary>
-        /// 是否启动
+        /// 是否可见
         /// </summary>
         public bool IsVisible { get; set; }
 

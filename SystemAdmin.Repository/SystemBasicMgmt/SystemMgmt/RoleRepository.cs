@@ -153,8 +153,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                               ModuleName = _lang.Locale == "zh-CN"
                                                            ? module.ModuleNameCn
                                                            : module.ModuleNameEn,
-                                              IsChecked = SqlFunc.IsNull(rolemodule.RoleId, 0) > 0,
-                                              IsEnabled = module.IsEnabled == 1
+                                              IsChecked = SqlFunc.IsNull(rolemodule.RoleId, 0) > 0
                                           }).ToListAsync();
             return roleModuleList;
         }
@@ -179,8 +178,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                 MenuName = _lang.Locale == "zh-CN"
                                            ? menu.MenuNameCn
                                            : menu.MenuNameEn,
-                                IsChecked = SqlFunc.IsNull(rolemenu.RoleId, 0) > 0,
-                                IsEnabled = menu.IsEnabled == 1
+                                IsChecked = SqlFunc.IsNull(rolemenu.RoleId, 0) > 0
                             }).ToTreeAsync(menu => menu.MenuChildren, menu => menu.ParentMenuId, 0);
         }
 
@@ -248,8 +246,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                 ModuleId = module.ModuleId,
                                 ModuleName = _lang.Locale == "zh-CN"
                                              ? module.ModuleNameCn
-                                             : module.ModuleNameEn,
-                                Disabled = module.IsEnabled == 0
+                                             : module.ModuleNameEn
                             }).ToListAsync();
         }
 

@@ -53,11 +53,6 @@
         /// <summary>
         /// 是否可见
         /// </summary>
-        public int IsEnabled { get; set; }
-
-        /// <summary>
-        /// 是否启动
-        /// </summary>
         public int IsVisible { get; set; }
 
         /// <summary>

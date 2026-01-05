@@ -18,10 +18,5 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
         /// 模块名称
         /// </summary>
         public string ModuleName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否禁用
-        /// </summary>
-        public bool Disabled { get; set; }
     }
 }

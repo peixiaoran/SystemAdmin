@@ -85,7 +85,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 if (user.IsFreeze != 0)
                 {
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(220,_localization.ReturnMsg($"{_this}LoginLock"));
+                    return Result<SysUserLoginReturnDto>.Failure(220, _localization.ReturnMsg($"{_this}LoginLock"));
                 }
 
                 // 校验密码
@@ -154,7 +154,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
 
                 // 清空锁定记录
                 await _sysUserOperateRepository.EmptyUserLock(user.UserId);
-
                 await _db.CommitTranAsync();
 
                 _jwt.SetAuthCookie(httpResponse, userId: user.UserId, userNo: user.UserNo);
@@ -186,7 +185,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         {
             try
             {
-                await _db.BeginTranAsync();
                 var user = await _sysUserOperateRepository.GetUserInfoForUserLogOut(_loginuser.UserId);
 
                 // 判断员工是否存在
@@ -194,6 +192,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFound"));
                 }
+
+                await _db.BeginTranAsync();
                 var logOutLog = new UserLogOutEntity
                 {
                     UserId = user.UserId,
@@ -317,8 +317,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     await _cache.RemoveAsync(userUnlock.UserNo); // 验证通过，清除缓存
 
                     return unlockFreezeCount >= 1
-                        ? Result<int>.Ok(unlockFreezeCount, _localization.ReturnMsg($"{_this}UnlockSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UnlockFailed"));
+                                ? Result<int>.Ok(unlockFreezeCount, _localization.ReturnMsg($"{_this}UnlockSuccess"))
+                                : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UnlockFailed"));
                 }
             }
             catch (Exception ex)
@@ -424,6 +424,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 var oldHash = HashPasswordWithArgon2id(pwdExpirationUpsert.PassWord, Convert.FromBase64String(user.PwdSalt));
                 if (oldHash == user.PassWord)
                 {
+                    await _db.RollbackTranAsync();
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}NotEqualOldPassWord"));
                 }
                 else

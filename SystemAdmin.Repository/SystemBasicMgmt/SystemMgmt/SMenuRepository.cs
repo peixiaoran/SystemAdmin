@@ -135,7 +135,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                                           : dic.DicNameEn,
                                            MenuIcon = pmenu.MenuIcon,
                                            SortOrder = pmenu.SortOrder,
-                                           IsEnabled = pmenu.IsEnabled,
                                            IsVisible = pmenu.IsVisible,
                                            Path = pmenu.Path,
                                            Remark = pmenu.Remark,
@@ -157,8 +156,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                 ModuleId = module.ModuleId,
                                 ModuleName = _lang.Locale == "zh-CN"
                                              ? module.ModuleNameCn
-                                             : module.ModuleNameEn,
-                                Disabled = module.IsEnabled == 0
+                                             : module.ModuleNameEn
                             }).ToListAsync();
         }
 
@@ -178,8 +176,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                 MenuId = pmenu.MenuId,
                                 MenuName = _lang.Locale == "zh-CN"
                                            ? pmenu.MenuNameCn
-                                           : pmenu.MenuNameEn,
-                                Disabled = pmenu.IsEnabled == 0
+                                           : pmenu.MenuNameEn
                             }).ToListAsync();
         }
     }

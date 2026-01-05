@@ -18,10 +18,5 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
         /// 一级菜单名称
         /// </summary>
         public string MenuName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否禁用
-        /// </summary>
-        public bool Disabled { get; set; }
     }
 }

@@ -51,16 +51,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
         public int SortOrder { get; set; }
 
         /// <summary>
-        /// 权限标识
-        /// </summary>
-        public string RoleCode { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否可见
-        /// </summary>
-        public int IsEnabled { get; set; }
-
-        /// <summary>
         /// 是否启动
         /// </summary>
         public int IsVisible { get; set; }
