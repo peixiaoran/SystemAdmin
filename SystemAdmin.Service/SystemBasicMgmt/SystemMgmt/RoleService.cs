@@ -52,8 +52,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 await _db.CommitTranAsync();
 
                 return insertRoleCount >= 1
-                    ? Result<int>.Ok(insertRoleCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                        ? Result<int>.Ok(insertRoleCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
             {
@@ -86,8 +86,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                    
                     await _db.CommitTranAsync();
                     return delRoleCount >= 1
-                           ? Result<int>.Ok(delRoleCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                           : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                            ? Result<int>.Ok(delRoleCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
                 }
                 else
                 {
@@ -129,8 +129,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 await _db.CommitTranAsync();
 
                 return updateRoleCount >= 1
-                    ? Result<int>.Ok(updateRoleCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                        ? Result<int>.Ok(updateRoleCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {

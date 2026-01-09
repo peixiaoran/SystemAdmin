@@ -132,8 +132,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     await _db.CommitTranAsync();
 
                     return insertUserAgentCount >= 1 && updateUserAgentCount >= 1
-                           ? Result<int>.Ok(insertUserAgentCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                           : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                            ? Result<int>.Ok(insertUserAgentCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                 }
             }
             catch (Exception ex)

@@ -316,8 +316,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     await _cache.RemoveAsync(userUnlock.UserNo); // 验证通过，清除缓存
 
                     return unlockFreezeCount >= 1
-                                ? Result<int>.Ok(unlockFreezeCount, _localization.ReturnMsg($"{_this}UnlockSuccess"))
-                                : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UnlockFailed"));
+                            ? Result<int>.Ok(unlockFreezeCount, _localization.ReturnMsg($"{_this}UnlockSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UnlockFailed"));
                 }
             }
             catch (Exception ex)
@@ -443,8 +443,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     await _cache.RemoveAsync(pwdExpirationUpsert.UserNo);
 
                     return updateCount >= 1
-                        ? Result<int>.Ok(updateCount, _localization.ReturnMsg($"{_this}UpdatePassWrodSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdatePassWrodFailed"));
+                            ? Result<int>.Ok(updateCount, _localization.ReturnMsg($"{_this}UpdatePassWrodSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdatePassWrodFailed"));
                 }
             }
             catch (Exception ex)

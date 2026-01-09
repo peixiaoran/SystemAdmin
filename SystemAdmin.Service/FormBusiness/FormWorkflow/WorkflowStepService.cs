@@ -59,68 +59,81 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
+
                 await _db.BeginTranAsync();
-                int insertStepCount = await _workflowStepRepository.InsertWorkflowStep(insertStep);
+                // 如果时起始步骤，则只新增审批步骤信息
+                if (workflowStep.IsStartStep == 1)
+                {
+                    int insertStepCount = await _workflowStepRepository.InsertWorkflowStep(insertStep);
+                    await _db.CommitTranAsync();
+                    return insertStepCount >= 1 && (insertStepOrgCount >= 1 || insertStepDeptUserCount >= 1 || insertStepUserCount >= 1 || insertStepRuleCount >= 1)
+                            ? Result<int>.Ok(insertStepCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                }
+                // 不是起始步骤，则新增审批步骤信息及对应的审批人选取方式数据
+                else
+                {
+                    int insertStepCount = await _workflowStepRepository.InsertWorkflowStep(insertStep);
+                    // 根据不同的审批人选取方式，新增对应的审批人选取方式数据
+                    if (workflowStep.Assignment.MatchEnum(StepAssignment.Org))
+                    {
+                        WorkflowStepOrgEntity insertStepOrg = new WorkflowStepOrgEntity()
+                        {
+                            StepOrgId = SnowFlakeSingle.Instance.NextId(),
+                            StepId = stepId,
+                            DeptLeaveIds = workflowStep.workflowStepOrgUpsert.DeptLeaveIds,
+                            PositionIds = workflowStep.workflowStepOrgUpsert.PositionIds,
+                            LaborIds = workflowStep.workflowStepOrgUpsert.LaborIds,
+                            CreatedBy = _loginuser.UserId,
+                            CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        };
+                        insertStepOrgCount = await _workflowStepRepository.InsertWorkflowStepOrg(insertStepOrg);
+                    }
+                    else if (workflowStep.Assignment.MatchEnum(StepAssignment.DeptUser))
+                    {
+                        WorkflowStepDeptUserEntity insertStepDeptUser = new WorkflowStepDeptUserEntity()
+                        {
+                            StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
+                            StepId = stepId,
+                            DeptIds = workflowStep.workflowStepDeptUserUpsert.DeptIds,
+                            PositionIds = workflowStep.workflowStepDeptUserUpsert.PositionIds,
+                            LaborIds = workflowStep.workflowStepDeptUserUpsert.LaborIds,
+                            CreatedBy = _loginuser.UserId,
+                            CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        };
+                        insertStepDeptUserCount = await _workflowStepRepository.InsertWorkflowStepDeptUser(insertStepDeptUser);
+                    }
+                    else if (workflowStep.Assignment.MatchEnum(StepAssignment.User))
+                    {
+                        WorkflowStepUserEntity insertStepUser = new WorkflowStepUserEntity()
+                        {
+                            StepUserId = SnowFlakeSingle.Instance.NextId(),
+                            StepId = stepId,
+                            UserIds = workflowStep.workflowStepUserUpsert.UserIds,
+                            CreatedBy = _loginuser.UserId,
+                            CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        };
+                        insertStepUserCount = await _workflowStepRepository.InsertWorkflowStepUser(insertStepUser);
+                    }
+                    else if (workflowStep.Assignment.MatchEnum(StepAssignment.Rule))
+                    {
+                        WorkflowStepRuleEntity inserrtStepRule = new WorkflowStepRuleEntity()
+                        {
+                            StepRuleId = SnowFlakeSingle.Instance.NextId(),
+                            StepId = stepId,
+                            HandlerKey = workflowStep.workflowStepRuleUpsert.HandlerKey,
+                            LogicalExplanation = workflowStep.workflowStepRuleUpsert.LogicalExplanation,
+                            CreatedBy = _loginuser.UserId,
+                            CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        };
+                        insertStepRuleCount = await _workflowStepRepository.InsertWorkflowStepRule(inserrtStepRule);
+                    }
+                    await _db.CommitTranAsync();
 
-                // 根据不同的审批人选取方式，新增对应的审批人选取方式数据
-                if (workflowStep.Assignment.MatchEnum(StepAssignment.Org))
-                {
-                    WorkflowStepOrgEntity insertStepOrg = new WorkflowStepOrgEntity()
-                    {
-                        StepOrgId = SnowFlakeSingle.Instance.NextId(),
-                        StepId = stepId,
-                        DeptLeaveIds = workflowStep.workflowStepOrgUpsert.DeptLeaveIds,
-                        PositionIds = workflowStep.workflowStepOrgUpsert.PositionIds,
-                        LaborIds = workflowStep.workflowStepOrgUpsert.LaborIds,
-                        CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    };
-                    insertStepOrgCount = await _workflowStepRepository.InsertWorkflowStepOrg(insertStepOrg);
+                    return insertStepCount >= 1 && (insertStepOrgCount >= 1 || insertStepDeptUserCount >= 1 || insertStepUserCount >= 1 || insertStepRuleCount >= 1)
+                            ? Result<int>.Ok(insertStepCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                 }
-                else if (workflowStep.Assignment.MatchEnum(StepAssignment.DeptUser))
-                {
-                    WorkflowStepDeptUserEntity insertStepDeptUser = new WorkflowStepDeptUserEntity()
-                    {
-                        StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
-                        StepId = stepId,
-                        DeptIds = workflowStep.workflowStepDeptUserUpsert.DeptIds,
-                        PositionIds = workflowStep.workflowStepDeptUserUpsert.PositionIds,
-                        LaborIds = workflowStep.workflowStepDeptUserUpsert.LaborIds,
-                        CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    };
-                    insertStepDeptUserCount = await _workflowStepRepository.InsertWorkflowStepDeptUser(insertStepDeptUser);
-                }
-                else if (workflowStep.Assignment.MatchEnum(StepAssignment.User))
-                {
-                    WorkflowStepUserEntity insertStepUser = new WorkflowStepUserEntity()
-                    {
-                        StepUserId = SnowFlakeSingle.Instance.NextId(),
-                        StepId = stepId,
-                        UserIds = workflowStep.workflowStepUserUpsert.UserIds,
-                        CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    };
-                    insertStepUserCount = await _workflowStepRepository.InsertWorkflowStepUser(insertStepUser);
-                }
-                else if (workflowStep.Assignment.MatchEnum(StepAssignment.Rule))
-                {
-                    WorkflowStepRuleEntity inserrtStepRule = new WorkflowStepRuleEntity()
-                    {
-                        StepRuleId = SnowFlakeSingle.Instance.NextId(),
-                        StepId = stepId,
-                        HandlerKey = workflowStep.workflowStepRuleUpsert.HandlerKey,
-                        LogicalExplanation = workflowStep.workflowStepRuleUpsert.LogicalExplanation,
-                        CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                    };
-                    insertStepRuleCount = await _workflowStepRepository.InsertWorkflowStepRule(inserrtStepRule);
-                }
-                await _db.CommitTranAsync();
-
-                return insertStepCount >= 1 && (insertStepOrgCount >= 1 || insertStepDeptUserCount >= 1 || insertStepUserCount >= 1 || insertStepRuleCount >= 1)
-                        ? Result<int>.Ok(insertStepCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
             {

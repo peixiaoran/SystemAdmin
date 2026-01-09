@@ -50,8 +50,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 await _db.CommitTranAsync();
 
                 return insertUserLaborCount >= 1
-                    ? Result<int>.Ok(insertUserLaborCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                        ? Result<int>.Ok(insertUserLaborCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
             {
@@ -75,8 +75,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 await _db.CommitTranAsync();
 
                 return delUserLaborCount >= 1
-                    ? Result<int>.Ok(delUserLaborCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                        ? Result<int>.Ok(delUserLaborCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
             {
@@ -109,8 +109,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 await _db.CommitTranAsync();
 
                 return updateUserLaborCount >= 1
-                    ? Result<int>.Ok(updateUserLaborCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                        ? Result<int>.Ok(updateUserLaborCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {

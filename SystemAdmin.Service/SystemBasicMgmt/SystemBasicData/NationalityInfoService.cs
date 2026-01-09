@@ -75,8 +75,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 await _db.CommitTranAsync();
 
                 return delNationCount >= 1
-                    ? Result<int>.Ok(delNationCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                        ? Result<int>.Ok(delNationCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
             {

@@ -63,18 +63,27 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         /// <summary>
         ///   查找类似 保存失败 的本地化字符串。
         /// </summary>
-        internal static string SaveFailed {
+        internal static string LeaveFormSaveFailed {
             get {
-                return ResourceManager.GetString("SaveFailed", resourceCulture);
+                return ResourceManager.GetString("LeaveFormSaveFailed", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 保存成功 的本地化字符串。
         /// </summary>
-        internal static string SaveSuccess {
+        internal static string LeaveFormSaveSuccess {
             get {
-                return ResourceManager.GetString("SaveSuccess", resourceCulture);
+                return ResourceManager.GetString("LeaveFormSaveSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 您暂无权限申请此表单 的本地化字符串。
+        /// </summary>
+        internal static string NotPermissionApply {
+            get {
+                return ResourceManager.GetString("NotPermissionApply", resourceCulture);
             }
         }
     }

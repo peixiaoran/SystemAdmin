@@ -51,8 +51,8 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                 await _db.CommitTranAsync();
 
                 return insertCustomerCount >= 1
-                    ? Result<int>.Ok(insertCustomerCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                        ? Result<int>.Ok(insertCustomerCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
             {
@@ -76,8 +76,8 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                 await _db.CommitTranAsync();
 
                 return delCustomerCount >= 1
-                    ? Result<int>.Ok(delCustomerCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                        ? Result<int>.Ok(delCustomerCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
             {
@@ -111,8 +111,8 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                 await _db.CommitTranAsync();
 
                 return updateCustomerCount >= 1
-                    ? Result<int>.Ok(updateCustomerCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                        ? Result<int>.Ok(updateCustomerCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {

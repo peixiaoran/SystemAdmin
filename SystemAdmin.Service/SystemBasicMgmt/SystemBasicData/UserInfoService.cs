@@ -74,8 +74,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
 
                 // 6. 返回
                 return updateAvatarCount >= 1
-                              ? Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"))
-                              : Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
+                        ? Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"))
+                        : Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
             }
             catch (Exception ex)
             {
