@@ -3,12 +3,12 @@
     /// <summary>
     /// 流程审批步骤自定义来源新增/修改类
     /// </summary>
-    public class WorkflowStepRuleUpsert
+    public class WorkflowStepCustomUpsert
     {
         /// <summary>
         /// 审批步骤自定义Id
         /// </summary>
-        public string StepRuleId { get; set; } = string.Empty;
+        public string StepCustomId { get; set; } = string.Empty;
 
         /// <summary>
         /// 步骤Id

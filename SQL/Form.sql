@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 05/01/2026 16:16:49
+ Date: 10/01/2026 17:00:41
 */
 
 
@@ -244,12 +244,6 @@ GO
 -- ----------------------------
 -- Records of FormCounting
 -- ----------------------------
-INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2512  ', N'1', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2025-12-27 15:11:03.000', NULL, NULL)
-GO
-
-INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2601  ', N'1', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2026-01-03 21:09:52.000', NULL, NULL)
-GO
-
 
 -- ----------------------------
 -- Table structure for FormGroup
@@ -404,9 +398,10 @@ CREATE TABLE [Form].[FormInfo] (
   [FormTypeId] bigint  NOT NULL,
   [FormNo] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [Description] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [ImportanceCode] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [FormStatus] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [FormOpenTime] datetime  NOT NULL,
+  [ImportanceCode] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [FormStatus] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [NowConditionId] bigint  NULL,
+  [NowStepId] bigint  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime DEFAULT getdate() NOT NULL,
   [ModifiedBy] bigint  NULL,
@@ -460,10 +455,17 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'开单时间',
+'MS_Description', N'当前条件Id',
 'SCHEMA', N'Form',
 'TABLE', N'FormInfo',
-'COLUMN', N'FormOpenTime'
+'COLUMN', N'NowConditionId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'当前步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormInfo',
+'COLUMN', N'NowStepId'
 GO
 
 EXEC sp_addextendedproperty
@@ -504,12 +506,6 @@ GO
 -- ----------------------------
 -- Records of FormInfo
 -- ----------------------------
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [FormOpenTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2004812253567782912', N'1987217256446300160', N'LVR-25120001', N'1', N'Important', N'PendingSubmission', N'2025-12-27 15:11:03.000', N'1903486709602062336', N'2025-12-27 15:11:03.000', N'1903486709602062336', N'2025-12-27 15:11:56.000')
-GO
-
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [FormOpenTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2007439266724057088', N'1987217256446300160', N'LVR-26010001', N'', N'Normal', N'PendingSubmission', N'2026-01-03 21:09:52.000', N'1903486709602062336', N'2026-01-03 21:09:52.000', NULL, NULL)
-GO
-
 
 -- ----------------------------
 -- Table structure for FormType
@@ -827,7 +823,6 @@ GO
 
 CREATE TABLE [Form].[WorkflowCondition] (
   [ConditionId] bigint  NOT NULL,
-  [FormTypeId] bigint  NOT NULL,
   [ConditionNameCn] nvarchar(20) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [ConditionNameEn] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [HandlerKey] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
@@ -847,13 +842,6 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowCondition',
 'COLUMN', N'ConditionId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'所属表单类型Id',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowCondition',
-'COLUMN', N'FormTypeId'
 GO
 
 EXEC sp_addextendedproperty
@@ -913,7 +901,7 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'流程条件表',
+'MS_Description', N'流程审批条件表',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowCondition'
 GO
@@ -935,12 +923,12 @@ CREATE TABLE [Form].[WorkflowStep] (
   [FormTypeId] bigint  NOT NULL,
   [StepNameCn] nvarchar(20) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [StepNameEn] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [ArchitectureLevel] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [IsStartStep] int  NOT NULL,
+  [ArchitectureLevel] nvarchar(15) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [Assignment] nvarchar(15) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [ApproveMode] nvarchar(15) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [IsReminderEnabled] int  NOT NULL,
-  [ReminderIntervalMinutes] int  NOT NULL,
+  [ReminderIntervalMinutes] int  NULL,
   [Description] nvarchar(100) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime DEFAULT getdate() NOT NULL,
@@ -953,7 +941,7 @@ ALTER TABLE [Form].[WorkflowStep] SET (LOCK_ESCALATION = TABLE)
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'步骤Id',
+'MS_Description', N'审批步骤Id',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStep',
 'COLUMN', N'StepId'
@@ -967,24 +955,17 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'步骤名称（中文）',
+'MS_Description', N'审批步骤名称（中文）',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStep',
 'COLUMN', N'StepNameCn'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'步骤名称（英文）',
+'MS_Description', N'审批步骤名称（英文）',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStep',
 'COLUMN', N'StepNameEn'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'架构级别（组织架构、执行级）',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStep',
-'COLUMN', N'ArchitectureLevel'
 GO
 
 EXEC sp_addextendedproperty
@@ -992,6 +973,13 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStep',
 'COLUMN', N'IsStartStep'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'架构级别（组织架构、执行级）',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStep',
+'COLUMN', N'ArchitectureLevel'
 GO
 
 EXEC sp_addextendedproperty
@@ -1067,6 +1055,205 @@ GO
 -- ----------------------------
 -- Records of WorkflowStep
 -- ----------------------------
+INSERT INTO [Form].[WorkflowStep] ([StepId], [FormTypeId], [StepNameCn], [StepNameEn], [IsStartStep], [ArchitectureLevel], [Assignment], [ApproveMode], [IsReminderEnabled], [ReminderIntervalMinutes], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009890853346217984', N'1987217256446300160', N'申请人', N'Applicant', N'1', N'OrgLevel', N'Org', N'Ss', N'0', N'1', N'', N'1903486709602062336', N'2026-01-10 15:31:41.000', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowStep] ([StepId], [FormTypeId], [StepNameCn], [StepNameEn], [IsStartStep], [ArchitectureLevel], [Assignment], [ApproveMode], [IsReminderEnabled], [ReminderIntervalMinutes], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009892923604340736', N'1987217256446300160', N'组长签核', N'Team leader', N'0', N'OrgLevel', N'Org', N'Ss', N'1', N'1', N'', N'1903486709602062336', N'2026-01-10 15:39:49.000', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowStep] ([StepId], [FormTypeId], [StepNameCn], [StepNameEn], [IsStartStep], [ArchitectureLevel], [Assignment], [ApproveMode], [IsReminderEnabled], [ReminderIntervalMinutes], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009897830268932096', N'1987217256446300160', N'科长签核', N'Section Chief', N'0', N'OrgLevel', N'Org', N'Ss', N'1', N'1', N'', N'1903486709602062336', N'2026-01-10 15:59:19.000', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowStep] ([StepId], [FormTypeId], [StepNameCn], [StepNameEn], [IsStartStep], [ArchitectureLevel], [Assignment], [ApproveMode], [IsReminderEnabled], [ReminderIntervalMinutes], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009898117243211776', N'1987217256446300160', N'经理签核', N'Manager', N'0', N'OrgLevel', N'Org', N'Ss', N'1', N'1', N'', N'1903486709602062336', N'2026-01-10 16:00:27.000', NULL, NULL)
+GO
+
+
+-- ----------------------------
+-- Table structure for WorkflowStepCondition
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[WorkflowStepCondition]') AND type IN ('U'))
+	DROP TABLE [Form].[WorkflowStepCondition]
+GO
+
+CREATE TABLE [Form].[WorkflowStepCondition] (
+  [StepId] bigint  NOT NULL,
+  [ConditionId] bigint  NULL,
+  [ExecuteMatched] int  NOT NULL,
+  [NextStepId] bigint  NOT NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime  NULL
+)
+GO
+
+ALTER TABLE [Form].[WorkflowStepCondition] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'审批步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCondition',
+'COLUMN', N'StepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'审批条件Id',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCondition',
+'COLUMN', N'ConditionId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'同时符合多条件时，是否执行此条件',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCondition',
+'COLUMN', N'ExecuteMatched'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'下一审批步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCondition',
+'COLUMN', N'NextStepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCondition',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCondition',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCondition',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCondition',
+'COLUMN', N'ModifiedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'审批步骤条件绑定表',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCondition'
+GO
+
+
+-- ----------------------------
+-- Records of WorkflowStepCondition
+-- ----------------------------
+INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009890853346217984', NULL, N'1', N'2009892923604340736', N'1', N'2026-01-10 16:02:15.000', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009892923604340736', NULL, N'1', N'2009897830268932096', N'1', N'2026-01-10 16:02:40.000', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009897830268932096', NULL, N'1', N'2009898117243211776', N'1', N'2026-01-10 16:03:21.000', NULL, NULL)
+GO
+
+
+-- ----------------------------
+-- Table structure for WorkflowStepCustom
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[WorkflowStepCustom]') AND type IN ('U'))
+	DROP TABLE [Form].[WorkflowStepCustom]
+GO
+
+CREATE TABLE [Form].[WorkflowStepCustom] (
+  [StepApproverRuleId] bigint  NOT NULL,
+  [StepId] bigint  NOT NULL,
+  [HandlerKey] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [LogicalExplanation] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime  NULL
+)
+GO
+
+ALTER TABLE [Form].[WorkflowStepCustom] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'审批步骤自定义Id',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCustom',
+'COLUMN', N'StepApproverRuleId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'审批步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCustom',
+'COLUMN', N'StepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'代码标记',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCustom',
+'COLUMN', N'HandlerKey'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'逻辑说明',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCustom',
+'COLUMN', N'LogicalExplanation'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCustom',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCustom',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCustom',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCustom',
+'COLUMN', N'ModifiedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'流程审批步骤人员来源表-依照自定义',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepCustom'
+GO
+
+
+-- ----------------------------
+-- Records of WorkflowStepCustom
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for WorkflowStepDeptUser
@@ -1092,14 +1279,14 @@ ALTER TABLE [Form].[WorkflowStepDeptUser] SET (LOCK_ESCALATION = TABLE)
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'签核步骤指定部门员工级别Id',
+'MS_Description', N'审批步骤指定部门员工级别Id',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStepDeptUser',
 'COLUMN', N'StepDeptUserId'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'步骤Id',
+'MS_Description', N'审批步骤Id',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStepDeptUser',
 'COLUMN', N'StepId'
@@ -1177,7 +1364,7 @@ CREATE TABLE [Form].[WorkflowStepOrg] (
   [StepId] bigint  NOT NULL,
   [DeptLeaveIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [PositionIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [LaborIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [LaborIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime DEFAULT getdate() NOT NULL,
   [ModifiedBy] bigint  NULL,
@@ -1189,14 +1376,14 @@ ALTER TABLE [Form].[WorkflowStepOrg] SET (LOCK_ESCALATION = TABLE)
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'签核步骤依照组织架构Id',
+'MS_Description', N'审批步骤依照组织架构Id',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStepOrg',
 'COLUMN', N'StepOrgId'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'步骤Id',
+'MS_Description', N'审批步骤Id',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStepOrg',
 'COLUMN', N'StepId'
@@ -1261,87 +1448,15 @@ GO
 -- ----------------------------
 -- Records of WorkflowStepOrg
 -- ----------------------------
-
--- ----------------------------
--- Table structure for WorkflowStepRule
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[WorkflowStepRule]') AND type IN ('U'))
-	DROP TABLE [Form].[WorkflowStepRule]
+INSERT INTO [Form].[WorkflowStepOrg] ([StepOrgId], [StepId], [DeptLeaveIds], [PositionIds], [LaborIds], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009892923646283776', N'2009892923604340736', N'1949169142347206656', N'1351602631784529920', N'', N'1903486709602062336', N'2026-01-10 15:39:49.000', NULL, NULL)
 GO
 
-CREATE TABLE [Form].[WorkflowStepRule] (
-  [StepApproverRuleId] bigint  NOT NULL,
-  [HandlerKey] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [LogicalExplanation] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
-  [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime  NULL
-)
+INSERT INTO [Form].[WorkflowStepOrg] ([StepOrgId], [StepId], [DeptLeaveIds], [PositionIds], [LaborIds], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009897830289903616', N'2009897830268932096', N'1949168956883472384', N'1351600746193223680', N'', N'1903486709602062336', N'2026-01-10 15:59:19.000', NULL, NULL)
 GO
 
-ALTER TABLE [Form].[WorkflowStepRule] SET (LOCK_ESCALATION = TABLE)
+INSERT INTO [Form].[WorkflowStepOrg] ([StepOrgId], [StepId], [DeptLeaveIds], [PositionIds], [LaborIds], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009898117259988992', N'2009898117243211776', N'1949167957770899456', N'1351585319710883840', N'', N'1903486709602062336', N'2026-01-10 16:00:27.000', NULL, NULL)
 GO
 
-EXEC sp_addextendedproperty
-'MS_Description', N'签核步骤自定义Id',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStepRule',
-'COLUMN', N'StepApproverRuleId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'代码标记',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStepRule',
-'COLUMN', N'HandlerKey'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'逻辑说明',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStepRule',
-'COLUMN', N'LogicalExplanation'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建人',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStepRule',
-'COLUMN', N'CreatedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStepRule',
-'COLUMN', N'CreatedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改人',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStepRule',
-'COLUMN', N'ModifiedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改时间',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStepRule',
-'COLUMN', N'ModifiedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'流程审批步骤人员来源表-依照自定义',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStepRule'
-GO
-
-
--- ----------------------------
--- Records of WorkflowStepRule
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for WorkflowStepUser
@@ -1488,6 +1603,15 @@ GO
 
 
 -- ----------------------------
+-- Primary Key structure for table WorkflowStepCustom
+-- ----------------------------
+ALTER TABLE [Form].[WorkflowStepCustom] ADD CONSTRAINT [PK__FormStep__0A0392F2D13B9AA7] PRIMARY KEY CLUSTERED ([StepApproverRuleId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
 -- Primary Key structure for table WorkflowStepDeptUser
 -- ----------------------------
 ALTER TABLE [Form].[WorkflowStepDeptUser] ADD CONSTRAINT [PK__FormStep__0E5287F3D58490B5] PRIMARY KEY CLUSTERED ([StepDeptUserId])
@@ -1500,15 +1624,6 @@ GO
 -- Primary Key structure for table WorkflowStepOrg
 -- ----------------------------
 ALTER TABLE [Form].[WorkflowStepOrg] ADD CONSTRAINT [PK__ss__B8A87239617A131F] PRIMARY KEY CLUSTERED ([StepOrgId])
-WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
-ON [PRIMARY]
-GO
-
-
--- ----------------------------
--- Primary Key structure for table WorkflowStepRule
--- ----------------------------
-ALTER TABLE [Form].[WorkflowStepRule] ADD CONSTRAINT [PK__FormStep__0A0392F2D13B9AA7] PRIMARY KEY CLUSTERED ([StepApproverRuleId])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
 ON [PRIMARY]
 GO

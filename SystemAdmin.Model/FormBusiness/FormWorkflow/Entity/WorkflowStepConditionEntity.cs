@@ -3,31 +3,30 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 流程审批步骤自定义来源表
+    /// 流程审批配置表
     /// </summary>
-    [SugarTable("[Form].[WorkflowStepRule]")]
-    public class WorkflowStepRuleEntity
+    [SugarTable("[Form].[WorkflowStepCondition]")]
+    public class WorkflowStepConditionEntity
     {
-        /// <summary>
-        /// 审批步骤自定义Id
-        /// </summary>
-        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
-        public long StepRuleId { get; set; }
-
         /// <summary>
         /// 步骤Id
         /// </summary>
         public long StepId { get; set; }
 
         /// <summary>
-        /// 代码标记
+        /// 条件Id
         /// </summary>
-        public string HandlerKey { get; set; } = string.Empty;
+        public long ConditionId { get; set; }
 
         /// <summary>
-        /// 逻辑说明
+        /// 同时符合多条件时，是否执行此条件
         /// </summary>
-        public string LogicalExplanation { get; set; } = string.Empty;
+        public int ExecuteMatched { get; set; }
+
+        /// <summary>
+        /// 下一审批步骤Id
+        /// </summary>
+        public long NextStepId { get; set; }
 
         /// <summary>
         /// 创建人

@@ -154,7 +154,7 @@
 
         /// <summary>
         /// Flags 枚举：是否命中任意一个标志位
-        /// 示例： "DeptUser".HasAnyFlagValue(DeptUser | Rule)
+        /// 示例： "DeptUser".HasAnyFlagValue(DeptUser | Custom)
         /// </summary>
         public static bool HasAnyFlagValue<TEnum>(this string? value, TEnum flags)
             where TEnum : struct, Enum

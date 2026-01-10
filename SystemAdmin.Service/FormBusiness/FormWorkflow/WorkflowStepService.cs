@@ -44,7 +44,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 int insertStepOrgCount = 0;
                 int insertStepDeptUserCount = 0;
                 int insertStepUserCount = 0;
-                int insertStepRuleCount = 0;
+                int insertStepCustomCount = 0;
                 WorkflowStepEntity insertStep = new WorkflowStepEntity
                 {
                     StepId = stepId,
@@ -52,9 +52,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     StepNameCn = workflowStep.StepNameCn,
                     StepNameEn = workflowStep.StepNameEn,
                     Assignment = workflowStep.Assignment,
-                    ArchitectureLevel = workflowStep.ArchitectureLevel,
                     IsStartStep = workflowStep.IsStartStep,
+                    ArchitectureLevel = workflowStep.ArchitectureLevel,
                     ApproveMode = workflowStep.ApproveMode,
+                    IsReminderEnabled = workflowStep.IsReminderEnabled,
+                    ReminderIntervalMinutes = workflowStep.ReminderIntervalMinutes,
                     Description = workflowStep.Description,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
@@ -66,7 +68,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 {
                     int insertStepCount = await _workflowStepRepository.InsertWorkflowStep(insertStep);
                     await _db.CommitTranAsync();
-                    return insertStepCount >= 1 && (insertStepOrgCount >= 1 || insertStepDeptUserCount >= 1 || insertStepUserCount >= 1 || insertStepRuleCount >= 1)
+                    return insertStepCount >= 1
                             ? Result<int>.Ok(insertStepCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                 }
@@ -115,22 +117,22 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         };
                         insertStepUserCount = await _workflowStepRepository.InsertWorkflowStepUser(insertStepUser);
                     }
-                    else if (workflowStep.Assignment.MatchEnum(StepAssignment.Rule))
+                    else if (workflowStep.Assignment.MatchEnum(StepAssignment.Custom))
                     {
-                        WorkflowStepRuleEntity inserrtStepRule = new WorkflowStepRuleEntity()
+                        WorkflowStepCustomEntity inserrtStepCustom = new WorkflowStepCustomEntity()
                         {
-                            StepRuleId = SnowFlakeSingle.Instance.NextId(),
+                            StepCustomId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
-                            HandlerKey = workflowStep.workflowStepRuleUpsert.HandlerKey,
-                            LogicalExplanation = workflowStep.workflowStepRuleUpsert.LogicalExplanation,
+                            HandlerKey = workflowStep.workflowStepCustomUpsert.HandlerKey,
+                            LogicalExplanation = workflowStep.workflowStepCustomUpsert.LogicalExplanation,
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                         };
-                        insertStepRuleCount = await _workflowStepRepository.InsertWorkflowStepRule(inserrtStepRule);
+                        insertStepCustomCount = await _workflowStepRepository.InsertWorkflowStepCustom(inserrtStepCustom);
                     }
                     await _db.CommitTranAsync();
 
-                    return insertStepCount >= 1 && (insertStepOrgCount >= 1 || insertStepDeptUserCount >= 1 || insertStepUserCount >= 1 || insertStepRuleCount >= 1)
+                    return insertStepCount >= 1 && (insertStepOrgCount >= 1 || insertStepDeptUserCount >= 1 || insertStepUserCount >= 1 || insertStepCustomCount >= 1)
                             ? Result<int>.Ok(insertStepCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                 }
@@ -156,14 +158,14 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 int deleteStepOrgCount = 0;
                 int deleteStepDeptUserCount = 0;
                 int deleteStepUserCount = 0;
-                int deleteStepRuleCount = 0;
+                int deleteStepCustomCount = 0;
                 deleteStepCount = await _workflowStepRepository.DeleteWorkflowStep(long.Parse(workflowStep.StepId));
                 deleteStepOrgCount = await _workflowStepRepository.DeleteWorkflowStepOrg(long.Parse(workflowStep.StepId));
                 deleteStepDeptUserCount = await _workflowStepRepository.DeleteWorkflowStepDeptUser(long.Parse(workflowStep.StepId));
                 deleteStepUserCount = await _workflowStepRepository.DeleteWorkflowStepUser(long.Parse(workflowStep.StepId));
-                deleteStepRuleCount = await _workflowStepRepository.DeleteWorkflowStepRule(long.Parse(workflowStep.StepId));
+                deleteStepCustomCount = await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(workflowStep.StepId));
 
-                return deleteStepCount >= 1 && (deleteStepOrgCount >= 1 || deleteStepDeptUserCount >= 1 || deleteStepUserCount >= 1 || deleteStepRuleCount >= 1)
+                return deleteStepCount >= 1 && (deleteStepOrgCount >= 1 || deleteStepDeptUserCount >= 1 || deleteStepUserCount >= 1 || deleteStepCustomCount >= 1)
                         ? Result<int>.Ok(deleteStepCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
@@ -184,30 +186,48 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
+                int updateStepCount = 0;
                 int updateStepOrgCount = 0;
                 int updateStepDeptUserCount = 0;
                 int updateStepUserCount = 0;
-                int updateStepRuleCount = 0;
+                int updateStepCustomCount = 0;
                 WorkflowStepEntity updateWorkflowStep = new WorkflowStepEntity
                 {
                     StepId = long.Parse(workflowStep.StepId),
                     FormTypeId = long.Parse(workflowStep.FormTypeId),
                     StepNameCn = workflowStep.StepNameCn,
                     StepNameEn = workflowStep.StepNameEn,
-                    ArchitectureLevel = workflowStep.ArchitectureLevel,
                     IsStartStep = workflowStep.IsStartStep,
+                    ArchitectureLevel = workflowStep.ArchitectureLevel,
                     Assignment = workflowStep.Assignment,
                     ApproveMode = workflowStep.ApproveMode,
+                    IsReminderEnabled = workflowStep.IsReminderEnabled,
+                    ReminderIntervalMinutes = workflowStep.ReminderIntervalMinutes,
                     Description = workflowStep.Description,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
                 await _db.BeginTranAsync();
-                int updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
+
+                // 如果时起始步骤，则只修改审批步骤信息删除其余审批人选取方式数据
+                if (workflowStep.IsStartStep == 1)
+                {
+                    updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
+                    await _workflowStepRepository.DeleteWorkflowStepOrg(long.Parse(workflowStep.StepId));
+                    await _workflowStepRepository.DeleteWorkflowStepDeptUser(long.Parse(workflowStep.StepId));
+                    await _workflowStepRepository.DeleteWorkflowStepUser(long.Parse(workflowStep.StepId));
+                    await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(workflowStep.StepId));
+                    
+                    await _db.CommitTranAsync();
+                    return updateStepCount >= 1
+                            ? Result<int>.Ok(updateStepCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                }
 
                 // 根据不同的审批人选取方式，删除其他选取方式数据，修改对应的审批人选取方式数据
                 if (workflowStep.Assignment.MatchEnum(StepAssignment.Org))
                 {
+                    updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
                     WorkflowStepOrgEntity updateStepOrg = new WorkflowStepOrgEntity()
                     {
                         StepOrgId = SnowFlakeSingle.Instance.NextId(),
@@ -220,11 +240,12 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     };
                     await _workflowStepRepository.DeleteWorkflowStepDeptUser(long.Parse(workflowStep.StepId));
                     await _workflowStepRepository.DeleteWorkflowStepUser(long.Parse(workflowStep.StepId));
-                    await _workflowStepRepository.DeleteWorkflowStepRule(long.Parse(workflowStep.StepId));
+                    await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(workflowStep.StepId));
                     await _workflowStepRepository.UpdateWorkflowStepOrg(updateStepOrg);
                 }
                 else if (workflowStep.Assignment.MatchEnum(StepAssignment.DeptUser))
                 {
+                    updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
                     WorkflowStepDeptUserEntity updateStepDeptUser = new WorkflowStepDeptUserEntity()
                     {
                         StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
@@ -237,11 +258,12 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     };
                     await _workflowStepRepository.DeleteWorkflowStepOrg(long.Parse(workflowStep.StepId));
                     await _workflowStepRepository.DeleteWorkflowStepUser(long.Parse(workflowStep.StepId));
-                    await _workflowStepRepository.DeleteWorkflowStepRule(long.Parse(workflowStep.StepId));
+                    await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(workflowStep.StepId));
                     updateStepDeptUserCount = await _workflowStepRepository.InsertWorkflowStepDeptUser(updateStepDeptUser);
                 }
                 else if (workflowStep.Assignment.MatchEnum(StepAssignment.User))
                 {
+                    updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
                     WorkflowStepUserEntity udpateStepUser = new WorkflowStepUserEntity()
                     {
                         StepUserId = SnowFlakeSingle.Instance.NextId(),
@@ -252,28 +274,29 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     };
                     await _workflowStepRepository.DeleteWorkflowStepOrg(long.Parse(workflowStep.StepId));
                     await _workflowStepRepository.DeleteWorkflowStepDeptUser(long.Parse(workflowStep.StepId));
-                    await _workflowStepRepository.DeleteWorkflowStepRule(long.Parse(workflowStep.StepId));
+                    await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(workflowStep.StepId));
                     updateStepUserCount = await _workflowStepRepository.InsertWorkflowStepUser(udpateStepUser);
                 }
-                else if (workflowStep.Assignment.MatchEnum(StepAssignment.Rule))
+                else if (workflowStep.Assignment.MatchEnum(StepAssignment.Custom))
                 {
-                    WorkflowStepRuleEntity updateStepRule = new WorkflowStepRuleEntity()
+                    updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
+                    WorkflowStepCustomEntity updateStepCustom = new WorkflowStepCustomEntity()
                     {
-                        StepRuleId = SnowFlakeSingle.Instance.NextId(),
+                        StepCustomId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(workflowStep.StepId),
-                        HandlerKey = workflowStep.workflowStepRuleUpsert.HandlerKey,
-                        LogicalExplanation = workflowStep.workflowStepRuleUpsert.LogicalExplanation,
+                        HandlerKey = workflowStep.workflowStepCustomUpsert.HandlerKey,
+                        LogicalExplanation = workflowStep.workflowStepCustomUpsert.LogicalExplanation,
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     };
                     await _workflowStepRepository.DeleteWorkflowStepOrg(long.Parse(workflowStep.StepId));
                     await _workflowStepRepository.DeleteWorkflowStepUser(long.Parse(workflowStep.StepId));
                     await _workflowStepRepository.DeleteWorkflowStepDeptUser(long.Parse(workflowStep.StepId));
-                    updateStepRuleCount = await _workflowStepRepository.InsertWorkflowStepRule(updateStepRule);
+                    updateStepCustomCount = await _workflowStepRepository.InsertWorkflowStepCustom(updateStepCustom);
                 }
                 await _db.CommitTranAsync();
 
-                return updateStepCount >= 1 && (updateStepOrgCount >= 1 || updateStepDeptUserCount >= 1 || updateStepUserCount >= 1 || updateStepRuleCount >= 1)
+                return updateStepCount >= 1 && (updateStepOrgCount >= 1 || updateStepDeptUserCount >= 1 || updateStepUserCount >= 1 || updateStepCustomCount >= 1)
                         ? Result<int>.Ok(updateStepCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
@@ -316,7 +339,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 workflowStepEntity.workflowStepOrgEntity = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(getWorkflowStep.StepId));
                 workflowStepEntity.workflowStepDeptUserEntity = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(getWorkflowStep.StepId));
                 workflowStepEntity.workflowStepUserEntity = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(getWorkflowStep.StepId));
-                workflowStepEntity.workflowStepApproverRuleEntity = await _workflowStepRepository.GetWorkflowStepRuleEntity(long.Parse(getWorkflowStep.StepId));
+                workflowStepEntity.workflowStepApproverCustomEntity = await _workflowStepRepository.GetWorkflowStepCustomEntity(long.Parse(getWorkflowStep.StepId));
 
                 return Result<WorkflowStepEntityDto>.Ok(workflowStepEntity);
             }

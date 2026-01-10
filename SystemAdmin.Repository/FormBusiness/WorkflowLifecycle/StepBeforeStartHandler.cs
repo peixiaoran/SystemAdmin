@@ -6,6 +6,8 @@ using SystemAdmin.Model.FormBusiness.FormAudit.Entity;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
+using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
+using SystemAdmin.Model.FormBusiness.WorkflowLifecycle;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
@@ -29,6 +31,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         public async Task<FormInfoEntity> InitFormInfo(long userId, long formTypeId)
         {
             // 获取表单编号
+            long startStepId = await GetWorkFlowIsStartStepId(formTypeId);
             var formNo = await GenerateFormNo(userId, formTypeId);
             FormInfoEntity insertForm = new FormInfoEntity()
             {
@@ -38,6 +41,8 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                 Description = "",
                 ImportanceCode = ImportanceType.Normal.ToEnumString(),
                 FormStatus = FormStatus.PendingSubmission.ToEnumString(),
+                NowConditionId = null,
+                NowStepId = startStepId,
                 FormOpenTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 CreatedBy = userId,
                 CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -47,7 +52,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         }
 
         /// <summary>
-        /// 保存表单基本信息
+        /// 保存表单信息
         /// </summary>
         /// <param name="formId"></param>
         /// <param name="description"></param>
@@ -69,7 +74,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         }
 
         /// <summary>
-        /// 生成表单No
+        /// 生成表单编号
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="formTypeId"></param>
@@ -103,13 +108,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             else
             {
                 seq = stat.Total + 1;
-
-                // 乐观锁 + 表达式
                 await _db.Updateable<FormCountingEntity>()
                          .SetColumns(formmonth => formmonth.Total == seq)
-                         .Where(formmonth => formmonth.FormTypeId == formTypeInfo.FormTypeId
-                                  && formmonth.YM == ym
-                                  && formmonth.Total == stat.Total)
+                         .Where(formmonth => formmonth.FormTypeId == formTypeInfo.FormTypeId && formmonth.YM == ym)
                          .ExecuteCommandAsync();
             }
             return $"{formTypeInfo.Prefix}-{ym}{seq.ToString("D" + 4)}";
@@ -127,9 +128,35 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                             {
                                 ImportanceCode = dic.DicCode,
                                 ImportanceName = _lang.Locale == "zh-CN"
-                                                ? dic.DicNameCn
-                                                : dic.DicNameEn,
+                                                 ? dic.DicNameCn
+                                                 : dic.DicNameEn,
                             }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 查询流程开始步骤Id
+        /// </summary>
+        /// <returns></returns>
+        public async Task<long> GetWorkFlowIsStartStepId(long formTypeId)
+        {
+            return await _db.Queryable<WorkflowStepEntity>()
+                            .Where(step => step.FormTypeId == formTypeId && step.IsStartStep == 1)
+                            .Select(step => step.StepId)
+                            .FirstAsync();
+        }
+
+        public async Task<List<WorkflowApproveDto>> GetWorkflowApproves(long formId)
+        {
+            long formTypeId = await _db.Queryable<FormInfoEntity>()
+                                       .Where(form => form.FormId == formId)
+                                       .Select(form => form.FormTypeId)
+                                       .FirstAsync();
+        }
+
+        public async Task<List<WorkflowApproveDto>> GetWorkflowApproveUser(long stepId)
+        {
+            long nextStepId = 0;
+
         }
     }
 }

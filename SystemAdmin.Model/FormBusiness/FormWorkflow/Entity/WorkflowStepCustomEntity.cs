@@ -3,25 +3,21 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 流程审批条件实体类
+    /// 流程审批步骤自定义来源表
     /// </summary>
-    [SugarTable("[Form].[WorkflowCondition]")]
-    public class WorkflowConditionEntity
+    [SugarTable("[Form].[WorkflowStepCustom]")]
+    public class WorkflowStepCustomEntity
     {
         /// <summary>
-        /// 审批条件Id
+        /// 审批步骤自定义Id
         /// </summary>
-        public long ConditionId { get; set; }
+        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
+        public long StepCustomId { get; set; }
 
         /// <summary>
-        /// 流程条件名称（中文）
+        /// 步骤Id
         /// </summary>
-        public string ConditionNameCn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 流程条件名称（英文）
-        /// </summary>
-        public string ConditionNameEn { get; set; } = string.Empty;
+        public long StepId { get; set; }
 
         /// <summary>
         /// 代码标记
@@ -31,7 +27,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// <summary>
         /// 逻辑说明
         /// </summary>
-        public string Description { get; set; } = string.Empty;
+        public string LogicalExplanation { get; set; } = string.Empty;
 
         /// <summary>
         /// 创建人
