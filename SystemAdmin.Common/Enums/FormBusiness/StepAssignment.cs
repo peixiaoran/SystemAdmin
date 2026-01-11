@@ -23,6 +23,6 @@
         /// <summary>
         /// 自定义规则
         /// </summary>
-        Rule = 4,
+        Custom = 4,
     }
 }

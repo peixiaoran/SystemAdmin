@@ -66,17 +66,17 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 新增审批步骤自定义来源
         /// </summary>
-        /// <param name="workflowStepRule"></param>
+        /// <param name="workflowStepCustom"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowStepRule(WorkflowStepRuleEntity workflowStepRule)
+        public async Task<int> InsertWorkflowStepCustom(WorkflowStepCustomEntity workflowStepCustom)
         {
-            return await _db.Insertable(workflowStepRule).ExecuteCommandAsync();
+            return await _db.Insertable(workflowStepCustom).ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 删除审批步骤信息
         /// </summary>
-        /// <param name="workflowStep"></param>
+        /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<int> DeleteWorkflowStep(long stepId)
         {
@@ -88,7 +88,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 删除审批步骤组织架构来源
         /// </summary>
-        /// <param name="workflowStepOrg"></param>
+        /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<int> DeleteWorkflowStepOrg(long stepId)
         {
@@ -100,19 +100,19 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 删除审批步骤指定部门员工级别来源
         /// </summary>
-        /// <param name="workflowStepDeptUser"></param>
+        /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<int> DeleteWorkflowStepDeptUser(long stepId)
         {
             return await _db.Deleteable<WorkflowStepOrgEntity>()
-                           .Where(stepdeptuser => stepdeptuser.StepId == stepId)
-                           .ExecuteCommandAsync();
+                            .Where(stepdeptuser => stepdeptuser.StepId == stepId)
+                            .ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 删除审批步骤指定员工来源
         /// </summary>
-        /// <param name="workflowStepUser"></param>
+        /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<int> DeleteWorkflowStepUser(long stepId)
         {
@@ -124,13 +124,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 删除审批步骤自定义来源
         /// </summary>
-        /// <param name="workflowStepRule"></param>
+        /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<int> DeleteWorkflowStepRule(long stepId)
+        public async Task<int> DeleteWorkflowStepCustom(long stepId)
         {
             return await _db.Deleteable<WorkflowStepOrgEntity>()
-                           .Where(steprule => steprule.StepId == stepId)
-                           .ExecuteCommandAsync();
+                            .Where(stepcustom => stepcustom.StepId == stepId)
+                            .ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -205,17 +205,17 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 修改审批步骤自定义来源
         /// </summary>
-        /// <param name="workflowStepRule"></param>
+        /// <param name="workflowStepCustom"></param>
         /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepRule(WorkflowStepRuleEntity workflowStepRule)
+        public async Task<int> UpdateWorkflowStepCustom(WorkflowStepCustomEntity workflowStepCustom)
         {
-            return await _db.Updateable(workflowStepRule)
+            return await _db.Updateable(workflowStepCustom)
                             .IgnoreColumns(step => new
                             {
                                 step.StepId,
                                 step.CreatedBy,
                                 step.CreatedDate,
-                            }).Where(step => step.StepId == workflowStepRule.StepId)
+                            }).Where(step => step.StepId == workflowStepCustom.StepId)
                             .ExecuteCommandAsync();
         }
 
@@ -309,13 +309,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepRuleEntity> GetWorkflowStepRuleEntity(long stepId)
+        public async Task<WorkflowStepCustomEntity> GetWorkflowStepCustomEntity(long stepId)
         {
-            var stepRuleEntity = await _db.Queryable<WorkflowStepRuleEntity>()
-                                          .With(SqlWith.NoLock)
-                                          .Where(stepapprule => stepapprule.StepId == stepId)
-                                          .ToListAsync();
-            return stepRuleEntity.Adapt<WorkflowStepRuleEntity>();
+            var stepCustomEntity = await _db.Queryable<WorkflowStepCustomEntity>()
+                                            .With(SqlWith.NoLock)
+                                            .Where(stepappcustom => stepappcustom.StepId == stepId)
+                                            .ToListAsync();
+            return stepCustomEntity.Adapt<WorkflowStepCustomEntity>();
         }
 
         /// <summary>
@@ -364,13 +364,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         {
             return await _db.Queryable<DictionaryInfoEntity>()
                             .With(SqlWith.NoLock) 
-                            .Where(dic => dic.DicType == "ApproverAssignment")
+                            .Where(dic => dic.DicType == "StepAssignment")
                             .Select(dic => new AssignmentDropDto
                             {
                                 AssignmentCode = dic.DicCode,
                                 AssignmentName = _lang.Locale == "zh-CN"
-                                                         ? dic.DicNameCn
-                                                         : dic.DicNameEn,
+                                                 ? dic.DicNameCn
+                                                 : dic.DicNameEn,
                             }).ToListAsync();
         }
 

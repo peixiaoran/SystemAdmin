@@ -30,14 +30,14 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public string StepNameEn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 架构级别（组织架构、执行级）
-        /// </summary>
-        public string ArchitectureLevel { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否为开始步骤
         /// </summary>
         public int IsStartStep { get; set; }
+
+        /// <summary>
+        /// 架构级别（组织架构、执行级）
+        /// </summary>
+        public string ArchitectureLevel { get; set; } = string.Empty;
 
         /// <summary>
         /// 审批人选取方式（依组织架构、指定部门员工级别、指定员工、自定义）
@@ -48,6 +48,16 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// 签核方式（单签、会签）
         /// </summary>
         public string ApproveMode { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 是否催签
+        /// </summary>
+        public int IsReminderEnabled { get; set; }
+
+        /// <summary>
+        /// 催签间隔分钟
+        /// </summary>
+        public int ReminderIntervalMinutes { get; set; }
 
         /// <summary>
         /// 步骤描述

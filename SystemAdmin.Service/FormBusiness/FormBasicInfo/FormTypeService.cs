@@ -82,8 +82,8 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                 await _db.CommitTranAsync();
 
                 return delFormTypeCount >= 1
-                    ? Result<int>.Ok(delFormTypeCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                        ? Result<int>.Ok(delFormTypeCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
             {

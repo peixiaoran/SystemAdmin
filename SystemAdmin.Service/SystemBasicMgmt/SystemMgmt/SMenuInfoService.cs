@@ -62,8 +62,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 await _db.CommitTranAsync();
 
                 return insertSMenuCount >= 1
-                    ? Result<int>.Ok(insertSMenuCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                        ? Result<int>.Ok(insertSMenuCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {
@@ -91,8 +91,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 await _db.CommitTranAsync();
 
                 return delSMenuCount >= 1
-                    ? Result<int>.Ok(delSMenuCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                        ? Result<int>.Ok(delSMenuCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
             {
@@ -135,8 +135,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 await _db.CommitTranAsync();
 
                 return updateSMenuCount >= 1
-                    ? Result<int>.Ok(updateSMenuCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                        ? Result<int>.Ok(updateSMenuCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {

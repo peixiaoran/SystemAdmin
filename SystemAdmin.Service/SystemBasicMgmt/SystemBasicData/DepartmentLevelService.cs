@@ -77,8 +77,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 await _db.CommitTranAsync();
 
                 return delDeptLevelCount >= 1
-                    ? Result<int>.Ok(delDeptLevelCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                        ? Result<int>.Ok(delDeptLevelCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
             {

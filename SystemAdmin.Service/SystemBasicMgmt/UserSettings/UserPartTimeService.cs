@@ -96,8 +96,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     await _db.CommitTranAsync();
 
                     return insertUserPartTimeCount >= 1
-                        ? Result<int>.Ok(insertUserPartTimeCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                            ? Result<int>.Ok(insertUserPartTimeCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                 }
                 else
                 {
@@ -134,8 +134,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 await _db.CommitTranAsync();
 
                 return delUserPartTimeCount >= 1
-                    ? Result<int>.Ok(delUserPartTimeCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                        ? Result<int>.Ok(delUserPartTimeCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
             {
@@ -201,8 +201,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     await _db.CommitTranAsync();
 
                     return updateUserPartTimeCount >= 1
-                        ? Result<int>.Ok(updateUserPartTimeCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                            ? Result<int>.Ok(updateUserPartTimeCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
                 }
                 else
                 {

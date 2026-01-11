@@ -70,8 +70,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
 
                 // 6. 返回
                 return updateAvatarCount >= 1
-                              ? Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"))
-                              : Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
+                        ? Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"))
+                        : Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
             }
             catch (Exception ex)
             {
@@ -151,8 +151,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 await _db.CommitTranAsync();
 
                 return updatePersonalCount >= 1
-                              ? Result<int>.Ok(updatePersonalCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                              : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                        ? Result<int>.Ok(updatePersonalCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {

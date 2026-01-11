@@ -131,8 +131,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 await _db.CommitTranAsync();
 
                 return updatePMenuCount >= 1
-                    ? Result<int>.Ok(updatePMenuCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                    : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                        ? Result<int>.Ok(updatePMenuCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {

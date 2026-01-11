@@ -40,6 +40,16 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         public string FormStatus { get; set; } = string.Empty;
 
         /// <summary>
+        /// 当前步骤Id
+        /// </summary>
+        public long? NowConditionId { get; set; }
+
+        /// <summary>
+        /// 当前条件Id
+        /// </summary>
+        public long NowStepId { get; set; }
+
+        /// <summary>
         /// 开单时间
         /// </summary>
         public string FormOpenTime { get; set; } = string.Empty;

@@ -20,18 +20,18 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly ILogger<ControlInfoService> _logger;
         private readonly SqlSugarScope _db;
         private readonly FormAuthRepository _formAuthRepository;
-        private readonly StepSelectionHandler _workflowStart;
+        private readonly StepBeforeStartHandler _stepBeforeStart;
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.Forms.LeaveForm";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formAuthRepository, StepSelectionHandler workflowStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formAuthRepository, StepBeforeStartHandler stepBeforeStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
             _formAuthRepository = formAuthRepository;
-            _workflowStart = workflowStart;
+            _stepBeforeStart = stepBeforeStart;
             _leaveFormRepository = leaveFormRepository;
             _localization = localization;
         }
@@ -48,12 +48,12 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 bool isCanApply = await _formAuthRepository.HasUserApplyFormType(_loginuser.UserId, long.Parse(formTypeId), FormOp.Apply);
                 if (!isCanApply)
                 {
-                    return Result<LeaveFormDto>.Failure(404, "");
+                    return Result<LeaveFormDto>.Failure(403, "");
                 }
 
                 await _db.BeginTranAsync();
                 // 初始化表单
-                var initFormInfo = await _formAuthRepository.InitFormInfo(_loginuser.UserId, long.Parse(formTypeId));
+                var initFormInfo = await _stepBeforeStart.InitFormInfo(_loginuser.UserId, long.Parse(formTypeId));
                 // 初始化请假表
                 var userInfo = await _leaveFormRepository.GetUserInfo(_loginuser.UserId);
                 LeaveFormEntity initleaveFormEntity = new LeaveFormEntity()
@@ -97,15 +97,16 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
+                // 判断是否有权限申请该表单类型
                 bool isCanApply = await _formAuthRepository.HasUserApplyFormType(_loginuser.UserId, long.Parse(leaveFormSave.FormTypeId), FormOp.Apply);
                 if (!isCanApply)
                 {
-                    return Result<int>.Failure(404, "");
+                    return Result<int>.Failure(403, _localization.ReturnMsg("NotPermissionApply"));
                 }
 
                 await _db.BeginTranAsync();
                 // 保存主表单
-                var saveFormInfo = await _formAuthRepository.SaveFormInfo(long.Parse(leaveFormSave.FormId), leaveFormSave.Description, FormStatus.PendingSubmission.ToEnumString(), leaveFormSave.ImportanceCode, _loginuser.UserId);
+                var saveFormInfo = await _stepBeforeStart.SaveFormInfo(long.Parse(leaveFormSave.FormId), leaveFormSave.Description, FormStatus.PendingSubmission.ToEnumString(), leaveFormSave.ImportanceCode, _loginuser.UserId);
                 LeaveFormEntity saveLeaveFormEntity = new LeaveFormEntity()
                 {
                     FormId = long.Parse(leaveFormSave.FormId),
@@ -129,8 +130,8 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 await _db.CommitTranAsync();
 
                 return saveFormInfo >= 1 && saveLeaveFormCount >= 1
-                       ? Result<int>.Ok(saveLeaveFormCount, _localization.ReturnMsg($"{_this}SaveSuccess"))
-                       : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}SaveFailed"));
+                        ? Result<int>.Ok(saveLeaveFormCount, _localization.ReturnMsg("SaveSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg("SaveFailed"));
             }
             catch (Exception ex)
             {
@@ -175,7 +176,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// <returns></returns>
         public async Task<Result<List<ImportanceDropDto>>> GetImportanceDropDown()
         {
-            var leaveTypeDrop = await _formAuthRepository.GetImportanceDropDown();
+            var leaveTypeDrop = await _stepBeforeStart.GetImportanceDropDown();
             return Result<List<ImportanceDropDto>>.Ok(leaveTypeDrop);
         }
     }

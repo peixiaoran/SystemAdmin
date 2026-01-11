@@ -18,14 +18,14 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public string StepName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 架构级别（组织架构、执行级）
-        /// </summary>
-        public string ArchitectureLevel { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否为开始步骤
         /// </summary>
         public int IsStartStep { get; set; }
+
+        /// <summary>
+        /// 架构级别（组织架构、执行级）
+        /// </summary>
+        public string ArchitectureLevel { get; set; } = string.Empty;
 
         /// <summary>
         /// 审批人选取方式（依组织架构、指定部门员工级别、指定员工、自定义）
@@ -36,6 +36,16 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// 签核方式（单签、会签）
         /// </summary>
         public int ApproveMode { get; set; }
+
+        /// <summary>
+        /// 是否催签
+        /// </summary>
+        public int IsReminderEnabled { get; set; }
+
+        /// <summary>
+        /// 催签间隔分钟
+        /// </summary>
+        public int ReminderIntervalMinutes { get; set; }
 
         /// <summary>
         /// 步骤描述
@@ -60,6 +70,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// <summary>
         /// 签核步骤自定义来源实体
         /// </summary>
-        public WorkflowStepRuleEntity workflowStepApproverRuleEntity { get; set; } = new WorkflowStepRuleEntity();
+        public WorkflowStepCustomEntity workflowStepApproverCustomEntity { get; set; } = new WorkflowStepCustomEntity();
     }
 }
