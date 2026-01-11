@@ -40,7 +40,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public async Task<Result<string>> UploadAvatarAsync(string userId, IFormFile file)
+        public async Task<Result<string>> UploadAvatar(string userId, IFormFile file)
         {
             try
             {
