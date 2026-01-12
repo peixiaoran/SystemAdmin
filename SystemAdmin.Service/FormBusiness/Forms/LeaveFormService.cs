@@ -7,6 +7,7 @@ using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
+using SystemAdmin.Model.FormBusiness.WorkflowLifecycle;
 using SystemAdmin.Repository.FormBusiness.Enum;
 using SystemAdmin.Repository.FormBusiness.Forms;
 using SystemAdmin.Repository.FormBusiness.WorkflowLifecycle;
@@ -178,6 +179,25 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             var leaveTypeDrop = await _stepBeforeStart.GetImportanceDropDown();
             return Result<List<ImportanceDropDto>>.Ok(leaveTypeDrop);
+        }
+
+        /// <summary>
+        /// 查询表单所有审批人
+        /// </summary>
+        /// <param name="fromId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser(string fromId)
+        {
+            try
+            {
+                var workflowAllApproveUser = await _stepBeforeStart.GetWorkflowAllApproveUser(long.Parse(fromId));
+                return Result<List<WorkflowApproveUser>>.Ok(workflowAllApproveUser);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<WorkflowApproveUser>>.Failure(500, ex.Message);
+            }
         }
     }
 }

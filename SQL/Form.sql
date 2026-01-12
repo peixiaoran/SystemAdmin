@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 10/01/2026 17:00:41
+ Date: 12/01/2026 17:09:03
 */
 
 
@@ -244,6 +244,9 @@ GO
 -- ----------------------------
 -- Records of FormCounting
 -- ----------------------------
+INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2601  ', N'1', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2026-01-12 17:02:36.000', NULL, NULL)
+GO
+
 
 -- ----------------------------
 -- Table structure for FormGroup
@@ -506,6 +509,9 @@ GO
 -- ----------------------------
 -- Records of FormInfo
 -- ----------------------------
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [Description], [ImportanceCode], [FormStatus], [NowConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2010638532728721408', N'1987217256446300160', N'LVR-26010001', N'', N'Normal', N'PendingSubmission', NULL, N'2009890853346217984', N'1903486709602062336', N'2026-01-12 17:02:36.000', NULL, NULL)
+GO
+
 
 -- ----------------------------
 -- Table structure for FormType
@@ -811,6 +817,9 @@ INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantU
 GO
 
 INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantUserNo], [ApplicantUserName], [ApplicantDeptId], [ApplicantDeptName], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [LeaveHandoverUserName], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2007439266724057088', N'LVR-26010001', N'2026-01-03 21:09:52.0000000', N'E347473', N'Xiaoran Pei', N'1929535196076576906', N'Software Development Team', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-01-03 21:09:52.000', NULL, NULL)
+GO
+
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantTime], [ApplicantUserNo], [ApplicantUserName], [ApplicantDeptId], [ApplicantDeptName], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [LeaveHandoverUserName], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2010638532728721408', N'LVR-26010001', N'2026-01-12 17:02:36.0000000', N'E347473', N'裴小然', N'1929535196076576906', N'软体开发组', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-01-12 17:02:36.000', NULL, NULL)
 GO
 
 
@@ -1156,13 +1165,16 @@ GO
 -- ----------------------------
 -- Records of WorkflowStepCondition
 -- ----------------------------
-INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009890853346217984', NULL, N'1', N'2009892923604340736', N'1', N'2026-01-10 16:02:15.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009890853346217984', N'-1', N'1', N'2009892923604340736', N'1', N'2026-01-10 16:02:15.000', NULL, NULL)
 GO
 
-INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009892923604340736', NULL, N'1', N'2009897830268932096', N'1', N'2026-01-10 16:02:40.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009892923604340736', N'-1', N'1', N'2009897830268932096', N'1', N'2026-01-10 16:02:40.000', NULL, NULL)
 GO
 
-INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009897830268932096', NULL, N'1', N'2009898117243211776', N'1', N'2026-01-10 16:03:21.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009897830268932096', N'-1', N'1', N'2009898117243211776', N'1', N'2026-01-10 16:03:21.000', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowStepCondition] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009898117243211776', N'-1', N'1', N'-1', N'1', N'2026-01-12 15:00:50.723', NULL, NULL)
 GO
 
 

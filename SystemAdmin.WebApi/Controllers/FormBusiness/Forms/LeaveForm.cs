@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
+using SystemAdmin.Model.FormBusiness.WorkflowLifecycle;
 using SystemAdmin.Service.FormBusiness.Forms;
 using SystemAdmin.WebApi.Attributes;
 
@@ -55,6 +56,14 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         public async Task<Result<List<ImportanceDropDto>>> GetImportanceDropDown()
         {
             return await _leaveFormService.GetImportanceDropDown();
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单作业模块")]
+        [EndpointSummary("[请假单] 查询全部签核人员")]
+        public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser([FromForm] string fromId)
+        {
+            return await _leaveFormService.GetWorkflowAllApproveUser(fromId);
         }
     }
 }

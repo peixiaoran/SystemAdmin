@@ -3,7 +3,7 @@
     /// <summary>
     /// 流程审批步骤选取人员来源方式枚举
     /// </summary>
-    public enum StepAssignment
+    public enum Assignment
     {
         /// <summary>
         /// 组织架构

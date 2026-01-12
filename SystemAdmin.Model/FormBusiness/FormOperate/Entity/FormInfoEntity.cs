@@ -50,11 +50,6 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         public long NowStepId { get; set; }
 
         /// <summary>
-        /// 开单时间
-        /// </summary>
-        public string FormOpenTime { get; set; } = string.Empty;
-
-        /// <summary>
         /// 创建人
         /// </summary>
         public long CreatedBy { get; set; }

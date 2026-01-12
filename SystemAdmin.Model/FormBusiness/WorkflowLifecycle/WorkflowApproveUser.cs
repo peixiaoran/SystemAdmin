@@ -3,12 +3,12 @@
     /// <summary>
     /// 流程审批人员Dto
     /// </summary>
-    public class WorkflowApproveDto
+    public class WorkflowApproveUser
     {
         /// <summary>
         /// 审批步骤Id
         /// </summary>
-        public long Step { get; set; }
+        public long StepId { get; set; }
 
         /// <summary>
         /// 审批步骤名称
@@ -16,18 +16,13 @@
         public string StepName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 符合条件Id
-        /// </summary>
-        public long ConditionId { get; set; }
-
-        /// <summary>
         /// 员工Id
         /// </summary>
-        public long UserId { get; set; }
+        public long AppmoveUserId { get; set; }
 
         /// <summary>
         /// 员工姓名
         /// </summary>
-        public string UserName { get; set; } = string.Empty;
+        public string AppmoveUserName { get; set; } = string.Empty;
     }
 }

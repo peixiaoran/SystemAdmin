@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 05/01/2026 16:16:43
+ Date: 12/01/2026 17:08:55
 */
 
 
@@ -461,7 +461,7 @@ GO
 INSERT INTO [Basic].[DepartmentInfo] ([DepartmentId], [DepartmentCode], [DepartmentNameCn], [DepartmentNameEn], [ParentId], [DepartmentLevelId], [SortOrder], [Landline], [Email], [Address], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929535196076576829', N'0528', N'风险管理部门', N'Risk Management Department', N'1929535196076576785', N'1949167957770899456', N'28', N'07-5678-1007', N'riskmgmt@company.com', N'高雄市苓雅區四維路2802號', NULL, NULL, NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DepartmentInfo] ([DepartmentId], [DepartmentCode], [DepartmentNameCn], [DepartmentNameEn], [ParentId], [DepartmentLevelId], [SortOrder], [Landline], [Email], [Address], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929535196076576830', N'0529', N'系统开发部门', N'System Development Department', N'1929535196076576812', N'1949167957770899456', N'29', N'02-1234-1020', N'sysdev@company.com', N'台北市文山區木柵路2900號', NULL, NULL, NULL, NULL, NULL)
+INSERT INTO [Basic].[DepartmentInfo] ([DepartmentId], [DepartmentCode], [DepartmentNameCn], [DepartmentNameEn], [ParentId], [DepartmentLevelId], [SortOrder], [Landline], [Email], [Address], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929535196076576830', N'0529', N'系统开发课', N'System Development Department', N'1929535196076576812', N'1949168956883472384', N'29', N'02-1234-1020', N'sysdev@company.com', N'台北市文山區木柵路2900號', NULL, NULL, NULL, NULL, NULL)
 GO
 
 INSERT INTO [Basic].[DepartmentInfo] ([DepartmentId], [DepartmentCode], [DepartmentNameCn], [DepartmentNameEn], [ParentId], [DepartmentLevelId], [SortOrder], [Landline], [Email], [Address], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929535196076576831', N'0530', N'网路部门', N'Network Department', N'1929535196076576812', N'1949167957770899456', N'30', N'02-1234-1021', N'networkdept@company.com', N'台北市文山區木柵路2902號', NULL, NULL, NULL, NULL, NULL)
@@ -793,13 +793,13 @@ GO
 -- ----------------------------
 -- Records of DepartmentLevel
 -- ----------------------------
-INSERT INTO [Basic].[DepartmentLevel] ([DepartmentLevelId], [DepartmentLevelCode], [DepartmentLevelNameCn], [DepartmentLevelNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1350917348311171072', N'Board', N'董事会', N'Board of Directors', N'1', N'', N'0', N'2025-01-22 16:28:54.000', N'1903486709602062336', N'2025-08-09 17:53:03.000')
+INSERT INTO [Basic].[DepartmentLevel] ([DepartmentLevelId], [DepartmentLevelCode], [DepartmentLevelNameCn], [DepartmentLevelNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1350917348311171072', N'Board', N'董事会', N'Board of Directors', N'1', N'', N'1903486709602062336', N'2025-01-22 16:28:54.000', N'1903486709602062336', N'2025-08-09 17:53:03.000')
 GO
 
-INSERT INTO [Basic].[DepartmentLevel] ([DepartmentLevelId], [DepartmentLevelCode], [DepartmentLevelNameCn], [DepartmentLevelNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351403528752463872', N'Gm', N'总经理', N'General Manager', N'2', N'', N'0', N'2025-01-23 08:34:52.000', N'1903486709602062336', N'2025-08-09 17:53:07.000')
+INSERT INTO [Basic].[DepartmentLevel] ([DepartmentLevelId], [DepartmentLevelCode], [DepartmentLevelNameCn], [DepartmentLevelNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351403528752463872', N'Gm', N'总经理', N'General Manager', N'2', N'', N'1903486709602062336', N'2025-01-23 08:34:52.000', N'1903486709602062336', N'2025-08-09 17:53:07.000')
 GO
 
-INSERT INTO [Basic].[DepartmentLevel] ([DepartmentLevelId], [DepartmentLevelCode], [DepartmentLevelNameCn], [DepartmentLevelNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351405026328707072', N'Plant', N'厂长室', N'Plant Director Office', N'3', N'', N'0', N'2025-01-23 08:37:50.000', N'1903486709602062336', N'2025-08-09 17:53:11.000')
+INSERT INTO [Basic].[DepartmentLevel] ([DepartmentLevelId], [DepartmentLevelCode], [DepartmentLevelNameCn], [DepartmentLevelNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351405026328707072', N'Plant', N'厂长室', N'Plant Director Office', N'3', N'', N'1903486709602062336', N'2025-01-23 08:37:50.000', N'1903486709602062336', N'2025-08-09 17:53:11.000')
 GO
 
 INSERT INTO [Basic].[DepartmentLevel] ([DepartmentLevelId], [DepartmentLevelCode], [DepartmentLevelNameCn], [DepartmentLevelNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1949166428666073088', N'Center', N'中心级', N'Corporate Center', N'4', N'', N'1903486709602062336', N'2025-07-27 01:54:25.000', N'1903486709602062336', N'2025-08-09 17:53:14.000')
@@ -981,6 +981,30 @@ INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode],
 GO
 
 INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990314002714071040', N'1968271760889614336', N'FormStatus', N'Cancelled', N'作废', N'Cancelled', N'5', N'1903486709602062336', N'2025-11-17 15:00:11.000', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009863132733902848', N'1968271760889614336', N'StepAssignment', N'Org', N'组织架构', N'Org Structure', N'1', N'1903486709602062336', N'2026-01-10 13:41:26.000', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009863891806457856', N'1968271760889614336', N'StepAssignment', N'DeptUser', N'指定部门和员工级别', N'Dept & Emp Level', N'2', N'1903486709602062336', N'2026-01-10 13:44:27.000', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009864209579511808', N'1968271760889614336', N'StepAssignment', N'User', N'指定员工', N'Assigned Employee', N'3', N'1903486709602062336', N'2026-01-10 13:45:43.000', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009864390316265472', N'1968271760889614336', N'StepAssignment', N'Custom', N'自定义', N'Custom', N'4', N'1903486709602062336', N'2026-01-10 13:46:26.000', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009873952087871488', N'1968271760889614336', N'ArchitectureLevel', N'OrgLevel', N'组织架构级', N'Org Level', N'1', N'1903486709602062336', N'2026-01-10 14:24:26.000', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009874127502053376', N'1968271760889614336', N'ArchitectureLevel', N'ImplementLevel', N'执行级', N'Implement Level', N'2', N'1903486709602062336', N'2026-01-10 14:25:08.000', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875445490782208', N'1968271760889614336', N'ApproveMode', N'Ss', N'单签', N'Single Approval', N'1', N'1903486709602062336', N'2026-01-10 14:30:22.000', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875596401840128', N'1968271760889614336', N'ApproveMode', N'Cs', N'会签', N'Joint Approval', N'2', N'1903486709602062336', N'2026-01-10 14:30:58.000', NULL, NULL)
 GO
 
 
@@ -2473,10 +2497,10 @@ GO
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1903486709602062336', N'1929535196076576906', N'1351602631784529920', N'E347473', N'裴小然', N'Xiaoran Pei', N'1', N'2024-07-01', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'18815384916', N'E347473', N'gEfAgzDiSSdOrIijtF0E7An6YIIUY7HQbFtNb14B8Mo=', N'yUyeBx340TTExtMvMEYoTw==', N'127.0.0.1:9000/systemadmin/20251227004216542_918e9c0a.jpg', N'1', N'1', N'1', N'1', N'0', N'1', N'0', N'180', N'2026-07-02 20:40:59.000', N'', N'1903486709602062336', N'2025-03-23 00:39:31.000', N'1903486709602062336', N'2025-12-27 00:42:31.000')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961651950017712128', N'1929535196076576830', N'1351581732096180224', N'E327852', N'黃仁華', N'Paul Huang', N'1', N'2025-08-30', N'1972220728019390464', N'1956396264467861504', N'3841510708@qq.com', N'13616266055', N'E327852', N'T9ncvVo1LGia8KNoUeYR8IcuJzDeZomXWmpZpBkYalQ=', N'8aKznfX78xIhh7FjgfmpuQ==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110631504.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-10-29 12:47:25.000', N'', N'1903486709602062336', N'2025-08-30 12:47:25.000', N'1903486709602062336', N'2025-10-03 19:06:32.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961651950017712128', N'1929535196076576812', N'1351581732096180224', N'E327852', N'黃仁華', N'Paul Huang', N'1', N'2025-08-30', N'1972220728019390464', N'1956396264467861504', N'3841510708@qq.com', N'13616266055', N'E327852', N'T9ncvVo1LGia8KNoUeYR8IcuJzDeZomXWmpZpBkYalQ=', N'8aKznfX78xIhh7FjgfmpuQ==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110631504.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-10-29 12:47:25.000', N'', N'1903486709602062336', N'2025-08-30 12:47:25.000', N'1903486709602062336', N'2025-10-03 19:06:32.000')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961653729589596160', N'1929535196076576906', N'1351601258426793984', N'E342306', N'于長洋', N'Changyang Yu', N'1', N'2025-08-30', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'15767661600', N'E342306', N'CHhX6UgNlcAUQ23sdgA6edpcvMs2WKZ24vTW97fDHzo=', N'5zj8c6aU9G3eRT+5Di9RzA==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110610293.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-10-29 12:54:29.000', N'', N'1903486709602062336', N'2025-08-30 12:54:29.000', N'1903486709602062336', N'2025-10-03 19:06:11.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961653729589596160', N'1929535196076576830', N'1351600746193223680', N'E342306', N'于長洋', N'Changyang Yu', N'1', N'2025-08-30', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'15767661600', N'E342306', N'CHhX6UgNlcAUQ23sdgA6edpcvMs2WKZ24vTW97fDHzo=', N'5zj8c6aU9G3eRT+5Di9RzA==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110610293.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-10-29 12:54:29.000', N'', N'1903486709602062336', N'2025-08-30 12:54:29.000', N'1903486709602062336', N'2025-10-03 19:06:11.000')
 GO
 
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961654554483363840', N'1929535196076576906', N'1351601258426793984', N'E347072', N'丁甲乙', N'Darren Ding', N'1', N'2025-08-30', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'', N'E347072', N'+DMa84C3C5YcB5lh80xsiYP4jr4wLCR0Qnw348Ce45I=', N'SNeTdFinEVJLmIdGqmIoRw==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110614238.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-10-29 12:57:46.000', N'', N'1903486709602062336', N'2025-08-30 12:57:46.000', N'1903486709602062336', N'2025-10-03 19:06:15.000')
@@ -2935,6 +2959,15 @@ INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUE
 GO
 
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-05 14:43:13.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-10 13:41:08.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-10 15:59:12.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-12 16:40:06.000')
 GO
 
 

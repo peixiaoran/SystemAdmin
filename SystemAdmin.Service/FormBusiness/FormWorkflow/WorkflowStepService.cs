@@ -77,7 +77,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 {
                     int insertStepCount = await _workflowStepRepository.InsertWorkflowStep(insertStep);
                     // 根据不同的审批人选取方式，新增对应的审批人选取方式数据
-                    if (workflowStep.Assignment.MatchEnum(StepAssignment.Org))
+                    if (workflowStep.Assignment.MatchEnum(Assignment.Org))
                     {
                         WorkflowStepOrgEntity insertStepOrg = new WorkflowStepOrgEntity()
                         {
@@ -91,7 +91,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         };
                         insertStepOrgCount = await _workflowStepRepository.InsertWorkflowStepOrg(insertStepOrg);
                     }
-                    else if (workflowStep.Assignment.MatchEnum(StepAssignment.DeptUser))
+                    else if (workflowStep.Assignment.MatchEnum(Assignment.DeptUser))
                     {
                         WorkflowStepDeptUserEntity insertStepDeptUser = new WorkflowStepDeptUserEntity()
                         {
@@ -105,7 +105,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         };
                         insertStepDeptUserCount = await _workflowStepRepository.InsertWorkflowStepDeptUser(insertStepDeptUser);
                     }
-                    else if (workflowStep.Assignment.MatchEnum(StepAssignment.User))
+                    else if (workflowStep.Assignment.MatchEnum(Assignment.User))
                     {
                         WorkflowStepUserEntity insertStepUser = new WorkflowStepUserEntity()
                         {
@@ -117,7 +117,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         };
                         insertStepUserCount = await _workflowStepRepository.InsertWorkflowStepUser(insertStepUser);
                     }
-                    else if (workflowStep.Assignment.MatchEnum(StepAssignment.Custom))
+                    else if (workflowStep.Assignment.MatchEnum(Assignment.Custom))
                     {
                         WorkflowStepCustomEntity inserrtStepCustom = new WorkflowStepCustomEntity()
                         {
@@ -225,7 +225,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 }
 
                 // 根据不同的审批人选取方式，删除其他选取方式数据，修改对应的审批人选取方式数据
-                if (workflowStep.Assignment.MatchEnum(StepAssignment.Org))
+                if (workflowStep.Assignment.MatchEnum(Assignment.Org))
                 {
                     updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
                     WorkflowStepOrgEntity updateStepOrg = new WorkflowStepOrgEntity()
@@ -243,7 +243,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(workflowStep.StepId));
                     await _workflowStepRepository.UpdateWorkflowStepOrg(updateStepOrg);
                 }
-                else if (workflowStep.Assignment.MatchEnum(StepAssignment.DeptUser))
+                else if (workflowStep.Assignment.MatchEnum(Assignment.DeptUser))
                 {
                     updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
                     WorkflowStepDeptUserEntity updateStepDeptUser = new WorkflowStepDeptUserEntity()
@@ -261,7 +261,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(workflowStep.StepId));
                     updateStepDeptUserCount = await _workflowStepRepository.InsertWorkflowStepDeptUser(updateStepDeptUser);
                 }
-                else if (workflowStep.Assignment.MatchEnum(StepAssignment.User))
+                else if (workflowStep.Assignment.MatchEnum(Assignment.User))
                 {
                     updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
                     WorkflowStepUserEntity udpateStepUser = new WorkflowStepUserEntity()
@@ -277,7 +277,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(workflowStep.StepId));
                     updateStepUserCount = await _workflowStepRepository.InsertWorkflowStepUser(udpateStepUser);
                 }
-                else if (workflowStep.Assignment.MatchEnum(StepAssignment.Custom))
+                else if (workflowStep.Assignment.MatchEnum(Assignment.Custom))
                 {
                     updateStepCount = await _workflowStepRepository.UpdateWorkflowStep(updateWorkflowStep);
                     WorkflowStepCustomEntity updateStepCustom = new WorkflowStepCustomEntity()
