@@ -1,4 +1,7 @@
-﻿namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle
+﻿using System.Text.Json.Serialization;
+using SystemAdmin.Model.ModelHelper.ModelConverter;
+
+namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle
 {
     /// <summary>
     /// 流程审批人员Dto
@@ -8,6 +11,7 @@
         /// <summary>
         /// 审批步骤Id
         /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
         public long StepId { get; set; }
 
         /// <summary>
@@ -18,6 +22,7 @@
         /// <summary>
         /// 员工Id
         /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
         public long AppmoveUserId { get; set; }
 
         /// <summary>

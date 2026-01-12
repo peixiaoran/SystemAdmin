@@ -165,6 +165,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                          {
                                              UserId = user.UserId,
                                              DepartmentId = user.DepartmentId,
+                                             PositionId = user.PositionId,
+                                             UserNameCn = user.UserNameCn,
+                                             UserNameEn = user.UserNameEn,
                                          }).FirstAsync();
 
             // 查询表单审批开始步骤
@@ -178,6 +181,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             {
                 var nowStep = await _db.Queryable<WorkflowStepEntity>()
                                        .With(SqlWith.NoLock)
+                                       .Where(step=>step.StepId== nowStepId)
                                        .FirstAsync();
 
                 // 寻找当前步骤的审批人
@@ -192,6 +196,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     workflowApproveItem.AppmoveUserName = _lang.Locale == "zh-CN" 
                                                    ? appUserInfo.UserNameCn 
                                                    : appUserInfo.UserNameEn;
+                    workflowAllApproveUser.Add(workflowApproveItem);
                 }
                 else
                 {
@@ -205,7 +210,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                .Where(org => org.StepId == nowStep.StepId)
                                                .FirstAsync();
                         // 查询组织架构审批人
-                        var orgApproveUser = await GetStepApproveUserByOrg(appUserInfo.UserId, appUserInfo.DepartmentId, nowStep.ApproveMode, stepOrg.DeptLeaveIds, stepOrg.DeptLeaveIds);
+                        var orgApproveUser = await GetStepApproveUserByOrg(appUserInfo.UserId, appUserInfo.DepartmentId, appUserInfo.PositionId, nowStep.ApproveMode, stepOrg.DeptLeaveIds, stepOrg.PositionIds);
                         foreach (var approveUser in orgApproveUser)
                         {
                             WorkflowApproveUser workflowApproveItem = new WorkflowApproveUser();
@@ -223,9 +228,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
 
                 // 查找下一个步骤
                 var stepCondition = await _db.Queryable<WorkflowStepConditionEntity>()
-                                                        .With(SqlWith.NoLock)
-                                                        .Where(condition => condition.StepId == nowStep.StepId)
-                                                        .ToListAsync();
+                                             .With(SqlWith.NoLock)
+                                             .Where(condition => condition.StepId == nowStep.StepId)
+                                             .ToListAsync();
                 List<long> conditionIds = new List<long>();
                 foreach (var conItem in stepCondition)
                 {
@@ -248,59 +253,76 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         /// <param name="deptLevelIds"></param>
         /// <param name="userPositionIds"></param>
         /// <returns></returns>
-        public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(long appUserId, long appdeptId, string approveMode, string deptLevelIds, string userPositionIds)
+        public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(long appUserId, long appDeptId, long appPositionId, string approveMode, string deptLevelIds, string userPositionIds)
         {
-            // 字符串解析为列表
-            var deptLevelIdList = deptLevelIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                              .Select(long.Parse)
-                                              .ToList();
-            var userPositionIdList = deptLevelIds.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                                 .Select(long.Parse)
-                                                 .ToList();
+            // ---------- 1. 参数解析 ----------
+            var deptLevelIdSet = deptLevelIds
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(long.Parse)
+                .ToHashSet();
 
-            // 查询符合级别的部门
-            var depts = await _db.Queryable<DepartmentInfoEntity>()
-                                 .With(SqlWith.NoLock)
-                                 .ToParentListAsync(dept => dept.ParentId, appdeptId);
-            var deptIds = depts.Where(dept => deptLevelIdList.Contains(dept.DepartmentLevelId))
-                               .Select(dept => dept.DepartmentId)
-                               .ToList();
+            var positionIdSet = userPositionIds
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(long.Parse)
+                .ToHashSet();
 
             var approveUsers = new List<StepApproveUser>();
-            // 如果是单签，只取符合职级最老入职员工
+
+            // ---------- 2. 查询符合级别的部门 ----------
+            var deptIdList = (await _db.Queryable<DepartmentInfoEntity>()
+                    .With(SqlWith.NoLock)
+                    .ToParentListAsync(d => d.ParentId, appDeptId))
+                .Where(d => deptLevelIdSet.Contains(d.DepartmentLevelId))
+                .Select(d => d.DepartmentId)
+                .ToList();
+
+            // ---------- 3. 审批人查询 ----------
+            var userQuery = _db.Queryable<UserInfoEntity>()
+                .With(SqlWith.NoLock)
+                .Where(u => u.UserId != appUserId);
+
             if (approveMode == ApproveMode.Ss.ToEnumString())
             {
-                approveUsers = await _db.Queryable<UserInfoEntity>()
-                                        .With(SqlWith.NoLock)
-                                        .Where(user => deptIds.Contains(user.DepartmentId) && userPositionIdList.Contains(user.PositionId) && user.UserId != appUserId)
-                                        .OrderBy(user => user.HireDate)
-                                        .Select(user => new StepApproveUser
-                                        {
-                                            UserId = user.UserId,
-                                            UserName = user.UserNameCn,
-                                        }).Take(1).ToListAsync();
+                approveUsers = await userQuery
+                    .Where(u =>
+                        deptIdList.Contains(u.DepartmentId) &&
+                        positionIdSet.Contains(u.PositionId) &&
+                        u.PositionId != appPositionId)
+                    .OrderBy(u => u.HireDate)
+                    .Select(u => new StepApproveUser
+                    {
+                        UserId = u.UserId,
+                        UserName = _lang.Locale == "zh-CN"
+                            ? u.UserNameCn
+                            : u.UserNameEn
+                    })
+                    .Take(1)
+                    .ToListAsync();
             }
-            // 如果是会签，则取符合职级所有员工
             else if (approveMode == ApproveMode.Cs.ToEnumString())
             {
-                approveUsers = await _db.Queryable<UserInfoEntity>()
-                                           .With(SqlWith.NoLock)
-                                           .Where(user => user.DepartmentId == appdeptId && userPositionIds.Contains(user.PositionId.ToString()) && user.UserId != appUserId)
-                                           .Select(user => new StepApproveUser
-                                           {
-                                               UserId = user.UserId,
-                                               UserName = user.UserNameCn,
-                                           }).ToListAsync();
+                approveUsers = await userQuery
+                    .Where(u =>
+                        u.DepartmentId == appDeptId &&
+                        positionIdSet.Contains(u.PositionId))
+                    .Select(u => new StepApproveUser
+                    {
+                        UserId = u.UserId,
+                        UserName = u.UserNameCn
+                    })
+                    .ToListAsync();
             }
-            if (approveUsers.Count==0)
+
+            // ---------- 4. 兜底处理 ----------
+            if (!approveUsers.Any())
             {
-                StepApproveUser workflowApproveUser = new StepApproveUser()
+                approveUsers.Add(new StepApproveUser
                 {
                     UserId = 0,
                     UserName = "无"
-                };
-                approveUsers.Add(workflowApproveUser);
+                });
             }
+
             return approveUsers;
         }
     }
