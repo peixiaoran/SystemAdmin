@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001160 (16.00.1160)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001160 (16.00.1160)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 12/01/2026 19:08:13
+ Date: 21/01/2026 11:46:33
 */
 
 
@@ -652,6 +652,81 @@ GO
 INSERT INTO [Form].[FormType] ([FormTypeId], [FormGroupId], [FormTypeNameCn], [FormTypeNameEn], [Prefix], [ApprovalPath], [ViewPath], [SortOrder], [DescriptionCn], [DescriptionEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'1987215338470772736', N'请假单', N'Leave Request Form', N'LVR', N'formbusiness/forms/leaveform/leaveform_r', N'formbusiness/forms/leaveform/leaveform_v', N'1', N'请假单用于员工因个人事由、病假、事假、年假等原因需要离开工作岗位时，向所属部门及管理层提出请假申请、审批与备案的业务单据。该单据记录请假类型、请假时间、时长、事由以及审批流程，用于确保人员安排合理、流程合规与人事数据准确。', N'A Leave Request Form is used when an employee needs to be absent from work due to personal reasons, sickness, annual leave, or other approved leave types. The form is submitted to the employee’s department and management for approval and record-keeping. It captures the leave type, leave period, duration, reason, and approval workflow, ensuring proper staffing, compliance, and accurate HR records.', N'1903486709602062336', N'2025-11-09 01:54:49.000', N'1903486709602062336', N'2025-11-09 02:16:46.000')
 GO
 
+
+-- ----------------------------
+-- Table structure for FromPendApprUser
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FromPendApprUser]') AND type IN ('U'))
+	DROP TABLE [Form].[FromPendApprUser]
+GO
+
+CREATE TABLE [Form].[FromPendApprUser] (
+  [FormId] bigint  NOT NULL,
+  [StepId] bigint  NOT NULL,
+  [ApproveUserId] bigint  NOT NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime  NULL
+)
+GO
+
+ALTER TABLE [Form].[FromPendApprUser] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单Id',
+'SCHEMA', N'Form',
+'TABLE', N'FromPendApprUser',
+'COLUMN', N'FormId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'当前步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'FromPendApprUser',
+'COLUMN', N'StepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'待签核人员Id',
+'SCHEMA', N'Form',
+'TABLE', N'FromPendApprUser',
+'COLUMN', N'ApproveUserId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'FromPendApprUser',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'FromPendApprUser',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'FromPendApprUser',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'FromPendApprUser',
+'COLUMN', N'ModifiedDate'
+GO
+
+
+-- ----------------------------
+-- Records of FromPendApprUser
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for LeaveForm
@@ -1376,7 +1451,6 @@ CREATE TABLE [Form].[WorkflowStepOrg] (
   [StepId] bigint  NOT NULL,
   [DeptLeaveIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [PositionIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [LaborIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime DEFAULT getdate() NOT NULL,
   [ModifiedBy] bigint  NULL,
@@ -1413,13 +1487,6 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStepOrg',
 'COLUMN', N'PositionIds'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'员工职业Ids',
-'SCHEMA', N'Form',
-'TABLE', N'WorkflowStepOrg',
-'COLUMN', N'LaborIds'
 GO
 
 EXEC sp_addextendedproperty
@@ -1460,13 +1527,13 @@ GO
 -- ----------------------------
 -- Records of WorkflowStepOrg
 -- ----------------------------
-INSERT INTO [Form].[WorkflowStepOrg] ([StepOrgId], [StepId], [DeptLeaveIds], [PositionIds], [LaborIds], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009892923646283776', N'2009892923604340736', N'1949169142347206656', N'1351602631784529920', N'', N'1903486709602062336', N'2026-01-10 15:39:49.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowStepOrg] ([StepOrgId], [StepId], [DeptLeaveIds], [PositionIds], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009892923646283776', N'2009892923604340736', N'1949169142347206656', N'1351602631784529920', N'1903486709602062336', N'2026-01-10 15:39:49.000', NULL, NULL)
 GO
 
-INSERT INTO [Form].[WorkflowStepOrg] ([StepOrgId], [StepId], [DeptLeaveIds], [PositionIds], [LaborIds], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009897830289903616', N'2009897830268932096', N'1949168956883472384', N'1351600746193223680', N'', N'1903486709602062336', N'2026-01-10 15:59:19.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowStepOrg] ([StepOrgId], [StepId], [DeptLeaveIds], [PositionIds], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009897830289903616', N'2009897830268932096', N'1949168956883472384', N'1351600746193223680', N'1903486709602062336', N'2026-01-10 15:59:19.000', NULL, NULL)
 GO
 
-INSERT INTO [Form].[WorkflowStepOrg] ([StepOrgId], [StepId], [DeptLeaveIds], [PositionIds], [LaborIds], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009898117259988992', N'2009898117243211776', N'1949167957770899456', N'1351584156689104896', N'', N'1903486709602062336', N'2026-01-10 16:00:27.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowStepOrg] ([StepOrgId], [StepId], [DeptLeaveIds], [PositionIds], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009898117259988992', N'2009898117243211776', N'1949167957770899456', N'1351584156689104896', N'1903486709602062336', N'2026-01-10 16:00:27.000', NULL, NULL)
 GO
 
 

@@ -23,11 +23,11 @@ namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle
         /// 员工Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
-        public long AppmoveUserId { get; set; }
+        public long ApproveUserId { get; set; }
 
         /// <summary>
         /// 员工姓名
         /// </summary>
-        public string AppmoveUserName { get; set; } = string.Empty;
+        public string ApproveUserName { get; set; } = string.Empty;
     }
 }

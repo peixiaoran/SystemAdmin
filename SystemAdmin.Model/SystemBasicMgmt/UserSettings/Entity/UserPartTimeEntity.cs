@@ -24,11 +24,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity
         public long PartTimePositionId { get; set; }
 
         /// <summary>
-        /// 兼任职业Id
-        /// </summary>
-        public long PartTimeLaborId { get; set; }
-
-        /// <summary>
         /// 开始时间
         /// </summary>
         public string StartTime { get; set; } = string.Empty;

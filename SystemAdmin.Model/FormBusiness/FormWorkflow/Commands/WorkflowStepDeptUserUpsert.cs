@@ -24,10 +24,5 @@
         /// 职级Ids
         /// </summary>
         public string PositionIds { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 职业Ids
-        /// </summary>
-        public string LaborIds { get; set; } = string.Empty;
     }
 }

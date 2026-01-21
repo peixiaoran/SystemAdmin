@@ -30,11 +30,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public string PositionIds { get; set; } = string.Empty;
 
         /// <summary>
-        /// 职业Ids
-        /// </summary>
-        public string LaborIds { get; set; } = string.Empty;
-
-        /// <summary>
         /// 创建人
         /// </summary>
         public long CreatedBy { get; set; }

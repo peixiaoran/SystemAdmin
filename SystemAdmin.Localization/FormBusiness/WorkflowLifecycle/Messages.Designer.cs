@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SystemAdmin.Localization.FormBusiness.Forms {
+namespace SystemAdmin.Localization.FormBusiness.WorkflowLifecycle {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SystemAdmin.Localization.FormBusiness.Forms.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SystemAdmin.Localization.FormBusiness.WorkflowLifecycle.Messages", typeof(Messages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,29 +61,11 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 您暂无权限申请此表单 的本地化字符串。
+        ///   查找类似 无 的本地化字符串。
         /// </summary>
-        internal static string NotPermissionApply {
+        internal static string StepBeforeStartNotApproveUser {
             get {
-                return ResourceManager.GetString("NotPermissionApply", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 表单保存失败 的本地化字符串。
-        /// </summary>
-        internal static string SaveFailed {
-            get {
-                return ResourceManager.GetString("SaveFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 表单保存成功 的本地化字符串。
-        /// </summary>
-        internal static string SaveSuccess {
-            get {
-                return ResourceManager.GetString("SaveSuccess", resourceCulture);
+                return ResourceManager.GetString("StepBeforeStartNotApproveUser", resourceCulture);
             }
         }
     }

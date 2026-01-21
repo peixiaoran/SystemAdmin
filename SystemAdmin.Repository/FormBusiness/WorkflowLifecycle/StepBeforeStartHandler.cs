@@ -2,6 +2,7 @@
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
+using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.FormAudit.Entity;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
@@ -20,11 +21,14 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
+        private readonly LocalizationService _localization;
+        private readonly string _this = "FormBusiness.WorkflowLifecycle.StepBeforeStart";
 
-        public StepBeforeStartHandler(SqlSugarScope db, Language lang)
+        public StepBeforeStartHandler(SqlSugarScope db, Language lang, LocalizationService _localizationService)
         {
             _db = db;
             _lang = lang;
+            _localization = _localizationService;
         }
         /// <summary>
         /// 初始化表单
@@ -148,7 +152,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         }
 
         /// <summary>
-        /// 查询表单所有审批人
+        /// 查询表单需要签核审批人
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
@@ -158,17 +162,17 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
 
             // 查询表单申请人信息
             var appUserInfo = await _db.Queryable<FormInfoEntity>()
-                                         .With(SqlWith.NoLock)
-                                         .InnerJoin<UserInfoEntity>((form, user) => form.CreatedBy == user.UserId)
-                                         .Where((form, user) => form.FormId == formId)
-                                         .Select((form, user) => new UserInfoEntity()
-                                         {
-                                             UserId = user.UserId,
-                                             DepartmentId = user.DepartmentId,
-                                             PositionId = user.PositionId,
-                                             UserNameCn = user.UserNameCn,
-                                             UserNameEn = user.UserNameEn,
-                                         }).FirstAsync();
+                                       .With(SqlWith.NoLock)
+                                       .InnerJoin<UserInfoEntity>((form, user) => form.CreatedBy == user.UserId)
+                                       .Where((form, user) => form.FormId == formId)
+                                       .Select((form, user) => new UserInfoEntity()
+                                       {
+                                           UserId = user.UserId,
+                                           DepartmentId = user.DepartmentId,
+                                           PositionId = user.PositionId,
+                                           UserNameCn = user.UserNameCn,
+                                           UserNameEn = user.UserNameEn,
+                                       }).FirstAsync();
 
             // 查询表单审批开始步骤
             var nowStepId = await _db.Queryable<WorkflowStepEntity>()
@@ -181,35 +185,31 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             {
                 var nowStep = await _db.Queryable<WorkflowStepEntity>()
                                        .With(SqlWith.NoLock)
-                                       .Where(step=>step.StepId== nowStepId)
+                                       .Where(step => step.StepId == nowStepId)
                                        .FirstAsync();
-
-                // 寻找当前步骤的审批人
-                if (nowStep.IsStartStep == 1)
+                // 组织架构
+                if (nowStep.Assignment == Assignment.Org.ToEnumString())
                 {
-                    WorkflowApproveUser workflowApproveItem = new WorkflowApproveUser();
-                    workflowApproveItem.StepId = nowStep.StepId;
-                    workflowApproveItem.StepName = _lang.Locale == "zh-CN" 
-                                                   ? nowStep.StepNameCn 
-                                                   : nowStep.StepNameEn;
-                    workflowApproveItem.AppmoveUserId = appUserInfo.UserId;
-                    workflowApproveItem.AppmoveUserName = _lang.Locale == "zh-CN" 
-                                                   ? appUserInfo.UserNameCn 
-                                                   : appUserInfo.UserNameEn;
-                    workflowAllApproveUser.Add(workflowApproveItem);
-                }
-                else
-                {
-                    List<WorkflowApproveUser> workflowApproveItems = new List<WorkflowApproveUser>();
-
-                    // 组织架构审批步骤
-                    if (nowStep.Assignment == Assignment.Org.ToEnumString())
+                    if (nowStep.IsStartStep == 1)
+                    {
+                        WorkflowApproveUser workflowApproveItem = new WorkflowApproveUser();
+                        workflowApproveItem.StepId = nowStep.StepId;
+                        workflowApproveItem.StepName = _lang.Locale == "zh-CN"
+                                                       ? nowStep.StepNameCn
+                                                       : nowStep.StepNameEn;
+                        workflowApproveItem.ApproveUserId = appUserInfo.UserId;
+                        workflowApproveItem.ApproveUserName = _lang.Locale == "zh-CN"
+                                                       ? appUserInfo.UserNameCn
+                                                       : appUserInfo.UserNameEn;
+                        workflowAllApproveUser.Add(workflowApproveItem);
+                    }
+                    else
                     {
                         var stepOrg = await _db.Queryable<WorkflowStepOrgEntity>()
-                                               .With(SqlWith.NoLock)
-                                               .Where(org => org.StepId == nowStep.StepId)
-                                               .FirstAsync();
-                        // 查询组织架构审批人
+                                           .With(SqlWith.NoLock)
+                                           .Where(org => org.StepId == nowStep.StepId)
+                                           .FirstAsync();
+
                         var orgApproveUser = await GetStepApproveUserByOrg(appUserInfo.UserId, appUserInfo.DepartmentId, appUserInfo.PositionId, nowStep.ApproveMode, stepOrg.DeptLeaveIds, stepOrg.PositionIds);
                         foreach (var approveUser in orgApproveUser)
                         {
@@ -218,10 +218,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                             workflowApproveItem.StepName = _lang.Locale == "zh-CN"
                                                            ? nowStep.StepNameCn
                                                            : nowStep.StepNameEn;
-                            workflowApproveItem.AppmoveUserId = approveUser.UserId;
-                            workflowApproveItem.AppmoveUserName = approveUser.UserName;
-                            workflowApproveItems.Add(workflowApproveItem);
-                            workflowAllApproveUser.AddRange(workflowApproveItem);
+                            workflowApproveItem.ApproveUserId = approveUser.UserId;
+                            workflowApproveItem.ApproveUserName = approveUser.UserName;
+                            workflowAllApproveUser.Add(workflowApproveItem);
                         }
                     }
                 }
@@ -240,6 +239,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     }
                 }
 
+                // 赋值下一个步骤Id
                 nowStepId = stepCondition.Where(condition => conditionIds.Contains(condition.ConditionId) && condition.ExecuteMatched == 1).First().NextStepId;
             }
             return workflowAllApproveUser;
@@ -248,14 +248,15 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         /// <summary>
         /// 查询组织架构步骤的审批人
         /// </summary>
-        /// <param name="appdeptId"></param>
+        /// <param name="appUserId"></param>
+        /// <param name="appDeptId"></param>
+        /// <param name="appPositionId"></param>
         /// <param name="approveMode"></param>
         /// <param name="deptLevelIds"></param>
         /// <param name="userPositionIds"></param>
         /// <returns></returns>
         public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(long appUserId, long appDeptId, long appPositionId, string approveMode, string deptLevelIds, string userPositionIds)
         {
-            // ---------- 1. 参数解析 ----------
             var deptLevelIdSet = deptLevelIds
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
                 .Select(long.Parse)
@@ -268,58 +269,55 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
 
             var approveUsers = new List<StepApproveUser>();
 
-            // ---------- 2. 查询符合级别的部门 ----------
+            // 查询符合级别的部门
             var deptIdList = (await _db.Queryable<DepartmentInfoEntity>()
                     .With(SqlWith.NoLock)
-                    .ToParentListAsync(d => d.ParentId, appDeptId))
-                .Where(d => deptLevelIdSet.Contains(d.DepartmentLevelId))
-                .Select(d => d.DepartmentId)
-                .ToList();
+                    .ToParentListAsync(dept => dept.ParentId, appDeptId))
+                    .Where(dept => deptLevelIdSet.Contains(dept.DepartmentLevelId))
+                    .Select(dept => dept.DepartmentId)
+                    .ToList();
 
-            // ---------- 3. 审批人查询 ----------
+            // 查询审批人
             var userQuery = _db.Queryable<UserInfoEntity>()
-                .With(SqlWith.NoLock)
-                .Where(u => u.UserId != appUserId);
+                               .With(SqlWith.NoLock)
+                               .Where(user => deptIdList.Contains(user.DepartmentId) && positionIdSet.Contains(user.PositionId) && user.IsApproval == 1 && user.PositionId != appPositionId)
+                               .Select(user=> new UserInfoEntity()
+                               {
+                                   UserId = user.UserId,
+                                   UserNameCn = user.UserNameCn,
+                                   UserNameEn = user.UserNameEn,
+                               });
 
             if (approveMode == ApproveMode.Ss.ToEnumString())
             {
                 approveUsers = await userQuery
-                    .Where(u =>
-                        deptIdList.Contains(u.DepartmentId) &&
-                        positionIdSet.Contains(u.PositionId) &&
-                        u.PositionId != appPositionId)
-                    .OrderBy(u => u.HireDate)
-                    .Select(u => new StepApproveUser
+                    .OrderBy(user => user.HireDate)
+                    .Select(user => new StepApproveUser
                     {
-                        UserId = u.UserId,
+                        UserId = user.UserId,
                         UserName = _lang.Locale == "zh-CN"
-                            ? u.UserNameCn
-                            : u.UserNameEn
-                    })
-                    .Take(1)
-                    .ToListAsync();
+                                   ? user.UserNameCn
+                                   : user.UserNameEn
+
+                    }).Take(1).ToListAsync();
             }
             else if (approveMode == ApproveMode.Cs.ToEnumString())
             {
                 approveUsers = await userQuery
-                    .Where(u =>
-                        u.DepartmentId == appDeptId &&
-                        positionIdSet.Contains(u.PositionId))
-                    .Select(u => new StepApproveUser
+                    .Select(user => new StepApproveUser
                     {
-                        UserId = u.UserId,
-                        UserName = u.UserNameCn
-                    })
-                    .ToListAsync();
+                        UserId = user.UserId,
+                        UserName = user.UserNameCn
+                    }).ToListAsync();
             }
 
-            // ---------- 4. 兜底处理 ----------
+            // 如果没有符合条件的审批人，添加无审批人记录
             if (!approveUsers.Any())
             {
                 approveUsers.Add(new StepApproveUser
                 {
-                    UserId = 0,
-                    UserName = "无"
+                    UserId = -1,
+                    UserName = _localization.ReturnMsg($"{_this}NotApproveUser")
                 });
             }
 

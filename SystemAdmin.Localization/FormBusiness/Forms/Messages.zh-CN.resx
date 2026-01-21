@@ -117,10 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="LeaveFormSaveFailed" xml:space="preserve">
+  <data name="SaveFailed" xml:space="preserve">
     <value>保存失败</value>
   </data>
-  <data name="LeaveFormSaveSuccess" xml:space="preserve">
+  <data name="SaveSuccess" xml:space="preserve">
     <value>保存成功</value>
   </data>
   <data name="NotPermissionApply" xml:space="preserve">

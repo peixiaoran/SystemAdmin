@@ -85,7 +85,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                             StepId = stepId,
                             DeptLeaveIds = workflowStep.workflowStepOrgUpsert.DeptLeaveIds,
                             PositionIds = workflowStep.workflowStepOrgUpsert.PositionIds,
-                            LaborIds = workflowStep.workflowStepOrgUpsert.LaborIds,
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                         };
@@ -99,7 +98,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                             StepId = stepId,
                             DeptIds = workflowStep.workflowStepDeptUserUpsert.DeptIds,
                             PositionIds = workflowStep.workflowStepDeptUserUpsert.PositionIds,
-                            LaborIds = workflowStep.workflowStepDeptUserUpsert.LaborIds,
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                         };
@@ -234,7 +232,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         StepId = long.Parse(workflowStep.StepId),
                         DeptLeaveIds = workflowStep.workflowStepOrgUpsert.DeptLeaveIds,
                         PositionIds = workflowStep.workflowStepOrgUpsert.PositionIds,
-                        LaborIds = workflowStep.workflowStepOrgUpsert.LaborIds,
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     };
@@ -252,7 +249,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         StepId = long.Parse(workflowStep.StepId),
                         DeptIds = workflowStep.workflowStepDeptUserUpsert.DeptIds,
                         PositionIds = workflowStep.workflowStepDeptUserUpsert.PositionIds,
-                        LaborIds = workflowStep.workflowStepDeptUserUpsert.LaborIds,
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                     };

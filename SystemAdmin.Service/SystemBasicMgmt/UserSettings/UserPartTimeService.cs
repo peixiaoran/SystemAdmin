@@ -79,7 +79,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     UserId = long.Parse(userPartTimeInsert.UserId),
                     PartTimeDeptId = long.Parse(userPartTimeInsert.PartTimeDeptId),
                     PartTimePositionId = long.Parse(userPartTimeInsert.PartTimePositionId),
-                    PartTimeLaborId = long.Parse(userPartTimeInsert.PartTimeLaborId),
                     StartTime = userPartTimeInsert.StartTime,
                     EndTime = userPartTimeInsert.EndTime,
                     CreatedBy = _loginuser.UserId,
@@ -87,8 +86,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 };
 
                 await _db.BeginTranAsync();
-                // 判断员工是否有重复（按照员工Id、兼任部门、兼任职业）
-                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeInsert.UserId), long.Parse(userPartTimeInsert.PartTimeDeptId), long.Parse(userPartTimeInsert.PartTimePositionId), long.Parse(userPartTimeInsert.PartTimeLaborId));
+                // 判断员工是否有重复（按照员工Id、兼任部门）
+                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeInsert.UserId), long.Parse(userPartTimeInsert.PartTimeDeptId));
                 if (userpartTimeAny)
                 {
                     var insertUserPartTimeCount = await _userPartTimeRepository.InsertUserPartTime(insertUserPartTimeEntity);
@@ -173,8 +172,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                // 判断员工是否有重复（按照员工Id、新兼任部门、新兼任职业）
-                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeUpdateDel.UserId), long.Parse(userPartTimeUpdateDel.PartTimeDeptId), long.Parse(userPartTimeUpdateDel.PartTimePositionId), long.Parse(userPartTimeUpdateDel.PartTimeLaborId));
+                // 判断员工是否有重复（按照员工Id、新兼任部门）
+                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeUpdateDel.UserId), long.Parse(userPartTimeUpdateDel.PartTimeDeptId));
                 if (userpartTimeAny)
                 {
                     await _db.BeginTranAsync();
@@ -182,8 +181,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     {
                         UserId = long.Parse(userPartTimeUpdateDel.UserId),
                         PartTimeDeptId = long.Parse(userPartTimeUpdateDel.PartTimeDeptId),
-                        PartTimePositionId = long.Parse(userPartTimeUpdateDel.PartTimePositionId),
-                        PartTimeLaborId = long.Parse(userPartTimeUpdateDel.PartTimeLaborId),
                         StartTime = userPartTimeUpdateDel.StartTime,
                         EndTime = userPartTimeUpdateDel.EndTime,
                         ModifiedBy = _loginuser.UserId,

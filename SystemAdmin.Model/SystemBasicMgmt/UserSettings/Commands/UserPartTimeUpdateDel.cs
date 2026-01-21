@@ -36,16 +36,6 @@
         public string PartTimeDeptId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 兼任职级Id
-        /// </summary>
-        public string PartTimePositionId { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 兼任职业Id
-        /// </summary>
-        public string PartTimeLaborId { get; set; } = string.Empty;
-
-        /// <summary>
         /// 开始时间
         /// </summary>
         public string StartTime { get; set; } = string.Empty;

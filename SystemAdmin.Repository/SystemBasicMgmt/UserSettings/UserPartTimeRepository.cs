@@ -38,19 +38,18 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            .LeftJoin<UserPositionEntity>((user, userpart, dept, userpos) => user.PositionId == userpos.PositionId)
                            .LeftJoin<DepartmentInfoEntity>((user, userpart, dept, userpos, p_userdept) => userpart.PartTimeDeptId == p_userdept.DepartmentId)
                            .LeftJoin<UserPositionEntity>((user, userpart, dept, userpos, p_userdept, p_userpos) => userpart.PartTimePositionId == p_userpos.PositionId)
-                           .LeftJoin<UserLaborEntity>((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) => p_userlabor.LaborId == userpart.PartTimeLaborId)
-                           .Where((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) => user.IsEmployed == 1 && user.IsFreeze == 0);
+                           .Where((user, userpart, dept, userpos, p_userdept, p_userpos) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getUserPartTimePage.UserNo))
             {
-                query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) =>
+                query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos) =>
                     user.UserNo.Contains(getUserPartTimePage.UserNo));
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getUserPartTimePage.UserName))
             {
-                query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) =>
+                query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos) =>
                     user.UserNameCn.Contains(getUserPartTimePage.UserName) ||
                     user.UserNameEn.Contains(getUserPartTimePage.UserName));
             }
@@ -59,14 +58,14 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 && string.IsNullOrEmpty(getUserPartTimePage.UserNo)
                 && string.IsNullOrEmpty(getUserPartTimePage.UserName))
             {
-                query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) => p_userdept.DepartmentId == long.Parse(getUserPartTimePage.DepartmentId));
+                query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos) => p_userdept.DepartmentId == long.Parse(getUserPartTimePage.DepartmentId));
             }
 
             // 排序
-            query = query.OrderBy((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) => new { UserPositionOrder = userpos.PositionOrderBy, user.HireDate, PartTimePositionOrder = p_userpos.PositionOrderBy });
+            query = query.OrderBy((user, userpart, dept, userpos, p_userdept, p_userpos) => new { UserPositionOrder = userpos.PositionOrderBy, user.HireDate, PartTimePositionOrder = p_userpos.PositionOrderBy });
 
             var userPartTimePage = await query
-            .Select((user, userpart, dept, userpos, p_userdept, p_userpos, p_userlabor) => new UserPartTimeDto
+            .Select((user, userpart, dept, userpos, p_userdept, p_userpos) => new UserPartTimeDto
             {
                 UserId = user.UserId,
                 UserNo = user.UserNo,
@@ -94,11 +93,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 PartTimePositionName = _lang.Locale == "zh-CN"
                            ? p_userpos.PositionNameCn
                            : p_userpos.PositionNameEn,
-                // 兼任职业名称
-                PartTimeLaborId = userpart.PartTimeLaborId,
-                PartTimeLaborName = _lang.Locale == "zh-CN"
-                           ? p_userlabor.LaborNameCn
-                           : p_userlabor.LaborNameEn,
                 StartTime = userpart.StartTime,
                 EndTime = userpart.EndTime,
             }).ToPageListAsync(getUserPartTimePage.PageIndex, getUserPartTimePage.PageSize, totalCount);
@@ -190,7 +184,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         public async Task<int> DeleteUserPartTime(UserPartTimeUpdateDel userPartTimeUpdateDel)
         {
             return await _db.Deleteable<UserPartTimeEntity>()
-                            .Where(userparttime => userparttime.UserId == long.Parse(userPartTimeUpdateDel.Old_UserId) && userparttime.PartTimeDeptId == long.Parse(userPartTimeUpdateDel.Old_PartTimeDeptId) && userparttime.PartTimePositionId == long.Parse(userPartTimeUpdateDel.Old_PartTimePositionId) && userparttime.PartTimeLaborId == long.Parse(userPartTimeUpdateDel.Old_PartTimeLaborId))
+                            .Where(userparttime => userparttime.UserId == long.Parse(userPartTimeUpdateDel.Old_UserId) && userparttime.PartTimeDeptId == long.Parse(userPartTimeUpdateDel.Old_PartTimeDeptId) && userparttime.PartTimePositionId == long.Parse(userPartTimeUpdateDel.Old_PartTimePositionId))
                             .ExecuteCommandAsync();
         }
 
@@ -221,17 +215,15 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
-        /// 查询员工兼任是否有重复（按照员工Id、兼任部门、兼任职级、兼任职业）
+        /// 查询员工兼任是否有重复（按照员工Id、兼任部门、兼任职级）
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="partTimeDeptId"></param>
-        /// <param name="partTimePositionId"></param>
-        /// <param name="partTimeLaborId"></param>
         /// <returns></returns>
-        public async Task<bool> GetUserPartTimeCount(long userId, long partTimeDeptId, long partTimePositionId, long partTimeLaborId)
+        public async Task<bool> GetUserPartTimeCount(long userId, long partTimeDeptId)
         {
             return await _db.Queryable<UserPartTimeEntity>()
-                            .Where(userparttime => userparttime.UserId == userId && userparttime.PartTimeDeptId == partTimeDeptId && userparttime.PartTimePositionId == partTimePositionId && userparttime.PartTimeLaborId == partTimeLaborId)
+                            .Where(userparttime => userparttime.UserId == userId && userparttime.PartTimeDeptId == partTimeDeptId)
                             .AnyAsync();
         }
 
@@ -243,7 +235,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         public async Task<UserPartTimeDto> GetUserPartTimeList(GetUserPartTimeEntity getUserPartTimeEntity)
         {
             var userPartTimeEntity = await _db.Queryable<UserPartTimeEntity>()
-                                              .Where(userparttime => userparttime.UserId == long.Parse(getUserPartTimeEntity.UserId) && userparttime.PartTimeDeptId == long.Parse(getUserPartTimeEntity.Old_PartTimeDeptId) && userparttime.PartTimePositionId == long.Parse(getUserPartTimeEntity.Old_PartTimePositionId) && userparttime.PartTimeLaborId == long.Parse(getUserPartTimeEntity.Old_PartTimeLaborId))
+                                              .Where(userparttime => userparttime.UserId == long.Parse(getUserPartTimeEntity.UserId) && userparttime.PartTimeDeptId == long.Parse(getUserPartTimeEntity.Old_PartTimeDeptId) && userparttime.PartTimePositionId == long.Parse(getUserPartTimeEntity.Old_PartTimePositionId))
                                               .FirstAsync();
             return userPartTimeEntity.Adapt<UserPartTimeDto>();
         }
@@ -261,7 +253,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                             {
                                 userparttime.CreatedBy,
                                 userparttime.CreatedDate,
-                            }).Where(userparttime => userparttime.UserId == long.Parse(userPartTimeUpdateDel.Old_UserId) && userparttime.PartTimeDeptId == long.Parse(userPartTimeUpdateDel.Old_PartTimeDeptId) && userparttime.PartTimePositionId == long.Parse(userPartTimeUpdateDel.Old_PartTimePositionId) && userparttime.PartTimeLaborId == long.Parse(userPartTimeUpdateDel.Old_PartTimeLaborId)).ExecuteCommandAsync();
+                            }).Where(userparttime => userparttime.UserId == long.Parse(userPartTimeUpdateDel.Old_UserId) && userparttime.PartTimeDeptId == long.Parse(userPartTimeUpdateDel.Old_PartTimeDeptId) && userparttime.PartTimePositionId == long.Parse(userPartTimeUpdateDel.Old_PartTimePositionId)).ExecuteCommandAsync();
         }
 
         // <summary>

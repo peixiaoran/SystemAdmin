@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001160 (16.00.1160)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Basic
 
  Target Server Type    : SQL Server
- Target Server Version : 16001160 (16.00.1160)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 12/01/2026 19:08:17
+ Date: 21/01/2026 11:46:26
 */
 
 
@@ -2988,7 +2988,6 @@ CREATE TABLE [Basic].[UserPartTime] (
   [UserId] bigint  NOT NULL,
   [PartTimeDeptId] bigint  NOT NULL,
   [PartTimePositionId] bigint  NOT NULL,
-  [PartTimeLaborId] bigint  NOT NULL,
   [StartTime] datetime2(7)  NOT NULL,
   [EndTime] datetime2(7)  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
@@ -3020,13 +3019,6 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'Basic',
 'TABLE', N'UserPartTime',
 'COLUMN', N'PartTimePositionId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'兼任职业',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPartTime',
-'COLUMN', N'PartTimeLaborId'
 GO
 
 EXEC sp_addextendedproperty
@@ -3081,13 +3073,13 @@ GO
 -- ----------------------------
 -- Records of UserPartTime
 -- ----------------------------
-INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [PartTimeLaborId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962091248886091776', N'1929535196076576906', N'1351601258426793984', N'1956395917238210560', N'2025-08-30 08:00:00.0000000', N'2026-08-30 08:00:00.0000000', N'1903486709602062336', N'2025-08-31 17:08:33.000', N'1903486709602062336', N'2025-10-03 21:05:41.000')
+INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962091248886091776', N'1929535196076576906', N'1351601258426793984', N'2025-08-30 08:00:00.0000000', N'2026-08-30 08:00:00.0000000', N'1903486709602062336', N'2025-08-31 17:08:33.000', N'1903486709602062336', N'2025-10-03 21:05:41.000')
 GO
 
-INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [PartTimeLaborId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961846945383321600', N'1929535196076576812', N'1351601258426793984', N'1956396031587520512', N'2025-10-03 00:00:00.0000000', N'2026-10-03 00:00:00.0000000', N'1903486709602062336', N'2025-10-03 21:13:15.000', NULL, NULL)
+INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961846945383321600', N'1929535196076576812', N'1351601258426793984', N'2025-10-03 00:00:00.0000000', N'2026-10-03 00:00:00.0000000', N'1903486709602062336', N'2025-10-03 21:13:15.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [PartTimeLaborId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079079705645056', N'1929535196076576768', N'1351581732096180224', N'1962083956962758656', N'2025-10-20 00:00:00.0000000', N'2025-10-31 00:00:00.0000000', N'1903486709602062336', N'2025-10-18 15:20:31.000', NULL, NULL)
+INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079079705645056', N'1929535196076576768', N'1351581732096180224', N'2025-10-20 00:00:00.0000000', N'2025-10-31 00:00:00.0000000', N'1903486709602062336', N'2025-10-18 15:20:31.000', NULL, NULL)
 GO
 
 

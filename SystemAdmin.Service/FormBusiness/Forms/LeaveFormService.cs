@@ -25,6 +25,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.Forms.LeaveForm";
+        private readonly string _publicthis = "FormBusiness.Forms.";
 
         public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formAuthRepository, StepBeforeStartHandler stepBeforeStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
@@ -102,7 +103,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 bool isCanApply = await _formAuthRepository.HasUserApplyFormType(_loginuser.UserId, long.Parse(leaveFormSave.FormTypeId), FormOp.Apply);
                 if (!isCanApply)
                 {
-                    return Result<int>.Failure(403, _localization.ReturnMsg("NotPermissionApply"));
+                    return Result<int>.Failure(403, _localization.ReturnMsg($"{_publicthis}NotPermissionApply"));
                 }
 
                 await _db.BeginTranAsync();
@@ -131,8 +132,8 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 await _db.CommitTranAsync();
 
                 return saveFormInfo >= 1 && saveLeaveFormCount >= 1
-                        ? Result<int>.Ok(saveLeaveFormCount, _localization.ReturnMsg("SaveSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg("SaveFailed"));
+                        ? Result<int>.Ok(saveLeaveFormCount, _localization.ReturnMsg($"{_publicthis}SaveSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_publicthis}SaveFailed"));
             }
             catch (Exception ex)
             {
@@ -182,7 +183,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 查询表单所有审批人
+        /// 查询表单需要签核审批人
         /// </summary>
         /// <param name="fromId"></param>
         /// <returns></returns>
