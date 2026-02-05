@@ -255,4 +255,44 @@
   <data name="PersonalUploadFailed" xml:space="preserve">
     <value>上传失败</value>
   </data>
+  <data name="UserExcel_UserNo" xml:space="preserve">
+    <value>员工工号</value>
+    <comment>员工Excel导出-员工工号</comment>
+  </data>
+  <data name="UserExcel_UserNameCn" xml:space="preserve">
+    <value>员工姓名（中文）</value>
+    <comment>员工Excel导出-员工姓名（中文）</comment>
+  </data>
+  <data name="UserExcel_UserNameEn" xml:space="preserve">
+    <value>员工姓名（英文）</value>
+    <comment>员工Excel导出-员工姓名（英文）</comment>
+  </data>
+  <data name="UserExcel_DepartmentName" xml:space="preserve">
+    <value>所属部门</value>
+    <comment>员工Excel导出-所属部门</comment>
+  </data>
+  <data name="UserExcel_PositionName" xml:space="preserve">
+    <value>职级</value>
+    <comment>员工Excel导出-职级</comment>
+  </data>
+  <data name="UserExcel_GenderName" xml:space="preserve">
+    <value>性别</value>
+    <comment>员工Excel导出-性别</comment>
+  </data>
+  <data name="UserExcel_NationalityName" xml:space="preserve">
+    <value>攻击</value>
+    <comment>员工Excel导出-国籍</comment>
+  </data>
+  <data name="UserExcel_IsEmployedName" xml:space="preserve">
+    <value>是否在职</value>
+    <comment>员工Excel导出-是否在职</comment>
+  </data>
+  <data name="UserExcel_IsApprovalName" xml:space="preserve">
+    <value>是否签核</value>
+    <comment>员工Excel导出-是否签核</comment>
+  </data>
+  <data name="UserExcel_IsFreezeName" xml:space="preserve">
+    <value>是否冻结</value>
+    <comment>员工Excel导出-是否冻结</comment>
+  </data>
 </root>

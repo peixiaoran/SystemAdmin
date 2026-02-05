@@ -107,5 +107,19 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         {
             return await _userInfoService.GetRoleDropDown();
         }
+
+        [HttpPost]
+        [Tags("系统基础管理-基本信息模块")]
+        [EndpointSummary("[员工信息] 导出员工信息Excel")]
+        public async Task<IActionResult> Export(GetUserInfoExcel getUserInfoExcel)
+        {
+            var bytes = await _userInfoService.GetUserInfoExcel(getUserInfoExcel);
+            return File(
+                bytes,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                $"UserInfo_{DateTime.Now:yyyyMMddHHmmss}.xlsx"
+            );
+        }
+
     }
 }

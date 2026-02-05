@@ -147,19 +147,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public int IsEmployed { get; set; }
 
         /// <summary>
-        /// 是否在职文字描述
-        /// </summary>
-        public string IsEmployedName { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否签核
         /// </summary>
         public int IsApproval { get; set; }
-
-        /// <summary>
-        /// 是否签核文字描述
-        /// </summary>
-        public string IsApprovalName { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否实时邮件通知
@@ -177,19 +167,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public int IsAgent { get; set; }
 
         /// <summary>
-        /// 是否代理其他员工文字描述
-        /// </summary>
-        public string IsAgentName { get; set; } = string.Empty;
-
-        /// <summary>
         /// 是否兼任
         /// </summary>
         public int IsPartTime { get; set; }
-
-        /// <summary>
-        /// 是否兼任文字描述
-        /// </summary>
-        public string IsPartTimeName { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否冻结
@@ -205,10 +185,5 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         /// 过期时间
         /// </summary>
         public string ExpirationTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 是否冻结文字描述
-        /// </summary>
-        public string IsFreezeName { get; set; } = string.Empty;
     }
 }

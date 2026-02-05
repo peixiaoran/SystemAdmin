@@ -1,10 +1,15 @@
-﻿using Konscious.Security.Cryptography;
+﻿using Dm;
+using Konscious.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using SqlSugar;
+using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using SystemAdmin.Common.Excel;
 using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
@@ -24,6 +29,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly UserInfoRepository _userInfoRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.UserInfo";
+        private readonly string _thisExcel = "SystemBasicMgmt.SystemBasicData.UserExcel_";
 
         public UserInfoService(CurrentUser loginuser, MinioService minioService, ILogger<UserInfoService> logger, SqlSugarScope db, UserInfoRepository userInfoRepository, LocalizationService localization)
         {
@@ -413,6 +419,64 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<List<RoleInfoDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 查询用户信息列表（导出Excel）
+        /// </summary>
+        /// <param name="getUserInfoExcel"></param>
+        /// <returns></returns>
+        public async Task<byte[]> GetUserInfoExcel(GetUserInfoExcel getUserInfoExcel)
+        {
+            try
+            {
+                var list = await _userInfoRepository.GetUserInfoExcel(getUserInfoExcel);
+
+                ExcelPackage.License.SetNonCommercialPersonal("Your Name");
+
+                using var package = new ExcelPackage();
+                var ws = package.Workbook.Worksheets.Add("Users");
+
+                // 列头（只关心“叫什么”）
+                var headers = new[]
+                {
+                    _localization.ReturnMsg($"{_thisExcel}UserNo"),
+                    _localization.ReturnMsg($"{_thisExcel}UserNameCn"),
+                    _localization.ReturnMsg($"{_thisExcel}UserNameEn"),
+                    _localization.ReturnMsg($"{_thisExcel}DepartmentName"),
+                    _localization.ReturnMsg($"{_thisExcel}PositionName"),
+                    _localization.ReturnMsg($"{_thisExcel}GenderName"),
+                    _localization.ReturnMsg($"{_thisExcel}IsEmployedName")
+                };
+
+                // 填充数据
+                for (int i = 0; i < list.Count; i++)
+                {
+                    int row = i + 2;
+                    ws.Cells[row, 1].Value = list[i].UserNo;
+                    ws.Cells[row, 2].Value = list[i].UserNameCn;
+                    ws.Cells[row, 3].Value = list[i].UserNameEn;
+                    ws.Cells[row, 4].Value = list[i].DepartmentName;
+                    ws.Cells[row, 5].Value = list[i].PositionName;
+                    ws.Cells[row, 6].Value = list[i].GenderName;
+                    ws.Cells[row, 7].Value = list[i].IsEmployedName;
+                }
+
+                // 应用标准样式
+                ExcelStyleHelper.ApplyStandardStyle(
+                    ws,
+                    headers,
+                    list.Count + 1,
+                    enableFilter: true
+                );
+
+                return package.GetAsByteArray();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Array.Empty<byte>();
             }
         }
 

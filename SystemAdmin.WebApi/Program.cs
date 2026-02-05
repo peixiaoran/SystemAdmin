@@ -1,4 +1,5 @@
-﻿using Scalar.AspNetCore;
+﻿using Microsoft.AspNetCore.Hosting;
+using Scalar.AspNetCore;
 using SystemAdmin.CommonSetup.DependencyInjection;
 using SystemAdmin.Hosting.DependencyInjection;
 using SystemAdmin.WebApi.DependencyInjection;
@@ -50,9 +51,14 @@ builder.Services.AddServiceAndRepository();
 // 注入 AddHybridCache缓存服务
 builder.Services.AddCache();
 
+builder.WebHost.ConfigureKestrel((context, options) =>
+{
+    context.Configuration.GetSection("Kestrel").Bind(options);
+});
+
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
 {
     app.MapScalarApiReference("/systemadmin");
     app.MapOpenApi();

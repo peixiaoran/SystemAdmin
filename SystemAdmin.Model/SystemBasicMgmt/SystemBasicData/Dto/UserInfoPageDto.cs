@@ -3,6 +3,9 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 
 namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
 {
+    /// <summary>
+    /// 员工分页查询Dto
+    /// </summary>
     public class UserInfoPageDto
     {
         /// <summary>

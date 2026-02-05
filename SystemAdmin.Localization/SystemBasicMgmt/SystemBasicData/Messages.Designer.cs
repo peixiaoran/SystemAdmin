@@ -304,6 +304,96 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
+        ///   查找类似 所属部门 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_DepartmentName {
+            get {
+                return ResourceManager.GetString("UserExcel_DepartmentName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 性别 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_GenderName {
+            get {
+                return ResourceManager.GetString("UserExcel_GenderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 是否签核 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_IsApprovalName {
+            get {
+                return ResourceManager.GetString("UserExcel_IsApprovalName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 是否在职 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_IsEmployedName {
+            get {
+                return ResourceManager.GetString("UserExcel_IsEmployedName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 是否冻结 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_IsFreezeName {
+            get {
+                return ResourceManager.GetString("UserExcel_IsFreezeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 攻击 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_NationalityName {
+            get {
+                return ResourceManager.GetString("UserExcel_NationalityName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 职级 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_PositionName {
+            get {
+                return ResourceManager.GetString("UserExcel_PositionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 员工姓名（中文） 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_UserNameCn {
+            get {
+                return ResourceManager.GetString("UserExcel_UserNameCn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 员工姓名（英文） 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_UserNameEn {
+            get {
+                return ResourceManager.GetString("UserExcel_UserNameEn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 员工工号 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_UserNo {
+            get {
+                return ResourceManager.GetString("UserExcel_UserNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 请上传头像文件 的本地化字符串。
         /// </summary>
         internal static string UserInfoAvatarFileNotNull {

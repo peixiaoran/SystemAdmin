@@ -212,22 +212,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserInfoEntity>()
                            .With(SqlWith.NoLock)
-                           
-                           .InnerJoin<UserRoleEntity>(
-                               (user, userrole) =>
-                                   user.UserId == userrole.UserId)
-
-                           .InnerJoin<DepartmentInfoEntity>(
-                               (user, userrole, deptinfo) =>
-                                   user.DepartmentId == deptinfo.DepartmentId)
-                           
-                           .InnerJoin<UserPositionEntity>(
-                               (user, userrole, deptinfo, userposition) =>
-                                   user.PositionId == userposition.PositionId)
-                           
-                           .InnerJoin<NationalityInfoEntity>(
-                               (user, userrole, deptinfo, userposition, nation) =>
-                                   user.Nationality == nation.NationId);
+                           .InnerJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
+                           .InnerJoin<DepartmentInfoEntity>((user, userrole, deptinfo) => user.DepartmentId == deptinfo.DepartmentId)
+                           .InnerJoin<UserPositionEntity>((user, userrole, deptinfo, userposition) => user.PositionId == userposition.PositionId)
+                           .InnerJoin<NationalityInfoEntity>((user, userrole, deptinfo, userposition, nation) => user.Nationality == nation.NationId);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getUserPage.UserNo))
@@ -242,20 +230,16 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                     user.UserNameCn.Contains(getUserPage.UserName) ||
                     user.UserNameEn.Contains(getUserPage.UserName));
             }
-            // 部门Id（仅在工号与姓名都为空时才筛选）
-            if (!string.IsNullOrEmpty(getUserPage.DepartmentId)
-                && string.IsNullOrEmpty(getUserPage.UserNo)
-                && string.IsNullOrEmpty(getUserPage.UserName))
+            // 部门Id
+            if (getUserPage.DepartmentId != "-1")
             {
                 query = query.Where(user => user.DepartmentId == long.Parse(getUserPage.DepartmentId));
             }
 
             // 排序
-            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) =>
-                    new { userposition.PositionOrderBy, user.HireDate });
+            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.PositionOrderBy, user.HireDate });
 
-            var userPage = await query
-                    .Select((user, userrole, deptinfo, userposition, nation) =>
+            var userPage = await query.Select((user, userrole, deptinfo, userposition, nation) =>
                     new UserInfoPageDto
                     {
                         UserId = user.UserId,
@@ -274,8 +258,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                         IsApproval = user.IsApproval,
                         IsFreeze = user.IsFreeze,
                         Remark = user.Remark
-                    })
-                .ToPageListAsync(getUserPage.PageIndex, getUserPage.PageSize, totalCount);
+                    }).ToPageListAsync(getUserPage.PageIndex, getUserPage.PageSize, totalCount);
             return ResultPaged<UserInfoPageDto>.Ok(userPage, totalCount, "");
         }
 
@@ -397,6 +380,69 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .With(SqlWith.NoLock)
                             .Where(user => user.UserNo == userNo || user.LoginNo == loginNo)
                             .AnyAsync();
+        }
+
+        /// <summary>
+        /// 查询用户信息列表（导出Excel）
+        /// </summary>
+        /// <param name="getUserInfoExcel"></param>
+        /// <returns></returns>
+        public async Task<List<UserInfoExcelDto>> GetUserInfoExcel(GetUserInfoExcel getUserInfoExcel)
+        {
+            var query = _db.Queryable<UserInfoEntity>()
+                           .With(SqlWith.NoLock)
+                           .InnerJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
+                           .InnerJoin<DepartmentInfoEntity>((user, userrole, deptinfo) => user.DepartmentId == deptinfo.DepartmentId)
+                           .InnerJoin<UserPositionEntity>((user, userrole, deptinfo, userposition) => user.PositionId == userposition.PositionId)
+                           .InnerJoin<NationalityInfoEntity>((user, userrole, deptinfo, userposition, nation) => user.Nationality == nation.NationId);
+
+            // 员工工号
+            if (!string.IsNullOrEmpty(getUserInfoExcel.UserNo))
+            {
+                query = query.Where(user =>
+                    user.UserNo.Contains(getUserInfoExcel.UserNo));
+            }
+            // 员工姓名
+            if (!string.IsNullOrEmpty(getUserInfoExcel.UserName))
+            {
+                query = query.Where(user =>
+                    user.UserNameCn.Contains(getUserInfoExcel.UserName) ||
+                    user.UserNameEn.Contains(getUserInfoExcel.UserName));
+            }
+            // 部门Id
+            if (getUserInfoExcel.DepartmentId != "-1")
+            {
+                query = query.Where(user => user.DepartmentId == long.Parse(getUserInfoExcel.DepartmentId));
+            }
+
+            // 排序
+            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.PositionOrderBy, user.HireDate });
+
+            return await query.Select((user, userrole, deptinfo, userposition, nation) =>
+                    new UserInfoExcelDto
+                    {
+                        DepartmentName = _lang.Locale == "zh-CN"
+                                         ? deptinfo.DepartmentNameCn
+                                         : deptinfo.DepartmentNameEn,
+                        UserNo = user.UserNo,
+                        UserNameCn = user.UserNameCn,
+                        UserNameEn = user.UserNameEn,
+                        PositionName = _lang.Locale == "zh-CN"
+                                         ? userposition.PositionNameCn
+                                         : userposition.PositionNameEn,
+                        GenderName = _lang.Locale == "zh-CN"
+                                         ? (user.Gender == 1 ? "男" : "女")
+                                         : (user.Gender == 1 ? "Male" : "Female"),
+                        IsEmployedName = _lang.Locale == "zh-CN"
+                                         ? (user.IsEmployed == 1 ? "在职" : "离职")
+                                         : (user.IsEmployed == 1 ? "Yes" : "No"),
+                        IsApprovalName = _lang.Locale == "zh-CN"
+                                         ? (user.IsApproval == 1 ? "需要签核" : "无需签核")
+                                         : (user.IsApproval == 1 ? "Yes" : "No"),
+                        IsFreezeName = _lang.Locale == "zh-CN"
+                                         ? (user.IsFreeze == 1 ? "未冻结" : "已冻结")
+                                         : (user.IsFreeze == 1 ? "No" : "Yes"),
+                    }).ToListAsync();
         }
     }
 }

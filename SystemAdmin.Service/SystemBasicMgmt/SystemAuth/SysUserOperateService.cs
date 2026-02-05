@@ -31,11 +31,12 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         private readonly MailKitEmailSender _mailKitEmail;
         private readonly LocalizationService _localization;
         private readonly HybridCache _cache;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly string _this = "SystemBasicMgmt.SystemAuth.SysUserOperate";
         private const int CodeLength = 6;
         private static readonly Random _random = new Random();
 
-        public SysUserOperateService(CurrentUser loginuser, JwtTokenService jwt, ILogger<SysUserOperateService> logger, SqlSugarScope db, SysUserOperateRepository sysUserOperateRepository, MailKitEmailSender mailKitEmail, LocalizationService localization, HybridCache cache)
+        public SysUserOperateService(CurrentUser loginuser, JwtTokenService jwt, ILogger<SysUserOperateService> logger, SqlSugarScope db, SysUserOperateRepository sysUserOperateRepository, MailKitEmailSender mailKitEmail, LocalizationService localization, HybridCache cache, IHttpContextAccessor httpContextAccessor)
         {
             _loginuser = loginuser;
             _jwt = jwt;
@@ -45,6 +46,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             _mailKitEmail = mailKitEmail;
             _localization = localization;
             _cache = cache;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         /// <summary>
@@ -474,23 +476,23 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         /// 获取本地IPv4地址
         /// </summary>
         /// <returns></returns>
-        public static string GetLocalIPv4()
+        public string GetLocalIPv4()
         {
-            foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
-            {
-                if (ni.OperationalStatus != OperationalStatus.Up)
-                    continue;
+            var context = _httpContextAccessor.HttpContext;
+            if (context == null) return "127.0.0.1"; // 没有请求上下文
 
-                var ipProps = ni.GetIPProperties();
-                foreach (UnicastIPAddressInformation ip in ipProps.UnicastAddresses)
-                {
-                    if (ip.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(ip.Address))
-                    {
-                        return ip.Address.ToString();
-                    }
-                }
+            // 优先取 X-Forwarded-For，如果不存在则取 RemoteIpAddress
+            var clientIp = context.Request.Headers["X-Forwarded-For"].FirstOrDefault()
+                           ?? context.Connection.RemoteIpAddress?.ToString()
+                           ?? "127.0.0.1";
+
+            // 如果 IP 地址以 "::ffff:" 开头，去除这个前缀
+            if (clientIp.StartsWith("::ffff:"))
+            {
+                clientIp = clientIp.Substring(7);  // 去除 "::ffff:"，只保留纯 IPv4 地址
             }
-            return "127.0.0.1"; // fallback
+
+            return clientIp;
         }
 
         /// <summary>
