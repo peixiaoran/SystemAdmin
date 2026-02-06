@@ -31,7 +31,7 @@
         public string PositionName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 入职时间
+        /// 入职日期
         /// </summary>
         public string HireDate { get; set; } = string.Empty;
 
