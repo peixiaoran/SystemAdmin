@@ -173,7 +173,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             catch(Exception ex)
             {
                 await _db.RollbackTranAsync();
-                _logger.LogCritical(ex, ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return Result<SysUserLoginReturnDto>.Failure(500, ex.Message);
             }
         }
@@ -210,7 +210,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             catch (Exception ex)
             {
                 await _db.RollbackTranAsync();
-                _logger.LogCritical(ex, ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
             }
         }
@@ -238,7 +238,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFreeze"));
                 }
 
-                await _cache.RemoveAsync(userNo); // 先清除旧缓存（HybridCache 不支持直接覆盖）
+                // 先清除旧缓存（HybridCache 不支持直接覆盖）
+                await _cache.RemoveAsync(userNo); 
 
                 // 正常发送验证码流程
                 var code = GenerateRandomCode();
@@ -257,7 +258,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}SendVcCodeFailed", ex.Message));
             }
         }
@@ -325,7 +326,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             catch (Exception ex)
             {
                 await _db.RollbackTranAsync();
-                _logger.LogCritical(ex, ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
             }
         }
@@ -372,7 +373,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}SendVcCodeFailed", ex.Message));
             }
         }
@@ -452,7 +453,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             catch (Exception ex)
             {
                 await _db.RollbackTranAsync();
-                _logger.LogCritical(ex, ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
             }
         }

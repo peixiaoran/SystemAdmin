@@ -285,4 +285,16 @@
   <data name="UserExcel_IsFreezeName" xml:space="preserve">
     <value>是否冻结</value>
   </data>
+  <data name="UserExcel_UserInfo" xml:space="preserve">
+    <value>用户信息</value>
+  </data>
+  <data name="UserExcel_HireDate" xml:space="preserve">
+    <value>入职日期</value>
+  </data>
+  <data name="UserExcel_Email" xml:space="preserve">
+    <value>邮箱</value>
+  </data>
+  <data name="UserExcel_PhoneNumber" xml:space="preserve">
+    <value>电话号码</value>
+  </data>
 </root>

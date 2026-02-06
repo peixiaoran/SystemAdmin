@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
@@ -15,8 +16,11 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
     public class UserInfo : ControllerBase
     {
         private readonly UserInfoService _userInfoService;
-        public UserInfo(UserInfoService userInfoService)
+        private readonly LocalizationService _localization;
+        private readonly string _thisExcel = "SystemBasicMgmt.SystemBasicData.UserExcel_";
+        public UserInfo(UserInfoService userInfoService, LocalizationService localization)
         {
+            _localization = localization;
             _userInfoService = userInfoService;
         }
 
@@ -117,9 +121,8 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
             return File(
                 bytes,
                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                $"UserInfo_{DateTime.Now:yyyyMMddHHmmss}.xlsx"
+                _localization.ReturnMsg($"{_thisExcel}UserInfo") + ".xlsx"
             );
         }
-
     }
 }

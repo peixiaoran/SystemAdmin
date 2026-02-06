@@ -280,7 +280,7 @@
     <comment>员工Excel导出-性别</comment>
   </data>
   <data name="UserExcel_NationalityName" xml:space="preserve">
-    <value>攻击</value>
+    <value>国籍</value>
     <comment>员工Excel导出-国籍</comment>
   </data>
   <data name="UserExcel_IsEmployedName" xml:space="preserve">
@@ -294,5 +294,21 @@
   <data name="UserExcel_IsFreezeName" xml:space="preserve">
     <value>是否冻结</value>
     <comment>员工Excel导出-是否冻结</comment>
+  </data>
+  <data name="UserExcel_UserInfo" xml:space="preserve">
+    <value>员工信息</value>
+    <comment>员工Excel导出-用户信息</comment>
+  </data>
+  <data name="UserExcel_HireDate" xml:space="preserve">
+    <value>入职日期</value>
+    <comment>员工Excel导出-入职日期</comment>
+  </data>
+  <data name="UserExcel_Email" xml:space="preserve">
+    <value>邮箱</value>
+    <comment>员工Excel导出-邮箱</comment>
+  </data>
+  <data name="UserExcel_PhoneNumber" xml:space="preserve">
+    <value>电话号码</value>
+    <comment>员工Excel导出-电话号码</comment>
   </data>
 </root>

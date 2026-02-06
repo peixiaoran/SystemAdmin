@@ -31,6 +31,11 @@
         public string PositionName { get; set; } = string.Empty;
 
         /// <summary>
+        /// 入职时间
+        /// </summary>
+        public string HireDate { get; set; } = string.Empty;
+
+        /// <summary>
         /// 性别
         /// </summary>
         public string GenderName { get; set; } = string.Empty;
@@ -39,6 +44,16 @@
         /// 国籍
         /// </summary>
         public string NationalityName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        public string Email { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 电话号码
+        /// </summary>
+        public string PhoneNumber { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否在职

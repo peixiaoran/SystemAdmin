@@ -7,65 +7,67 @@ namespace SystemAdmin.Common.Excel
     public class ExcelStyleHelper
     {
         /// <summary>
-        /// 应用标准导出样式
+        /// Excel表格导出标准样式
         /// </summary>
-        /// <param name="ws">Worksheet</param>
-        /// <param name="headers">列头名称</param>
-        /// <param name="rowCount">总行数（包含表头）</param>
-        /// <param name="enableFilter">是否启用筛选</param>
+        /// <param name="ws"></param>
+        /// <param name="headers"></param>
+        /// <param name="rowCount"></param>
+        /// <param name="enableFilter"></param>
         public static void ApplyStandardStyle(ExcelWorksheet ws, string[] headers, int rowCount, bool enableFilter = true)
         {
+            if (ws == null || headers == null || headers.Length == 0)
+                return;
+
             int colCount = headers.Length;
 
-            // 表头
+            // 1. 表头
             for (int i = 0; i < colCount; i++)
             {
                 ws.Cells[1, i + 1].Value = headers[i];
             }
 
-            using (var headerRange = ws.Cells[1, 1, 1, colCount])
-            {
-                headerRange.Style.Font.Name = "微软雅黑";
-                headerRange.Style.Font.Bold = true;
-                headerRange.Style.Font.Color.SetColor(Color.Black);
-                headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                headerRange.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-                headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                headerRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-            }
+            var headerRange = ws.Cells[1, 1, 1, colCount];
+            headerRange.Style.Font.Name = "微软雅黑";
+            headerRange.Style.Font.Bold = true;
+            headerRange.Style.Font.Color.SetColor(Color.Black);
+            headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            headerRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
+
+            headerRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
+            headerRange.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
 
             ws.Row(1).Height = 25;
 
-            // 数据区样式
+            // 2. 数据区样式
             if (rowCount > 1)
             {
-                using (var dataRange = ws.Cells[2, 1, rowCount, colCount])
-                {
-                    dataRange.Style.Font.Name = "微软雅黑";
-                    dataRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
-                    dataRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
-                    dataRange.Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    dataRange.Style.Fill.BackgroundColor.SetColor(Color.White);
-                }
+                var dataRange = ws.Cells[2, 1, rowCount, colCount];
+                dataRange.Style.Font.Name = "微软雅黑";
+                dataRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                dataRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
             }
 
-            // 边框
-            using (var borderRange = ws.Cells[1, 1, rowCount, colCount])
-            {
-                borderRange.Style.Border.Top.Style =
-                borderRange.Style.Border.Bottom.Style =
-                borderRange.Style.Border.Left.Style =
-                borderRange.Style.Border.Right.Style =
-                    ExcelBorderStyle.Thin;
-            }
+            // 3. 边框
+            var allRange = ws.Cells[1, 1, rowCount, colCount];
+            var border = allRange.Style.Border;
 
-            // 其他通用设置
-            ws.Cells[ws.Dimension.Address].AutoFitColumns();
+            border.Top.Style =
+            border.Bottom.Style =
+            border.Left.Style =
+            border.Right.Style = ExcelBorderStyle.Thin;
+
+            // 4. 视图 & 筛选
             ws.View.FreezePanes(2, 1);
 
             if (enableFilter)
             {
-                ws.Cells[1, 1, 1, colCount].AutoFilter = true;
+                headerRange.AutoFilter = true;
+            }
+
+            // 5. 列宽
+            if (ws.Dimension != null)
+            {
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
             }
         }
     }

@@ -430,9 +430,15 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                         PositionName = _lang.Locale == "zh-CN"
                                          ? userposition.PositionNameCn
                                          : userposition.PositionNameEn,
+                        HireDate = user.HireDate,
                         GenderName = _lang.Locale == "zh-CN"
                                          ? (user.Gender == 1 ? "男" : "女")
                                          : (user.Gender == 1 ? "Male" : "Female"),
+                        NationalityName = _lang.Locale == "zh-CN"
+                                            ? nation.NationNameCn
+                                            : nation.NationNameEn,
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber,
                         IsEmployedName = _lang.Locale == "zh-CN"
                                          ? (user.IsEmployed == 1 ? "在职" : "离职")
                                          : (user.IsEmployed == 1 ? "Yes" : "No"),

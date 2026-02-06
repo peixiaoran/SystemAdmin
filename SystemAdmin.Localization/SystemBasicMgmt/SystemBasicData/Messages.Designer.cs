@@ -313,11 +313,29 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
+        ///   查找类似 邮箱 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_Email {
+            get {
+                return ResourceManager.GetString("UserExcel_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 性别 的本地化字符串。
         /// </summary>
         internal static string UserExcel_GenderName {
             get {
                 return ResourceManager.GetString("UserExcel_GenderName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 入职日期 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_HireDate {
+            get {
+                return ResourceManager.GetString("UserExcel_HireDate", resourceCulture);
             }
         }
         
@@ -349,11 +367,20 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 攻击 的本地化字符串。
+        ///   查找类似 国籍 的本地化字符串。
         /// </summary>
         internal static string UserExcel_NationalityName {
             get {
                 return ResourceManager.GetString("UserExcel_NationalityName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 电话号码 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_PhoneNumber {
+            get {
+                return ResourceManager.GetString("UserExcel_PhoneNumber", resourceCulture);
             }
         }
         
@@ -363,6 +390,15 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         internal static string UserExcel_PositionName {
             get {
                 return ResourceManager.GetString("UserExcel_PositionName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 员工信息 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_UserInfo {
+            get {
+                return ResourceManager.GetString("UserExcel_UserInfo", resourceCulture);
             }
         }
         

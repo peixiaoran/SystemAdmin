@@ -423,7 +423,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 查询用户信息列表（导出Excel）
+        /// 导出员工信息Excel
         /// </summary>
         /// <param name="getUserInfoExcel"></param>
         /// <returns></returns>
@@ -433,12 +433,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             {
                 var list = await _userInfoRepository.GetUserInfoExcel(getUserInfoExcel);
 
+                // EPPlus License
                 ExcelPackage.License.SetNonCommercialPersonal("Your Name");
 
                 using var package = new ExcelPackage();
-                var ws = package.Workbook.Worksheets.Add("Users");
+                var ws = package.Workbook.Worksheets.Add(_localization.ReturnMsg($"{_thisExcel}UserInfo"));
 
-                // 列头（只关心“叫什么”）
+                // 1. 列头
                 var headers = new[]
                 {
                     _localization.ReturnMsg($"{_thisExcel}UserNo"),
@@ -446,30 +447,37 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     _localization.ReturnMsg($"{_thisExcel}UserNameEn"),
                     _localization.ReturnMsg($"{_thisExcel}DepartmentName"),
                     _localization.ReturnMsg($"{_thisExcel}PositionName"),
+                    _localization.ReturnMsg($"{_thisExcel}HireDate"),
                     _localization.ReturnMsg($"{_thisExcel}GenderName"),
-                    _localization.ReturnMsg($"{_thisExcel}IsEmployedName")
-                };
+                    _localization.ReturnMsg($"{_thisExcel}NationalityName"),
+                    _localization.ReturnMsg($"{_thisExcel}Email"),
+                    _localization.ReturnMsg($"{_thisExcel}PhoneNumber"),
+                    _localization.ReturnMsg($"{_thisExcel}IsEmployedName"),
+                    _localization.ReturnMsg($"{_thisExcel}IsApprovalName"),
+                    _localization.ReturnMsg($"{_thisExcel}IsFreezeName")
 
-                // 填充数据
-                for (int i = 0; i < list.Count; i++)
+                };
+                for (int i = 0; i < headers.Length; i++)
                 {
-                    int row = i + 2;
-                    ws.Cells[row, 1].Value = list[i].UserNo;
-                    ws.Cells[row, 2].Value = list[i].UserNameCn;
-                    ws.Cells[row, 3].Value = list[i].UserNameEn;
-                    ws.Cells[row, 4].Value = list[i].DepartmentName;
-                    ws.Cells[row, 5].Value = list[i].PositionName;
-                    ws.Cells[row, 6].Value = list[i].GenderName;
-                    ws.Cells[row, 7].Value = list[i].IsEmployedName;
+                    ws.Cells[1, i + 1].Value = headers[i];
                 }
 
-                // 应用标准样式
+                // 2. 填充数据
+                if (list != null && list.Count > 0)
+                {
+                    // 从 A2 开始填充，不生成列头
+                    ws.Cells["A2"].LoadFromCollection(list, false);
+                }
+
                 ExcelStyleHelper.ApplyStandardStyle(
                     ws,
                     headers,
-                    list.Count + 1,
+                    list?.Count + 1 ?? 1,
                     enableFilter: true
                 );
+
+                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                package.Workbook.CalcMode = ExcelCalcMode.Manual;
 
                 return package.GetAsByteArray();
             }

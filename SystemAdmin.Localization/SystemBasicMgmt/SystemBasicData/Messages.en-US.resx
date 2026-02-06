@@ -285,4 +285,16 @@
   <data name="UserExcel_IsFreezeName" xml:space="preserve">
     <value>FreezeStatus</value>
   </data>
+  <data name="UserExcel_UserInfo" xml:space="preserve">
+    <value>UserInfo</value>
+  </data>
+  <data name="UserExcel_HireDate" xml:space="preserve">
+    <value>HireDate</value>
+  </data>
+  <data name="UserExcel_Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="UserExcel_PhoneNumber" xml:space="preserve">
+    <value>PhoneNumber</value>
+  </data>
 </root>

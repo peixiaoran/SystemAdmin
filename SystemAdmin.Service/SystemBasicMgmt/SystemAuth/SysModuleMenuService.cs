@@ -32,7 +32,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return Result<List<SysModuleInfoDto>>.Failure(500, ex.Message);
             }
         }
@@ -51,7 +51,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, ex.Message);
+                _logger.LogError(ex, ex.Message);
                 return Result<List<SysMenuInfoDto>>.Failure(500, ex.Message.ToString());
             }
         }

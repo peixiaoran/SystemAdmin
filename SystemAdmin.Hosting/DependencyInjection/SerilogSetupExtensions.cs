@@ -38,14 +38,10 @@ namespace SystemAdmin.Hosting.DependencyInjection
                     .WriteTo.Logger(lc => lc
                         .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Error)
                         .WriteTo.File(Path.Combine(logRoot, "error.log"))
-                    )
-
-                    // Critical / Fatal
-                    .WriteTo.Logger(lc => lc
-                        .Filter.ByIncludingOnly(e => e.Level == LogEventLevel.Fatal)
-                        .WriteTo.File(Path.Combine(logRoot, "fatal.log"))
                     );
+
             });
+
             return host;
         }
     }

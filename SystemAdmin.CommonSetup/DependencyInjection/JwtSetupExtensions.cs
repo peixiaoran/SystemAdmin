@@ -84,8 +84,8 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
                 })
                 .AddJwtBearer(options =>
                 {
-                    // 生产环境建议 true；本地开发 HTTP 可以先关掉
-                    options.RequireHttpsMetadata = false;
+                    options.Audience = settings.Audience;
+                    options.RequireHttpsMetadata = true;
                     options.SaveToken = false;
 
                     options.TokenValidationParameters = new TokenValidationParameters
