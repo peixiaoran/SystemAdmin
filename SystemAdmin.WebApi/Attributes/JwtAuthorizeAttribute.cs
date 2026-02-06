@@ -9,7 +9,7 @@ public class JwtAuthorizeAttribute : Attribute, IAsyncAuthorizationFilter
 
         if (user?.Identity?.IsAuthenticated != true)
         {
-            context.Result = new JsonResult(Result<bool>.Failure(401, "Unauthorized: Invalid or expired token."))
+            context.Result = new JsonResult(Result<bool>.Failure(401, "Unauthorized: Invalid or expired token"))
             {
                 StatusCode = StatusCodes.Status401Unauthorized
             };

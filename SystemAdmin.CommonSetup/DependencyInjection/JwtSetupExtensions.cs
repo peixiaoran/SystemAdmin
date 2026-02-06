@@ -23,17 +23,8 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
             configuration.GetSection("JwtSettings").Bind(settings);
 
             // 修正 JSON 里的 \n
-            settings.PublicKey = (settings.PublicKey ?? string.Empty)
-                .Trim();
-
-            settings.PrivateKey = (settings.PrivateKey ?? string.Empty)
-                .Trim();
-
-            if (string.IsNullOrEmpty(settings.PrivateKey))
-                throw new InvalidOperationException("JwtSettings.PrivateKey 不能为空。");
-
-            if (string.IsNullOrEmpty(settings.PublicKey))
-                throw new InvalidOperationException("JwtSettings.PublicKey 不能为空。");
+            settings.PublicKey = (settings.PublicKey ?? string.Empty).Trim();
+            settings.PrivateKey = (settings.PrivateKey ?? string.Empty).Trim();
 
             // 2. 把“修正后的 settings”写回 Options，供 JwtTokenService / 其它地方使用
             services.Configure<JwtSettings>(_ =>

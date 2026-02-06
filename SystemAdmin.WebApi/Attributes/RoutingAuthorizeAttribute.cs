@@ -22,21 +22,21 @@ namespace SystemAdmin.WebApi.Attributes
             var userId = loginuser.UserId;
             if (userId == 0)
             {
-                SetErrorResponse(context, Result<bool>.Failure(401, "Unauthorized: Invalid or expired token."));
+                SetErrorResponse(context, Result<bool>.Failure(401, "Unauthorized: Invalid or expired token"));
                 return;
             }
 
             var resourceKey = BuildResourceKey(context);
             if (string.IsNullOrEmpty(resourceKey))
             {
-                SetErrorResponse(context, Result<bool>.Failure(400, "Invalid routing path."));
+                SetErrorResponse(context, Result<bool>.Failure(400, "Invalid routing path"));
                 return;
             }
 
             var ok = await acl.HasPermission(userId, resourceKey);
             if (!ok)
             {
-                SetErrorResponse(context, Result<bool>.Failure(403, "No permission to access this resource."));
+                SetErrorResponse(context, Result<bool>.Failure(403, "No permission to access this resource"));
                 return;
             }
         }

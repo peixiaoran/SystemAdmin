@@ -51,6 +51,7 @@ builder.Services.AddServiceAndRepository();
 // 注入 AddHybridCache缓存服务
 builder.Services.AddCache();
 
+// 配置 Kestrel
 builder.WebHost.ConfigureKestrel((context, options) =>
 {
     context.Configuration.GetSection("Kestrel").Bind(options);
@@ -58,12 +59,9 @@ builder.WebHost.ConfigureKestrel((context, options) =>
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
-{
-    app.MapScalarApiReference("/systemadmin");
-    app.MapOpenApi();
-    app.UseHttpsRedirection();
-}
+app.MapScalarApiReference("/systemadmin");
+app.MapOpenApi();
+app.UseHttpsRedirection();
 
 app.UseRouting();
 app.UseCorsSetup(builder.Configuration);
