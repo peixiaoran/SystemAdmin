@@ -14,16 +14,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly CurrentUser _loginuser;
         private readonly ILogger<DepartmentInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly DepartmentInfoRepository _departmentInfoRepository;
+        private readonly DepartmentInfoRepository _deptInfoRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.DeptInfo";
 
-        public DepartmentInfoService(CurrentUser loginuser, ILogger<DepartmentInfoService> logger, SqlSugarScope db, DepartmentInfoRepository departmentInfoRepository, LocalizationService localization)
+        public DepartmentInfoService(CurrentUser loginuser, ILogger<DepartmentInfoService> logger, SqlSugarScope db, DepartmentInfoRepository deptInfoRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _departmentInfoRepository = departmentInfoRepository;
+            _deptInfoRepository = deptInfoRepository;
             _localization = localization;
         }
 
@@ -37,28 +37,36 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                DepartmentInfoEntity insertDept = new DepartmentInfoEntity()
+                bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(deptUpsert.DepartmentCode);
+                if (codeExist)
                 {
-                    DepartmentId = SnowFlakeSingle.Instance.NextId(),
-                    DepartmentCode = deptUpsert.DepartmentCode,
-                    DepartmentNameCn = deptUpsert.DepartmentNameCn,
-                    DepartmentNameEn = deptUpsert.DepartmentNameEn,
-                    ParentId = long.Parse(deptUpsert.ParentId),
-                    DepartmentLevelId = long.Parse(deptUpsert.DepartmentLevelId),
-                    SortOrder = deptUpsert.SortOrder,
-                    Landline = deptUpsert.Landline,
-                    Email = deptUpsert.Email,
-                    Address = deptUpsert.Address,
-                    Description = deptUpsert.Description,
-                    CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                };
-                int insertDeptCount = await _departmentInfoRepository.InsertDepartmentInfo(insertDept);
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeptCodeExist"));
+                }
+                else
+                {
+                    DepartmentInfoEntity insertDept = new DepartmentInfoEntity()
+                    {
+                        DepartmentId = SnowFlakeSingle.Instance.NextId(),
+                        DepartmentCode = deptUpsert.DepartmentCode,
+                        DepartmentNameCn = deptUpsert.DepartmentNameCn,
+                        DepartmentNameEn = deptUpsert.DepartmentNameEn,
+                        ParentId = long.Parse(deptUpsert.ParentId),
+                        DepartmentLevelId = long.Parse(deptUpsert.DepartmentLevelId),
+                        SortOrder = deptUpsert.SortOrder,
+                        Landline = deptUpsert.Landline,
+                        Email = deptUpsert.Email,
+                        Address = deptUpsert.Address,
+                        Description = deptUpsert.Description,
+                        CreatedBy = _loginuser.UserId,
+                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    };
+                    int insertDeptCount = await _deptInfoRepository.InsertDepartmentInfo(insertDept);
+                    await _db.CommitTranAsync();
 
-                await _db.CommitTranAsync();
-                return insertDeptCount >= 1
-                        ? Result<int>.Ok(insertDeptCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                    return insertDeptCount >= 1
+                            ? Result<int>.Ok(insertDeptCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                }
             }
             catch (Exception ex)
             {
@@ -104,8 +112,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private async Task<int> DeleteDepartmentWithChildrenAsync(long departmentId)
         {
             // 获取所有人员和部门信息
-            var userList = await _departmentInfoRepository.GetUserInfoList();
-            var deptList = await _departmentInfoRepository.GetDepartmentInfoList();
+            var userList = await _deptInfoRepository.GetUserInfoList();
+            var deptList = await _deptInfoRepository.GetDepartmentInfoList();
 
             // 构建部门树字典，Parent -> List<Dept>
             var deptChildrenMap = deptList
@@ -143,7 +151,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
 
                 // 删除当前部门
-                deleteCount += await _departmentInfoRepository.DeleteDepartmentInfo(deptId);
+                deleteCount += await _deptInfoRepository.DeleteDepartmentInfo(deptId);
                 return deleteCount;
             }
 
@@ -167,28 +175,36 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                DepartmentInfoEntity updateDept = new DepartmentInfoEntity()
+                bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(deptUpsert.DepartmentCode);
+                if (codeExist)
                 {
-                    DepartmentId = long.Parse(deptUpsert.DepartmentId),
-                    DepartmentCode = deptUpsert.DepartmentCode,
-                    DepartmentNameCn = deptUpsert.DepartmentNameCn,
-                    DepartmentNameEn = deptUpsert.DepartmentNameEn,
-                    ParentId = long.Parse(deptUpsert.ParentId),
-                    DepartmentLevelId = long.Parse(deptUpsert.DepartmentLevelId),
-                    SortOrder = deptUpsert.SortOrder,
-                    Landline = deptUpsert.Landline,
-                    Email = deptUpsert.Email,
-                    Address = deptUpsert.Address,
-                    Description = deptUpsert.Description,
-                    ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                };
-                int updateDeptCount = await _departmentInfoRepository.UpdateDepartmentInfo(updateDept);
-                await _db.CommitTranAsync();
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeptCodeExist"));
+                }
+                else
+                {
+                    DepartmentInfoEntity updateDept = new DepartmentInfoEntity()
+                    {
+                        DepartmentId = long.Parse(deptUpsert.DepartmentId),
+                        DepartmentCode = deptUpsert.DepartmentCode,
+                        DepartmentNameCn = deptUpsert.DepartmentNameCn,
+                        DepartmentNameEn = deptUpsert.DepartmentNameEn,
+                        ParentId = long.Parse(deptUpsert.ParentId),
+                        DepartmentLevelId = long.Parse(deptUpsert.DepartmentLevelId),
+                        SortOrder = deptUpsert.SortOrder,
+                        Landline = deptUpsert.Landline,
+                        Email = deptUpsert.Email,
+                        Address = deptUpsert.Address,
+                        Description = deptUpsert.Description,
+                        ModifiedBy = _loginuser.UserId,
+                        ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    };
+                    int updateDeptCount = await _deptInfoRepository.UpdateDepartmentInfo(updateDept);
+                    await _db.CommitTranAsync();
 
-                return updateDeptCount >= 1
-                        ? Result<int>.Ok(updateDeptCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                    return updateDeptCount >= 1
+                            ? Result<int>.Ok(updateDeptCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                }
             }
             catch (Exception ex)
             {
@@ -207,7 +223,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var deptEntity = await _departmentInfoRepository.GetDepartmentInfoEntity(long.Parse(getDeptEntity.DepartmentId));
+                var deptEntity = await _deptInfoRepository.GetDepartmentInfoEntity(long.Parse(getDeptEntity.DepartmentId));
                 return Result<DepartmentInfoDto>.Ok(deptEntity, "");
             }
             catch (Exception ex)
@@ -226,7 +242,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var deptTree = await _departmentInfoRepository.GetDepartmentInfoTree(getDeptTree);
+                var deptTree = await _deptInfoRepository.GetDepartmentInfoTree(getDeptTree);
                 return Result<List<DepartmentInfoDto>>.Ok(deptTree, "");
             }
             catch (Exception ex)
@@ -244,7 +260,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var deptDrop = await _departmentInfoRepository.GetDepartmentDropDown();
+                var deptDrop = await _deptInfoRepository.GetDepartmentDropDown();
                 return Result<List<DepartmentDropDto>>.Ok(deptDrop, "");
             }
             catch (Exception ex)
@@ -262,7 +278,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var deptLevelDrop = await _departmentInfoRepository.GetDepartmentLevelDropDown();
+                var deptLevelDrop = await _deptInfoRepository.GetDepartmentLevelDropDown();
                 return Result<List<DepartmentLevelDropDto>>.Ok(deptLevelDrop, "");
             }
             catch (Exception ex)

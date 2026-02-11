@@ -62,7 +62,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             }
 
             // 排序
-            query = query.OrderBy((user, userpart, dept, userpos, p_userdept, p_userpos) => new { UserPositionOrder = userpos.PositionOrderBy, user.HireDate, PartTimePositionOrder = p_userpos.PositionOrderBy });
+            query = query.OrderBy((user, userpart, dept, userpos, p_userdept, p_userpos) => new { UserPositionOrder = userpos.SortOrder, user.HireDate, PartTimePositionOrder = p_userpos.SortOrder });
 
             var userPartTimePage = await query
             .Select((user, userpart, dept, userpos, p_userdept, p_userpos) => new UserPartTimeDto
@@ -139,7 +139,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             }
 
             // 排序
-            query = query.OrderBy((user, dept, userpos, nation, userlabor) => new { userpos.PositionOrderBy, user.HireDate });
+            query = query.OrderBy((user, dept, userpos, nation, userlabor) => new { userpos.SortOrder, user.HireDate });
 
             var userPartTimeViewPage = await query
             .Select((user, dept, userpos, nation, userlabor) => new UserPartTimeViewDto

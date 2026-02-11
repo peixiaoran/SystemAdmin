@@ -61,7 +61,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             }
 
             //排序
-            query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.PositionOrderBy, user.HireDate });
+            query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
 
             var userPage = await query
             .Select((user, dept, userpos, userlabor, nation) => new UserAgentDto

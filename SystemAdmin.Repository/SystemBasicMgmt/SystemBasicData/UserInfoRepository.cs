@@ -237,7 +237,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             }
 
             // 排序
-            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.PositionOrderBy, user.HireDate });
+            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.SortOrder, user.HireDate });
 
             var userPage = await query.Select((user, userrole, deptinfo, userposition, nation) =>
                     new UserInfoPageDto
@@ -416,7 +416,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             }
 
             // 排序
-            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.PositionOrderBy, user.HireDate });
+            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.SortOrder, user.HireDate });
 
             return await query.Select((user, userrole, deptinfo, userposition, nation) =>
                     new UserInfoExcelDto

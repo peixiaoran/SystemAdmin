@@ -297,4 +297,7 @@
   <data name="UserExcel_PhoneNumber" xml:space="preserve">
     <value>电话号码</value>
   </data>
+  <data name="DeptInfoDeptCodeExist" xml:space="preserve">
+    <value>部门代码已存在，请重新输入</value>
+  </data>
 </root>

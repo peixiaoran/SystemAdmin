@@ -31,7 +31,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         /// <summary>
         /// 职级排序
         /// </summary>
-        public int PositionOrderBy { get; set; }
+        public int SortOrder { get; set; }
 
         /// <summary>
         /// 职级描述

@@ -88,6 +88,15 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
+        ///   查找类似 部门代码已存在，请重新输入 的本地化字符串。
+        /// </summary>
+        internal static string DeptInfoDeptCodeExist {
+            get {
+                return ResourceManager.GetString("DeptInfoDeptCodeExist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 部门信息新增失败 的本地化字符串。
         /// </summary>
         internal static string DeptInfoInsertFailed {

@@ -297,4 +297,7 @@
   <data name="UserExcel_PhoneNumber" xml:space="preserve">
     <value>PhoneNumber</value>
   </data>
+  <data name="DeptInfoDeptCodeExist" xml:space="preserve">
+    <value>Department code already exists, please re-enter</value>
+  </data>
 </root>

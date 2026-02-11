@@ -27,7 +27,7 @@ namespace SystemAdmin.Hosting.DependencyInjection
                     BearerFormat = "JWT",
                     In = ParameterLocation.Header,
                     Name = "Authorization",
-                    Description = "JWT Authorization header using the Bearer scheme."
+                    Description = "JWT Authorization header using the Bearer scheme"
                 };
 
                 // 注册到 Components

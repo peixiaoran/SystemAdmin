@@ -269,58 +269,137 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
 
             var approveUsers = new List<StepApproveUser>();
 
+            var parentDeptTreeList = await _db.Queryable<DepartmentInfoEntity>()
+                                           .With(SqlWith.NoLock)
+                                           .ToParentListAsync(dept => dept.ParentId, appDeptId);
             // 查询符合级别的部门
-            var deptIdList = (await _db.Queryable<DepartmentInfoEntity>()
-                    .With(SqlWith.NoLock)
-                    .ToParentListAsync(dept => dept.ParentId, appDeptId))
-                    .Where(dept => deptLevelIdSet.Contains(dept.DepartmentLevelId))
+            var conformDeptIdList = parentDeptTreeList
+                .Where(dept => deptLevelIdSet.Contains(dept.DepartmentLevelId))
+                .Select(dept => dept.DepartmentId)
+                .ToList();
+
+            if (conformDeptIdList.Count > 0)
+            {
+                var userInfo = _db.Queryable<UserInfoEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(user => conformDeptIdList.Contains(user.DepartmentId) && positionIdSet.Contains(user.PositionId) && user.IsApproval == 1 && user.PositionId != appPositionId)
+                                  .Select(user => new UserInfoEntity()
+                                  {
+                                      UserId = user.UserId,
+                                      UserNameCn = user.UserNameCn,
+                                      UserNameEn = user.UserNameEn,
+                                  });
+
+                if (approveMode == ApproveMode.Ss.ToEnumString())
+                {
+                    approveUsers = await userInfo
+                        .OrderBy(user => user.HireDate)
+                        .Select(user => new StepApproveUser
+                        {
+                            UserId = user.UserId,
+                            UserName = _lang.Locale == "zh-CN"
+                                       ? user.UserNameCn
+                                       : user.UserNameEn
+                        }).Take(1).ToListAsync();
+                }
+                else if (approveMode == ApproveMode.Cs.ToEnumString())
+                {
+                    approveUsers = await userInfo
+                        .Select(user => new StepApproveUser
+                        {
+                            UserId = user.UserId,
+                            UserName = user.UserNameCn
+                        }).ToListAsync();
+                }
+
+                // 如果没有符合条件的审批人，添加无审批人记录
+                if (!approveUsers.Any())
+                {
+                    approveUsers.Add(new StepApproveUser
+                    {
+                        UserId = -1,
+                        UserName = _localization.ReturnMsg($"{_this}NotApproveUser")
+                    });
+                }
+            }
+            else
+            {
+                var parentDeptIdSet = parentDeptTreeList
                     .Select(dept => dept.DepartmentId)
                     .ToList();
 
-            // 查询审批人
-            var userQuery = _db.Queryable<UserInfoEntity>()
-                               .With(SqlWith.NoLock)
-                               .Where(user => deptIdList.Contains(user.DepartmentId) && positionIdSet.Contains(user.PositionId) && user.IsApproval == 1 && user.PositionId != appPositionId)
-                               .Select(user=> new UserInfoEntity()
-                               {
-                                   UserId = user.UserId,
-                                   UserNameCn = user.UserNameCn,
-                                   UserNameEn = user.UserNameEn,
-                               });
+                var deptMaxOrder = await _db.Queryable<DepartmentInfoEntity>()
+                                            .With(SqlWith.NoLock)
+                                            .MaxAsync(position => position.SortOrder);
 
-            if (approveMode == ApproveMode.Ss.ToEnumString())
-            {
-                approveUsers = await userQuery
-                    .OrderBy(user => user.HireDate)
-                    .Select(user => new StepApproveUser
-                    {
-                        UserId = user.UserId,
-                        UserName = _lang.Locale == "zh-CN"
-                                   ? user.UserNameCn
-                                   : user.UserNameEn
+                var posMaxOrder = await _db.Queryable<UserPositionEntity>()
+                                           .With(SqlWith.NoLock)
+                                           .MaxAsync(position => position.SortOrder);
 
-                    }).Take(1).ToListAsync();
-            }
-            else if (approveMode == ApproveMode.Cs.ToEnumString())
-            {
-                approveUsers = await userQuery
-                    .Select(user => new StepApproveUser
-                    {
-                        UserId = user.UserId,
-                        UserName = user.UserNameCn
-                    }).ToListAsync();
-            }
+                var stepDeptMaxOrder = await _db.Queryable<DepartmentInfoEntity>()
+                                                .With(SqlWith.NoLock)
+                                                .Where(dept => deptLevelIdSet.Contains(dept.DepartmentId))
+                                                .MaxAsync(position => position.SortOrder) + 1;
 
-            // 如果没有符合条件的审批人，添加无审批人记录
-            if (!approveUsers.Any())
-            {
-                approveUsers.Add(new StepApproveUser
+                var stepPosMaxOrder = await _db.Queryable<UserPositionEntity>()
+                                               .With(SqlWith.NoLock)
+                                               .Where(position => positionIdSet.Contains(position.PositionId))
+                                               .MaxAsync(position => position.SortOrder);
+
+                List<StepApproveUser> heightLevelApproveUser = new List<StepApproveUser>();
+                for (long itemDeptOrder = stepDeptMaxOrder; itemDeptOrder > 0 && itemDeptOrder <= deptMaxOrder;)
                 {
-                    UserId = -1,
-                    UserName = _localization.ReturnMsg($"{_this}NotApproveUser")
-                });
+                    for (int itemPosOrder = stepPosMaxOrder; itemPosOrder > 0 && stepPosMaxOrder <= stepDeptMaxOrder;)
+                    {
+                        var highLevelUserInfo = await _db.Queryable<UserInfoEntity>()
+                                                         .With(SqlWith.NoLock)
+                                                         .LeftJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId)
+                                                         .LeftJoin<DepartmentInfoEntity>((user, position, dept) => user.DepartmentId == dept.DepartmentId)
+                                                         .LeftJoin<DepartmentLevelEntity>((user, position, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                                                         .Where((user, position, dept, deptlevel) => parentDeptIdSet.Contains(dept.DepartmentId) && position.SortOrder == itemPosOrder && deptlevel.SortOrder == itemDeptOrder)
+                                                         .Select((user, position, dept, deptlevel) => user)
+                                                         .ToListAsync();
+                        if (highLevelUserInfo.Count > 0)
+                        {
+                            if (approveMode == ApproveMode.Ss.ToEnumString())
+                            {
+                                heightLevelApproveUser = highLevelUserInfo
+                                    .OrderBy(user => user.HireDate)
+                                    .Select(user => new StepApproveUser
+                                    {
+                                        UserId = user.UserId,
+                                        UserName = _lang.Locale == "zh-CN"
+                                                   ? user.UserNameCn
+                                                   : user.UserNameEn
+                                    }).Take(1).ToList();
+                            }
+                            else if (approveMode == ApproveMode.Cs.ToEnumString())
+                            {
+                                heightLevelApproveUser = highLevelUserInfo
+                                    .Select(user => new StepApproveUser
+                                    {
+                                        UserId = user.UserId,
+                                        UserName = user.UserNameCn
+                                    }).ToList();
+                            }
+                            itemDeptOrder = -1;
+                            itemPosOrder = -1;
+                        }
+                        else
+                        {
+                            itemPosOrder++;
+                        }
+                    }
+                    if (heightLevelApproveUser.Count > 0)
+                    {
+                        itemDeptOrder = -1;
+                    }
+                    else
+                    {
+                        itemDeptOrder++;
+                    }
+                }
             }
-
             return approveUsers;
         }
     }

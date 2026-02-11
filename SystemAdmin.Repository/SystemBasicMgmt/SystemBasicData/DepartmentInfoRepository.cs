@@ -215,5 +215,18 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                       : deptlevel.DepartmentLevelNameEn
                             }).ToListAsync();
         }
+
+        /// <summary>
+        /// 查询部门编码是否存在
+        /// </summary>
+        /// <param name="deptCode"></param>
+        /// <returns></returns>
+        public async Task<bool> GetDepartCodeIsExist(string deptCode)
+        {
+            var query = _db.Queryable<DepartmentInfoEntity>()
+                           .With(SqlWith.NoLock)
+                           .Where(dept => dept.DepartmentCode == deptCode);
+            return await query.AnyAsync();
+        }
     }
 }

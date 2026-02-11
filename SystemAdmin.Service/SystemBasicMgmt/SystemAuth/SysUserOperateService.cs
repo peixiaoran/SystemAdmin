@@ -383,7 +383,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         /// </summary>
         /// <param name="pwdExpirationUpsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> PwdExpirationUpdate(PwdExpiration pwdExpirationUpsert)
+        public async Task<Result<int>> UserPwdExpiration(PwdExpiration pwdExpirationUpsert)
         {
             try
             {

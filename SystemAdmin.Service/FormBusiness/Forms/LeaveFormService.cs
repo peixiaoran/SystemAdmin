@@ -24,7 +24,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly StepBeforeStartHandler _stepBeforeStart;
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "FormBusiness.Forms.LeaveForm";
+        //private readonly string _this = "FormBusiness.Forms.LeaveForm";
         private readonly string _publicthis = "FormBusiness.Forms.";
 
         public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formAuthRepository, StepBeforeStartHandler stepBeforeStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)

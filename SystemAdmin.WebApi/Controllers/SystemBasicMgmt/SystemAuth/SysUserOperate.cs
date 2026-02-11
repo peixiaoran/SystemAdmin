@@ -58,9 +58,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         [Tags("系统基础管理-系统接口")]
         [EndpointSummary("[系统接口] 密码过期（重置密码）")]
         [AllowAnonymous]
-        public async Task<Result<int>> PwdExpirationUpdate([FromBody] PwdExpiration pwdExpirationUpsert)
+        public async Task<Result<int>> UserPwdExpiration([FromBody] PwdExpiration pwdExpirationUpsert)
         {
-            return await _sysUserOperateService.PwdExpirationUpdate(pwdExpirationUpsert);
+            return await _sysUserOperateService.UserPwdExpiration(pwdExpirationUpsert);
         }
 
         [HttpPost]

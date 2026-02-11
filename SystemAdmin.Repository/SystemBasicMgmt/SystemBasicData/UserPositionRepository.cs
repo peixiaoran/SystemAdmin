@@ -36,7 +36,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         {
             var userPositionList = await _db.Queryable<UserPositionEntity>()
                                             .With(SqlWith.NoLock)
-                                            .OrderBy(userpos => userpos.PositionOrderBy)
+                                            .OrderBy(userpos => userpos.SortOrder)
                                             .Select((userpos) => new UserPositionDto
                                             {
                                                 PositionId = userpos.PositionId,
