@@ -53,7 +53,7 @@ namespace SystemAdmin.Hosting.DependencyInjection
             {
                 Name = "Accept-Language",
                 In = ParameterLocation.Header,
-                Description = "语言偏好设置：zh-CN（简体中文）、en-US（英文）",
+                Description = "语言设置：zh-CN（简体中文）、en-US（英文）",
                 Required = false,
                 Schema = new OpenApiSchema
                 {
