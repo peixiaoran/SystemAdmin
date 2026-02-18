@@ -1,11 +1,8 @@
-﻿using Dm;
-using Konscious.Security.Cryptography;
+﻿using Konscious.Security.Cryptography;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
-using OfficeOpenXml.Style;
 using SqlSugar;
-using System.Drawing;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -42,7 +39,51 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 上传员工头像
+        /// 上传员工头像（新增员工）
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public async Task<Result<string>> UploadAvatar(IFormFile file)
+        {
+            try
+            {
+                // 1. 判空
+                if (file == null || file.Length == 0)
+                {
+                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarFileNotNull"));
+                }
+
+                // 2. 限制最大 2MB
+                const long maxSize = 2 * 1024 * 1024;
+                if (file.Length > maxSize)
+                {
+                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarFileTooLarge", "2MB"));
+                }
+
+                // 3. 限制图片格式
+                var allowed = new[] { ".png", ".jpg", ".jpeg" };
+                var ext = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+
+                if (!allowed.Contains(ext))
+                {
+                    return Result<string>.Failure(400, _localization.ReturnMsg($"{_this}AvatarInvalidImageFormat"));
+                }
+
+                // 4. 上传到 MinIO
+                var avatarUrl = await _minioService.UploadAsync(file.FileName, file.OpenReadStream(), file.ContentType);
+
+                // 5. 返回
+                return Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Avatar upload failed: {Message}", ex.Message);
+                return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
+            }
+        }
+
+        /// <summary>
+        /// 上传员工头像（修改）
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
@@ -64,7 +105,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
 
                 // 3. 限制图片格式
-                var allowed = new[] { ".png", ".jpg", ".jpeg"};
+                var allowed = new[] { ".png", ".jpg", ".jpeg" };
                 var ext = Path.GetExtension(file.FileName)?.ToLowerInvariant();
 
                 if (!allowed.Contains(ext))

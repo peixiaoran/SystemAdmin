@@ -20,14 +20,8 @@ namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle
         public string StepName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 员工Id
+        /// 审批步骤签核人员列表
         /// </summary>
-        [JsonConverter(typeof(LongToStringConverter))]
-        public long ApproveUserId { get; set; }
-
-        /// <summary>
-        /// 员工姓名
-        /// </summary>
-        public string ApproveUserName { get; set; } = string.Empty;
+        public List<StepApproveUser> stepApproveUsers { get; set; } = new List<StepApproveUser>();
     }
 }

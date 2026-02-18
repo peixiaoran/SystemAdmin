@@ -228,5 +228,19 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                            .Where(dept => dept.DepartmentCode == deptCode);
             return await query.AnyAsync();
         }
+
+        /// <summary>
+        /// 查询部门编码是否存在（修改）
+        /// </summary>
+        /// <param name="deptId"></param>
+        /// <param name="newDeptCode"></param>
+        /// <returns></returns>
+        public async Task<bool> GetDepartCodeIsExist(long deptId, string newDeptCode)
+        {
+            var query = _db.Queryable<DepartmentInfoEntity>()
+                           .With(SqlWith.NoLock)
+                           .Where(dept => dept.DepartmentId != deptId && dept.DepartmentCode == newDeptCode);
+            return await query.AnyAsync();
+        }
     }
 }

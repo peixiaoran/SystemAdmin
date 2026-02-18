@@ -175,7 +175,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(deptUpsert.DepartmentCode);
+                bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(long.Parse(deptUpsert.DepartmentId), deptUpsert.DepartmentCode);
                 if (codeExist)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeptCodeExist"));
