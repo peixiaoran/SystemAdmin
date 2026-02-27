@@ -194,7 +194,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     {
                         WorkflowApproveUser workflowApproveItem = new WorkflowApproveUser();
 
-                        List <StepApproveUser> stepApproveUsers = new List<StepApproveUser>();
+                        List<StepApproveUser> stepApproveUsers = new List<StepApproveUser>();
                         stepApproveUsers.Add(new StepApproveUser
                         {
                             UserId = appUserInfo.UserId,
@@ -214,12 +214,17 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     }
                     else
                     {
+                        // 申请人所有的上级部门
+                        var parentDeptTreeList = await _db.Queryable<DepartmentInfoEntity>()
+                                                          .With(SqlWith.NoLock)
+                                                          .ToParentListAsync(dept => dept.ParentId, appUserInfo.DepartmentId);
+
                         var stepOrg = await _db.Queryable<WorkflowStepOrgEntity>()
                                                .With(SqlWith.NoLock)
                                                .Where(org => org.StepId == nowStep.StepId)
                                                .FirstAsync();
 
-                        var orgApproveUser = await GetStepApproveUserByOrg(appUserInfo.UserId, appUserInfo.DepartmentId, appUserInfo.PositionId, nowStep.ApproveMode, stepOrg.DeptLeaveIds, stepOrg.PositionIds);
+                        var orgApproveUser = await GetStepApproveUserByOrg(appUserInfo.UserId, appUserInfo.DepartmentId, appUserInfo.PositionId, nowStep.ApproveMode, parentDeptTreeList, stepOrg.DeptLeaveIds, stepOrg.PositionIds);
 
                         WorkflowApproveUser workflowApproveItem = new WorkflowApproveUser();
                         workflowApproveItem.StepId = nowStep.StepId;
@@ -261,7 +266,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         /// <param name="deptLevelIds"></param>
         /// <param name="userPositionIds"></param>
         /// <returns></returns>
-        public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(long appUserId, long appDeptId, long appPositionId, string approveMode, string deptLevelIds, string userPositionIds)
+        public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(long appUserId, long appDeptId, long appPositionId, string approveMode, List<DepartmentInfoEntity> parentDeptList, string deptLevelIds, string userPositionIds)
         {
             var deptLevelIdSet = deptLevelIds
                 .Split(',', StringSplitOptions.RemoveEmptyEntries)
@@ -275,171 +280,70 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
 
             var finalApprovers = new List<StepApproveUser>();
 
-            var parentDeptTreeList = await _db.Queryable<DepartmentInfoEntity>()
-                                              .With(SqlWith.NoLock)
-                                              .ToParentListAsync(dept => dept.ParentId, appDeptId);
-            // 查询符合级别的部门
-            var conformDeptIdList = parentDeptTreeList
+            // 申请人所有上级部门Ids
+            var parentDeptIdsList = parentDeptList.Select(dept => dept.DepartmentId).ToList();
+
+            // 查询此步骤符合级别的部门
+            var stepParentDeptIdsList = parentDeptList
                 .Where(dept => deptLevelIdSet.Contains(dept.DepartmentLevelId))
                 .Select(dept => dept.DepartmentId)
                 .ToList();
 
-            // 查询签核类型（实、兼、代、临时代）
+            // 查询签核类型（实、兼、代、自动升级）
             var appointmentType = _db.Queryable<DictionaryInfoEntity>()
                                      .With(SqlWith.NoLock)
                                      .Where(appointment => appointment.DicType == "AppointmentType")
                                      .ToList();
 
-            // 查询符合条件的审批人（同部门符合条件的审批人，如果没有则查询本部门以上符合条件的审批人）
-            if (conformDeptIdList.Count > 0)
+            var approveUsers = _db.Queryable<UserInfoEntity>()
+                                  .InnerJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId)
+                                  .With(SqlWith.NoLock)
+                                  .Where((user, position) => stepParentDeptIdsList.Contains(user.DepartmentId) && positionIdSet.Contains(user.PositionId) && user.IsApproval == 1 && user.PositionId != appPositionId)
+                                  .OrderBy((user, position) => position.SortOrder)
+                                  .Select((user, position) => user).ToList();
+
+            // 查询实职的审批人，如果没有则自动升级找符合条件的审批人
+            if (approveUsers.Count > 0)
             {
-                var approveUsers = _db.Queryable<UserInfoEntity>()
-                                      .LeftJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId)
-                                      .With(SqlWith.NoLock)
-                                      .Where((user, position) => conformDeptIdList.Contains(user.DepartmentId) && positionIdSet.Contains(user.PositionId) && user.IsApproval == 1 && user.PositionId != appPositionId)
-                                      .OrderBy((user, position) => position.SortOrder)
-                                      .Select((user, position) => user).ToList();
-                if (approveUsers.Count > 0)
-                {
-                    // 自动升级签核字典
-                    var appTypeIncumbent = appointmentType.Where(app => app.DicCode == "Incumbent").First();
+                var appTypeIncumbent = appointmentType.Where(app => app.DicCode == "Incumbent").First();
 
-                    if (approveMode == ApproveMode.Ss.ToEnumString())
-                    {
-                        finalApprovers = approveUsers
-                                         .Select(user => new StepApproveUser
-                                         {
-                                             UserId = user.UserId,
-                                             UserName = _lang.Locale == "zh-CN"
-                                                        ? user.UserNameCn
-                                                        : user.UserNameEn,
-                                             AppointmentType = appTypeIncumbent.DicCode,
-                                             AppointmentTypeName = _lang.Locale == "zh-CN"
-                                                                    ? appTypeIncumbent.DicNameCn
-                                                                    : appTypeIncumbent.DicNameEn
-                                         }).Take(1).ToList();
-                    }
-                    else if (approveMode == ApproveMode.Cs.ToEnumString())
-                    {
-                        finalApprovers = approveUsers
-                                         .Select(user => new StepApproveUser
-                                         {
-                                             UserId = user.UserId,
-                                             UserName = user.UserNameCn,
-                                             AppointmentType = appTypeIncumbent.DicCode,
-                                             AppointmentTypeName = _lang.Locale == "zh-CN"
-                                                                    ? appTypeIncumbent.DicNameCn
-                                                                    : appTypeIncumbent.DicNameEn
-                                         }).ToList();
-                    }
+                if (approveMode == ApproveMode.Ss.ToEnumString())
+                {
+                    finalApprovers = approveUsers
+                                     .Select(user => new StepApproveUser
+                                     {
+                                         UserId = user.UserId,
+                                         UserName = _lang.Locale == "zh-CN"
+                                                    ? user.UserNameCn
+                                                    : user.UserNameEn,
+                                         AppointmentType = appTypeIncumbent.DicCode,
+                                         AppointmentTypeName = _lang.Locale == "zh-CN"
+                                                                ? appTypeIncumbent.DicNameCn
+                                                                : appTypeIncumbent.DicNameEn
+                                     }).Take(1).ToList();
                 }
-                // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人
-                else
+                else if (approveMode == ApproveMode.Cs.ToEnumString())
                 {
-                    // 自动升级签核字典
-                    var appTypeEscalation = appointmentType.Where(app => app.DicCode == "Escalation").First();
-
-                    // 查询申请人所有的父级部门Id
-                    var parentDeptIdSet = parentDeptTreeList
-                                          .Select(dept => dept.DepartmentId)
-                                          .ToList();
-
-                    var deptLevelMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
-                                                     .With(SqlWith.NoLock)
-                                                     .MaxAsync(deptlevel => deptlevel.SortOrder);
-
-                    var posMaxOrder = await _db.Queryable<UserPositionEntity>()
-                                               .With(SqlWith.NoLock)
-                                               .MaxAsync(position => position.SortOrder);
-
-                    var stepDeptMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
-                                                    .With(SqlWith.NoLock)
-                                                    .Where(dept => deptLevelIdSet.Contains(dept.DepartmentLevelId))
-                                                    .MaxAsync(position => position.SortOrder);
-
-                    var stepPosMaxOrder = await _db.Queryable<UserPositionEntity>()
-                                                   .With(SqlWith.NoLock)
-                                                   .Where(position => positionIdSet.Contains(position.PositionId))
-                                                   .MaxAsync(position => position.SortOrder);
-
-                    List<StepApproveUser> heightLevelApproveUser = new List<StepApproveUser>();
-                    for (long itemDeptOrder = stepDeptMaxOrder; itemDeptOrder > 0 && itemDeptOrder <= deptLevelMaxOrder;)
-                    {
-                        for (int itemPosOrder = stepPosMaxOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
-                        {
-                            var highLevelUserInfo = await _db.Queryable<UserInfoEntity>()
-                                                             .With(SqlWith.NoLock)
-                                                             .LeftJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId)
-                                                             .LeftJoin<DepartmentInfoEntity>((user, position, dept) => user.DepartmentId == dept.DepartmentId)
-                                                             .LeftJoin<DepartmentLevelEntity>((user, position, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                                                             .Where((user, position, dept, deptlevel) => parentDeptIdSet.Contains(dept.DepartmentId) && position.SortOrder == itemPosOrder && deptlevel.SortOrder == itemDeptOrder && position.PositionId != appPositionId)
-                                                             .OrderBy((user, position, dept, deptlevel) => position.SortOrder)
-                                                             .Select((user, position, dept, deptlevel) => user)
-                                                             .ToListAsync();
-                            if (highLevelUserInfo.Count > 0)
-                            {
-                                if (approveMode == ApproveMode.Ss.ToEnumString())
-                                {
-                                    heightLevelApproveUser = highLevelUserInfo
-                                        .Select(user => new StepApproveUser
-                                        {
-                                            UserId = user.UserId,
-                                            UserName = _lang.Locale == "zh-CN"
-                                                       ? user.UserNameCn
-                                                       : user.UserNameEn,
-                                            AppointmentType = appTypeEscalation.DicCode,
-                                            AppointmentTypeName = _lang.Locale == "zh-CN"
-                                                                  ? appTypeEscalation.DicNameCn
-                                                                  : appTypeEscalation.DicNameEn
-                                        }).Take(1).ToList();
-                                }
-                                else if (approveMode == ApproveMode.Cs.ToEnumString())
-                                {
-                                    heightLevelApproveUser = highLevelUserInfo
-                                        .Select(user => new StepApproveUser
-                                        {
-                                            UserId = user.UserId,
-                                            UserName = user.UserNameCn,
-                                            AppointmentType = appTypeEscalation.DicCode,
-                                            AppointmentTypeName = _lang.Locale == "zh-CN"
-                                                                  ? appTypeEscalation.DicNameCn
-                                                                  : appTypeEscalation.DicNameEn
-                                        }).ToList();
-                                }
-                                itemDeptOrder = -1;
-                                itemPosOrder = -1;
-                            }
-                            else
-                            {
-                                itemPosOrder--;
-                            }
-                        }
-                        if (heightLevelApproveUser.Count > 0)
-                        {
-                            itemDeptOrder = -1;
-                        }
-                        else
-                        {
-                            itemDeptOrder--;
-                        }
-                    }
-                    finalApprovers.AddRange(heightLevelApproveUser);
+                    finalApprovers = approveUsers
+                                     .Select(user => new StepApproveUser
+                                     {
+                                         UserId = user.UserId,
+                                         UserName = user.UserNameCn,
+                                         AppointmentType = appTypeIncumbent.DicCode,
+                                         AppointmentTypeName = _lang.Locale == "zh-CN"
+                                                                ? appTypeIncumbent.DicNameCn
+                                                                : appTypeIncumbent.DicNameEn
+                                     }).ToList();
                 }
             }
-
-            // 如果没有符合条件的部门，则查询本部门以上的符合条件审批人
+            // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动升级签核）
             else
             {
-                // 自动升级签核字典
                 var appTypeEscalation = appointmentType.Where(app => app.DicCode == "Escalation").First();
 
-                var parentDeptIdSet = parentDeptTreeList
-                    .Select(dept => dept.DepartmentId)
-                    .ToList();
-
                 var deptLevelMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
-                                            .With(SqlWith.NoLock)
-                                            .MaxAsync(deptlevel => deptlevel.SortOrder);
+                                                 .With(SqlWith.NoLock)
+                                                 .MaxAsync(deptlevel => deptlevel.SortOrder);
 
                 var posMaxOrder = await _db.Queryable<UserPositionEntity>()
                                            .With(SqlWith.NoLock)
@@ -448,7 +352,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                 var stepDeptMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
                                                 .With(SqlWith.NoLock)
                                                 .Where(dept => deptLevelIdSet.Contains(dept.DepartmentLevelId))
-                                                .MaxAsync(position => position.SortOrder) - 1;
+                                                .MaxAsync(position => position.SortOrder);
 
                 var stepPosMaxOrder = await _db.Queryable<UserPositionEntity>()
                                                .With(SqlWith.NoLock)
@@ -462,10 +366,10 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     {
                         var highLevelUserInfo = await _db.Queryable<UserInfoEntity>()
                                                          .With(SqlWith.NoLock)
-                                                         .LeftJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId)
-                                                         .LeftJoin<DepartmentInfoEntity>((user, position, dept) => user.DepartmentId == dept.DepartmentId)
-                                                         .LeftJoin<DepartmentLevelEntity>((user, position, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                                                         .Where((user, position, dept, deptlevel) => parentDeptIdSet.Contains(dept.DepartmentId) && position.SortOrder == itemPosOrder && deptlevel.SortOrder == itemDeptOrder && position.PositionId != appPositionId)
+                                                         .InnerJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId)
+                                                         .InnerJoin<DepartmentInfoEntity>((user, position, dept) => user.DepartmentId == dept.DepartmentId)
+                                                         .InnerJoin<DepartmentLevelEntity>((user, position, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                                                         .Where((user, position, dept, deptlevel) => parentDeptIdsList.Contains(dept.DepartmentId) && position.SortOrder == itemPosOrder && deptlevel.SortOrder == itemDeptOrder && position.PositionId != appPositionId && user.IsApproval == 1)
                                                          .OrderBy((user, position, dept, deptlevel) => position.SortOrder)
                                                          .Select((user, position, dept, deptlevel) => user)
                                                          .ToListAsync();
@@ -482,8 +386,8 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                    : user.UserNameEn,
                                         AppointmentType = appTypeEscalation.DicCode,
                                         AppointmentTypeName = _lang.Locale == "zh-CN"
-                                                                  ? appTypeEscalation.DicNameCn
-                                                                  : appTypeEscalation.DicNameEn
+                                                              ? appTypeEscalation.DicNameCn
+                                                              : appTypeEscalation.DicNameEn
                                     }).Take(1).ToList();
                             }
                             else if (approveMode == ApproveMode.Cs.ToEnumString())
@@ -495,8 +399,8 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                         UserName = user.UserNameCn,
                                         AppointmentType = appTypeEscalation.DicCode,
                                         AppointmentTypeName = _lang.Locale == "zh-CN"
-                                                                  ? appTypeEscalation.DicNameCn
-                                                                  : appTypeEscalation.DicNameEn
+                                                              ? appTypeEscalation.DicNameCn
+                                                              : appTypeEscalation.DicNameEn
                                     }).ToList();
                             }
                             itemDeptOrder = -1;
