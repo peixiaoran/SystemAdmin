@@ -18,7 +18,7 @@
         /// <summary>
         /// 部门来源Ids
         /// </summary>
-        public string DeptLeaveIds { get; set; } = string.Empty;
+        public long DeptLeaveId { get; set; }
 
         /// <summary>
         /// 职级来源Ids

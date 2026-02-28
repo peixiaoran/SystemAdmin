@@ -83,7 +83,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         {
                             StepOrgId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
-                            DeptLeaveIds = workflowStep.workflowStepOrgUpsert.DeptLeaveIds,
+                            DeptLeaveId = workflowStep.workflowStepOrgUpsert.DeptLeaveId,
                             PositionIds = workflowStep.workflowStepOrgUpsert.PositionIds,
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
@@ -230,7 +230,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         StepOrgId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(workflowStep.StepId),
-                        DeptLeaveIds = workflowStep.workflowStepOrgUpsert.DeptLeaveIds,
+                        DeptLeaveId = workflowStep.workflowStepOrgUpsert.DeptLeaveId,
                         PositionIds = workflowStep.workflowStepOrgUpsert.PositionIds,
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")

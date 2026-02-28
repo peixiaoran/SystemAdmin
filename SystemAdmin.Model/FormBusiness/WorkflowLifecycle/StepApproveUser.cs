@@ -17,12 +17,17 @@ namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle
         public string UserName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 任命类型（实任、兼任、代理）
+        /// 职级排序
+        /// </summary>
+        public int PositionSortOrder { get; set; }
+
+        /// <summary>
+        /// 签核类型（实任、兼任、代理）
         /// </summary>
         public string AppointmentType { get; set; } = string.Empty;
 
         /// <summary>
-        /// 任命类型名称（实任、兼任、代理）
+        /// 签核类型名称（实任、兼任、代理）
         /// </summary>
 
         public string AppointmentTypeName { get; set; } = string.Empty;

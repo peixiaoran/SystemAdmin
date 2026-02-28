@@ -20,9 +20,9 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long StepId { get; set; }
 
         /// <summary>
-        /// 部门级别Ids
+        /// 部门级别Id
         /// </summary>
-        public string DeptLeaveIds { get; set; } = string.Empty;
+        public long DeptLeaveId { get; set; }
 
         /// <summary>
         /// 职级Ids
