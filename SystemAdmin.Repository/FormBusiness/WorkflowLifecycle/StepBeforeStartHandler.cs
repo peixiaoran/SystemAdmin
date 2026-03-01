@@ -433,11 +433,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             var allUser = _db.Queryable<UserInfoEntity>()
                              .InnerJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId);
 
-            var ss = allUser.ToList();
-
             var userAgent = _db.Queryable<UserAgentEntity>()
                                .InnerJoin<UserInfoEntity>((useragent, user) => useragent.SubstituteUserId == user.UserId)
-                               .Where((useragent, user) => useragent.SubstituteUserId == user.UserId);
+                               .Where((useragent, user) => SqlFunc.ToDate(useragent.StartTime) <= DateTime.Now && SqlFunc.ToDate(useragent.EndTime) >= DateTime.Now);
 
             foreach (var appuser in approveUser)
             {
