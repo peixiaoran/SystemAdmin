@@ -21,15 +21,15 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// <summary>
         /// 查询申请表单分页
         /// </summary>
-        /// <param name="getApplyFormPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ApplyFormInfoDto>> GetApplyFormPage(getApplyFormPage getApplyFormPage, long userId)
+        public async Task<ResultPaged<ApplyFormInfoDto>> GetApplyFormPage(getPage getPage, long userId)
         {
             RefAsync<int> totalCount = 0;
             var applyFormPage = await _db.Queryable<UserFormBindEntity>()
                                          .With(SqlWith.NoLock)
                                          .InnerJoin<FormTypeEntity>((userform, formtype) => userform.FormGroupTypeId == formtype.FormTypeId)
-                                         .Where((userform, formtype) => userform.UserId == userId && formtype.FormGroupId == long.Parse(getApplyFormPage.FormGroupId))
+                                         .Where((userform, formtype) => userform.UserId == userId && formtype.FormGroupId == long.Parse(getPage.FormGroupId))
                                          .OrderBy((userform, formtype) => formtype.SortOrder)
                                          .Select((userform, formtype) => new ApplyFormInfoDto()
                                          {
@@ -41,12 +41,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                                              Description = _lang.Locale == "zh-CN"
                                                             ? formtype.DescriptionCn
                                                             : formtype.DescriptionEn,
-                                         }).ToPageListAsync(getApplyFormPage.PageIndex, getApplyFormPage.PageSize, totalCount);
+                                         }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<ApplyFormInfoDto>.Ok(applyFormPage, totalCount);
         }
 
         /// <summary>
-        /// 表单组别下拉框
+        /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()

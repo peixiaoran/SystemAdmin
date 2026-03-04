@@ -22,7 +22,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormAudit
         /// 查询表单计数信息分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<FormCountingDto>> GetFormCountingPage(GetFormCountingPage getFormCountingPage)
+        public async Task<ResultPaged<FormCountingDto>> GetFormCountingPage(GetFormCountingPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<FormTypeEntity>()
@@ -30,9 +30,9 @@ namespace SystemAdmin.Repository.FormBusiness.FormAudit
                            .LeftJoin<FormCountingEntity>((formtype, formcounting) => formcounting.FormTypeId == formtype.FormTypeId);
 
             // 表单组别Id
-            if (!string.IsNullOrEmpty(getFormCountingPage.FormTypeId))
+            if (!string.IsNullOrEmpty(getPage.FormTypeId))
             {
-                query = query.Where(formtype => formtype.FormTypeId == long.Parse(getFormCountingPage.FormTypeId));
+                query = query.Where(formtype => formtype.FormTypeId == long.Parse(getPage.FormTypeId));
             }
 
             // 排序
@@ -52,7 +52,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormAudit
                 Approved = formcounting.Approved,
                 Rejected = formcounting.Rejected,
                 Canceled = formcounting.Canceled
-            }).ToPageListAsync(getFormCountingPage.PageIndex, getFormCountingPage.PageSize, totalCount);
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<FormCountingDto>.Ok(formCountingPage, totalCount, "");
         }
     }

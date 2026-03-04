@@ -29,33 +29,33 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 新增模块
         /// </summary>
-        /// <param name="moduleUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertModule(ModuleInfoUpsert moduleUpsert)
+        public async Task<Result<int>> InsertModule(ModuleInfoUpsert upsert)
         {
             try
             {
-                await _db.BeginTranAsync();
-                ModuleInfoEntity insertModule = new ModuleInfoEntity()
+                ModuleInfoEntity entity = new ModuleInfoEntity()
                 {
                     ModuleId = SnowFlakeSingle.Instance.NextId(),
-                    ModuleNameCn = moduleUpsert.ModuleNameCn,
-                    ModuleNameEn = moduleUpsert.ModuleNameEn,
-                    ModuleCode = moduleUpsert.ModuleCode,
-                    ModuleIcon = moduleUpsert.ModuleIcon,
-                    SortOrder = moduleUpsert.SortOrder,
-                    IsVisible = moduleUpsert.IsVisible,
-                    Path = moduleUpsert.Path,
+                    ModuleNameCn = upsert.ModuleNameCn,
+                    ModuleNameEn = upsert.ModuleNameEn,
+                    ModuleCode = upsert.ModuleCode,
+                    ModuleIcon = upsert.ModuleIcon,
+                    SortOrder = upsert.SortOrder,
+                    IsVisible = upsert.IsVisible,
+                    Path = upsert.Path,
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    RemarkCh = moduleUpsert.RemarkCh,
-                    RemarkEn = moduleUpsert.RemarkEn
+                    CreatedDate = DateTime.Now,
+                    RemarkCh = upsert.RemarkCh,
+                    RemarkEn = upsert.RemarkEn
                 };
-                int insertModuleCount = await _moduleRepository.InsertModule(insertModule);
+                await _db.BeginTranAsync();
+                int count = await _moduleRepository.InsertModule(entity);
                 await _db.CommitTranAsync();
 
-                return insertModuleCount >= 1
-                        ? Result<int>.Ok(insertModuleCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -69,21 +69,21 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 删除模块
         /// </summary>
-        /// <param name="moduleUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteModule(ModuleInfoUpsert moduleUpsert)
+        public async Task<Result<int>> DeleteModule(ModuleInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除模块
-                var delModuleCount = await _moduleRepository.DeleteModule(long.Parse(moduleUpsert.ModuleId));
+                var delModuleCount = await _moduleRepository.DeleteModule(long.Parse(upsert.ModuleId));
                 // 删除角色模块
-                var delRoleModuleCount = await _moduleRepository.DeleteRoleModule(long.Parse(moduleUpsert.ModuleId));
+                var delRoleModuleCount = await _moduleRepository.DeleteRoleModule(long.Parse(upsert.ModuleId));
                 // 获取删除菜单Ids
-                var delMenuIds = await _moduleRepository.GetModuleMenusIds(long.Parse(moduleUpsert.ModuleId));
+                var delMenuIds = await _moduleRepository.GetModuleMenusIds(long.Parse(upsert.ModuleId));
                 // 删除模块下的菜单
-                var delMenuCount = await _moduleRepository.DeleteMenu(long.Parse(moduleUpsert.ModuleId));
+                var delMenuCount = await _moduleRepository.DeleteMenu(long.Parse(upsert.ModuleId));
                 // 删除角色菜单绑定
                 var delRoleMenuCount = await _moduleRepository.DeleteRoleMenuId(delMenuIds);
                 await _db.CommitTranAsync();
@@ -103,32 +103,32 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 修改模块
         /// </summary>
-        /// <param name="moduleUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateModule(ModuleInfoUpsert moduleUpsert)
+        public async Task<Result<int>> UpdateModule(ModuleInfoUpsert upsert)
         {
             try
             {
-                await _db.BeginTranAsync();
-                ModuleInfoEntity insertModule = new ModuleInfoEntity()
+                ModuleInfoEntity entity = new ModuleInfoEntity()
                 {
-                    ModuleId = long.Parse(moduleUpsert.ModuleId),
-                    ModuleNameCn = moduleUpsert.ModuleNameCn,
-                    ModuleNameEn = moduleUpsert.ModuleNameEn,
-                    ModuleIcon = moduleUpsert.ModuleIcon,
-                    SortOrder = moduleUpsert.SortOrder,
-                    IsVisible = moduleUpsert.IsVisible,
-                    Path = moduleUpsert.Path,
+                    ModuleId = long.Parse(upsert.ModuleId),
+                    ModuleNameCn = upsert.ModuleNameCn,
+                    ModuleNameEn = upsert.ModuleNameEn,
+                    ModuleIcon = upsert.ModuleIcon,
+                    SortOrder = upsert.SortOrder,
+                    IsVisible = upsert.IsVisible,
+                    Path = upsert.Path,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    RemarkCh = moduleUpsert.RemarkCh,
-                    RemarkEn = moduleUpsert.RemarkEn
+                    ModifiedDate = DateTime.Now,
+                    RemarkCh = upsert.RemarkCh,
+                    RemarkEn = upsert.RemarkEn
                 };
-                int updateModuleCount = await _moduleRepository.UpdateModule(insertModule);
+                await _db.BeginTranAsync();
+                int count = await _moduleRepository.UpdateModule(entity);
                 await _db.CommitTranAsync();
 
-                return updateModuleCount >= 1
-                        ? Result<int>.Ok(updateModuleCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -142,14 +142,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询模块实体
         /// </summary>
-        /// <param name="getModuleEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<ModuleInfoDto>> GetModuleEntity(GetModuleInfoEntity getModuleEntity)
+        public async Task<Result<ModuleInfoDto>> GetModuleEntity(GetModuleInfoEntity getEntity)
         {
             try
             {
-                ModuleInfoDto moduleEntity = await _moduleRepository.GetModuleEntity(long.Parse(getModuleEntity.ModuleId));
-                return Result<ModuleInfoDto>.Ok(moduleEntity, "");
+                ModuleInfoDto entity = await _moduleRepository.GetModuleEntity(long.Parse(getEntity.ModuleId));
+                return Result<ModuleInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -161,13 +161,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询模块分页
         /// </summary>
-        /// <param name="getModulePage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ModuleInfoDto>> GetModulePage(GetModuleInfoPage getModulePage)
+        public async Task<ResultPaged<ModuleInfoDto>> GetModulePage(GetModuleInfoPage getPage)
         {
             try
             {
-                return await _moduleRepository.GetModulePage(getModulePage);
+                return await _moduleRepository.GetModulePage(getPage);
             }
             catch (Exception ex)
             {

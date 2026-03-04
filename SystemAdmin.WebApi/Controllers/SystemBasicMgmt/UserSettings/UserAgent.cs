@@ -39,38 +39,38 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工代理] 新增员工代理人")]
-        public async Task<Result<int>> InsertUserAgent([FromBody] UserAgentUpsert userAgentUpsert)
+        public async Task<Result<int>> InsertUserAgent([FromBody] UserAgentUpsert upsert)
         {
-            return await _userAgentService.InsertUserAgent(userAgentUpsert);
+            return await _userAgentService.InsertUserAgent(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工代理] 删除员工代理人")]
-        public async Task<Result<int>> DeleteUserAgent(UserAgentDel userAgentDel)
+        public async Task<Result<int>> DeleteUserAgent(UserAgentDel upsertdel)
         {
-            return await _userAgentService.DeleteUserAgent(userAgentDel);
+            return await _userAgentService.DeleteUserAgent(upsertdel);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工代理] 查询员工代理了哪些人")]
-        public async Task<Result<List<UserAgentProactiveDto>>> GetUserAgentProactiveList([FromBody] GetUserAgentProactiveList getUserAgentProactiveList)
+        public async Task<Result<List<UserAgentProactiveDto>>> GetUserAgentProactiveList([FromBody] GetUserAgentProactiveList getList)
         {
-            return await _userAgentService.GetUserAgentProactiveList(getUserAgentProactiveList);
+            return await _userAgentService.GetUserAgentProactiveList(getList);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工代理] 查询员工被哪些人代理")]
-        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentList([FromBody] GetUserAgentPassiveList getUserAgentPassiveList)
+        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentList([FromBody] GetUserAgentPassiveList getList)
         {
-            return await _userAgentService.GetUserAgentPassiveList(getUserAgentPassiveList);
+            return await _userAgentService.GetUserAgentPassiveList(getList);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
-        [EndpointSummary("[员工信息] 部门下拉框")]
+        [EndpointSummary("[员工信息] 部门下拉")]
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
         {
             return await _userAgentService.GetDepartmentDropDown();

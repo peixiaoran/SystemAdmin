@@ -22,33 +22,33 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[国籍信息] 新增国籍信息")]
-        public async Task<Result<int>> InsertNationalityInfo([FromBody] NationalityInfoUpsert nationUpsert)
+        public async Task<Result<int>> InsertNationalityInfo([FromBody] NationalityInfoUpsert upsert)
         {
-            return await _nationalityService.InsertNationalityInfo(nationUpsert);
+            return await _nationalityService.InsertNationalityInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[国籍信息] 删除国籍信息")]
-        public async Task<Result<int>> DeleteNationalityInfo([FromBody] NationalityInfoUpsert nationUpsert)
+        public async Task<Result<int>> DeleteNationalityInfo([FromBody] NationalityInfoUpsert upsert)
         {
-            return await _nationalityService.DeleteNationalityInfo(nationUpsert);
+            return await _nationalityService.DeleteNationalityInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[国籍信息] 修改国籍信息")]
-        public async Task<Result<int>> UpdateNationalityInfo([FromBody] NationalityInfoUpsert nationUpsert)
+        public async Task<Result<int>> UpdateNationalityInfo([FromBody] NationalityInfoUpsert upsert)
         {
-            return await _nationalityService.UpdateNationalityInfo(nationUpsert);
+            return await _nationalityService.UpdateNationalityInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[国籍信息] 查询国籍实体")]
-        public async Task<Result<NationalityInfoDto>> GetNationalityEntity([FromBody] GetNationalityInfoEntity getNationEntity)
+        public async Task<Result<NationalityInfoDto>> GetNationalityEntity([FromBody] GetNationalityInfoEntity getEntity)
         {
-            return await _nationalityService.GetNationalityEntity(getNationEntity);
+            return await _nationalityService.GetNationalityEntity(getEntity);
         }
 
         [HttpPost]

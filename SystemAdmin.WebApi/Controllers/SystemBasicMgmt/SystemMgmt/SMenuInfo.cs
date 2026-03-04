@@ -21,46 +21,46 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 新增二级菜单")]
-        public async Task<Result<int>> InsertSMenu([FromBody] MenuInfoUpsert menuUpsert)
+        public async Task<Result<int>> InsertSMenu([FromBody] MenuInfoUpsert upsert)
         {
-            return await _sMenuInfoService.InsertSMenu(menuUpsert);
+            return await _sMenuInfoService.InsertSMenu(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 删除二级菜单")]
-        public async Task<Result<int>> DeleteSMenu([FromBody] MenuInfoUpsert menuUpsert)
+        public async Task<Result<int>> DeleteSMenu([FromBody] MenuInfoUpsert upsert)
         {
-            return await _sMenuInfoService.DeleteSMenu(menuUpsert);
+            return await _sMenuInfoService.DeleteSMenu(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 修改二级菜单")]
-        public async Task<Result<int>> UpdateSMenu([FromBody] MenuInfoUpsert menuUpsert)
+        public async Task<Result<int>> UpdateSMenu([FromBody] MenuInfoUpsert upsert)
         {
-            return await _sMenuInfoService.UpdateSMenu(menuUpsert);
+            return await _sMenuInfoService.UpdateSMenu(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 查询二级菜单实体")]
-        public async Task<Result<MenuInfoDto>> GetSMenuEntity([FromBody] GetMenuInfoEntity getMenuEntity)
+        public async Task<Result<MenuInfoDto>> GetSMenuEntity([FromBody] GetMenuInfoEntity getEntity)
         {
-            return await _sMenuInfoService.GetSMenuEntity(getMenuEntity);
+            return await _sMenuInfoService.GetSMenuEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 查询二级菜单分页")]
-        public async Task<ResultPaged<MenuInfoDto>> GetSMenuPage([FromBody] GetMenuInfoPage getMenuPage)
+        public async Task<ResultPaged<MenuInfoDto>> GetSMenuPage([FromBody] GetMenuInfoPage getPage)
         {
-            return await _sMenuInfoService.GetSMenuPage(getMenuPage);
+            return await _sMenuInfoService.GetSMenuPage(getPage);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[二级菜单信息] 模块下拉框")]
+        [EndpointSummary("[二级菜单信息] 模块下拉")]
         public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
         {
             return await _sMenuInfoService.GetModuleDropDown();
@@ -68,7 +68,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[二级菜单信息] 一级菜单下拉框")]
+        [EndpointSummary("[二级菜单信息] 一级菜单下拉")]
         public async Task<Result<List<MenuDropDto>>> GetPMenuDropDown([FromBody] GetPMenuDropDown getPMenuDropDown)
         {
             return await _sMenuInfoService.GetPMenuDropDown(getPMenuDropDown);

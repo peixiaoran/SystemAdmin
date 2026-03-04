@@ -30,27 +30,27 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增职业
         /// </summary>
-        /// <param name="userLaborUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertUserLabor(UserLaborUpsert userLaborUpsert)
+        public async Task<Result<int>> InsertUserLabor(UserLaborUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                UserLaborEntity insertUserLabor = new UserLaborEntity()
+                UserLaborEntity entity = new UserLaborEntity()
                 {
                     LaborId = SnowFlakeSingle.Instance.NextId(),
-                    LaborNameCn = userLaborUpsert.LaborNameCn,
-                    LaborNameEn = userLaborUpsert.LaborNameEn,
-                    Description = userLaborUpsert.Description,
+                    LaborNameCn = upsert.LaborNameCn,
+                    LaborNameEn = upsert.LaborNameEn,
+                    Description = upsert.Description,
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    CreatedDate = DateTime.Now
                 };
-                var insertUserLaborCount = await _userLaborRepository.InsertUserLabor(insertUserLabor);
+                var count = await _userLaborRepository.InsertUserLabor(entity);
                 await _db.CommitTranAsync();
 
-                return insertUserLaborCount >= 1
-                        ? Result<int>.Ok(insertUserLaborCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -64,18 +64,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 删除职业
         /// </summary>
-        /// <param name="userLaborUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteUserLabor(UserLaborUpsert userLaborUpsert)
+        public async Task<Result<int>> DeleteUserLabor(UserLaborUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var delUserLaborCount = await _userLaborRepository.DeleteUserLabor(long.Parse(userLaborUpsert.LaborId));
+                var count = await _userLaborRepository.DeleteUserLabor(long.Parse(upsert.LaborId));
                 await _db.CommitTranAsync();
 
-                return delUserLaborCount >= 1
-                        ? Result<int>.Ok(delUserLaborCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
@@ -89,27 +89,27 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改职业
         /// </summary>
-        /// <param name="userLaborUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateUserLabor(UserLaborUpsert userLaborUpsert)
+        public async Task<Result<int>> UpdateUserLabor(UserLaborUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                UserLaborEntity updateUserLabor = new UserLaborEntity()
+                UserLaborEntity entity = new UserLaborEntity()
                 {
-                    LaborId = long.Parse(userLaborUpsert.LaborId),
-                    LaborNameCn = userLaborUpsert.LaborNameCn,
-                    LaborNameEn = userLaborUpsert.LaborNameEn,
-                    Description = userLaborUpsert.Description,
+                    LaborId = long.Parse(upsert.LaborId),
+                    LaborNameCn = upsert.LaborNameCn,
+                    LaborNameEn = upsert.LaborNameEn,
+                    Description = upsert.Description,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    ModifiedDate = DateTime.Now
                 };
-                var updateUserLaborCount = await _userLaborRepository.UpdateUserLabor(updateUserLabor);
+                var count = await _userLaborRepository.UpdateUserLabor(entity);
                 await _db.CommitTranAsync();
 
-                return updateUserLaborCount >= 1
-                        ? Result<int>.Ok(updateUserLaborCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -123,14 +123,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询职业实体
         /// </summary>
-        /// <param name="getUserLaborEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<UserLaborDto>> GetUserLaborEntity(GetUserLaborEntity getUserLaborEntity)
+        public async Task<Result<UserLaborDto>> GetUserLaborEntity(GetUserLaborEntity getEntity)
         {
             try
             {
-                var userLaborEntity = await _userLaborRepository.GetUserLaborEntity(long.Parse(getUserLaborEntity.LaborId));
-                return Result<UserLaborDto>.Ok(userLaborEntity, "");
+                var entity = await _userLaborRepository.GetUserLaborEntity(long.Parse(getEntity.LaborId));
+                return Result<UserLaborDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -142,13 +142,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询职业分页
         /// </summary>
-        /// <param name="getUserLaborPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserLaborDto>> GetUserLaborPage(GetUserLaborPage getUserLaborPage)
+        public async Task<ResultPaged<UserLaborDto>> GetUserLaborPage(GetUserLaborPage getPage)
         {
             try
             {
-                return await _userLaborRepository.GetUserLaborPage(getUserLaborPage);
+                return await _userLaborRepository.GetUserLaborPage(getPage);
             }
             catch (Exception ex)
             {

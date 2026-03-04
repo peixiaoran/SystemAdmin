@@ -22,41 +22,41 @@ namespace SystemAdmin.WebApi.Controllers.CustMat.CustMatBasicInfo
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[厂商信息] 新增厂商信息")]
-        public async Task<Result<int>> InsertManufacturerInfo([FromBody] ManufacturerInfoUpsert manufacturerInfoUpsert)
+        public async Task<Result<int>> InsertManufacturerInfo([FromBody] ManufacturerInfoUpsert upsert)
         {
-            return await _manufacturerInfoService.InsertManufacturerInfo(manufacturerInfoUpsert);
+            return await _manufacturerInfoService.InsertManufacturerInfo(upsert);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[厂商信息] 删除厂商信息")]
-        public async Task<Result<int>> DeleteManufacturerInfo([FromBody] ManufacturerInfoUpsert manufacturerInfoUpsert)
+        public async Task<Result<int>> DeleteManufacturerInfo([FromBody] ManufacturerInfoUpsert upsert)
         {
-            return await _manufacturerInfoService.DeleteManufacturerInfo(manufacturerInfoUpsert);
+            return await _manufacturerInfoService.DeleteManufacturerInfo(upsert);
         }
 
         [HttpPost]
         [Tags(  "客户生产订单-相关基础信息")]
         [EndpointSummary("[厂商信息] 修改厂商信息")]
-        public async Task<Result<int>> UpdateManufacturerInfo([FromBody] ManufacturerInfoUpsert manufacturerInfoUpsert)
+        public async Task<Result<int>> UpdateManufacturerInfo([FromBody] ManufacturerInfoUpsert upsert)
         {
-            return await _manufacturerInfoService.UpdateManufacturerInfo(manufacturerInfoUpsert);
+            return await _manufacturerInfoService.UpdateManufacturerInfo(upsert);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[厂商信息] 查询厂商信息实体")]
-        public async Task<Result<ManufacturerInfoDto>> GetManufacturerInfoEntity([FromBody] GetManufacturerInfoEntity getManufacturerInfoEntity)
+        public async Task<Result<ManufacturerInfoDto>> GetManufacturerInfoEntity([FromBody] GetManufacturerInfoEntity getEntity)
         {
-            return await _manufacturerInfoService.GetManufacturerInfoEntity(getManufacturerInfoEntity);
+            return await _manufacturerInfoService.GetManufacturerInfoEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[厂商信息] 查询厂商信息分页")]
-        public async Task<ResultPaged<ManufacturerInfoDto>> GetManufacturerInfoPage([FromBody] GetManufacturerInfoPage getManufacturerInfoPage)
+        public async Task<ResultPaged<ManufacturerInfoDto>> GetManufacturerInfoPage([FromBody] GetManufacturerInfoPage getPage)
         {
-            return await _manufacturerInfoService.GetManufacturerInfoPage(getManufacturerInfoPage);
+            return await _manufacturerInfoService.GetManufacturerInfoPage(getPage);
         }
     }
 }

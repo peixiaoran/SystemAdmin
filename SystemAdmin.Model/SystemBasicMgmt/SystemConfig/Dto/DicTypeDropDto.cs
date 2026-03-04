@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto
 {
     /// <summary>
-    /// 字典类型下拉框Dto
+    /// 字典类型下拉Dto
     /// </summary>
     public class DicTypeDropDto
     {

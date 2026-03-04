@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
 {
     /// <summary>
-    /// 部门级别下拉框Dto
+    /// 部门级别下拉Dto
     /// </summary>
     public class DepartmentLevelDropDto
     {

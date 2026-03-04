@@ -194,15 +194,15 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工代理了哪些人列表
         /// </summary>
-        /// <param name="getUserAgentProactiveList"></param>
+        /// <param name="getList"></param>
         /// <returns></returns>
-        public async Task<Result<List<UserAgentProactiveDto>>> GetUserAgentProactiveList(GetUserAgentProactiveList getUserAgentProactiveList)
+        public async Task<Result<List<UserAgentProactiveDto>>> GetUserAgentProactiveList(GetUserAgentProactiveList getList)
         {
             var userAgentProactiveList = await _db.Queryable<UserAgentEntity>()
                                                   .With(SqlWith.NoLock)
                                                   .LeftJoin<UserInfoEntity>((useragent, agentuser) => useragent.AgentUserId == agentuser.UserId)
                                                   .LeftJoin<UserInfoEntity>((useragent, agentuser, substituteuser) => useragent.SubstituteUserId == substituteuser.UserId)
-                                                  .Where((useragent, agentuser, substituteuser) => useragent.AgentUserId == long.Parse(getUserAgentProactiveList.UserId))
+                                                  .Where((useragent, agentuser, substituteuser) => useragent.AgentUserId == long.Parse(getList.UserId))
                                                   .Select((useragent, agentuser, substituteuser) => new UserAgentProactiveDto
                                                   {
                                                       AgentUserId = useragent.AgentUserId,
@@ -220,15 +220,15 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询此员工被哪些人代理列表
         /// </summary>
-        /// <param name="getUserAgentPassiveList"></param>
+        /// <param name="getList"></param>
         /// <returns></returns>
-        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentPassiveList(GetUserAgentPassiveList getUserAgentPassiveList)
+        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentPassiveList(GetUserAgentPassiveList getList)
         {
             var userAgentList = await _db.Queryable<UserAgentEntity>()
                                          .With(SqlWith.NoLock)
                                          .LeftJoin<UserInfoEntity>((useragent, substituteuser) => useragent.SubstituteUserId == substituteuser.UserId)
                                          .LeftJoin<UserInfoEntity>((useragent, substituteuser, agentuser) => useragent.AgentUserId == agentuser.UserId)
-                                         .Where((useragent, substituteuser, agentuser) => useragent.SubstituteUserId == long.Parse(getUserAgentPassiveList.SubstituteUserId))
+                                         .Where((useragent, substituteuser, agentuser) => useragent.SubstituteUserId == long.Parse(getList.SubstituteUserId))
                                          .Select((useragent, substituteuser, agentuser) => new UserAgentPassiveDto
                                          {
                                              SubstituteUserId = useragent.SubstituteUserId,
@@ -244,7 +244,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
-        /// 部门树下拉框
+        /// 部门树下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()

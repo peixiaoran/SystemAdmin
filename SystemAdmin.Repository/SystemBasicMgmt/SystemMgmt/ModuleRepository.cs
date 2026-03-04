@@ -120,23 +120,23 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询模块分页
         /// </summary>
-        /// <param name="getModulePage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ModuleInfoDto>> GetModulePage(GetModuleInfoPage getModulePage)
+        public async Task<ResultPaged<ModuleInfoDto>> GetModulePage(GetModuleInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<ModuleInfoEntity>()
                            .With(SqlWith.NoLock);
 
             // 模块编码
-            if (!string.IsNullOrEmpty(getModulePage.ModuleCode))
+            if (!string.IsNullOrEmpty(getPage.ModuleCode))
             {
-                query = query.Where(module => module.ModuleCode.Contains(getModulePage.ModuleCode));
+                query = query.Where(module => module.ModuleCode.Contains(getPage.ModuleCode));
             }
             // 模块名称
-            if (!string.IsNullOrEmpty(getModulePage.ModuleName))
+            if (!string.IsNullOrEmpty(getPage.ModuleName))
             {
-                query = query.Where(module => module.ModuleNameCn.Contains(getModulePage.ModuleName));
+                query = query.Where(module => module.ModuleNameCn.Contains(getPage.ModuleName));
             }
 
             // 排序
@@ -153,7 +153,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                             Path = module.Path,
                                             RemarkCh = module.RemarkCh,
                                             RemarkEn = module.RemarkEn,
-                                        }).ToPageListAsync(getModulePage.PageIndex, getModulePage.PageSize, totalCount);
+                                        }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<ModuleInfoDto>.Ok(modulePage, totalCount, "");
         }
     }

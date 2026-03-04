@@ -30,26 +30,26 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 新增控件
         /// </summary>
-        /// <param name="controlInfoUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertControlInfo(ControlInfoUpsert controlInfoUpsert)
+        public async Task<Result<int>> InsertControlInfo(ControlInfoUpsert upsert)
         {
             try
             {
-                ControlInfoEntity insertFromGroup = new ControlInfoEntity()
+                ControlInfoEntity entity = new ControlInfoEntity()
                 {
-                    ControlCode = controlInfoUpsert.ControlCode,
-                    ControlName = controlInfoUpsert.ControlName,
-                    Description = controlInfoUpsert.Description,
+                    ControlCode = upsert.ControlCode,
+                    ControlName = upsert.ControlName,
+                    Description = upsert.Description,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
 
                 await _db.BeginTranAsync();
-                int insertControlInfoCount = await _controlInfoRepository.InsertControlInfo(insertFromGroup);
+                int count = await _controlInfoRepository.InsertControlInfo(entity);
                 await _db.CommitTranAsync();
-                return insertControlInfoCount >= 1
-                        ? Result<int>.Ok(insertControlInfoCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -63,18 +63,18 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 删除控件
         /// </summary>
-        /// <param name="controlInfoUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteControlInfo(ControlInfoUpsert controlInfoUpsert)
+        public async Task<Result<int>> DeleteControlInfo(ControlInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                int delControlInfoCount = await _controlInfoRepository.DeleteControlInfo(controlInfoUpsert.ControlCode);
+                int count = await _controlInfoRepository.DeleteControlInfo(upsert.ControlCode);
                 await _db.CommitTranAsync();
 
-                return delControlInfoCount >= 1
-                        ? Result<int>.Ok(delControlInfoCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
@@ -88,13 +88,13 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 查询控件信息分页
         /// </summary>
-        /// <param name="getControlInfoPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ControlInfoDto>> GetControlInfoPage(GetControlInfoPage getControlInfoPage)
+        public async Task<ResultPaged<ControlInfoDto>> GetControlInfoPage(GetControlInfoPage getPage)
         {
             try
             {
-                return await _controlInfoRepository.GetControlInfoPage(getControlInfoPage);
+                return await _controlInfoRepository.GetControlInfoPage(getPage);
             }
             catch (Exception ex)
             {

@@ -124,30 +124,38 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             {
                                 AvatarAddress = userAvatar,
                                 ModifiedBy = userId,
-                                ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                                ModifiedDate = DateTime.Now
                             }).Where(user => user.UserId == userId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
-        /// 职业下拉框
+        /// 职业下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<UserLaborDropDto>> GetLaborDropDown()
         {
-            return await _db.Queryable<UserLaborEntity>()
-                            .With(SqlWith.NoLock)
-                            .Select(userlabor => new UserLaborDropDto
-                            {
-                                LaborId = userlabor.LaborId,
-                                LaborName = _lang.Locale == "zh-CN"
-                                            ? userlabor.LaborNameCn
-                                            : userlabor.LaborNameEn
-                            }).ToListAsync();
+            var query = _db.Queryable<UserLaborEntity>().With(SqlWith.NoLock);
+            if (_lang.Locale == "zh-CN")
+            {
+                query = query.OrderBy(labor => labor.LaborNameCn);
+            }
+            else
+            {
+                query = query.OrderBy(labor => labor.LaborNameEn);
+            }
+
+            return await query.Select(labor => new UserLaborDropDto
+            {
+                LaborId = labor.LaborId,
+                LaborName = _lang.Locale == "zh-CN"
+                                      ? labor.LaborNameCn
+                                      : labor.LaborNameEn
+            }).ToListAsync();
         }
 
         /// <summary>
-        /// 部门树下拉框
+        /// 部门树下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
@@ -167,7 +175,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 职级下拉框
+        /// 职级下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
@@ -185,7 +193,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 角色下拉框
+        /// 角色下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<RoleInfoDropDto>> GetRoleDropDown()

@@ -22,46 +22,46 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormBasicInfo
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单类别] 新增表单类别")]
-        public async Task<Result<int>> InsertFormTypeInfo([FromBody] FormTypeUpsert formTypeUpsert)
+        public async Task<Result<int>> InsertFormTypeInfo([FromBody] FormTypeUpsert upsert)
         {
-            return await _formTypeService.InsertFormTypeInfo(formTypeUpsert);
+            return await _formTypeService.InsertFormTypeInfo(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单类别] 删除表单类别")]
-        public async Task<Result<int>> DeleteFormTypeInfo([FromBody] FormTypeUpsert userLaborUpsert)
+        public async Task<Result<int>> DeleteFormTypeInfo([FromBody] FormTypeUpsert upsert)
         {
-            return await _formTypeService.DeleteFormTypeInfo(userLaborUpsert);
+            return await _formTypeService.DeleteFormTypeInfo(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单类别] 修改表单类别")]
-        public async Task<Result<int>> UpdateFormTypeInfo([FromBody] FormTypeUpsert formTypeUpsert)
+        public async Task<Result<int>> UpdateFormTypeInfo([FromBody] FormTypeUpsert upsert)
         {
-            return await _formTypeService.UpdateFormTypeInfo(formTypeUpsert);
+            return await _formTypeService.UpdateFormTypeInfo(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单类别] 查询表单类别实体")]
-        public async Task<Result<FormTypeDto>> GetFormTypeEntity([FromBody] GetFormTypeEntity getFormTypeEntity)
+        public async Task<Result<FormTypeDto>> GetFormTypeEntity([FromBody] GetFormTypeEntity getEntity)
         {
-            return await _formTypeService.GetFormTypeEntity(getFormTypeEntity);
+            return await _formTypeService.GetFormTypeEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单类别] 查询表单类别分页")]
-        public async Task<ResultPaged<FormTypeDto>> GetFormTypePage([FromBody] GetFormTypePage getFormTypePage)
+        public async Task<ResultPaged<FormTypeDto>> GetFormTypePage([FromBody] GetFormTypePage getPage)
         {
-            return await _formTypeService.GetFormTypePage(getFormTypePage);
+            return await _formTypeService.GetFormTypePage(getPage);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
-        [EndpointSummary("[表单类别] 表单组别下拉框")]
+        [EndpointSummary("[表单类别] 表单组别下拉")]
         public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
         {
             return await _formTypeService.GetFormGroupDropDown();

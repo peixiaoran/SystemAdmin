@@ -131,7 +131,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         /// <summary>
         /// 过期时间
         /// </summary>
-        public string ExpirationTime { get; set; } = string.Empty;
+        public DateTime ExpirationTime { get; set; }
 
         /// <summary>
         /// 备注
@@ -146,7 +146,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         /// <summary>
         /// 创建时间
         /// </summary>
-        public string CreatedDate { get; set; } = string.Empty;
+        public DateTime? CreatedDate { get; set; }
 
         /// <summary>
         /// 修改人
@@ -156,6 +156,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         /// <summary>
         /// 修改时间
         /// </summary>
-        public string? ModifiedDate { get; set; } = null;
+        public DateTime? ModifiedDate { get; set; }
     }
 }

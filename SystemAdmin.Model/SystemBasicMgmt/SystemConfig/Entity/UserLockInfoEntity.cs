@@ -21,6 +21,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity
         /// <summary>
         /// 创建时间
         /// </summary>
-        public string? CreatedDate { get; set; } = null;
+        public DateTime? CreatedDate { get; set; }
     }
 }

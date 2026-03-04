@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
 {
     /// <summary>
-    /// 模块下拉框Dto
+    /// 模块下拉Dto
     /// </summary>
     public class ModuleDropDto
     {

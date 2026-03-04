@@ -319,7 +319,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 表单组别下拉框
+        /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()
@@ -337,7 +337,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 表单类型下拉框
+        /// 表单类型下拉
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
@@ -357,7 +357,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 审批人选取方式下拉框
+        /// 审批人选取方式下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<AssignmentDropDto>> GetAssignmentDropDown()
@@ -375,7 +375,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 部门树下拉框
+        /// 部门树下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
@@ -395,7 +395,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 部门级别下拉框
+        /// 部门级别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDropDown()
@@ -413,14 +413,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 职级下拉框
+        /// 职级下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
         {
             return await _db.Queryable<UserPositionEntity>()
                             .With(SqlWith.NoLock)
-                            .OrderBy(userpos => userpos.CreatedDate)
+                            .OrderBy(userpos => userpos.SortOrder)
                             .Select((userpos) => new UserPositionDropDto
                             {
                                 PositionId = userpos.PositionId,
@@ -431,28 +431,36 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 职业下拉框
+        /// 职业下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<UserLaborDropDto>> GetLaborDropDown()
         {
-            return await _db.Queryable<UserLaborEntity>()
-                            .With(SqlWith.NoLock)
-                            .Select(userlabor => new UserLaborDropDto
-                            {
-                                LaborId = userlabor.LaborId,
-                                LaborName = _lang.Locale == "zh-CN"
-                                            ? userlabor.LaborNameCn
-                                            : userlabor.LaborNameEn
-                            }).ToListAsync();
+            var query = _db.Queryable<UserLaborEntity>().With(SqlWith.NoLock);
+            if (_lang.Locale == "zh-CN")
+            {
+                query = query.OrderBy(labor => labor.LaborNameCn);
+            }
+            else
+            {
+                query = query.OrderBy(labor => labor.LaborNameEn);
+            }
+
+            return await query.Select(labor => new UserLaborDropDto
+            {
+                LaborId = labor.LaborId,
+                LaborName = _lang.Locale == "zh-CN"
+                                      ? labor.LaborNameCn
+                                      : labor.LaborNameEn
+            }).ToListAsync();
         }
 
         /// <summary>
         /// 查询选取员工分页
         /// </summary>
-        /// <param name="getUserInfoPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getUserInfoPage)
+        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserInfoEntity>()
@@ -465,25 +473,25 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                            .Where((user, dept, userpos, userlabor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
             // 员工工号
-            if (!string.IsNullOrEmpty(getUserInfoPage.UserNo))
+            if (!string.IsNullOrEmpty(getPage.UserNo))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNo.Contains(getUserInfoPage.UserNo));
+                    user.UserNo.Contains(getPage.UserNo));
             }
             // 员工姓名
-            if (!string.IsNullOrEmpty(getUserInfoPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.UserName))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNameCn.Contains(getUserInfoPage.UserName) ||
-                    user.UserNameEn.Contains(getUserInfoPage.UserName));
+                    user.UserNameCn.Contains(getPage.UserName) ||
+                    user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门Id（仅在工号与姓名都为空时）
-            if (!string.IsNullOrEmpty(getUserInfoPage.DepartmentId)
-                && string.IsNullOrEmpty(getUserInfoPage.UserNo)
-                && string.IsNullOrEmpty(getUserInfoPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.DepartmentId)
+                && string.IsNullOrEmpty(getPage.UserNo)
+                && string.IsNullOrEmpty(getPage.UserName))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.DepartmentId == long.Parse(getUserInfoPage.DepartmentId));
+                    user.DepartmentId == long.Parse(getPage.DepartmentId));
             }
 
             // 排序
@@ -511,7 +519,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                            : nation.NationNameEn,
                 IsAgent = user.IsAgent,
                 IsApproval = user.IsApproval,
-            }).ToPageListAsync(getUserInfoPage.PageIndex, getUserInfoPage.PageSize, totalCount);
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserInfoDto>.Ok(userPage.Adapt<List<UserInfoDto>>(), totalCount, "");
         }
     }

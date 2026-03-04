@@ -19,14 +19,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 查询员工登录日志分页
         /// </summary>
-        /// <param name="getUserLoginLogPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserLogOutDto>> GetUserLoginLogPage(GetUserLoginLogPage getUserLoginLogPage)
+        public async Task<ResultPaged<UserLogOutDto>> GetUserLoginLogPage(GetUserLoginLogPage getPage)
         {
             try
             {
-                var userLoginLogPage = await _userLoginLogRepository.GetUserLoginLogPage(getUserLoginLogPage);
-                return userLoginLogPage;
+                var page = await _userLoginLogRepository.GetUserLoginLogPage(getPage);
+                return page;
             }
             catch (Exception ex)
             {

@@ -205,9 +205,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询员工分页
         /// </summary>
-        /// <param name="getUserPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserInfoPageDto>> GetUserInfoPage(GetUserInfoPage getUserPage)
+        public async Task<ResultPaged<UserInfoPageDto>> GetUserInfoPage(GetUserInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserInfoEntity>()
@@ -218,22 +218,22 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                            .InnerJoin<NationalityInfoEntity>((user, userrole, deptinfo, userposition, nation) => user.Nationality == nation.NationId);
 
             // 员工工号
-            if (!string.IsNullOrEmpty(getUserPage.UserNo))
+            if (!string.IsNullOrEmpty(getPage.UserNo))
             {
                 query = query.Where(user =>
-                    user.UserNo.Contains(getUserPage.UserNo));
+                    user.UserNo.Contains(getPage.UserNo));
             }
             // 员工姓名
-            if (!string.IsNullOrEmpty(getUserPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.UserName))
             {
                 query = query.Where(user =>
-                    user.UserNameCn.Contains(getUserPage.UserName) ||
-                    user.UserNameEn.Contains(getUserPage.UserName));
+                    user.UserNameCn.Contains(getPage.UserName) ||
+                    user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门Id
-            if (getUserPage.DepartmentId != "-1")
+            if (getPage.DepartmentId != "-1")
             {
-                query = query.Where(user => user.DepartmentId == long.Parse(getUserPage.DepartmentId));
+                query = query.Where(user => user.DepartmentId == long.Parse(getPage.DepartmentId));
             }
 
             // 排序
@@ -258,7 +258,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                         IsApproval = user.IsApproval,
                         IsFreeze = user.IsFreeze,
                         Remark = user.Remark
-                    }).ToPageListAsync(getUserPage.PageIndex, getUserPage.PageSize, totalCount);
+                    }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserInfoPageDto>.Ok(userPage, totalCount, "");
         }
 
@@ -280,7 +280,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 国籍字典下拉框
+        /// 国籍字典下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<NationalityDropDto>> GetNationalityDropDown()
@@ -297,24 +297,32 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 职业下拉框
+        /// 职业下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<UserLaborDropDto>> GetLaborDropDown()
         {
-            return await _db.Queryable<UserLaborEntity>()
-                            .With(SqlWith.NoLock)
-                            .Select(userlabor => new UserLaborDropDto
-                            {
-                                LaborId = userlabor.LaborId,
-                                LaborName = _lang.Locale == "zh-CN"
-                                            ? userlabor.LaborNameCn
-                                            : userlabor.LaborNameEn
-                            }).ToListAsync();
+            var query = _db.Queryable<UserLaborEntity>().With(SqlWith.NoLock);
+            if (_lang.Locale == "zh-CN")
+            {
+                query = query.OrderBy(labor => labor.LaborNameCn);
+            }
+            else
+            {
+                query = query.OrderBy(labor => labor.LaborNameEn);
+            }
+
+            return await query.Select(labor => new UserLaborDropDto
+            {
+                LaborId = labor.LaborId,
+                LaborName = _lang.Locale == "zh-CN"
+                                      ? labor.LaborNameCn
+                                      : labor.LaborNameEn
+            }).ToListAsync();
         }
 
         /// <summary>
-        /// 部门树下拉框
+        /// 部门树下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
@@ -334,7 +342,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 职级下拉框
+        /// 职级下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
@@ -352,7 +360,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 角色下拉框
+        /// 角色下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<RoleInfoDropDto>> GetRoleDropDown()

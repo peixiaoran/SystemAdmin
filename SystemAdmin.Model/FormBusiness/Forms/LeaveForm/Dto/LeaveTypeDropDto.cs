@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
 {
     /// <summary>
-    /// 假别下拉框Dto
+    /// 假别下拉Dto
     /// </summary>
     public class LeaveTypeDropDto
     {

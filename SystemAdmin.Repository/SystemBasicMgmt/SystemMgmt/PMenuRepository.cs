@@ -127,9 +127,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询一级菜单分页
         /// </summary>
-        /// <param name="getMenuPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<MenuInfoDto>> GetPMenuPage(GetMenuInfoPage getMenuPage)
+        public async Task<ResultPaged<MenuInfoDto>> GetPMenuPage(GetMenuInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
            var query = _db.Queryable<MenuInfoEntity>()
@@ -138,21 +138,21 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                           .Where(pmenu => pmenu.MenuType == "PrimaryMenu");
 
             // 一级菜单编码
-            if (!string.IsNullOrEmpty(getMenuPage.MenuCode))
+            if (!string.IsNullOrEmpty(getPage.MenuCode))
             {
-                query = query.Where((pmenu, dic) => pmenu.MenuCode.Contains(getMenuPage.MenuCode));
+                query = query.Where((pmenu, dic) => pmenu.MenuCode.Contains(getPage.MenuCode));
             }
             // 一级菜单名称
-            if (!string.IsNullOrEmpty(getMenuPage.MenuName))
+            if (!string.IsNullOrEmpty(getPage.MenuName))
             {
                 query = query.Where((pmenu, dic) =>
-                    pmenu.MenuNameCn.Contains(getMenuPage.MenuName) ||
-                    pmenu.MenuNameEn.Contains(getMenuPage.MenuName));
+                    pmenu.MenuNameCn.Contains(getPage.MenuName) ||
+                    pmenu.MenuNameEn.Contains(getPage.MenuName));
             }
             // 所属模块Id
-            if (!string.IsNullOrEmpty(getMenuPage.ModuleId))
+            if (!string.IsNullOrEmpty(getPage.ModuleId))
             {
-                query = query.Where((pmenu, dic) => pmenu.ModuleId == long.Parse(getMenuPage.ModuleId));
+                query = query.Where((pmenu, dic) => pmenu.ModuleId == long.Parse(getPage.ModuleId));
             }
 
             // 排序
@@ -173,12 +173,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                            IsVisible = pmenu.IsVisible,
                                            Path = pmenu.Path,
                                            Remark = pmenu.Remark,
-                                       }).ToPageListAsync(getMenuPage.PageIndex, getMenuPage.PageSize, totalCount);
+                                       }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<MenuInfoDto>.Ok(pmenuPage, totalCount, "");
         }
 
         /// <summary>
-        /// 模块下拉框
+        /// 模块下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<ModuleDropDto>> GetModuleDropDown()

@@ -30,9 +30,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 新增币别信息
         /// </summary>
-        /// <param name="currencyUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertCurrencyInfo(CurrencyInfoUpsert currencyUpsert)
+        public async Task<Result<int>> InsertCurrencyInfo(CurrencyInfoUpsert upsert)
         {
             try
             {
@@ -40,18 +40,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                 CurrencyInfoEntity insertCurrencyEntity = new CurrencyInfoEntity()
                 {
                     CurrencyId = SnowFlakeSingle.Instance.NextId(),
-                    CurrencyCode = currencyUpsert.CurrencyCode,
-                    CurrencyNameCn = currencyUpsert.CurrencyNameCn,
-                    CurrencyNameEn = currencyUpsert.CurrencyNameEn,
-                    SortOrder = currencyUpsert.SortOrder,
+                    CurrencyCode = upsert.CurrencyCode,
+                    CurrencyNameCn = upsert.CurrencyNameCn,
+                    CurrencyNameEn = upsert.CurrencyNameEn,
+                    SortOrder = upsert.SortOrder,
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    CreatedDate = DateTime.Now
                 };
-                var insertCurrencyCount = await _currencyInfoRepository.InsertCurrencyInfo(insertCurrencyEntity);
+                var count = await _currencyInfoRepository.InsertCurrencyInfo(insertCurrencyEntity);
                 await _db.CommitTranAsync();
 
-                return insertCurrencyCount >= 1
-                        ? Result<int>.Ok(insertCurrencyCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -65,18 +65,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 删除币别信息
         /// </summary>
-        /// <param name="currencyUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteCurrencyInfo(CurrencyInfoUpsert currencyUpsert)
+        public async Task<Result<int>> DeleteCurrencyInfo(CurrencyInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var delCurrencyCount = await _currencyInfoRepository.DeleteCurrencyInfo(long.Parse(currencyUpsert.CurrencyId));
+                var count = await _currencyInfoRepository.DeleteCurrencyInfo(long.Parse(upsert.CurrencyId));
                 await _db.CommitTranAsync();
 
-                return delCurrencyCount >= 1
-                        ? Result<int>.Ok(delCurrencyCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
@@ -90,28 +90,28 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 修改币别信息
         /// </summary>
-        /// <param name="currencyUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateCurrencyInfo(CurrencyInfoUpsert currencyUpsert)
+        public async Task<Result<int>> UpdateCurrencyInfo(CurrencyInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                CurrencyInfoEntity updateCurrencyEntity = new CurrencyInfoEntity()
+                CurrencyInfoEntity entity = new CurrencyInfoEntity()
                 {
-                    CurrencyId = long.Parse(currencyUpsert.CurrencyId),
-                    CurrencyCode = currencyUpsert.CurrencyCode,
-                    CurrencyNameCn = currencyUpsert.CurrencyNameCn,
-                    CurrencyNameEn = currencyUpsert.CurrencyNameEn,
-                    SortOrder = currencyUpsert.SortOrder,
+                    CurrencyId = long.Parse(upsert.CurrencyId),
+                    CurrencyCode = upsert.CurrencyCode,
+                    CurrencyNameCn = upsert.CurrencyNameCn,
+                    CurrencyNameEn = upsert.CurrencyNameEn,
+                    SortOrder = upsert.SortOrder,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    ModifiedDate = DateTime.Now
                 };
-                var updateCurrencyCount = await _currencyInfoRepository.UpdateCurrencyInfo(updateCurrencyEntity);
+                var count = await _currencyInfoRepository.UpdateCurrencyInfo(entity);
                 await _db.CommitTranAsync();
 
-                return updateCurrencyCount >= 1
-                        ? Result<int>.Ok(updateCurrencyCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -125,14 +125,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 查询币别实体
         /// </summary>
-        /// <param name="getCurrencyEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<CurrencyInfoDto>> GetCurrencyInfoEntity(GetCurrencyInfoEntity getCurrencyEntity)
+        public async Task<Result<CurrencyInfoDto>> GetCurrencyInfoEntity(GetCurrencyInfoEntity getEntity)
         {
             try
             {
-                var currencyEntity = await _currencyInfoRepository.GetCurrencyInfoEntity(long.Parse(getCurrencyEntity.CurrencyId));
-                return Result<CurrencyInfoDto>.Ok(currencyEntity, "");
+                var entity = await _currencyInfoRepository.GetCurrencyInfoEntity(long.Parse(getEntity.CurrencyId));
+                return Result<CurrencyInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -144,14 +144,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 查询币别分页
         /// </summary>
-        /// <param name="getCurrencyPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<CurrencyInfoDto>> GetCurrencyInfoPage(GetCurrencyInfoPage getCurrencyPage)
+        public async Task<ResultPaged<CurrencyInfoDto>> GetCurrencyInfoPage(GetCurrencyInfoPage getPage)
         {
             try
             {
-                var currencyPage = await _currencyInfoRepository.GetCurrencyInfoPage(getCurrencyPage);
-                return currencyPage;
+                var page = await _currencyInfoRepository.GetCurrencyInfoPage(getPage);
+                return page;
             }
             catch (Exception ex)
             {

@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
 {
     /// <summary>
-    /// 角色绑定模块下拉框Dto
+    /// 角色绑定模块下拉Dto
     /// </summary>
     public class RoleModuleDropDto
     {

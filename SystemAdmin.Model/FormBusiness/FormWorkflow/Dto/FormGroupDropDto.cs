@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 表单组别下拉框Dto
+    /// 表单组别下拉Dto
     /// </summary>
     public class FormGroupDropDto
     {

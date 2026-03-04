@@ -21,41 +21,41 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[模块信息] 新增模块")]
-        public async Task<Result<int>> InsertModule([FromBody] ModuleInfoUpsert moduleUpsert)
+        public async Task<Result<int>> InsertModule([FromBody] ModuleInfoUpsert upsert)
         {
-            return await _sysMenuService.InsertModule(moduleUpsert);
+            return await _sysMenuService.InsertModule(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[模块信息] 删除模块")]
-        public async Task<Result<int>> DeleteModule([FromBody] ModuleInfoUpsert moduleUpsert)
+        public async Task<Result<int>> DeleteModule([FromBody] ModuleInfoUpsert upsert)
         {
-            return await _sysMenuService.DeleteModule(moduleUpsert);
+            return await _sysMenuService.DeleteModule(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[模块信息] 修改模块")]
-        public async Task<Result<int>> UpdateModule([FromBody] ModuleInfoUpsert moduleUpsert)
+        public async Task<Result<int>> UpdateModule([FromBody] ModuleInfoUpsert upsert)
         {
-            return await _sysMenuService.UpdateModule(moduleUpsert);
+            return await _sysMenuService.UpdateModule(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[模块信息] 查询模块实体")]
-        public async Task<Result<ModuleInfoDto>> GetModuleEntity([FromBody] GetModuleInfoEntity getModuleEntity)
+        public async Task<Result<ModuleInfoDto>> GetModuleEntity([FromBody] GetModuleInfoEntity getEntity)
         {
-            return await _sysMenuService.GetModuleEntity(getModuleEntity);
+            return await _sysMenuService.GetModuleEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[模块信息] 查询模块分页")]
-        public async Task<ResultPaged<ModuleInfoDto>> GetModulePage([FromBody] GetModuleInfoPage getModulePage)
+        public async Task<ResultPaged<ModuleInfoDto>> GetModulePage([FromBody] GetModuleInfoPage getPage)
         {
-            return await _sysMenuService.GetModulePage(getModulePage);
+            return await _sysMenuService.GetModulePage(getPage);
         }
     }
 }

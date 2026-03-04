@@ -30,14 +30,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增部门信息
         /// </summary>
-        /// <param name="deptUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertDepartmentInfo(DepartmentInfoUpsert deptUpsert)
+        public async Task<Result<int>> InsertDepartmentInfo(DepartmentInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(deptUpsert.DepartmentCode);
+                bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(upsert.DepartmentCode);
                 if (codeExist)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeptCodeExist"));
@@ -47,18 +47,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     DepartmentInfoEntity insertDept = new DepartmentInfoEntity()
                     {
                         DepartmentId = SnowFlakeSingle.Instance.NextId(),
-                        DepartmentCode = deptUpsert.DepartmentCode,
-                        DepartmentNameCn = deptUpsert.DepartmentNameCn,
-                        DepartmentNameEn = deptUpsert.DepartmentNameEn,
-                        ParentId = long.Parse(deptUpsert.ParentId),
-                        DepartmentLevelId = long.Parse(deptUpsert.DepartmentLevelId),
-                        SortOrder = deptUpsert.SortOrder,
-                        Landline = deptUpsert.Landline,
-                        Email = deptUpsert.Email,
-                        Address = deptUpsert.Address,
-                        Description = deptUpsert.Description,
+                        DepartmentCode = upsert.DepartmentCode,
+                        DepartmentNameCn = upsert.DepartmentNameCn,
+                        DepartmentNameEn = upsert.DepartmentNameEn,
+                        ParentId = long.Parse(upsert.ParentId),
+                        DepartmentLevelId = long.Parse(upsert.DepartmentLevelId),
+                        SortOrder = upsert.SortOrder,
+                        Landline = upsert.Landline,
+                        Email = upsert.Email,
+                        Address = upsert.Address,
+                        Description = upsert.Description,
                         CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        CreatedDate = DateTime.Now,
                     };
                     int insertDeptCount = await _deptInfoRepository.InsertDepartmentInfo(insertDept);
                     await _db.CommitTranAsync();
@@ -79,22 +79,22 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 删除部门信息
         /// </summary>
-        /// <param name="deptUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteDepartmentInfo(DepartmentInfoUpsert deptUpsert)
+        public async Task<Result<int>> DeleteDepartmentInfo(DepartmentInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                int delDeptCount = await DeleteDepartmentWithChildrenAsync(long.Parse(deptUpsert.DepartmentId));
-                if (delDeptCount == 0)
+                int count = await DeleteDepartmentWithChildrenAsync(long.Parse(upsert.DepartmentId));
+                if (count == 0)
                 {
                     await _db.RollbackTranAsync();
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DepartmentHasUsers"));
                 }
                 await _db.CommitTranAsync();
 
-                return Result<int>.Ok(delDeptCount, _localization.ReturnMsg($"{_this}DeleteSuccess"));
+                return Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"));
             }
             catch (Exception ex)
             {
@@ -168,15 +168,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改部门信息
         /// </summary>
-        /// <param name="deptUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateDepartmentInfo(DepartmentInfoUpsert deptUpsert)
+        public async Task<Result<int>> UpdateDepartmentInfo(DepartmentInfoUpsert upsert)
         {
             try
             {
-                await _db.BeginTranAsync();
-                bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(long.Parse(deptUpsert.DepartmentId), deptUpsert.DepartmentCode);
-                if (codeExist)
+                bool isExist = await _deptInfoRepository.GetDepartCodeIsExist(long.Parse(upsert.DepartmentId), upsert.DepartmentCode);
+                if (isExist)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeptCodeExist"));
                 }
@@ -184,25 +183,26 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 {
                     DepartmentInfoEntity updateDept = new DepartmentInfoEntity()
                     {
-                        DepartmentId = long.Parse(deptUpsert.DepartmentId),
-                        DepartmentCode = deptUpsert.DepartmentCode,
-                        DepartmentNameCn = deptUpsert.DepartmentNameCn,
-                        DepartmentNameEn = deptUpsert.DepartmentNameEn,
-                        ParentId = long.Parse(deptUpsert.ParentId),
-                        DepartmentLevelId = long.Parse(deptUpsert.DepartmentLevelId),
-                        SortOrder = deptUpsert.SortOrder,
-                        Landline = deptUpsert.Landline,
-                        Email = deptUpsert.Email,
-                        Address = deptUpsert.Address,
-                        Description = deptUpsert.Description,
+                        DepartmentId = long.Parse(upsert.DepartmentId),
+                        DepartmentCode = upsert.DepartmentCode,
+                        DepartmentNameCn = upsert.DepartmentNameCn,
+                        DepartmentNameEn = upsert.DepartmentNameEn,
+                        ParentId = long.Parse(upsert.ParentId),
+                        DepartmentLevelId = long.Parse(upsert.DepartmentLevelId),
+                        SortOrder = upsert.SortOrder,
+                        Landline = upsert.Landline,
+                        Email = upsert.Email,
+                        Address = upsert.Address,
+                        Description = upsert.Description,
                         ModifiedBy = _loginuser.UserId,
-                        ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        ModifiedDate = DateTime.Now,
                     };
-                    int updateDeptCount = await _deptInfoRepository.UpdateDepartmentInfo(updateDept);
+                    await _db.BeginTranAsync();
+                    int count = await _deptInfoRepository.UpdateDepartmentInfo(updateDept);
                     await _db.CommitTranAsync();
 
-                    return updateDeptCount >= 1
-                            ? Result<int>.Ok(updateDeptCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                    return count >= 1
+                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
                 }
             }
@@ -217,14 +217,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询部门实体
         /// </summary>
-        /// <param name="getDeptEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<DepartmentInfoDto>> GetDepartmentInfoEntity(GetDepartmentInfoEntity getDeptEntity)
+        public async Task<Result<DepartmentInfoDto>> GetDepartmentInfoEntity(GetDepartmentInfoEntity getEntity)
         {
             try
             {
-                var deptEntity = await _deptInfoRepository.GetDepartmentInfoEntity(long.Parse(getDeptEntity.DepartmentId));
-                return Result<DepartmentInfoDto>.Ok(deptEntity, "");
+                var entity = await _deptInfoRepository.GetDepartmentInfoEntity(long.Parse(getEntity.DepartmentId));
+                return Result<DepartmentInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -236,14 +236,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询部门树
         /// </summary>
-        /// <param name="getDeptTree"></param>
+        /// <param name="getTree"></param>
         /// <returns></returns>
-        public async Task<Result<List<DepartmentInfoDto>>> GetDepartmentInfoTree(GetDepartmentTree getDeptTree)
+        public async Task<Result<List<DepartmentInfoDto>>> GetDepartmentInfoTree(GetDepartmentTree getTree)
         {
             try
             {
-                var deptTree = await _deptInfoRepository.GetDepartmentInfoTree(getDeptTree);
-                return Result<List<DepartmentInfoDto>>.Ok(deptTree, "");
+                var tree = await _deptInfoRepository.GetDepartmentInfoTree(getTree);
+                return Result<List<DepartmentInfoDto>>.Ok(tree, "");
             }
             catch (Exception ex)
             {
@@ -253,15 +253,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 部门下拉框
+        /// 部门下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
         {
             try
             {
-                var deptDrop = await _deptInfoRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(deptDrop, "");
+                var drop = await _deptInfoRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -271,15 +271,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 部门级别下拉框
+        /// 部门级别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
         {
             try
             {
-                var deptLevelDrop = await _deptInfoRepository.GetDepartmentLevelDropDown();
-                return Result<List<DepartmentLevelDropDto>>.Ok(deptLevelDrop, "");
+                var drop = await _deptInfoRepository.GetDepartmentLevelDropDown();
+                return Result<List<DepartmentLevelDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {

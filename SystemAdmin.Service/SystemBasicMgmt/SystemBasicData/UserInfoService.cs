@@ -134,21 +134,21 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增员工
         /// </summary>
-        /// <param name="userUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertUserInfo(UserInfoUpsert userUpsert)
+        public async Task<Result<int>> InsertUserInfo(UserInfoUpsert upsert)
         {
             try
             {
-                if (string.IsNullOrEmpty(userUpsert.LoginNo) || string.IsNullOrEmpty(userUpsert.PassWord))
+                if (string.IsNullOrEmpty(upsert.LoginNo) || string.IsNullOrEmpty(upsert.PassWord))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}ValidationLoginNoPassWrodNotNull"));
                 }
-                if (await _userInfoRepository.UserNoIsExist(userUpsert.UserNo, userUpsert.LoginNo))
+                if (await _userInfoRepository.UserNoIsExist(upsert.UserNo, upsert.LoginNo))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DuplicatejobRepeatable"));
                 }
-                if (!ValidatePassword(userUpsert.PassWord))
+                if (!ValidatePassword(upsert.PassWord))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}ValidationPassWrodError"));
                 }
@@ -161,31 +161,31 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 UserInfoEntity insertUser = new UserInfoEntity()
                 {
                     UserId = userId,
-                    DepartmentId = long.Parse(userUpsert.DepartmentId),
-                    PositionId = long.Parse(userUpsert.PositionId),
-                    UserNo = userUpsert.UserNo,
-                    UserNameCn = userUpsert.UserNameCn,
-                    UserNameEn = userUpsert.UserNameEn,
-                    Gender = userUpsert.Gender,
-                    HireDate = userUpsert.HireDate,
-                    Nationality = userUpsert.Nationality,
-                    LaborId = long.Parse(userUpsert.LaborId),
-                    Email = userUpsert.Email,
-                    PhoneNumber = userUpsert.PhoneNumber,
-                    LoginNo = userUpsert.LoginNo,
-                    PassWord = HashPasswordWithArgon2id(userUpsert.PassWord, salt),
+                    DepartmentId = long.Parse(upsert.DepartmentId),
+                    PositionId = long.Parse(upsert.PositionId),
+                    UserNo = upsert.UserNo,
+                    UserNameCn = upsert.UserNameCn,
+                    UserNameEn = upsert.UserNameEn,
+                    Gender = upsert.Gender,
+                    HireDate = upsert.HireDate,
+                    Nationality = upsert.Nationality,
+                    LaborId = long.Parse(upsert.LaborId),
+                    Email = upsert.Email,
+                    PhoneNumber = upsert.PhoneNumber,
+                    LoginNo = upsert.LoginNo,
+                    PassWord = HashPasswordWithArgon2id(upsert.PassWord, salt),
                     PwdSalt = saltString,
-                    AvatarAddress = userUpsert.AvatarAddress,
-                    IsApproval = userUpsert.IsApproval,
-                    IsRealtimeNotification = userUpsert.IsRealtimeNotification,
-                    IsScheduledNotification = userUpsert.IsScheduledNotification,
-                    IsEmployed = userUpsert.IsEmployed,
-                    IsFreeze = userUpsert.IsFreeze,
-                    ExpirationDays = userUpsert.ExpirationDays,
-                    ExpirationTime = DateTime.Now.AddDays(userUpsert.ExpirationDays).ToString("yyyy-MM-dd HH:mm:ss"),
-                    Remark = userUpsert.Remark,
+                    AvatarAddress = upsert.AvatarAddress,
+                    IsApproval = upsert.IsApproval,
+                    IsRealtimeNotification = upsert.IsRealtimeNotification,
+                    IsScheduledNotification = upsert.IsScheduledNotification,
+                    IsEmployed = upsert.IsEmployed,
+                    IsFreeze = upsert.IsFreeze,
+                    ExpirationDays = upsert.ExpirationDays,
+                    ExpirationTime = DateTime.Now.AddDays(upsert.ExpirationDays),
+                    Remark = upsert.Remark,
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    CreatedDate = DateTime.Now
                 };
                 int insertUserCount = await _userInfoRepository.InsertUserInfo(insertUser);
 
@@ -193,14 +193,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 UserRoleEntity insertUserRoleEntity = new UserRoleEntity()
                 {
                     UserId = userId,
-                    RoleId = long.Parse(userUpsert.RoleId),
+                    RoleId = long.Parse(upsert.RoleId),
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    CreatedDate = DateTime.Now
                 };
-                int InsertUserRoleCount = await _userInfoRepository.InsertUserRole(insertUserRoleEntity);
+                int insertUserRoleCount = await _userInfoRepository.InsertUserRole(insertUserRoleEntity);
                 await _db.CommitTranAsync();
 
-                return insertUserCount >= 1 && InsertUserRoleCount >= 1
+                return insertUserCount >= 1 && insertUserRoleCount >= 1
                         ? Result<int>.Ok(insertUserCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
@@ -215,25 +215,25 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 删除员工
         /// </summary>
-        /// <param name="userUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteUserInfo(UserInfoUpsert userUpsert)
+        public async Task<Result<int>> DeleteUserInfo(UserInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除员工信息
-                int delUserCount = await _userInfoRepository.DeleteUserInfo(long.Parse(userUpsert.UserId));
+                int delUserCount = await _userInfoRepository.DeleteUserInfo(long.Parse(upsert.UserId));
                 // 删除员工权限
-                int delUserRoleCount = await _userInfoRepository.DeleteUserRoleInfo(long.Parse(userUpsert.UserId));
+                int delUserRoleCount = await _userInfoRepository.DeleteUserRoleInfo(long.Parse(upsert.UserId));
                 // 删除员工代理
-                int delUserAgentCount = await _userInfoRepository.DeleteUserAgent(long.Parse(userUpsert.UserId));
+                int delUserAgentCount = await _userInfoRepository.DeleteUserAgent(long.Parse(upsert.UserId));
                 // 删除员工兼任
-                int delUserPartTimeCount = await _userInfoRepository.DeleteUserPartTime(long.Parse(userUpsert.UserId));
+                int delUserPartTimeCount = await _userInfoRepository.DeleteUserPartTime(long.Parse(upsert.UserId));
                 // 删除员工表单绑定
-                int delUserFormBindCount = await _userInfoRepository.DeleteUserFormBind(long.Parse(userUpsert.UserId));
+                int delUserFormBindCount = await _userInfoRepository.DeleteUserFormBind(long.Parse(upsert.UserId));
                 // 删除员工账号锁定记录
-                int delUserLockCount = await _userInfoRepository.DeleteUserLock(long.Parse(userUpsert.UserId));
+                int delUserLockCount = await _userInfoRepository.DeleteUserLock(long.Parse(upsert.UserId));
                 await _db.CommitTranAsync();
 
                 return delUserCount >= 1 && delUserRoleCount >= 1
@@ -251,9 +251,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改员工
         /// </summary>
-        /// <param name="userUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateUserInfo(UserInfoUpsert userUpsert)
+        public async Task<Result<int>> UpdateUserInfo(UserInfoUpsert upsert)
         {
             try
             {
@@ -261,9 +261,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 string updateSaltString = string.Empty;
 
                 await _db.BeginTranAsync();
-                if (!string.IsNullOrEmpty(userUpsert.PassWord))
+                if (!string.IsNullOrEmpty(upsert.PassWord))
                 {
-                    if (!ValidatePassword(userUpsert.PassWord))
+                    if (!ValidatePassword(upsert.PassWord))
                     {
                         await _db.RollbackTranAsync();
                         return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}ValidationPassWrodError"));
@@ -272,55 +272,55 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     {
                         byte[] salt = GenerateSalt();
                         updateSaltString = Convert.ToBase64String(salt);
-                        updatePassWord = HashPasswordWithArgon2id(userUpsert.PassWord, salt);
+                        updatePassWord = HashPasswordWithArgon2id(upsert.PassWord, salt);
                     }
                 }
                 else
                 {
-                    UserInfoEntity user = await _userInfoRepository.GetUserPasswordAndSalt(long.Parse(userUpsert.UserId));
+                    UserInfoEntity user = await _userInfoRepository.GetUserPasswordAndSalt(long.Parse(upsert.UserId));
                     updateSaltString = user.PwdSalt;
                     updatePassWord = user.PassWord;
                 }
-                
+
                 // 修改员工信息
-                var updateUser = new UserInfoEntity
+                UserInfoEntity entity = new UserInfoEntity
                 {
-                    UserId = long.Parse(userUpsert.UserId),
-                    UserNo = userUpsert.UserNo,
-                    DepartmentId = long.Parse(userUpsert.DepartmentId),
-                    PositionId = long.Parse(userUpsert.PositionId),
-                    UserNameCn = userUpsert.UserNameCn,
-                    UserNameEn = userUpsert.UserNameEn,
-                    Gender = userUpsert.Gender,
-                    HireDate = userUpsert.HireDate,
-                    Nationality = userUpsert.Nationality,
-                    LaborId = long.Parse(userUpsert.LaborId),
-                    Email = userUpsert.Email,
-                    PhoneNumber = userUpsert.PhoneNumber,
-                    LoginNo = userUpsert.LoginNo,
+                    UserId = long.Parse(upsert.UserId),
+                    UserNo = upsert.UserNo,
+                    DepartmentId = long.Parse(upsert.DepartmentId),
+                    PositionId = long.Parse(upsert.PositionId),
+                    UserNameCn = upsert.UserNameCn,
+                    UserNameEn = upsert.UserNameEn,
+                    Gender = upsert.Gender,
+                    HireDate = upsert.HireDate,
+                    Nationality = upsert.Nationality,
+                    LaborId = long.Parse(upsert.LaborId),
+                    Email = upsert.Email,
+                    PhoneNumber = upsert.PhoneNumber,
+                    LoginNo = upsert.LoginNo,
                     PassWord = updatePassWord,
                     PwdSalt = updateSaltString,
-                    AvatarAddress = userUpsert.AvatarAddress,
-                    IsEmployed = userUpsert.IsEmployed,
-                    IsApproval = userUpsert.IsApproval,
-                    IsRealtimeNotification = userUpsert.IsRealtimeNotification,
-                    IsScheduledNotification = userUpsert.IsScheduledNotification,
-                    IsFreeze = userUpsert.IsFreeze,
-                    ExpirationDays = userUpsert.ExpirationDays,
-                    ExpirationTime = DateTime.Now.AddDays(userUpsert.ExpirationDays).ToString("yyyy-MM-dd HH:mm:ss"),
-                    Remark = userUpsert.Remark,
+                    AvatarAddress = upsert.AvatarAddress,
+                    IsEmployed = upsert.IsEmployed,
+                    IsApproval = upsert.IsApproval,
+                    IsRealtimeNotification = upsert.IsRealtimeNotification,
+                    IsScheduledNotification = upsert.IsScheduledNotification,
+                    IsFreeze = upsert.IsFreeze,
+                    ExpirationDays = upsert.ExpirationDays,
+                    ExpirationTime = DateTime.Now.AddDays(upsert.ExpirationDays),
+                    Remark = upsert.Remark,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    ModifiedDate = DateTime.Now
                 };
-                int updateUserCount = await _userInfoRepository.UpdateUserInfo(updateUser);
+                int updateUserCount = await _userInfoRepository.UpdateUserInfo(entity);
 
                 // 修改员工角色
                 UserRoleEntity updateUserRole = new UserRoleEntity()
                 {
-                    UserId = long.Parse(userUpsert.UserId),
-                    RoleId = long.Parse(userUpsert.RoleId),
+                    UserId = long.Parse(upsert.UserId),
+                    RoleId = long.Parse(upsert.RoleId),
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    ModifiedDate = DateTime.Now
                 };
                 int updateUserRoleCount = await _userInfoRepository.UpdateUserRoleInfo(updateUserRole);
                 await _db.CommitTranAsync();
@@ -340,14 +340,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询员工实体
         /// </summary>
-        /// <param name="getUserEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<UserInfoEntityDto>> GetUserInfoEntity(GetUserInfoEntity getUserEntity)
+        public async Task<Result<UserInfoEntityDto>> GetUserInfoEntity(GetUserInfoEntity getEntity)
         {
             try
             {
-                var userEntity = await _userInfoRepository.GetUserInfoEntity(long.Parse(getUserEntity.UserId));
-                return Result<UserInfoEntityDto>.Ok(userEntity, "");
+                var entity = await _userInfoRepository.GetUserInfoEntity(long.Parse(getEntity.UserId));
+                return Result<UserInfoEntityDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -359,13 +359,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询员工分页
         /// </summary>
-        /// <param name="getUserPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserInfoPageDto>> GetUserInfoPage(GetUserInfoPage getUserPage)
+        public async Task<ResultPaged<UserInfoPageDto>> GetUserInfoPage(GetUserInfoPage getPage)
         {
             try
             {
-                return await _userInfoRepository.GetUserInfoPage(getUserPage);
+                return await _userInfoRepository.GetUserInfoPage(getPage);
             }
             catch (Exception ex)
             {
@@ -374,15 +374,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             }
         }
         /// <summary>
-        /// 国籍字典下拉框
+        /// 国籍字典下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<NationalityDropDto>>> GetNationalityDropDown()
         {
             try
             {
-                var nationDrop = await _userInfoRepository.GetNationalityDropDown();
-                return Result<List<NationalityDropDto>>.Ok(nationDrop, "");
+                var drop = await _userInfoRepository.GetNationalityDropDown();
+                return Result<List<NationalityDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -392,15 +392,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 职业下拉框
+        /// 职业下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
         {
             try
             {
-                var LaborDrop = await _userInfoRepository.GetLaborDropDown();
-                return Result<List<UserLaborDropDto>>.Ok(LaborDrop, "");
+                var drop = await _userInfoRepository.GetLaborDropDown();
+                return Result<List<UserLaborDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -410,15 +410,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 部门树下拉框
+        /// 部门树下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
         {
             try
             {
-                var deptDrop = await _userInfoRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(deptDrop, "");
+                var drop = await _userInfoRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -428,15 +428,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 职级下拉框
+        /// 职级下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
         {
             try
             {
-                var userPositionDrop = await _userInfoRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(userPositionDrop, "");
+                var drop = await _userInfoRepository.GetUserPositionDropDown();
+                return Result<List<UserPositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -446,15 +446,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 角色下拉框
+        /// 角色下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
         {
             try
             {
-                var roleDrop = await _userInfoRepository.GetRoleDropDown();
-                return Result<List<RoleInfoDropDto>>.Ok(roleDrop, "");
+                var drop = await _userInfoRepository.GetRoleDropDown();
+                return Result<List<RoleInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -496,7 +496,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     _localization.ReturnMsg($"{_thisExcel}IsEmployedName"),
                     _localization.ReturnMsg($"{_thisExcel}IsApprovalName"),
                     _localization.ReturnMsg($"{_thisExcel}IsFreezeName")
-
                 };
                 for (int i = 0; i < headers.Length; i++)
                 {

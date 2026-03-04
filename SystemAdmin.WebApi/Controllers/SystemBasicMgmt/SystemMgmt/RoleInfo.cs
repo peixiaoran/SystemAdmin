@@ -22,57 +22,57 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 新增角色")]
-        public async Task<Result<int>> InsertRole([FromBody] RoleInfoUpsert roleUpsert)
+        public async Task<Result<int>> InsertRole([FromBody] RoleInfoUpsert upsert)
         {
-            return await _roleService.InsertRole(roleUpsert);
+            return await _roleService.InsertRole(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 删除角色")]
-        public async Task<Result<int>> DeleteRole([FromBody] RoleInfoUpsert roleUpsert)
+        public async Task<Result<int>> DeleteRole([FromBody] RoleInfoUpsert upsert)
         {
-            return await _roleService.DeleteRole(roleUpsert);
+            return await _roleService.DeleteRole(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 修改角色")]
-        public async Task<Result<int>> UpdateRole([FromBody] RoleInfoUpsert roleUpsert)
+        public async Task<Result<int>> UpdateRole([FromBody] RoleInfoUpsert upsert)
         {
-            return await _roleService.UpdateRole(roleUpsert);
+            return await _roleService.UpdateRole(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 查询角色实体")]
-        public async Task<Result<RoleInfoDto>> GetRoleEntity([FromBody] GetRoleInfoEntity getRoleEntity)
+        public async Task<Result<RoleInfoDto>> GetRoleEntity([FromBody] GetRoleInfoEntity getEntity)
         {
-            return await _roleService.GetRoleEntity(getRoleEntity);
+            return await _roleService.GetRoleEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 查询角色分页")]
-        public async Task<ResultPaged<RoleInfoDto>> GetRolePage([FromBody] GetRoleInfoPage getRolePage)
+        public async Task<ResultPaged<RoleInfoDto>> GetRolePage([FromBody] GetRoleInfoPage getPage)
         {
-            return await _roleService.GetRolePage(getRolePage);
+            return await _roleService.GetRolePage(getPage);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 查询角色模块绑定列表")]
-        public async Task<Result<List<RoleModuleDto>>> GetRoleModuleList(GetRoleModuleList getRoleModuleList)
+        public async Task<Result<List<RoleModuleDto>>> GetRoleModuleList(GetRoleModuleList getList)
         {
-            return await _roleService.GetRoleModuleList(getRoleModuleList);
+            return await _roleService.GetRoleModuleList(getList);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 查询角色菜单绑定树")]
-        public async Task<Result<List<RoleMenuDto>>> GetRoleMenuTree(GetRoleMenuTree getRoleMenuTree)
+        public async Task<Result<List<RoleMenuDto>>> GetRoleMenuTree(GetRoleMenuTree getTree)
         {
-            return await _roleService.GetRoleMenuTree(getRoleMenuTree);
+            return await _roleService.GetRoleMenuTree(getTree);
         }
 
         [HttpPost]
@@ -85,7 +85,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[角色信息] 角色模块下拉框")]
+        [EndpointSummary("[角色信息] 角色模块下拉")]
         public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(GetRoleModuleDropDown getRoleModuleDrop)
         {
             return await _roleService.GetRoleModuleDropDown(getRoleModuleDrop);

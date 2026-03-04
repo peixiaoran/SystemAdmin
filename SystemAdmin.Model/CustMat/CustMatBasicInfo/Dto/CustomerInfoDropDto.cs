@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.CustMat.CustMatBasicInfo.Dto
 {
     /// <summary>
-    /// 客户信息下拉框Dto
+    /// 客户信息下拉Dto
     /// </summary>
     public class CustomerInfoDropDto
     {

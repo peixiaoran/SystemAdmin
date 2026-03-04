@@ -30,42 +30,41 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 新增汇率对照信息
         /// </summary>
-        /// <param name="exchangeRateUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertExchangeRate(ExchangeRateUpsert exchangeRateUpsert)
+        public async Task<Result<int>> InsertExchangeRate(ExchangeRateUpsert upsert)
         {
             try
             {
-                if (exchangeRateUpsert.CurrencyCode == exchangeRateUpsert.ExchangeCurrencyCode)
+                if (upsert.CurrencyCode == upsert.ExchangeCurrencyCode)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsRepeat"));
                 }
                 else
                 {
-                    await _db.BeginTranAsync();
-                    bool IsExist = await _ExchangeRateRepository.GetExchangeRateIsExist(exchangeRateUpsert.CurrencyCode, exchangeRateUpsert.ExchangeCurrencyCode, exchangeRateUpsert.YearMonth);
-                    if (IsExist)
+                    bool isExist = await _ExchangeRateRepository.GetExchangeRateIsExist(upsert.CurrencyCode, upsert.ExchangeCurrencyCode, upsert.YearMonth);
+                    if (isExist)
                     {
-                        await _db.RollbackTranAsync();
                         return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsExist"));
                     }
                     else
                     {
-                        ExchangeRateEntity ExchangeRateEntity = new ExchangeRateEntity()
+                        ExchangeRateEntity entity = new ExchangeRateEntity()
                         {
-                            CurrencyCode = exchangeRateUpsert.CurrencyCode,
-                            ExchangeCurrencyCode = exchangeRateUpsert.ExchangeCurrencyCode,
-                            ExchangeRate = exchangeRateUpsert.ExchangeRate,
-                            YearMonth = exchangeRateUpsert.YearMonth,
-                            Remark = exchangeRateUpsert.Remark,
+                            CurrencyCode = upsert.CurrencyCode,
+                            ExchangeCurrencyCode = upsert.ExchangeCurrencyCode,
+                            ExchangeRate = upsert.ExchangeRate,
+                            YearMonth = upsert.YearMonth,
+                            Remark = upsert.Remark,
                             CreatedBy = _loginuser.UserId,
-                            CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                            CreatedDate = DateTime.Now
                         };
-                        var insertExchangeRateCount = await _ExchangeRateRepository.InsertExchangeRate(ExchangeRateEntity);
+                        await _db.BeginTranAsync();
+                        var count = await _ExchangeRateRepository.InsertExchangeRate(entity);
                         await _db.CommitTranAsync();
 
-                        return insertExchangeRateCount >= 1
-                                ? Result<int>.Ok(insertExchangeRateCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                        return count >= 1
+                                ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                                 : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                     }
                 }
@@ -81,18 +80,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 删除汇率对照信息
         /// </summary>
-        /// <param name="exchangeRateUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteExchangeRate(ExchangeRateUpsert exchangeRateUpsert)
+        public async Task<Result<int>> DeleteExchangeRate(ExchangeRateUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var delExchangeRateCount = await _ExchangeRateRepository.DeleteExchangeRate(exchangeRateUpsert.CurrencyCode, exchangeRateUpsert.ExchangeCurrencyCode, exchangeRateUpsert.YearMonth);
+                var count = await _ExchangeRateRepository.DeleteExchangeRate(upsert.CurrencyCode, upsert.ExchangeCurrencyCode, upsert.YearMonth);
                 await _db.CommitTranAsync();
 
-                return delExchangeRateCount >= 1
-                        ? Result<int>.Ok(delExchangeRateCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
@@ -106,37 +105,36 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 修改汇率对照信息
         /// </summary>
-        /// <param name="exchangeRateUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateExchangeRate(ExchangeRateUpsert exchangeRateUpsert)
+        public async Task<Result<int>> UpdateExchangeRate(ExchangeRateUpsert upsert)
         {
             try
             {
-                if (exchangeRateUpsert.CurrencyCode == exchangeRateUpsert.ExchangeCurrencyCode)
+                if (upsert.CurrencyCode == upsert.ExchangeCurrencyCode)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsRepeat"));
                 }
                 else
                 {
                     await _db.BeginTranAsync();
-                    await _ExchangeRateRepository.DeleteExchangeRate(exchangeRateUpsert.CurrencyCode, exchangeRateUpsert.ExchangeCurrencyCode, exchangeRateUpsert.YearMonth);
-                    ExchangeRateEntity ExchangeRateEntity = new ExchangeRateEntity()
+                    ExchangeRateEntity updateExchangeRate = new ExchangeRateEntity()
                     {
-                        CurrencyCode = exchangeRateUpsert.CurrencyCode,
-                        ExchangeCurrencyCode = exchangeRateUpsert.ExchangeCurrencyCode,
-                        ExchangeRate = exchangeRateUpsert.ExchangeRate,
-                        YearMonth = exchangeRateUpsert.YearMonth,
-                        Remark = exchangeRateUpsert.Remark,
+                        CurrencyCode = upsert.CurrencyCode,
+                        ExchangeCurrencyCode = upsert.ExchangeCurrencyCode,
+                        ExchangeRate = upsert.ExchangeRate,
+                        YearMonth = upsert.YearMonth,
+                        Remark = upsert.Remark,
                         CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                        CreatedDate = DateTime.Now,
                         ModifiedBy = _loginuser.UserId,
-                        ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        ModifiedDate = DateTime.Now
                     };
-                    var insertExchangeRateCount = await _ExchangeRateRepository.InsertExchangeRate(ExchangeRateEntity);
+                    var count = await _ExchangeRateRepository.UpdateExchangeRate(updateExchangeRate);
                     await _db.CommitTranAsync();
 
-                    return insertExchangeRateCount >= 1
-                            ? Result<int>.Ok(insertExchangeRateCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                    return count >= 1
+                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
                 }
             }
@@ -151,14 +149,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 查询汇率对照信息分页
         /// </summary>
-        /// <param name="getExchangeRatePage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ExchangeRateDto>> GetExchangeRatePage(GetExchangeRatePage getExchangeRatePage)
+        public async Task<ResultPaged<ExchangeRateDto>> GetExchangeRatePage(GetExchangeRatePage getPage)
         {
             try
             {
-                var exchangeRatePage = await _ExchangeRateRepository.GetExchangeRatePage(getExchangeRatePage);
-                return exchangeRatePage;
+                var page = await _ExchangeRateRepository.GetExchangeRatePage(getPage);
+                return page;
             }
             catch (Exception ex)
             {
@@ -170,14 +168,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 查询汇率对照信息实体
         /// </summary>
-        /// <param name="getExchangeRateEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<ExchangeRateDto>> GetExchangeRateEntity(GetExchangeRateEntity getExchangeRateEntity)
+        public async Task<Result<ExchangeRateDto>> GetExchangeRateEntity(GetExchangeRateEntity getEntity)
         {
             try
             {
-                var exchangeRateEntity = await _ExchangeRateRepository.GetExchangeRateEntity(getExchangeRateEntity);
-                return Result<ExchangeRateDto>.Ok(exchangeRateEntity, "");
+                var entity = await _ExchangeRateRepository.GetExchangeRateEntity(getEntity);
+                return Result<ExchangeRateDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -194,8 +192,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var currencyDrop = await _ExchangeRateRepository.GetCurrencyInfoDropDown();
-                return Result<List<CurrencyInfoDropDto>>.Ok(currencyDrop, "");
+                var drop = await _ExchangeRateRepository.GetCurrencyInfoDropDown();
+                return Result<List<CurrencyInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {

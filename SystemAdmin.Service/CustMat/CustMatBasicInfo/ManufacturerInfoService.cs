@@ -30,9 +30,9 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 新增厂商信息
         /// </summary>
-        /// <param name="manufacturerInfoUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertManufacturerInfo(ManufacturerInfoUpsert manufacturerInfoUpsert)
+        public async Task<Result<int>> InsertManufacturerInfo(ManufacturerInfoUpsert upsert)
         {
             try
             {
@@ -40,10 +40,10 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                 ManufacturerInfoEntity insertManufacturerEntity = new ManufacturerInfoEntity()
                 {
                     ManufacturerId = SnowFlakeSingle.Instance.NextId(),
-                    ManufacturerCode = manufacturerInfoUpsert.ManufacturerCode,
-                    ManufacturerNameCn = manufacturerInfoUpsert.ManufacturerNameCn,
-                    ManufacturerNameEn = manufacturerInfoUpsert.ManufacturerNameEn,
-                    Description = manufacturerInfoUpsert.Description,
+                    ManufacturerCode = upsert.ManufacturerCode,
+                    ManufacturerNameCn = upsert.ManufacturerNameCn,
+                    ManufacturerNameEn = upsert.ManufacturerNameEn,
+                    Description = upsert.Description,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
@@ -65,14 +65,14 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 删除厂商信息
         /// </summary>
-        /// <param name="manufacturerInfoUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteManufacturerInfo(ManufacturerInfoUpsert manufacturerInfoUpsert)
+        public async Task<Result<int>> DeleteManufacturerInfo(ManufacturerInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var delManufacturerCount = await _manufacturerInfoRepository.DeleteManufacturerInfo(long.Parse(manufacturerInfoUpsert.ManufacturerId));
+                var delManufacturerCount = await _manufacturerInfoRepository.DeleteManufacturerInfo(long.Parse(upsert.ManufacturerId));
                 await _db.CommitTranAsync();
 
                 return delManufacturerCount >= 1
@@ -90,22 +90,22 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 修改厂商信息
         /// </summary>
-        /// <param name="manufacturerInfoUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateManufacturerInfo(ManufacturerInfoUpsert manufacturerInfoUpsert)
+        public async Task<Result<int>> UpdateManufacturerInfo(ManufacturerInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
                 ManufacturerInfoEntity updateManufacturerEntity = new ManufacturerInfoEntity()
                 {
-                    ManufacturerId = long.Parse(manufacturerInfoUpsert.ManufacturerId),
-                    ManufacturerCode = manufacturerInfoUpsert.ManufacturerCode,
-                    ManufacturerNameCn = manufacturerInfoUpsert.ManufacturerNameCn,
-                    ManufacturerNameEn = manufacturerInfoUpsert.ManufacturerNameEn,
-                    Email= manufacturerInfoUpsert.Email,
-                    Fax = manufacturerInfoUpsert.Fax,
-                    Description = manufacturerInfoUpsert.Description,
+                    ManufacturerId = long.Parse(upsert.ManufacturerId),
+                    ManufacturerCode = upsert.ManufacturerCode,
+                    ManufacturerNameCn = upsert.ManufacturerNameCn,
+                    ManufacturerNameEn = upsert.ManufacturerNameEn,
+                    Email= upsert.Email,
+                    Fax = upsert.Fax,
+                    Description = upsert.Description,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
@@ -127,13 +127,13 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 查询厂商信息实体
         /// </summary>
-        /// <param name="getManufacturerInfoEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<ManufacturerInfoDto>> GetManufacturerInfoEntity(GetManufacturerInfoEntity getManufacturerInfoEntity)
+        public async Task<Result<ManufacturerInfoDto>> GetManufacturerInfoEntity(GetManufacturerInfoEntity getEntity)
         {
             try
             {
-                var manufacturerInfoEntity = await _manufacturerInfoRepository.GetManufacturerInfoEntity(long.Parse(getManufacturerInfoEntity.ManufacturerId));
+                var manufacturerInfoEntity = await _manufacturerInfoRepository.GetManufacturerInfoEntity(long.Parse(getEntity.ManufacturerId));
                 return Result<ManufacturerInfoDto>.Ok(manufacturerInfoEntity, "");
             }
             catch (Exception ex)
@@ -146,13 +146,13 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 查询厂商信息分页
         /// </summary>
-        /// <param name="getManufacturerInfoPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ManufacturerInfoDto>> GetManufacturerInfoPage(GetManufacturerInfoPage getManufacturerInfoPage)
+        public async Task<ResultPaged<ManufacturerInfoDto>> GetManufacturerInfoPage(GetManufacturerInfoPage getPage)
         {
             try
             {
-                return await _manufacturerInfoRepository.GetManufacturerInfoPage(getManufacturerInfoPage);
+                return await _manufacturerInfoRepository.GetManufacturerInfoPage(getPage);
             }
             catch (Exception ex)
             {

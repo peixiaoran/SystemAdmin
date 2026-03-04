@@ -38,14 +38,14 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[个人信息] 修改个人信息")]
-        public async Task<Result<int>> UpdatePersonalInfo(PersonalInfoUpdate personalUpdate)
+        public async Task<Result<int>> UpdatePersonalInfo(PersonalInfoUpsert upsert)
         {
-            return await _personalInfoService.UpdatePersonalInfo(personalUpdate);
+            return await _personalInfoService.UpdatePersonalInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[个人信息] 职业下拉框")]
+        [EndpointSummary("[个人信息] 职业下拉")]
         public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
         {
             var ss = await _personalInfoService.GetLaborDropDown();
@@ -54,7 +54,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[个人信息] 部门下拉框")]
+        [EndpointSummary("[个人信息] 部门下拉")]
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
         {
             return await _personalInfoService.GetDepartmentDropDown();
@@ -62,7 +62,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[个人信息] 职级下拉框")]
+        [EndpointSummary("[个人信息] 职级下拉")]
         public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
         {
             return await _personalInfoService.GetUserPositionDropDown();
@@ -70,7 +70,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[个人信息] 角色下拉框")]
+        [EndpointSummary("[个人信息] 角色下拉")]
         public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
         {
             return await _personalInfoService.GetRoleDropDown();

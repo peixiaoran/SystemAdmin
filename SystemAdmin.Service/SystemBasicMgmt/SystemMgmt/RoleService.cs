@@ -30,29 +30,29 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 新增角色
         /// </summary>
-        /// <param name="roleUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertRole(RoleInfoUpsert roleUpsert)
+        public async Task<Result<int>> InsertRole(RoleInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var insertRole = new RoleInfoEntity
+                RoleInfoEntity entity = new RoleInfoEntity
                 {
                     RoleId = SnowFlakeSingle.Instance.NextId(),
-                    RoleCode = roleUpsert.RoleCode,
-                    RoleNameCn = roleUpsert.RoleNameCn,
-                    RoleNameEn = roleUpsert.RoleNameEn,
-                    Description = roleUpsert.Description,
+                    RoleCode = upsert.RoleCode,
+                    RoleNameCn = upsert.RoleNameCn,
+                    RoleNameEn = upsert.RoleNameEn,
+                    Description = upsert.Description,
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    Remark = roleUpsert.Remark
+                    CreatedDate = DateTime.Now,
+                    Remark = upsert.Remark
                 };
-                int insertRoleCount = await _roleRepository.InsertRole(insertRole);
+                int count = await _roleRepository.InsertRole(entity);
                 await _db.CommitTranAsync();
 
-                return insertRoleCount >= 1
-                        ? Result<int>.Ok(insertRoleCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -66,23 +66,24 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 删除角色
         /// </summary>
-        /// <param name="roleUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteRole(RoleInfoUpsert roleUpsert)
+        public async Task<Result<int>> DeleteRole(RoleInfoUpsert upsert)
         {
             try
             {
-                await _db.BeginTranAsync();
                 // 查询角色是否被使用
-                bool isRoleUsed = await _roleRepository.GetUserRoleIsExist(long.Parse(roleUpsert.RoleId));
+                bool isRoleUsed = await _roleRepository.GetUserRoleIsExist(long.Parse(upsert.RoleId));
                 if (!isRoleUsed)
                 {
+
+                    await _db.BeginTranAsync();
                     // 删除角色
-                    int delRoleCount = await _roleRepository.DeleteRole(long.Parse(roleUpsert.RoleId));
+                    int delRoleCount = await _roleRepository.DeleteRole(long.Parse(upsert.RoleId));
                     // 删除角色模块绑定
-                    int delRoleModuleCount = await _roleRepository.DeleleRoleModule(long.Parse(roleUpsert.RoleId));
+                    int delRoleModuleCount = await _roleRepository.DeleleRoleModule(long.Parse(upsert.RoleId));
                     // 删除角色菜单绑定
-                    int delRoleMenuCount = await _roleRepository.DeleteRoleMenu(long.Parse(roleUpsert.RoleId));
+                    int delRoleMenuCount = await _roleRepository.DeleteRoleMenu(long.Parse(upsert.RoleId));
                    
                     await _db.CommitTranAsync();
                     return delRoleCount >= 1
@@ -106,30 +107,30 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 修改角色
         /// </summary>
-        /// <param name="roleUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateRole(RoleInfoUpsert roleUpsert)
+        public async Task<Result<int>> UpdateRole(RoleInfoUpsert upsert)
         {
             try
             {
-                await _db.BeginTranAsync();
-                var updateRole = new RoleInfoEntity
+                RoleInfoEntity entity = new RoleInfoEntity
                 {
-                    RoleId = long.Parse(roleUpsert.RoleId),
-                    RoleCode = roleUpsert.RoleCode,
-                    RoleNameCn = roleUpsert.RoleNameCn,
-                    RoleNameEn = roleUpsert.RoleNameEn,
-                    Description = roleUpsert.Description,
+                    RoleId = long.Parse(upsert.RoleId),
+                    RoleCode = upsert.RoleCode,
+                    RoleNameCn = upsert.RoleNameCn,
+                    RoleNameEn = upsert.RoleNameEn,
+                    Description = upsert.Description,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    Remark = roleUpsert.Remark
+                    ModifiedDate = DateTime.Now,
+                    Remark = upsert.Remark
                 };
 
-                int updateRoleCount = await _roleRepository.UpdateRole(updateRole);
+                await _db.BeginTranAsync();
+                int count = await _roleRepository.UpdateRole(entity);
                 await _db.CommitTranAsync();
 
-                return updateRoleCount >= 1
-                        ? Result<int>.Ok(updateRoleCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -143,14 +144,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询角色实体
         /// </summary>
-        /// <param name="getRoleEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<RoleInfoDto>> GetRoleEntity(GetRoleInfoEntity getRoleEntity)
+        public async Task<Result<RoleInfoDto>> GetRoleEntity(GetRoleInfoEntity getEntity)
         {
             try
             {
-                var roleEntity = await _roleRepository.GetRoleEntity(long.Parse(getRoleEntity.RoleId));
-                return Result<RoleInfoDto>.Ok(roleEntity, "");
+                var entity = await _roleRepository.GetRoleEntity(long.Parse(getEntity.RoleId));
+                return Result<RoleInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -162,14 +163,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询角色分页
         /// </summary>
-        /// <param name="getRolePage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<RoleInfoDto>> GetRolePage(GetRoleInfoPage getRolePage)
+        public async Task<ResultPaged<RoleInfoDto>> GetRolePage(GetRoleInfoPage getPage)
         {
             try
             {
-                var rolePage = await _roleRepository.GetRolePage(getRolePage);
-                return rolePage;
+                var page = await _roleRepository.GetRolePage(getPage);
+                return page;
             }
             catch (Exception ex)
             {
@@ -181,14 +182,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询角色模块绑定列表
         /// </summary>
-        /// <param name="getRoleModuleList"></param>
+        /// <param name="getList"></param>
         /// <returns></returns>
-        public async Task<Result<List<RoleModuleDto>>> GetRoleModuleList(GetRoleModuleList getRoleModuleList)
+        public async Task<Result<List<RoleModuleDto>>> GetRoleModuleList(GetRoleModuleList getList)
         {
             try
             {
-                var roleModuleList = await _roleRepository.GetRoleModuleList(long.Parse(getRoleModuleList.RoleId));
-                return Result<List<RoleModuleDto>>.Ok(roleModuleList, "");
+                var list = await _roleRepository.GetRoleModuleList(long.Parse(getList.RoleId));
+                return Result<List<RoleModuleDto>>.Ok(list, "");
             }
             catch (Exception ex)
             {
@@ -200,14 +201,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询角色菜单绑定树
         /// </summary>
-        /// <param name="getRoleMenuTree"></param>
+        /// <param name="getTree"></param>
         /// <returns></returns>
-        public async Task<Result<List<RoleMenuDto>>> GetRoleMenuTree(GetRoleMenuTree getRoleMenuTree)
+        public async Task<Result<List<RoleMenuDto>>> GetRoleMenuTree(GetRoleMenuTree getTree)
         {
             try
             {
-                var roleMenuList = await _roleRepository.GetRoleMenuTree(long.Parse(getRoleMenuTree.RoleId), long.Parse(getRoleMenuTree.ModuleId));
-                return Result<List<RoleMenuDto>>.Ok(roleMenuList, "");
+                var list = await _roleRepository.GetRoleMenuTree(long.Parse(getTree.RoleId), long.Parse(getTree.ModuleId));
+                return Result<List<RoleMenuDto>>.Ok(list, "");
             }
             catch (Exception ex)
             {
@@ -226,9 +227,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             try
             {
                 List<long> unSelectdModuleIds = roleModuleUpsert.UnSelectedModuleIds
-                                                       .Where(moduleId => long.TryParse(moduleId, out _))
-                                                       .Select(long.Parse)
-                                                       .ToList();
+                                                .Where(moduleId => long.TryParse(moduleId, out _))
+                                                .Select(long.Parse)
+                                                .ToList();
                 // 查询未选中模块下的菜单Id
                 var delMenuIds = await _roleRepository.GetMenuIds(unSelectdModuleIds);
                 // 删除角色菜单绑定
@@ -238,15 +239,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
 
                 // 再新增角色模块绑定
                 List<RoleModuleEntity> insertRoleModuleList = roleModuleUpsert.SelectedModuleIds
-                                                      .Select(moduleId => new RoleModuleEntity
-                                                      {
-                                                          RoleId = long.Parse(roleModuleUpsert.RoleId),
-                                                          ModuleId = long.Parse(moduleId),
-                                                          CreatedBy = _loginuser.UserId,
-                                                          CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                                                          ModifiedBy = _loginuser.UserId,
-                                                          ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                                                      }).ToList();
+                                       .Select(moduleId => new RoleModuleEntity
+                                       {
+                                           RoleId = long.Parse(roleModuleUpsert.RoleId),
+                                           ModuleId = long.Parse(moduleId),
+                                           CreatedBy = _loginuser.UserId,
+                                           CreatedDate = DateTime.Now,
+                                           ModifiedBy = _loginuser.UserId,
+                                           ModifiedDate = DateTime.Now,
+                                       }).ToList();
                 var insertRoleModuleCount = await _roleRepository.InsertRoleModule(insertRoleModuleList);
                 await _db.CommitTranAsync();
 
@@ -261,7 +262,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
-        /// 角色模块下拉框
+        /// 角色模块下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(GetRoleModuleDropDown getRoleModuleDrop)
@@ -293,15 +294,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 var delRoleMenuIdCount = await _roleRepository.DeleteRoleMenu(long.Parse(roleMenuUpsert.RoleId), delMenuIds);
                 // 再新增角色菜单绑定
                 List<RoleMenuEntity> insertRoleMenuList = roleMenuUpsert.SelectedMenuIds
-                                                    .Select(menuid => new RoleMenuEntity
-                                                    {
-                                                        RoleId = long.Parse(roleMenuUpsert.RoleId),
-                                                        MenuId = long.Parse(menuid),
-                                                        CreatedBy = _loginuser.UserId,
-                                                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                                                        ModifiedBy = _loginuser.UserId,
-                                                        ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                                                    }).ToList();
+                                     .Select(menuid => new RoleMenuEntity
+                                     {
+                                         RoleId = long.Parse(roleMenuUpsert.RoleId),
+                                         MenuId = long.Parse(menuid),
+                                         CreatedBy = _loginuser.UserId,
+                                         CreatedDate = DateTime.Now,
+                                         ModifiedBy = _loginuser.UserId,
+                                         ModifiedDate = DateTime.Now,
+                                     }).ToList();
                 var insertRoleMenuCount = await _roleRepository.InsertRoleMenu(insertRoleMenuList);
                 await _db.CommitTranAsync();
 

@@ -48,9 +48,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 查询员工分页")]
-        public async Task<ResultPaged<UserPartTimeViewDto>> GetUserPartTimeView([FromBody] GetUserInfoPage getUserPage)
+        public async Task<ResultPaged<UserPartTimeViewDto>> GetUserPartTimeView([FromBody] GetUserInfoPage getPage)
         {
-            return await _userPartTimeService.GetUserPartTimeView(getUserPage);
+            return await _userPartTimeService.GetUserPartTimeView(getPage);
         }
 
         [HttpPost]
@@ -71,7 +71,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
-        [EndpointSummary("[员工兼任] 职业下拉框")]
+        [EndpointSummary("[员工兼任] 职业下拉")]
         public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
         {
             return await _userPartTimeService.GetLaborDropDown();
@@ -79,7 +79,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
-        [EndpointSummary("[员工兼任] 部门下拉框")]
+        [EndpointSummary("[员工兼任] 部门下拉")]
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
         {
             return await _userPartTimeService.GetDepartmentDropDown();
@@ -87,7 +87,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
-        [EndpointSummary("[员工兼任] 职级下拉框")]
+        [EndpointSummary("[员工兼任] 职级下拉")]
         public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
         {
             return await _userPartTimeService.GetUserPositionDropDown();

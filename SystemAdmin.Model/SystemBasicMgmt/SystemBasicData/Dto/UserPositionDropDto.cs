@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
 {
     /// <summary>
-    /// 职级下拉框Dto
+    /// 职级下拉Dto
     /// </summary>
     public class UserPositionDropDto
     {

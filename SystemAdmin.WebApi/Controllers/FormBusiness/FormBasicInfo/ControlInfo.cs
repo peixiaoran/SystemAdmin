@@ -22,25 +22,25 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormBasicInfo
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[控件信息] 新增控件信息")]
-        public async Task<Result<int>> InsertControlInfo([FromBody] ControlInfoUpsert controlInfoUpsert)
+        public async Task<Result<int>> InsertControlInfo([FromBody] ControlInfoUpsert upsert)
         {
-            return await _controlInfoService.InsertControlInfo(controlInfoUpsert);
+            return await _controlInfoService.InsertControlInfo(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[控件信息] 删除控件信息")]
-        public async Task<Result<int>> DeleteControlInfo([FromBody] ControlInfoUpsert controlInfoUpsert)
+        public async Task<Result<int>> DeleteControlInfo([FromBody] ControlInfoUpsert upsert)
         {
-            return await _controlInfoService.DeleteControlInfo(controlInfoUpsert);
+            return await _controlInfoService.DeleteControlInfo(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[控件信息] 查询控件信息分页")]
-        public async Task<ResultPaged<ControlInfoDto>> GetControlInfoPage([FromBody] GetControlInfoPage getControlInfoPage)
+        public async Task<ResultPaged<ControlInfoDto>> GetControlInfoPage([FromBody] GetControlInfoPage getPage)
         {
-            return await _controlInfoService.GetControlInfoPage(getControlInfoPage);
+            return await _controlInfoService.GetControlInfoPage(getPage);
         }
     }
 }

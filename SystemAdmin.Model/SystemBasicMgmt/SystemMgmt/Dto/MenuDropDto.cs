@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto
 {
     /// <summary>
-    /// 一级菜单下拉框Dto
+    /// 一级菜单下拉Dto
     /// </summary>
     public class MenuDropDto
     {

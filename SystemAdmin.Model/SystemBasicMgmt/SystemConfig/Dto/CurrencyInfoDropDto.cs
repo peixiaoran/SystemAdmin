@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Dto
 {
     /// <summary>
-    /// 币别下拉框Dto
+    /// 币别下拉Dto
     /// </summary>
     public class CurrencyInfoDropDto
     {

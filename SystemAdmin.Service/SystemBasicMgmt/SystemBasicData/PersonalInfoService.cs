@@ -102,9 +102,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改个人信息
         /// </summary>
-        /// <param name="personalUpdate"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdatePersonalInfo(PersonalInfoUpdate personalUpdate)
+        public async Task<Result<int>> UpdatePersonalInfo(PersonalInfoUpsert upsert)
         {
             try
             {
@@ -114,10 +114,10 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 string updatePassWord = string.Empty;
                 string updateSaltString = string.Empty;
 
-                if (!string.IsNullOrEmpty(personalUpdate.PassWord))
+                if (!string.IsNullOrEmpty(upsert.PassWord))
                 {
                     //验证密码是否符合规范（必须为8-16位、包含小写、大写字母和数字）
-                    if (!_personalInfoRepository.ValidatePassword(personalUpdate.PassWord))
+                    if (!_personalInfoRepository.ValidatePassword(upsert.PassWord))
                     {
                         await _db.RollbackTranAsync();
                         return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}ValidationPassWrodError"));
@@ -126,7 +126,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     {
                         byte[] salt = _personalInfoRepository.GenerateSalt();
                         updateSaltString = Convert.ToBase64String(salt);
-                        updatePassWord = _personalInfoRepository.HashPasswordWithArgon2id(personalUpdate.PassWord, salt);
+                        updatePassWord = _personalInfoRepository.HashPasswordWithArgon2id(upsert.PassWord, salt);
                     }
                 }
                 else
@@ -135,23 +135,23 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     updatePassWord = user.PassWord;
                 }
 
-                var updatePersonal = new UserInfoEntity
+                UserInfoEntity entity = new UserInfoEntity
                 {
-                    UserId = personalUpdate.UserId,
-                    PhoneNumber = personalUpdate.PhoneNumber,
+                    UserId = upsert.UserId,
+                    PhoneNumber = upsert.PhoneNumber,
                     PassWord = updatePassWord,
                     PwdSalt = updateSaltString,
-                    IsRealtimeNotification = personalUpdate.IsRealtimeNotification,
-                    IsScheduledNotification = personalUpdate.IsScheduledNotification,
-                    AvatarAddress = personalUpdate.AvatarAddress,
+                    IsRealtimeNotification = upsert.IsRealtimeNotification,
+                    IsScheduledNotification = upsert.IsScheduledNotification,
+                    AvatarAddress = upsert.AvatarAddress,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    ModifiedDate = DateTime.Now
                 };
-                var updatePersonalCount = await _personalInfoRepository.UpdatePersonalInfo(_loginuser.UserId, updatePersonal);
+                var count = await _personalInfoRepository.UpdatePersonalInfo(_loginuser.UserId, entity);
                 await _db.CommitTranAsync();
 
-                return updatePersonalCount >= 1
-                        ? Result<int>.Ok(updatePersonalCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -163,15 +163,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 职业下拉框
+        /// 职业下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
         {
             try
             {
-                var userlaborDrop = await _personalInfoRepository.GetLaborDropDown();
-                return Result<List<UserLaborDropDto>>.Ok(userlaborDrop, "");
+                var drop = await _personalInfoRepository.GetLaborDropDown();
+                return Result<List<UserLaborDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -181,15 +181,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 部门下拉框
+        /// 部门下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
         {
             try
             {
-                var deptDrop = await _personalInfoRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(deptDrop, "");
+                var drop = await _personalInfoRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -206,8 +206,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var userPositionDrop = await _personalInfoRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(userPositionDrop, "");
+                var drop = await _personalInfoRepository.GetUserPositionDropDown();
+                return Result<List<UserPositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -217,15 +217,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 角色下拉框
+        /// 角色下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
         {
             try
             {
-                var roleDrop = await _personalInfoRepository.GetRoleDropDown();
-                return Result<List<RoleInfoDropDto>>.Ok(roleDrop, "");
+                var drop = await _personalInfoRepository.GetRoleDropDown();
+                return Result<List<RoleInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {

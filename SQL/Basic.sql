@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 28/02/2026 18:23:35
+ Date: 04/03/2026 17:01:12
 */
 
 
@@ -30,9 +30,9 @@ CREATE TABLE [Basic].[CurrencyInfo] (
   [CurrencyNameEn] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [SortOrder] int  NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -157,9 +157,9 @@ CREATE TABLE [Basic].[DepartmentInfo] (
   [Address] nvarchar(200) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [Description] nvarchar(200) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -834,9 +834,9 @@ CREATE TABLE [Basic].[DictionaryInfo] (
   [DicNameEn] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [SortOrder] int  NULL,
   [CreatedBy] bigint  NULL,
-  [CreatedDate] datetime DEFAULT getdate() NULL,
+  [CreatedDate] datetime2(3)  NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3) DEFAULT NULL NULL
 )
 GO
 
@@ -923,106 +923,106 @@ GO
 -- ----------------------------
 -- Records of DictionaryInfo
 -- ----------------------------
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1942923565422743552', N'1350161679034934501', N'MenuType', N'PrimaryMenu', N'一级菜单', N'Primary Menu', N'1', N'1903486709602062336', N'2025-11-06 14:04:35.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1942923565422743552', N'1350161679034934501', N'MenuType', N'PrimaryMenu', N'一级菜单', N'Primary Menu', N'1', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1942923650634223616', N'1350161679034934501', N'MenuType', N'SecondaryMenu', N'二级菜单', N'Secondary menu', N'2', N'1903486709602062336', N'2025-11-06 14:04:35.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1942923650634223616', N'1350161679034934501', N'MenuType', N'SecondaryMenu', N'二级菜单', N'Secondary menu', N'2', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1951693847235006464', N'1350161679034934501', N'LoginBehavior', N'LoginSuccessful', N'登入成功', N'Login successful', N'1', N'1903486709602062336', N'2025-11-06 14:04:35.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1951693847235006464', N'1350161679034934501', N'LoginBehavior', N'LoginSuccessful', N'登入成功', N'Login successful', N'1', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1951694944875974656', N'1350161679034934501', N'LoginBehavior', N'IncorrectPassword', N'密码错误', N'Incorrect password', N'2', N'1903486709602062336', N'2025-11-06 14:04:35.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1951694944875974656', N'1350161679034934501', N'LoginBehavior', N'IncorrectPassword', N'密码错误', N'Incorrect password', N'2', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1951695070155640832', N'1350161679034934501', N'LoginBehavior', N'AccountNotExist', N'账号不存在', N'Account does not exist', N'3', N'1903486709602062336', N'2025-11-06 14:04:35.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1951695070155640832', N'1350161679034934501', N'LoginBehavior', N'AccountNotExist', N'账号不存在', N'Account does not exist', N'3', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1954124186578456576', N'1350161679034934501', N'LoginBehavior', N'LoggedOut', N'登出', N'Logged out', N'4', N'1903486709602062336', N'2025-11-06 14:04:35.000', N'1903486709602062336', N'2025-12-27 15:25:01.000')
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1954124186578456576', N'1350161679034934501', N'LoginBehavior', N'LoggedOut', N'登出', N'Logged out', N'4', N'1903486709602062336', NULL, N'1903486709602062336', NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990313419198304256', N'1968271760889614336', N'FormStatus', N'PendingSubmission', N'待送审', N'Pending Submission', N'1', N'1903486709602062336', N'2025-11-17 14:57:52.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990313419198304256', N'1968271760889614336', N'FormStatus', N'PendingSubmission', N'待送审', N'Pending Submission', N'1', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987844250263490560', N'1968271760889614336', N'LeaveType', N'AnnualLeave', N'年休假', N'Annual Leave', N'1', N'1903486709602062336', N'2025-11-10 19:26:16.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987844250263490560', N'1968271760889614336', N'LeaveType', N'AnnualLeave', N'年休假', N'Annual Leave', N'1', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987844559857651712', N'1968271760889614336', N'LeaveType', N'SickLeave', N'病假', N'Sick Leave', N'2', N'1903486709602062336', N'2025-11-10 19:27:30.000', N'1903486709602062336', N'2025-11-10 19:28:06.000')
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987844559857651712', N'1968271760889614336', N'LeaveType', N'SickLeave', N'病假', N'Sick Leave', N'2', N'1903486709602062336', NULL, N'1903486709602062336', NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987844688471789568', N'1968271760889614336', N'LeaveType', N'PersonalLeave', N'事假', N'Personal Leave', N'3', N'1903486709602062336', N'2025-11-10 19:28:00.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987844688471789568', N'1968271760889614336', N'LeaveType', N'PersonalLeave', N'事假', N'Personal Leave', N'3', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987845000968409088', N'1968271760889614336', N'ImportanceType', N'Normal', N'一般', N'Normal', N'1', N'1903486709602062336', N'2025-11-10 19:29:15.000', N'1903486709602062336', N'2025-11-15 15:48:20.000')
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987845000968409088', N'1968271760889614336', N'ImportanceType', N'Normal', N'一般', N'Normal', N'1', N'1903486709602062336', NULL, N'1903486709602062336', NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987845208037003264', N'1968271760889614336', N'ImportanceType', N'Important', N'重要', N'Important', N'2', N'1903486709602062336', N'2025-11-10 19:30:04.000', N'1903486709602062336', N'2025-11-15 16:13:13.000')
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987845208037003264', N'1968271760889614336', N'ImportanceType', N'Important', N'重要', N'Important', N'2', N'1903486709602062336', NULL, N'1903486709602062336', NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1989622758610440192', N'1968271760889614336', N'LeaveType', N'4', N'婚假', N'Marriage Leave', N'4', N'1903486709602062336', N'2025-11-15 17:13:25.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1989622758610440192', N'1968271760889614336', N'LeaveType', N'4', N'婚假', N'Marriage Leave', N'4', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1989622835332648960', N'1968271760889614336', N'LeaveType', N'5', N'产假', N'Maternity Leave', N'5', N'1903486709602062336', N'2025-11-15 17:13:44.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1989622835332648960', N'1968271760889614336', N'LeaveType', N'5', N'产假', N'Maternity Leave', N'5', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1989622953901428736', N'1968271760889614336', N'LeaveType', N'6', N'陪产假 / 护理假', N'Paternity Leave', N'6', N'1903486709602062336', N'2025-11-15 17:14:12.000', N'1903486709602062336', N'2025-11-15 17:14:23.000')
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1989622953901428736', N'1968271760889614336', N'LeaveType', N'6', N'陪产假 / 护理假', N'Paternity Leave', N'6', N'1903486709602062336', NULL, N'1903486709602062336', NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1989623247368491008', N'1968271760889614336', N'LeaveType', N'7', N'哺乳假', N'Nursing Leave', N'7', N'1903486709602062336', N'2025-11-15 17:15:22.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1989623247368491008', N'1968271760889614336', N'LeaveType', N'7', N'哺乳假', N'Nursing Leave', N'7', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990313509094821888', N'1968271760889614336', N'FormStatus', N'UnderReview', N'审批中', N'Under Review', N'2', N'1903486709602062336', N'2025-11-17 14:58:13.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990313509094821888', N'1968271760889614336', N'FormStatus', N'UnderReview', N'审批中', N'Under Review', N'2', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990313656482664448', N'1968271760889614336', N'FormStatus', N'Rejected', N'已驳回', N'Rejected', N'3', N'1903486709602062336', N'2025-11-17 14:58:48.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990313656482664448', N'1968271760889614336', N'FormStatus', N'Rejected', N'已驳回', N'Rejected', N'3', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990313846581104640', N'1968271760889614336', N'FormStatus', N'Approved', N'已批准', N'Approved', N'4', N'1903486709602062336', N'2025-11-17 14:59:33.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990313846581104640', N'1968271760889614336', N'FormStatus', N'Approved', N'已批准', N'Approved', N'4', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990314002714071040', N'1968271760889614336', N'FormStatus', N'Cancelled', N'作废', N'Cancelled', N'5', N'1903486709602062336', N'2025-11-17 15:00:11.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1990314002714071040', N'1968271760889614336', N'FormStatus', N'Cancelled', N'作废', N'Cancelled', N'5', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009863132733902848', N'1968271760889614336', N'StepAssignment', N'Org', N'组织架构', N'Org Structure', N'1', N'1903486709602062336', N'2026-01-10 13:41:26.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009863132733902848', N'1968271760889614336', N'StepAssignment', N'Org', N'组织架构', N'Org Structure', N'1', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009863891806457856', N'1968271760889614336', N'StepAssignment', N'DeptUser', N'指定部门和员工级别', N'Dept & Emp Level', N'2', N'1903486709602062336', N'2026-01-10 13:44:27.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009863891806457856', N'1968271760889614336', N'StepAssignment', N'DeptUser', N'指定部门和员工级别', N'Dept & Emp Level', N'2', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009864209579511808', N'1968271760889614336', N'StepAssignment', N'User', N'指定员工', N'Assigned Employee', N'3', N'1903486709602062336', N'2026-01-10 13:45:43.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009864209579511808', N'1968271760889614336', N'StepAssignment', N'User', N'指定员工', N'Assigned Employee', N'3', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009864390316265472', N'1968271760889614336', N'StepAssignment', N'Custom', N'自定义', N'Custom', N'4', N'1903486709602062336', N'2026-01-10 13:46:26.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009864390316265472', N'1968271760889614336', N'StepAssignment', N'Custom', N'自定义', N'Custom', N'4', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009873952087871488', N'1968271760889614336', N'ArchitectureLevel', N'OrgLevel', N'组织架构级', N'Org Level', N'1', N'1903486709602062336', N'2026-01-10 14:24:26.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009873952087871488', N'1968271760889614336', N'ArchitectureLevel', N'OrgLevel', N'组织架构级', N'Org Level', N'1', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009874127502053376', N'1968271760889614336', N'ArchitectureLevel', N'ImplementLevel', N'执行级', N'Implement Level', N'2', N'1903486709602062336', N'2026-01-10 14:25:08.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009874127502053376', N'1968271760889614336', N'ArchitectureLevel', N'ImplementLevel', N'执行级', N'Implement Level', N'2', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875445490782208', N'1968271760889614336', N'ApproveMode', N'Ss', N'单签', N'Single Approval', N'1', N'1903486709602062336', N'2026-01-10 14:30:22.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875445490782208', N'1968271760889614336', N'ApproveMode', N'Ss', N'单签', N'Single Approval', N'1', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875596401840128', N'1968271760889614336', N'ApproveMode', N'Cs', N'会签', N'Joint Approval', N'2', N'1903486709602062336', N'2026-01-10 14:30:58.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875596401840128', N'1968271760889614336', N'ApproveMode', N'Cs', N'会签', N'Joint Approval', N'2', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022522679818588160', N'1968271760889614336', N'AppointmentType', N'Incumbent', N'实', N'Incumbent', N'1', N'1903486709602062336', N'2026-02-14 12:05:58.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022522679818588160', N'1968271760889614336', N'AppointmentType', N'Incumbent', N'实', N'Incumbent', N'1', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523046727913472', N'1968271760889614336', N'AppointmentType', N'Concurrent', N'兼', N'Concurrent Post', N'2', N'1903486709602062336', N'2026-02-14 12:07:25.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523046727913472', N'1968271760889614336', N'AppointmentType', N'Concurrent', N'兼', N'Concurrent Post', N'2', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523134879600640', N'1968271760889614336', N'AppointmentType', N'Acting', N'代', N'Acting', N'3', N'1903486709602062336', N'2026-02-14 12:07:46.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523134879600640', N'1968271760889614336', N'AppointmentType', N'Acting', N'代', N'Acting', N'3', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523379030036480', N'1968271760889614336', N'AppointmentType', N'Auto-Incumbent', N'自动上签-实', N'Auto-Incumbent', N'4', N'1903486709602062336', N'2026-02-14 12:08:44.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523379030036480', N'1968271760889614336', N'AppointmentType', N'Auto-Incumbent', N'自动上签-实', N'Auto-Incumbent', N'4', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2027616422913511424', N'1968271760889614336', N'AppointmentType', N'Auto-Concurrent', N'自动上签-兼', N'Auto-Concurrent', N'5', N'1903486709602062336', N'2026-02-28 13:26:41.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2027616422913511424', N'1968271760889614336', N'AppointmentType', N'Auto-Concurrent', N'自动上签-兼', N'Auto-Concurrent', N'5', N'1903486709602062336', NULL, NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2027616542358900736', N'1968271760889614336', N'AppointmentType', N'Auto-Acting', N'自动上签-代', N'Auto-Acting', N'6', N'1903486709602062336', N'2026-02-28 13:27:09.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2029030380463591424', N'1968271760889614336', N'AppointmentType', N'Auto-Acting', N'自动上签-代', N'Auto-Acting', N'6', N'1903486709602062336', N'2026-03-04 11:05:14.923', NULL, NULL)
 GO
 
 
@@ -1040,9 +1040,9 @@ CREATE TABLE [Basic].[ExchangeRate] (
   [ExchangeRate] decimal(18,4)  NOT NULL,
   [Remark] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -1146,9 +1146,9 @@ CREATE TABLE [Basic].[MenuInfo] (
   [Redirect] nvarchar(100) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [Remark] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NULL,
-  [CreatedDate] datetime DEFAULT getdate() NULL,
+  [CreatedDate] datetime2(3)  NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -1406,9 +1406,9 @@ CREATE TABLE [Basic].[ModuleInfo] (
   [RemarkCh] nvarchar(1000) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [RemarkEn] nvarchar(1000) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -1546,9 +1546,9 @@ CREATE TABLE [Basic].[NationalityInfo] (
   [NationNameEn] nvarchar(20) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [Remark] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NULL,
-  [CreatedDate] datetime DEFAULT getdate() NULL,
+  [CreatedDate] datetime2(3)  NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -1664,9 +1664,9 @@ CREATE TABLE [Basic].[RoleInfo] (
   [Description] nvarchar(100) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [Remark] nvarchar(1000) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint DEFAULT NULL NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -1764,9 +1764,9 @@ CREATE TABLE [Basic].[RoleMenu] (
   [RoleId] bigint  NOT NULL,
   [MenuId] bigint  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint DEFAULT NULL NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -1967,9 +1967,9 @@ CREATE TABLE [Basic].[RoleModule] (
   [RoleId] bigint  NOT NULL,
   [ModuleId] bigint  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint DEFAULT NULL NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -2057,9 +2057,9 @@ CREATE TABLE [Basic].[UserAgent] (
   [StartTime] datetime2(7)  NOT NULL,
   [EndTime] datetime2(7)  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3) DEFAULT '' NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -2147,9 +2147,9 @@ CREATE TABLE [Basic].[UserFormBind] (
   [UserId] bigint  NOT NULL,
   [FormGroupTypeId] bigint  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -2280,12 +2280,12 @@ CREATE TABLE [Basic].[UserInfo] (
   [IsParttime] int  NOT NULL,
   [IsFreeze] int  NOT NULL,
   [ExpirationDays] int  NOT NULL,
-  [ExpirationTime] datetime  NULL,
+  [ExpirationTime] datetime2(3)  NULL,
   [Remark] nvarchar(200) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -2548,7 +2548,7 @@ GO
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962091248886091776', N'1929535196076576876', N'1351601258426793984', N'E347377', N'喬知強', N'Zhiqiang Qiao', N'1', N'2025-08-31', N'1972220728019390464', N'1962091425965412352', N'3841510708@qq.com', N'', N'E347377', N'KGcpgw92+jrDFb0EizJO5eyD1o46RMcex9PZp8O+o2w=', N'XhUiCEvbyEFnZsTgiv5Nkw==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003120618339.jpg', N'1', N'1', N'1', N'1', N'0', N'1', N'0', N'60', N'2025-10-30 17:53:02.000', N'', N'1903486709602062336', N'2025-08-31 17:53:02.000', N'1903486709602062336', N'2025-10-03 20:06:23.000')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079079705645056', N'1929535196076576768', N'1351582085961220096', N'ETW00331', N'黃薰鋒', N'Stein Huang', N'1', N'2025-09-20', N'1972220823855042560', N'1962084148730531840', N'3841510708@qq.com', N'', N'ETW00331', N'u3Kroho36l4NrbiqywHC7BpDViDk25GP0tJlKuZxJLY=', N'8dIffCMtw3wgzqUoxLvdCQ==', N'127.0.0.1:9000/systemadmin/20251227015121374_2dcd5a31.jpg', N'1', N'1', N'1', N'1', N'1', N'1', N'0', N'180', N'2026-08-13 12:57:40.000', N'', N'1903486709602062336', N'2025-09-20 00:40:11.000', N'1903486709602062336', N'2026-02-14 12:57:40.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079079705645056', N'1929535196076576768', N'1351582085961220096', N'ETW00331', N'黃薰鋒', N'Stein Huang', N'1', N'2025-09-20', N'1972220823855042560', N'1962084148730531840', N'3841510708@qq.com', N'', N'ETW00331', N'IcV2Og14Uyjsy9Wu4fQCnTNU45DYFglm/tA4we6yB8g=', N'iB4+0eMXDe00XNpS+sYWKA==', N'127.0.0.1:9000/systemadmin/20251227015121374_2dcd5a31.jpg', N'1', N'1', N'1', N'1', N'1', N'1', N'0', N'180', N'2026-08-13 12:57:40.000', N'', N'1903486709602062336', N'2025-09-20 00:40:11.000', N'1903486709602062336', N'2026-02-14 12:57:40.000')
 GO
 
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079427610578944', N'1929535196076576769', N'1351583636813512704', N'ETW00366', N'吳崇源', N'Allen Wu', N'1', N'2025-09-20', N'1972220728019390464', N'1962084148730531840', N'3841510708@qq.com', N'', N'ETW00366', N'13HrafN9ZBF01qa0ahgLd7NiwniHr9fwVg4ElIRZmZs=', N'3kRXd8MEO6lgqSi5hREy8w==', N'127.0.0.1:9000/systemadmin/20260214124636753_899809ba.jpg', N'1', N'1', N'0', N'0', N'0', N'0', N'0', N'180', N'2026-08-13 12:46:38.000', N'', N'1903486709602062336', N'2025-09-20 00:41:34.000', N'1903486709602062336', N'2026-02-14 12:46:38.000')
@@ -2583,9 +2583,9 @@ CREATE TABLE [Basic].[UserLabor] (
   [LaborNameEn] nvarchar(50) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [Description] nvarchar(200) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -2801,7 +2801,7 @@ GO
 CREATE TABLE [Basic].[UserLock] (
   [UserId] bigint  NOT NULL,
   [NumberErrors] int  NOT NULL,
-  [CreatedDate] datetime  NOT NULL
+  [CreatedDate] datetime2(3)  NOT NULL
 )
 GO
 
@@ -2851,7 +2851,7 @@ CREATE TABLE [Basic].[UserLogOut] (
   [UserId] bigint  NULL,
   [IP] nvarchar(1000) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [StatusId] nvarchar(20) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [LoginDate] datetime  NOT NULL
+  [LoginDate] datetime2(3)  NOT NULL
 )
 GO
 
@@ -3114,6 +3114,12 @@ GO
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.23', N'LoginSuccessful', N'2026-02-28 16:24:03.000')
 GO
 
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1969079079705645056', N'::1', N'LoginSuccessful', N'2026-03-04 11:01:29.000')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-04 11:02:45.000')
+GO
+
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-28 16:27:04.000')
 GO
 
@@ -3132,9 +3138,9 @@ CREATE TABLE [Basic].[UserPartTime] (
   [StartTime] datetime2(7)  NOT NULL,
   [EndTime] datetime2(7)  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime DEFAULT NULL NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -3239,9 +3245,9 @@ CREATE TABLE [Basic].[UserPosition] (
   [SortOrder] int  NULL,
   [Description] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime  NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 
@@ -3404,9 +3410,9 @@ CREATE TABLE [Basic].[UserRole] (
   [RoleId] bigint  NOT NULL,
   [Remarks] nvarchar(1000) COLLATE Chinese_PRC_CI_AS  NULL,
   [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
   [ModifiedBy] bigint DEFAULT NULL NULL,
-  [ModifiedDate] datetime DEFAULT getdate() NULL
+  [ModifiedDate] datetime2(3)  NULL
 )
 GO
 

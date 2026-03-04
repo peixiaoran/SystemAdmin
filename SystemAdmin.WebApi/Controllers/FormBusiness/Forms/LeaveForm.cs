@@ -29,9 +29,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
         [EndpointSummary("[请假单] 保存请假单")]
-        public async Task<Result<int>> SaveLeaveForm([FromBody] LeaveFormSave leaveFormSave)
+        public async Task<Result<int>> SaveLeaveForm([FromBody] LeaveFormSave formSave)
         {
-            return await _leaveFormService.SaveLeaveForm(leaveFormSave);
+            return await _leaveFormService.SaveLeaveForm(formSave);
         }
 
         [HttpPost]
@@ -44,7 +44,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[请假单] 请假类别下拉框")]
+        [EndpointSummary("[请假单] 请假类别下拉")]
         public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDropDown()
         {
             return await _leaveFormService.GetLeaveTypeDropDown();
@@ -52,7 +52,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[请假单] 重要程度下拉框")]
+        [EndpointSummary("[请假单] 重要程度下拉")]
         public async Task<Result<List<ImportanceDropDto>>> GetImportanceDropDown()
         {
             return await _leaveFormService.GetImportanceDropDown();
@@ -60,7 +60,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[请假单] 查询全部签核人员")]
+        [EndpointSummary("[请假单] 查询表单审批流程")]
         public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser([FromForm] string fromId)
         {
             return await _leaveFormService.GetWorkflowAllApproveUser(fromId);

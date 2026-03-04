@@ -24,25 +24,25 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[系统字典] 新增字典信息")]
-        public async Task<Result<int>> InsertDictionaryInfo([FromBody] DictionaryInfoUpsert dicUpsert)
+        public async Task<Result<int>> InsertDictionaryInfo([FromBody] DictionaryInfoUpsert upsert)
         {
-            return await _dictionaryService.InsertDictionaryInfo(dicUpsert);
+            return await _dictionaryService.InsertDictionaryInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[系统字典] 删除字典信息")]
-        public async Task<Result<int>> DeleteDictionaryInfo([FromBody] DictionaryInfoUpsert dicUpsert)
+        public async Task<Result<int>> DeleteDictionaryInfo([FromBody] DictionaryInfoUpsert upsert)
         {
-            return await _dictionaryService.DeleteDictionaryInfo(dicUpsert);
+            return await _dictionaryService.DeleteDictionaryInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[系统字典] 修改字典信息")]
-        public async Task<Result<int>> UpdateDictionaryInfo([FromBody] DictionaryInfoUpsert dicUpsert)
+        public async Task<Result<int>> UpdateDictionaryInfo([FromBody] DictionaryInfoUpsert upsert)
         {
-            return await _dictionaryService.UpdateDictionaryInfo(dicUpsert);
+            return await _dictionaryService.UpdateDictionaryInfo(upsert);
         }
 
         [HttpPost]
@@ -63,7 +63,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
-        [EndpointSummary("[系统字典] 模块下拉框")]
+        [EndpointSummary("[系统字典] 模块下拉")]
         public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
         {
             return await _dictionaryService.GetModuleDropDown();
@@ -71,7 +71,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
-        [EndpointSummary("[系统字典] 字典类型下拉框")]
+        [EndpointSummary("[系统字典] 字典类型下拉")]
         public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown(GetDicTypeDropDown getDicTypeDropDown)
         {
             return await _dictionaryService.GetDicTypeDropDown(getDicTypeDropDown);

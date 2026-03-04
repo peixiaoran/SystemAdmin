@@ -26,6 +26,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity
         /// <summary>
         /// 登录时间
         /// </summary>
-        public string LoginDate { get; set; } = string.Empty;
+        public DateTime? LoginDate { get; set; }
     }
 }

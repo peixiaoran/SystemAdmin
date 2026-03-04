@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.CustMat.CustMatBasicInfo.Dto
 {
     /// <summary>
-    /// 厂商信息下拉框Dto
+    /// 厂商信息下拉Dto
     /// </summary>
     public class ManufacturerInfoDropDto
     {

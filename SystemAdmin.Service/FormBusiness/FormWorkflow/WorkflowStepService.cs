@@ -157,6 +157,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 int deleteStepDeptUserCount = 0;
                 int deleteStepUserCount = 0;
                 int deleteStepCustomCount = 0;
+
+                // 删除所有审批步骤的流程配置
                 deleteStepCount = await _workflowStepRepository.DeleteWorkflowStep(long.Parse(workflowStep.StepId));
                 deleteStepOrgCount = await _workflowStepRepository.DeleteWorkflowStepOrg(long.Parse(workflowStep.StepId));
                 deleteStepDeptUserCount = await _workflowStepRepository.DeleteWorkflowStepDeptUser(long.Parse(workflowStep.StepId));
@@ -307,13 +309,13 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <summary>
         /// 查询审批步骤分页
         /// </summary>
-        /// <param name="getWorkflowStep"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<WorkflowStepPageDto>> GetWorkflowStepPage(GetWorkflowStepPage getWorkflowStep)
+        public async Task<ResultPaged<WorkflowStepPageDto>> GetWorkflowStepPage(GetWorkflowStepPage getPage)
         {
             try
             {
-                return await _workflowStepRepository.GetWorkflowStepPage(getWorkflowStep);
+                return await _workflowStepRepository.GetWorkflowStepPage(getPage);
             }
             catch (Exception ex)
             {
@@ -325,17 +327,18 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <summary>
         /// 查询审批步骤实体
         /// </summary>
-        /// <param name="getWorkflowStep"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<WorkflowStepEntityDto>> GetWorkflowStepEntity(GetWorkflowStepEntity getWorkflowStep)
+        public async Task<Result<WorkflowStepEntityDto>> GetWorkflowStepEntity(GetWorkflowStepEntity getEntity)
         {
             try
             {
-                var workflowStepEntity = await _workflowStepRepository.GetWorkflowStepEntity(long.Parse(getWorkflowStep.StepId));
-                workflowStepEntity.workflowStepOrgEntity = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(getWorkflowStep.StepId));
-                workflowStepEntity.workflowStepDeptUserEntity = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(getWorkflowStep.StepId));
-                workflowStepEntity.workflowStepUserEntity = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(getWorkflowStep.StepId));
-                workflowStepEntity.workflowStepApproverCustomEntity = await _workflowStepRepository.GetWorkflowStepCustomEntity(long.Parse(getWorkflowStep.StepId));
+                var workflowStepEntity = await _workflowStepRepository.GetWorkflowStepEntity(long.Parse(getEntity.StepId));
+
+                workflowStepEntity.workflowStepOrgEntity = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(getEntity.StepId));
+                workflowStepEntity.workflowStepDeptUserEntity = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(getEntity.StepId));
+                workflowStepEntity.workflowStepUserEntity = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(getEntity.StepId));
+                workflowStepEntity.workflowStepApproverCustomEntity = await _workflowStepRepository.GetWorkflowStepCustomEntity(long.Parse(getEntity.StepId));
 
                 return Result<WorkflowStepEntityDto>.Ok(workflowStepEntity);
             }
@@ -347,15 +350,15 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 表单组别下拉框
+        /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
         {
             try
             {
-                var formGroupDropDown = await _workflowStepRepository.GetFormGroupDropDown();
-                return Result<List<FormGroupDropDto>>.Ok(formGroupDropDown);
+                var drop = await _workflowStepRepository.GetFormGroupDropDown();
+                return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
             {
@@ -365,15 +368,15 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 表单类别下拉框
+        /// 表单类别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(GetFormTypeDropDown getFormTypeDropDown)
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(GetFormTypeDropDown getDrop)
         {
             try
             {
-                var formTypeDropDown = await _workflowStepRepository.GetFormTypeDropDown(long.Parse(getFormTypeDropDown.FormGroupId));
-                return Result<List<FormTypeDropDto>>.Ok(formTypeDropDown);
+                var drop = await _workflowStepRepository.GetFormTypeDropDown(long.Parse(getDrop.FormGroupId));
+                return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
             {
@@ -383,15 +386,15 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 审批人选取方式下拉框
+        /// 审批人选取方式下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<AssignmentDropDto>>> GetAssignmentDropDown()
         {
             try
             {
-                var assigDropDown = await _workflowStepRepository.GetAssignmentDropDown();
-                return Result<List<AssignmentDropDto>>.Ok(assigDropDown);
+                var drop = await _workflowStepRepository.GetAssignmentDropDown();
+                return Result<List<AssignmentDropDto>>.Ok(drop);
             }
             catch (Exception ex)
             {
@@ -401,15 +404,15 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 部门树下拉框
+        /// 部门树下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
         {
             try
             {
-                var deptDrop = await _workflowStepRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(deptDrop, "");
+                var drop = await _workflowStepRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -419,15 +422,15 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 部门级别下拉框
+        /// 部门级别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
         {
             try
             {
-                var deptLevelDrop = await _workflowStepRepository.GetDepartmentLevelDropDown();
-                return Result<List<DepartmentLevelDropDto>>.Ok(deptLevelDrop, "");
+                var drop = await _workflowStepRepository.GetDepartmentLevelDropDown();
+                return Result<List<DepartmentLevelDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -437,15 +440,15 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 职级下拉框
+        /// 职级下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
         {
             try
             {
-                var userPositionDrop = await _workflowStepRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(userPositionDrop, "");
+                var drop = await _workflowStepRepository.GetUserPositionDropDown();
+                return Result<List<UserPositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -455,15 +458,15 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 职业下拉框
+        /// 职业下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
         {
             try
             {
-                var laborDrop = await _workflowStepRepository.GetLaborDropDown();
-                return Result<List<UserLaborDropDto>>.Ok(laborDrop, "");
+                var drop = await _workflowStepRepository.GetLaborDropDown();
+                return Result<List<UserLaborDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -476,12 +479,12 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 查询用户信息分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getUserInfoPage)
+        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
         {
             try
             {
-                var userPage = await _workflowStepRepository.GetUserInfoPage(getUserInfoPage);
-                return userPage;
+                var page = await _workflowStepRepository.GetUserInfoPage(getPage);
+                return page;
             }
             catch (Exception ex)
             {

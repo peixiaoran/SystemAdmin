@@ -19,14 +19,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询职级实体
         /// </summary>
-        /// <param name="getUserPositionEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<UserPositionDto>> GetUserPositionEntity(GetUserPositionEntity getUserPositionEntity)
+        public async Task<Result<UserPositionDto>> GetUserPositionEntity(GetUserPositionEntity getEntity)
         {
             try
             {
-                var userPositionEntity = await _userPositionRepository.GetUserPositionEntity(long.Parse(getUserPositionEntity.PositionId));
-                return Result<UserPositionDto>.Ok(userPositionEntity, "");
+                var entity = await _userPositionRepository.GetUserPositionEntity(long.Parse(getEntity.PositionId));
+                return Result<UserPositionDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -43,8 +43,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var userPositionList = await _userPositionRepository.GetUserPositionList();
-                return Result<List<UserPositionDto>>.Ok(userPositionList, "");
+                var list = await _userPositionRepository.GetUserPositionList();
+                return Result<List<UserPositionDto>>.Ok(list, "");
             }
             catch (Exception ex)
             {

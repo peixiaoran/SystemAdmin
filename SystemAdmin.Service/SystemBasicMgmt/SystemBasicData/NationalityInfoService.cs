@@ -30,9 +30,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增国籍
         /// </summary>
-        /// <param name="nationUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertNationalityInfo(NationalityInfoUpsert nationUpsert)
+        public async Task<Result<int>> InsertNationalityInfo(NationalityInfoUpsert upsert)
         {
             try
             {
@@ -40,17 +40,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 NationalityInfoEntity insertNation = new NationalityInfoEntity()
                 {
                     NationId = SnowFlakeSingle.Instance.NextId(),
-                    NationNameCn = nationUpsert.NationNameCn,
-                    NationNameEn = nationUpsert.NationNameEn,
-                    Remark = nationUpsert.Remark,
+                    NationNameCn = upsert.NationNameCn,
+                    NationNameEn = upsert.NationNameEn,
+                    Remark = upsert.Remark,
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    CreatedDate = DateTime.Now,
                 };
-                int insertNationCount = await _nationRepository.InsertNationalityInfo(insertNation);
+                int count = await _nationRepository.InsertNationalityInfo(insertNation);
                 await _db.CommitTranAsync();
 
-                return insertNationCount >= 1
-                        ? Result<int>.Ok(insertNationCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -64,18 +64,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 删除国籍
         /// </summary>
-        /// <param name="nationUpset"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteNationalityInfo(NationalityInfoUpsert nationUpset)
+        public async Task<Result<int>> DeleteNationalityInfo(NationalityInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                int delNationCount = await _nationRepository.DeleteNationalityInfo(long.Parse(nationUpset.NationId));
+                int count = await _nationRepository.DeleteNationalityInfo(long.Parse(upsert.NationId));
                 await _db.CommitTranAsync();
 
-                return delNationCount >= 1
-                        ? Result<int>.Ok(delNationCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
@@ -90,27 +90,27 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改国籍
         /// </summary>
-        /// <param name="nationUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateNationalityInfo(NationalityInfoUpsert nationUpsert)
+        public async Task<Result<int>> UpdateNationalityInfo(NationalityInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                NationalityInfoEntity updateNation = new NationalityInfoEntity()
+                NationalityInfoEntity entity = new NationalityInfoEntity()
                 {
-                    NationId = long.Parse(nationUpsert.NationId),
-                    NationNameCn = nationUpsert.NationNameCn,
-                    NationNameEn = nationUpsert.NationNameEn,
-                    Remark = nationUpsert.Remark,
+                    NationId = long.Parse(upsert.NationId),
+                    NationNameCn = upsert.NationNameCn,
+                    NationNameEn = upsert.NationNameEn,
+                    Remark = upsert.Remark,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    ModifiedDate = DateTime.Now,
                 };
-                int updateNationCount = await _nationRepository.UpdateNationalityInfo(updateNation);
+                int count = await _nationRepository.UpdateNationalityInfo(entity);
                 await _db.CommitTranAsync();
 
-                return updateNationCount >= 1
-                        ? Result<int>.Ok(updateNationCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -124,14 +124,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询国籍实体
         /// </summary>
-        /// <param name="getNationEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<NationalityInfoDto>> GetNationalityEntity(GetNationalityInfoEntity getNationEntity)
+        public async Task<Result<NationalityInfoDto>> GetNationalityEntity(GetNationalityInfoEntity getEntity)
         {
             try
             {
-                var nationEntity = await _nationRepository.GetNationalityEntity(long.Parse(getNationEntity.NationId));
-                return Result<NationalityInfoDto>.Ok(nationEntity, "");
+                var entity = await _nationRepository.GetNationalityEntity(long.Parse(getEntity.NationId));
+                return Result<NationalityInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -148,8 +148,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var nationList = await _nationRepository.GetNationalityInfoList();
-                return Result<List<NationalityInfoDto>>.Ok(nationList, "");
+                var list = await _nationRepository.GetNationalityInfoList();
+                return Result<List<NationalityInfoDto>>.Ok(list, "");
             }
             catch (Exception ex)
             {

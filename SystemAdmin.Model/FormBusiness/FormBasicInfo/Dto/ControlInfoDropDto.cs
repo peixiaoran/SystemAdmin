@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto
 {
     /// <summary>
-    /// 控件下拉框Dto
+    /// 控件下拉Dto
     /// </summary>
     public class ControlInfoDropDto
     {

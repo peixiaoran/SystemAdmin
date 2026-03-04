@@ -22,41 +22,41 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormBasicInfo
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单组别] 新增表单组别")]
-        public async Task<Result<int>> InsertFormGroupInfo([FromBody] FormGroupUpsert formGroupUpsert)
+        public async Task<Result<int>> InsertFormGroupInfo([FromBody] FormGroupUpsert upsert)
         {
-            return await _formGroupService.InsertFormGroupInfo(formGroupUpsert);
+            return await _formGroupService.InsertFormGroupInfo(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单组别] 删除表单组别")]
-        public async Task<Result<int>> DeleteFormGroupInfo([FromBody] FormGroupUpsert userLaborUpsert)
+        public async Task<Result<int>> DeleteFormGroupInfo([FromBody] FormGroupUpsert upsert)
         {
-            return await _formGroupService.DeleteFormGroupInfo(userLaborUpsert);
+            return await _formGroupService.DeleteFormGroupInfo(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单组别] 修改表单组别")]
-        public async Task<Result<int>> UpdateFormGroupInfo([FromBody] FormGroupUpsert formGroupUpsert)
+        public async Task<Result<int>> UpdateFormGroupInfo([FromBody] FormGroupUpsert upsert)
         {
-            return await _formGroupService.UpdateFormGroupInfo(formGroupUpsert);
+            return await _formGroupService.UpdateFormGroupInfo(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单组别] 查询表单组别实体")]
-        public async Task<Result<FormGroupDto>> GetFormGroupEntity([FromBody] GetFormGroupEntity getFormGroupEntity)
+        public async Task<Result<FormGroupDto>> GetFormGroupEntity([FromBody] GetFormGroupEntity getEntity)
         {
-            return await _formGroupService.GetFormGroupEntity(getFormGroupEntity);
+            return await _formGroupService.GetFormGroupEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单组别] 查询表单组别分页")]
-        public async Task<ResultPaged<FormGroupDto>> GetFormGroupPage([FromBody] GetFormGroupPage getFormGroupPage)
+        public async Task<ResultPaged<FormGroupDto>> GetFormGroupPage([FromBody] GetFormGroupPage getPage)
         {
-            return await _formGroupService.GetFormGroupPage(getFormGroupPage);
+            return await _formGroupService.GetFormGroupPage(getPage);
         }
     }
 }

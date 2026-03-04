@@ -71,26 +71,26 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询职业分页
         /// </summary>
-        /// <param name="getUserLaborPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserLaborDto>> GetUserLaborPage(GetUserLaborPage getUserLaborPage)
+        public async Task<ResultPaged<UserLaborDto>> GetUserLaborPage(GetUserLaborPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserLaborEntity>()
                            .With(SqlWith.NoLock);
 
             // 职业名称
-            if (!string.IsNullOrEmpty(getUserLaborPage.LaborName))
+            if (!string.IsNullOrEmpty(getPage.LaborName))
             {
                 query = query.Where(userlabor =>
-                    userlabor.LaborNameCn.Contains(getUserLaborPage.LaborName) ||
-                    userlabor.LaborNameEn.Contains(getUserLaborPage.LaborName));
+                    userlabor.LaborNameCn.Contains(getPage.LaborName) ||
+                    userlabor.LaborNameEn.Contains(getPage.LaborName));
             }
 
             // 排序
             query = query.OrderBy(userlabor => userlabor.LaborNameCn);
 
-            var userLaborPage = await query.ToPageListAsync(getUserLaborPage.PageIndex, getUserLaborPage.PageSize, totalCount);
+            var userLaborPage = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserLaborDto>.Ok(userLaborPage.Adapt<List<UserLaborDto>>(), totalCount, "");
         }
     }

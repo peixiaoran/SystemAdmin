@@ -23,25 +23,25 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[币别信息] 新增币别信息")]
-        public async Task<Result<int>> InsertCurrencyInfo([FromBody] CurrencyInfoUpsert currencyUpsert)
+        public async Task<Result<int>> InsertCurrencyInfo([FromBody] CurrencyInfoUpsert upsert)
         {
-            return await _currencyInfoService.InsertCurrencyInfo(currencyUpsert);
+            return await _currencyInfoService.InsertCurrencyInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[币别信息] 删除币别信息")]
-        public async Task<Result<int>> DeleteCurrencyInfo([FromBody] CurrencyInfoUpsert currencyUpsert)
+        public async Task<Result<int>> DeleteCurrencyInfo([FromBody] CurrencyInfoUpsert upsert)
         {
-            return await _currencyInfoService.DeleteCurrencyInfo(currencyUpsert);
+            return await _currencyInfoService.DeleteCurrencyInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[币别信息] 修改币别信息")]
-        public async Task<Result<int>> UpdateCurrencyInfo([FromBody] CurrencyInfoUpsert currencyUpsert)
+        public async Task<Result<int>> UpdateCurrencyInfo([FromBody] CurrencyInfoUpsert upsert)
         {
-            return await _currencyInfoService.UpdateCurrencyInfo(currencyUpsert);
+            return await _currencyInfoService.UpdateCurrencyInfo(upsert);
         }
 
         [HttpPost]

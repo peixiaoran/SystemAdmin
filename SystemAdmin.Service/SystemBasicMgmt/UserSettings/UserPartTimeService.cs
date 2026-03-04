@@ -50,13 +50,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工分页
         /// </summary>
-        /// <param name="getUserPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserPartTimeViewDto>> GetUserPartTimeView(GetUserInfoPage getUserPage)
+        public async Task<ResultPaged<UserPartTimeViewDto>> GetUserPartTimeView(GetUserInfoPage getPage)
         {
             try
             {
-                return await _userPartTimeRepository.GetUserPartTimeView(getUserPage);
+                return await _userPartTimeRepository.GetUserPartTimeView(getPage);
             }
             catch (Exception ex)
             {
@@ -82,7 +82,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     StartTime = userPartTimeInsert.StartTime,
                     EndTime = userPartTimeInsert.EndTime,
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    CreatedDate = DateTime.Now
                 };
 
                 await _db.BeginTranAsync();
@@ -184,7 +184,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                         StartTime = userPartTimeUpdateDel.StartTime,
                         EndTime = userPartTimeUpdateDel.EndTime,
                         ModifiedBy = _loginuser.UserId,
-                        ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        ModifiedDate = DateTime.Now
                     };
                     var updateUserPartTimeCount = await _userPartTimeRepository.UpdateUserPartTime(userPartTimeUpdateDel, updateUserPartTimeEntity);
                     // 判断老员工是否还有兼任，如果没有就修改兼任状态为0
@@ -215,7 +215,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
-        /// 职业下拉框
+        /// 职业下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
@@ -233,7 +233,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
-        /// 部门下拉框
+        /// 部门下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
@@ -251,7 +251,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
-        /// 职级下拉框
+        /// 职级下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()

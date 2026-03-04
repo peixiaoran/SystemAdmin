@@ -22,13 +22,13 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// <summary>
         /// 查询申请表单分页
         /// </summary>
-        /// <param name="getApplyFormPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ApplyFormInfoDto>> GetApplyFormPage(getApplyFormPage getApplyFormPage)
+        public async Task<ResultPaged<ApplyFormInfoDto>> GetApplyFormPage(getPage getPage)
         {
             try
             {
-                return await _applyFormRepository.GetApplyFormPage(getApplyFormPage, _loginuser.UserId);
+                return await _applyFormRepository.GetApplyFormPage(getPage, _loginuser.UserId);
             }
             catch (Exception ex)
             {
@@ -38,15 +38,15 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         }
 
         /// <summary>
-        /// 表单组别下拉框
+        /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
         {
             try
             {
-                var formGroupDropDown = await _applyFormRepository.GetFormGroupDropDown();
-                return Result<List<FormGroupDropDto>>.Ok(formGroupDropDown);
+                var drop = await _applyFormRepository.GetFormGroupDropDown();
+                return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
             {

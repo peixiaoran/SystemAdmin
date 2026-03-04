@@ -184,6 +184,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         /// <summary>
         /// 过期时间
         /// </summary>
-        public string ExpirationTime { get; set; } = string.Empty;
+        public DateTime ExpirationTime { get; set; }
     }
 }

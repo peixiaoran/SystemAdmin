@@ -21,9 +21,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[职业] 查询职级实体")]
-        public async Task<Result<UserPositionDto>> GetUserPositionEntity([FromBody] GetUserPositionEntity getUserPositionEntity)
+        public async Task<Result<UserPositionDto>> GetUserPositionEntity([FromBody] GetUserPositionEntity getEntity)
         {
-            return await _userPositionService.GetUserPositionEntity(getUserPositionEntity);
+            return await _userPositionService.GetUserPositionEntity(getEntity);
         }
 
         [HttpPost]

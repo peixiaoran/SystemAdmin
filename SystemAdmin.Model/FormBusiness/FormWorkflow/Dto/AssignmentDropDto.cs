@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 审批人选取方式下拉框Dto
+    /// 审批人选取方式下拉Dto
     /// </summary>
     public class AssignmentDropDto
     {

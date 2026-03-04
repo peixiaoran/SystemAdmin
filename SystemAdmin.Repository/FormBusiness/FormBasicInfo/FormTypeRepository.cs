@@ -88,7 +88,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// 查询表单类别分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<FormTypeDto>> GetFormTypePage(GetFormTypePage getFormTypePage)
+        public async Task<ResultPaged<FormTypeDto>> GetFormTypePage(GetFormTypePage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<FormTypeEntity>()
@@ -96,16 +96,16 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                            .LeftJoin<FormGroupEntity>((formtype, formgroup) => formtype.FormGroupId == formgroup.FormGroupId);
 
             // 表单组别Id
-            if (!string.IsNullOrEmpty(getFormTypePage.FormGroupId))
+            if (!string.IsNullOrEmpty(getPage.FormGroupId))
             {
-                query = query.Where(formtype => formtype.FormGroupId == long.Parse(getFormTypePage.FormGroupId));
+                query = query.Where(formtype => formtype.FormGroupId == long.Parse(getPage.FormGroupId));
             }
             // 表单类别名称
-            if (!string.IsNullOrEmpty(getFormTypePage.FormTypeName))
+            if (!string.IsNullOrEmpty(getPage.FormTypeName))
             {
                 query = query.Where(formtype =>
-                    formtype.FormTypeNameCn.Contains(getFormTypePage.FormTypeName) ||
-                    formtype.FormTypeNameEn.Contains(getFormTypePage.FormTypeName));
+                    formtype.FormTypeNameCn.Contains(getPage.FormTypeName) ||
+                    formtype.FormTypeNameEn.Contains(getPage.FormTypeName));
             }
 
             // 排序
@@ -125,7 +125,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                                               ViewPath = formtype.ViewPath,
                                               DescriptionCn = formtype.DescriptionCn,
                                               DescriptionEn = formtype.DescriptionEn,
-                                          }).ToPageListAsync(getFormTypePage.PageIndex, getFormTypePage.PageSize, totalCount);
+                                          }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<FormTypeDto>.Ok(formTypePage, totalCount, "");
         }
 

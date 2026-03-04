@@ -30,9 +30,9 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 新增客户信息
         /// </summary>
-        /// <param name="customerInfoUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertCustomerInfo(CustomerInfoUpsert customerInfoUpsert)
+        public async Task<Result<int>> InsertCustomerInfo(CustomerInfoUpsert upsert)
         {
             try
             {
@@ -40,10 +40,10 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                 CustomerInfoEntity insertCustomerEntity = new CustomerInfoEntity()
                 {
                     CustomerId = SnowFlakeSingle.Instance.NextId(),
-                    CustomerCode = customerInfoUpsert.CustomerCode,
-                    CustomerNameCn = customerInfoUpsert.CustomerNameCn,
-                    CustomerNameEn = customerInfoUpsert.CustomerNameEn,
-                    Description = customerInfoUpsert.Description,
+                    CustomerCode = upsert.CustomerCode,
+                    CustomerNameCn = upsert.CustomerNameCn,
+                    CustomerNameEn = upsert.CustomerNameEn,
+                    Description = upsert.Description,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
@@ -65,14 +65,14 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 删除客户信息
         /// </summary>
-        /// <param name="customerInfoUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteCustomerInfo(CustomerInfoUpsert customerInfoUpsert)
+        public async Task<Result<int>> DeleteCustomerInfo(CustomerInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var delCustomerCount = await _customerInfoRepository.DeleteCustomerInfo(long.Parse(customerInfoUpsert.CustomerId));
+                var delCustomerCount = await _customerInfoRepository.DeleteCustomerInfo(long.Parse(upsert.CustomerId));
                 await _db.CommitTranAsync();
 
                 return delCustomerCount >= 1
@@ -90,20 +90,20 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 修改客户信息
         /// </summary>
-        /// <param name="customerInfoUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateCustomerInfo(CustomerInfoUpsert customerInfoUpsert)
+        public async Task<Result<int>> UpdateCustomerInfo(CustomerInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
                 CustomerInfoEntity updateCustomerEntity = new CustomerInfoEntity()
                 {
-                    CustomerId = long.Parse(customerInfoUpsert.CustomerId),
-                    CustomerCode = customerInfoUpsert.CustomerCode,
-                    CustomerNameCn = customerInfoUpsert.CustomerNameCn,
-                    CustomerNameEn = customerInfoUpsert.CustomerNameEn,
-                    Description = customerInfoUpsert.Description,
+                    CustomerId = long.Parse(upsert.CustomerId),
+                    CustomerCode = upsert.CustomerCode,
+                    CustomerNameCn = upsert.CustomerNameCn,
+                    CustomerNameEn = upsert.CustomerNameEn,
+                    Description = upsert.Description,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
@@ -125,13 +125,13 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 查询客户信息实体
         /// </summary>
-        /// <param name="getCustomerInfoEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<CustomerInfoDto>> GetCustomerInfoEntity(GetCustomerInfoEntity getCustomerInfoEntity)
+        public async Task<Result<CustomerInfoDto>> GetCustomerInfoEntity(GetCustomerInfoEntity getEntity)
         {
             try
             {
-                var customerInfoEntity = await _customerInfoRepository.GetCustomerInfoEntity(long.Parse(getCustomerInfoEntity.CustomerId));
+                var customerInfoEntity = await _customerInfoRepository.GetCustomerInfoEntity(long.Parse(getEntity.CustomerId));
                 return Result<CustomerInfoDto>.Ok(customerInfoEntity, "");
             }
             catch (Exception ex)
@@ -144,13 +144,13 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 查询客户信息分页
         /// </summary>
-        /// <param name="getCustomerInfoPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<CustomerInfoDto>> GetCustomerInfoPage(GetCustomerInfoPage getCustomerInfoPage)
+        public async Task<ResultPaged<CustomerInfoDto>> GetCustomerInfoPage(GetCustomerInfoPage getPage)
         {
             try
             {
-                return await _customerInfoRepository.GetCustomerInfoPage(getCustomerInfoPage);
+                return await _customerInfoRepository.GetCustomerInfoPage(getPage);
             }
             catch (Exception ex)
             {

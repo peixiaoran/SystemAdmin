@@ -179,7 +179,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 部门树下拉框
+        /// 部门树下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
@@ -199,7 +199,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 部门级别下拉框
+        /// 部门级别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDropDown()

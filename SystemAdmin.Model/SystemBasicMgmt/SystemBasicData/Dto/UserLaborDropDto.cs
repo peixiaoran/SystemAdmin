@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
 {
     /// <summary>
-    /// 职业下拉框Dto
+    /// 职业下拉Dto
     /// </summary>
     public class UserLaborDropDto
     {

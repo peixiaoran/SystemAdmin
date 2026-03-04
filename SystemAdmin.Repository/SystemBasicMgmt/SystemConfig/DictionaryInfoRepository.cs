@@ -34,30 +34,30 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 删除系统字典
         /// </summary>
-        /// <param name="dicUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<int> DeleteDictionaryInfo(DictionaryInfoUpsert dicUpsert)
+        public async Task<int> DeleteDictionaryInfo(DictionaryInfoUpsert upsert)
         {
             return await _db.Deleteable<DictionaryInfoEntity>()
-                            .Where(dicInfo => dicInfo.DicId == long.Parse(dicUpsert.DicId))
+                            .Where(dicInfo => dicInfo.DicId == long.Parse(upsert.DicId))
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 修改系统字典
         /// </summary>
-        /// <param name="dicUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<int> UpdateDictionaryInfo(DictionaryInfoEntity dicUpsert)
+        public async Task<int> UpdateDictionaryInfo(DictionaryInfoEntity upsert)
         {
-            return await _db.Updateable(dicUpsert)
+            return await _db.Updateable(upsert)
                             .IgnoreColumns(dic => new
                             {
                                 dic.DicId,
                                 dic.DicCode,
                                 dic.CreatedBy,
                                 dic.CreatedDate,
-                            }).Where(dicInfo => dicInfo.DicId == dicUpsert.DicId)
+                            }).Where(dicInfo => dicInfo.DicId == upsert.DicId)
                             .ExecuteCommandAsync();
         }
 
@@ -119,13 +119,13 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                                          DicCode = dicinfo.DicCode,
                                          DicNameCn = dicinfo.DicNameCn,
                                          DicNameEn = dicinfo.DicNameEn,
-                                         SortOrder = dicinfo.SortOrder,
-                                     }).ToPageListAsync(getdicPage.PageIndex, getdicPage.PageSize, totalCount);
+                                         SortOrder = dicinfo.SortOrder
+            }).ToPageListAsync(getdicPage.PageIndex, getdicPage.PageSize, totalCount);
             return ResultPaged<DictionaryInfoDto>.Ok(dicPage.Adapt<List<DictionaryInfoDto>>(), totalCount, "");
         }
 
         /// <summary>
-        /// 模块下拉框
+        /// 模块下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<ModuleDropDto>> GetModuleDropDown()
@@ -143,7 +143,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         }
 
         /// <summary>
-        /// 字典类型下拉框
+        /// 字典类型下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<DicTypeDropDto>> GetDicTypeDropDown(long moduleId)

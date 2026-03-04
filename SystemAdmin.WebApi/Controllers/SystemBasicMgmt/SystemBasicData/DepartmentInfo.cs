@@ -22,46 +22,46 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[部门信息] 新增部门信息")]
-        public async Task<Result<int>> InsertDepartmentInfo([FromBody] DepartmentInfoUpsert deptUpsert)
+        public async Task<Result<int>> InsertDepartmentInfo([FromBody] DepartmentInfoUpsert upsert)
         {
-            return await _departmentInfoService.InsertDepartmentInfo(deptUpsert);
+            return await _departmentInfoService.InsertDepartmentInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[部门信息] 删除部门信息")]
-        public async Task<Result<int>> DeleteDepartmentInfo([FromBody] DepartmentInfoUpsert deptUpsert)
+        public async Task<Result<int>> DeleteDepartmentInfo([FromBody] DepartmentInfoUpsert upsert)
         {
-            return await _departmentInfoService.DeleteDepartmentInfo(deptUpsert);
+            return await _departmentInfoService.DeleteDepartmentInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[部门信息] 修改部门信息")]
-        public async Task<Result<int>> UpdateDepartmentInfo([FromBody] DepartmentInfoUpsert deptUpsert)
+        public async Task<Result<int>> UpdateDepartmentInfo([FromBody] DepartmentInfoUpsert upsert)
         {
-            return await _departmentInfoService.UpdateDepartmentInfo(deptUpsert);
+            return await _departmentInfoService.UpdateDepartmentInfo(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[部门信息] 查询部门实体")]
-        public async Task<Result<DepartmentInfoDto>> GetDepartmentInfoEntity([FromBody] GetDepartmentInfoEntity getDeptEntity)
+        public async Task<Result<DepartmentInfoDto>> GetDepartmentInfoEntity([FromBody] GetDepartmentInfoEntity getEntity)
         {
-            return await _departmentInfoService.GetDepartmentInfoEntity(getDeptEntity);
+            return await _departmentInfoService.GetDepartmentInfoEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[部门信息] 查询部门树")]
-        public async Task<Result<List<DepartmentInfoDto>>> GetDepartmentInfoTree([FromBody] GetDepartmentTree getDeptPage)
+        public async Task<Result<List<DepartmentInfoDto>>> GetDepartmentInfoTree([FromBody] GetDepartmentTree getPage)
         {
-            return await _departmentInfoService.GetDepartmentInfoTree(getDeptPage);
+            return await _departmentInfoService.GetDepartmentInfoTree(getPage);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 部门下拉框")]
+        [EndpointSummary("[员工信息] 部门下拉")]
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
         {
             return await _departmentInfoService.GetDepartmentDropDown();
@@ -69,7 +69,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[部门信息] 部门级别下拉框")]
+        [EndpointSummary("[部门信息] 部门级别下拉")]
         public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
         {
             return await _departmentInfoService.GetDepartmentLevelDropDown();

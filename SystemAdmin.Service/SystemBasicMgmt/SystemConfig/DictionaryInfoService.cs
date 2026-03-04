@@ -31,37 +31,37 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 新增字典信息
         /// </summary>
-        /// <param name="dicUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertDictionaryInfo(DictionaryInfoUpsert dicUpsert)
+        public async Task<Result<int>> InsertDictionaryInfo(DictionaryInfoUpsert upsert)
         {
             try
             {
-                var dicTypeCodeExist = await _dictionaryRepository.GetDictionaryInfoIsExist(dicUpsert.DicType, dicUpsert.DicCode);
+                var dicTypeCodeExist = await _dictionaryRepository.GetDictionaryInfoIsExist(upsert.DicType, upsert.DicCode);
                 if (dicTypeCodeExist)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DicTypeCodeIsExist"));
                 }
                 else
                 {
-                    await _db.BeginTranAsync();
-                    DictionaryInfoEntity insertDicEntity = new DictionaryInfoEntity()
+                    DictionaryInfoEntity entity = new DictionaryInfoEntity()
                     {
                         DicId = SnowFlakeSingle.Instance.NextId(),
-                        ModuleId = long.Parse(dicUpsert.ModuleId),
-                        DicType = dicUpsert.DicType,
-                        DicCode = dicUpsert.DicCode,
-                        DicNameCn = dicUpsert.DicNameCn,
-                        DicNameEn = dicUpsert.DicNameEn,
-                        SortOrder = dicUpsert.SortOrder,
+                        ModuleId = long.Parse(upsert.ModuleId),
+                        DicType = upsert.DicType,
+                        DicCode = upsert.DicCode,
+                        DicNameCn = upsert.DicNameCn,
+                        DicNameEn = upsert.DicNameEn,
+                        SortOrder = upsert.SortOrder,
                         CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        CreatedDate = DateTime.Now
                     };
-                    var insertDicCount = await _dictionaryRepository.InsertDictionaryInfo(insertDicEntity);
+                    await _db.BeginTranAsync();
+                    var count = await _dictionaryRepository.InsertDictionaryInfo(entity);
                     await _db.CommitTranAsync();
 
-                    return insertDicCount >= 1
-                            ? Result<int>.Ok(insertDicCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                    return count >= 1
+                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                 }
             }
@@ -76,18 +76,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 删除字典信息
         /// </summary>
-        /// <param name="dicUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteDictionaryInfo(DictionaryInfoUpsert dicUpsert)
+        public async Task<Result<int>> DeleteDictionaryInfo(DictionaryInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var delDicCount = await _dictionaryRepository.DeleteDictionaryInfo(dicUpsert);
+                var count = await _dictionaryRepository.DeleteDictionaryInfo(upsert);
                 await _db.CommitTranAsync();
 
-                return delDicCount >= 1
-                        ? Result<int>.Ok(delDicCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
@@ -101,30 +101,30 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 修改字典信息
         /// </summary>
-        /// <param name="dicUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateDictionaryInfo(DictionaryInfoUpsert dicUpsert)
+        public async Task<Result<int>> UpdateDictionaryInfo(DictionaryInfoUpsert upsert)
         {
             try
             {
-                await _db.BeginTranAsync();
-                DictionaryInfoEntity updateDicEntity = new DictionaryInfoEntity()
+                DictionaryInfoEntity entity = new DictionaryInfoEntity()
                 {
-                    DicId = long.Parse(dicUpsert.DicId),
-                    ModuleId = long.Parse(dicUpsert.ModuleId),
-                    DicType = dicUpsert.DicType,
-                    DicCode = dicUpsert.DicCode,
-                    DicNameCn = dicUpsert.DicNameCn,
-                    DicNameEn = dicUpsert.DicNameEn,
-                    SortOrder = dicUpsert.SortOrder,
+                    DicId = long.Parse(upsert.DicId),
+                    ModuleId = long.Parse(upsert.ModuleId),
+                    DicType = upsert.DicType,
+                    DicCode = upsert.DicCode,
+                    DicNameCn = upsert.DicNameCn,
+                    DicNameEn = upsert.DicNameEn,
+                    SortOrder = upsert.SortOrder,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    ModifiedDate = DateTime.Now
                 };
-                var updateDicCount = await _dictionaryRepository.UpdateDictionaryInfo(updateDicEntity);
+                await _db.BeginTranAsync();
+                var count = await _dictionaryRepository.UpdateDictionaryInfo(entity);
                 await _db.CommitTranAsync();
 
-                return updateDicCount >= 1
-                        ? Result<int>.Ok(updateDicCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -138,14 +138,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 查询字典实体
         /// </summary>
-        /// <param name="getDicEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<DictionaryInfoDto>> GetDictionaryInfoEntity(GetDictionaryInfoEntity getDicEntity)
+        public async Task<Result<DictionaryInfoDto>> GetDictionaryInfoEntity(GetDictionaryInfoEntity getEntity)
         {
             try
             {
-                var dicEntity = await _dictionaryRepository.GetDictionaryInfoEntity(long.Parse(getDicEntity.DicId));
-                return Result<DictionaryInfoDto>.Ok(dicEntity, "");
+                var entity = await _dictionaryRepository.GetDictionaryInfoEntity(long.Parse(getEntity.DicId));
+                return Result<DictionaryInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -157,14 +157,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 查询字典分页
         /// </summary>
-        /// <param name="getDicPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<DictionaryInfoDto>> GetDictionaryInfoPage(GetDictionaryInfoPage getDicPage)
+        public async Task<ResultPaged<DictionaryInfoDto>> GetDictionaryInfoPage(GetDictionaryInfoPage getPage)
         {
             try
             {
-                var dicPage = await _dictionaryRepository.GetDictionaryInfoPage(getDicPage);
-                return dicPage;
+                var page = await _dictionaryRepository.GetDictionaryInfoPage(getPage);
+                return page;
             }
             catch (Exception ex)
             {
@@ -174,15 +174,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         }
 
         /// <summary>
-        /// 模块下拉框
+        /// 模块下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
         {
             try
             {
-                var moduleDrop = await _dictionaryRepository.GetModuleDropDown();
-                return Result<List<ModuleDropDto>>.Ok(moduleDrop, "");
+                var drop = await _dictionaryRepository.GetModuleDropDown();
+                return Result<List<ModuleDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -192,15 +192,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         }
 
         /// <summary>
-        /// 字典类型下拉框
+        /// 字典类型下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown(GetDicTypeDropDown getDicTypeDropDown)
+        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown(GetDicTypeDropDown getDrop)
         {
             try
             {
-                var dicDrop = await _dictionaryRepository.GetDicTypeDropDown(long.Parse(getDicTypeDropDown.ModuleId));
-                return Result<List<DicTypeDropDto>>.Ok(dicDrop, "");
+                var drop = await _dictionaryRepository.GetDicTypeDropDown(long.Parse(getDrop.ModuleId));
+                return Result<List<DicTypeDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {

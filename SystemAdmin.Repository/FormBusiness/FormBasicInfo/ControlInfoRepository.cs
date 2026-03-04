@@ -74,21 +74,21 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <summary>
         /// 查询控件信息分页
         /// </summary>
-        /// <param name="getControlInfoPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ControlInfoDto>> GetControlInfoPage(GetControlInfoPage getControlInfoPage)
+        public async Task<ResultPaged<ControlInfoDto>> GetControlInfoPage(GetControlInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<ControlInfoEntity>()
                            .With(SqlWith.NoLock);
 
             // 控件编码
-            if (!string.IsNullOrEmpty(getControlInfoPage.ControlCode))
+            if (!string.IsNullOrEmpty(getPage.ControlCode))
             {
-                query = query.Where(control => control.ControlCode.Contains(getControlInfoPage.ControlCode));
+                query = query.Where(control => control.ControlCode.Contains(getPage.ControlCode));
             }
 
-            var controlInfoPage = await query.ToPageListAsync(getControlInfoPage.PageIndex, getControlInfoPage.PageSize, totalCount);
+            var controlInfoPage = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<ControlInfoDto>.Ok(controlInfoPage.Adapt<List<ControlInfoDto>>(), totalCount, "");
         }
     }

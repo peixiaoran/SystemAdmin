@@ -6,12 +6,12 @@
     public class ExchangeRateUpsert
     {
         /// <summary>
-        /// 本币别Id
+        /// 本币别Code
         /// </summary>
         public string CurrencyCode { get; set; } = string.Empty;
 
         /// <summary>
-        /// 兑换币别Id
+        /// 兑换币别Code
         /// </summary>
         public string ExchangeCurrencyCode { get; set; } = string.Empty;
 

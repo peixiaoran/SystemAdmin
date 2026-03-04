@@ -126,18 +126,18 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// 查询表单组别分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<FormGroupDto>> GetFormGroupPage(GetFormGroupPage getFormGroupPage)
+        public async Task<ResultPaged<FormGroupDto>> GetFormGroupPage(GetFormGroupPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<FormGroupEntity>()
                            .With(SqlWith.NoLock);
 
             // 表单组别名称
-            if (!string.IsNullOrEmpty(getFormGroupPage.FormGroupName))
+            if (!string.IsNullOrEmpty(getPage.FormGroupName))
             {
                 query = query.Where(formgroup =>
-                    formgroup.FormGroupNameCn.Contains(getFormGroupPage.FormGroupName) ||
-                    formgroup.FormGroupNameEn.Contains(getFormGroupPage.FormGroupName));
+                    formgroup.FormGroupNameCn.Contains(getPage.FormGroupName) ||
+                    formgroup.FormGroupNameEn.Contains(getPage.FormGroupName));
             }
 
             // 排序
@@ -151,7 +151,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                                                Description = _lang.Locale == "zh-CN"
                                                              ? formgroup.DescriptionCn
                                                              : formgroup.DescriptionEn,
-                                           }).ToPageListAsync(getFormGroupPage.PageIndex, getFormGroupPage.PageSize, totalCount);
+                                           }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<FormGroupDto>.Ok(formGroupPage.Adapt<List<FormGroupDto>>(), totalCount, "");
         }
     }

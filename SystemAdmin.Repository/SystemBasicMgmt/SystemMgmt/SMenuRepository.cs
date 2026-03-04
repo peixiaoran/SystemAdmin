@@ -89,9 +89,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询二级菜单分页
         /// </summary>
-        /// <param name="getMenuPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<MenuInfoDto>> GetSMenuPage(GetMenuInfoPage getMenuPage)
+        public async Task<ResultPaged<MenuInfoDto>> GetSMenuPage(GetMenuInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<MenuInfoEntity>()
@@ -100,24 +100,24 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                            .Where((pmenu, dic) => pmenu.MenuType == "SecondaryMenu");
 
             // 二级菜单编码
-            if (!string.IsNullOrEmpty(getMenuPage.MenuCode))
+            if (!string.IsNullOrEmpty(getPage.MenuCode))
             {
-                query = query.Where((pmenu, dic) => pmenu.MenuCode.Contains(getMenuPage.MenuCode));
+                query = query.Where((pmenu, dic) => pmenu.MenuCode.Contains(getPage.MenuCode));
             }
             // 二级菜单名称
-            if (!string.IsNullOrEmpty(getMenuPage.MenuName))
+            if (!string.IsNullOrEmpty(getPage.MenuName))
             {
-                query = query.Where((pmenu, dic) => pmenu.MenuNameCn.Contains(getMenuPage.MenuName) || pmenu.MenuNameEn.Contains(getMenuPage.MenuName));
+                query = query.Where((pmenu, dic) => pmenu.MenuNameCn.Contains(getPage.MenuName) || pmenu.MenuNameEn.Contains(getPage.MenuName));
             }
             // 所属模块
-            if (long.Parse(getMenuPage.ModuleId) > 0)
+            if (long.Parse(getPage.ModuleId) > 0)
             {
-                query = query.Where((pmenu, dic) => pmenu.ModuleId == long.Parse(getMenuPage.ModuleId));
+                query = query.Where((pmenu, dic) => pmenu.ModuleId == long.Parse(getPage.ModuleId));
             }
             // 所属一级菜单
-            if (long.Parse(getMenuPage.ParentMenuId) > 0)
+            if (long.Parse(getPage.ParentMenuId) > 0)
             {
-                query = query.Where((pmenu, dic) => pmenu.ParentMenuId == long.Parse(getMenuPage.ParentMenuId));
+                query = query.Where((pmenu, dic) => pmenu.ParentMenuId == long.Parse(getPage.ParentMenuId));
             }
 
             // 排序
@@ -138,12 +138,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                            IsVisible = pmenu.IsVisible,
                                            Path = pmenu.Path,
                                            Remark = pmenu.Remark,
-                                       }).ToPageListAsync(getMenuPage.PageIndex, getMenuPage.PageSize, totalCount);
+                                       }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<MenuInfoDto>.Ok(smenuPage.Adapt<List<MenuInfoDto>>(), totalCount, "");
         }
 
         /// <summary>
-        /// 模块下拉框
+        /// 模块下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<ModuleDropDto>> GetModuleDropDown()
@@ -161,7 +161,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
-        /// 一级菜单下拉框
+        /// 一级菜单下拉
         /// </summary>
         /// <param name="moduleId"></param>
         /// <returns></returns>

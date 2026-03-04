@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
 {
     /// <summary>
-    /// 国籍下拉框Dto
+    /// 国籍下拉Dto
     /// </summary>
     public class NationalityDropDto
     {

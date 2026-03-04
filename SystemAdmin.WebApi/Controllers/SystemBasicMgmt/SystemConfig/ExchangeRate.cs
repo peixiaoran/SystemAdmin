@@ -23,46 +23,46 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[汇率对照] 新增汇率对照")]
-        public async Task<Result<int>> InsertExchangeRate([FromBody] ExchangeRateUpsert exchangeRateUpsert)
+        public async Task<Result<int>> InsertExchangeRate([FromBody] ExchangeRateUpsert upsert)
         {
-            return await _exchangeRateService.InsertExchangeRate(exchangeRateUpsert);
+            return await _exchangeRateService.InsertExchangeRate(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[汇率对照] 删除汇率对照")]
-        public async Task<Result<int>> DeleteExchangeRate([FromBody] ExchangeRateUpsert exchangeRateUpsert)
+        public async Task<Result<int>> DeleteExchangeRate([FromBody] ExchangeRateUpsert upsert)
         {
-            return await _exchangeRateService.DeleteExchangeRate(exchangeRateUpsert);
+            return await _exchangeRateService.DeleteExchangeRate(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[汇率对照] 修改汇率对照")]
-        public async Task<Result<int>> UpdateExchangeRate([FromBody] ExchangeRateUpsert exchangeRateUpsert)
+        public async Task<Result<int>> UpdateExchangeRate([FromBody] ExchangeRateUpsert upsert)
         {
-            return await _exchangeRateService.UpdateExchangeRate(exchangeRateUpsert);
+            return await _exchangeRateService.UpdateExchangeRate(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[汇率对照] 查询汇率对照信息分页")]
-        public async Task<ResultPaged<ExchangeRateDto>> GetExchangeRatePage([FromBody] GetExchangeRatePage getExchangeRatePage)
+        public async Task<ResultPaged<ExchangeRateDto>> GetExchangeRatePage([FromBody] GetExchangeRatePage getPage)
         {
-            return await _exchangeRateService.GetExchangeRatePage(getExchangeRatePage);
+            return await _exchangeRateService.GetExchangeRatePage(getPage);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[汇率对照] 查询汇率对照信息实体")]
-        public async Task<Result<ExchangeRateDto>> GetExchangeRateEntity([FromBody] GetExchangeRateEntity getExchangeRateEntity)
+        public async Task<Result<ExchangeRateDto>> GetExchangeRateEntity([FromBody] GetExchangeRateEntity getEntity)
         {
-            return await _exchangeRateService.GetExchangeRateEntity(getExchangeRateEntity);
+            return await _exchangeRateService.GetExchangeRateEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
-        [EndpointSummary("[汇率对照] 币别信息下拉框")]
+        [EndpointSummary("[汇率对照] 币别信息下拉")]
         public async Task<Result<List<CurrencyInfoDropDto>>> GetCurrencyInfoDropDown()
         {
             return await _exchangeRateService.GetCurrencyInfoDropDown();

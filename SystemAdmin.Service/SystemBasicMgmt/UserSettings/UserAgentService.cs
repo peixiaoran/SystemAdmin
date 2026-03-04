@@ -31,13 +31,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工分页
         /// </summary>
-        /// <param name="getUserAgentPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserAgentDto>> GetUserInfoPage(GetUserAgentPage getUserAgentPage)
+        public async Task<ResultPaged<UserAgentDto>> GetUserInfoPage(GetUserAgentPage getPage)
         {
             try
             {
-                return await _userAgentRepository.GetUserInfoPage(getUserAgentPage);
+                return await _userAgentRepository.GetUserInfoPage(getPage);
             }
             catch (Exception ex)
             {
@@ -49,13 +49,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询可代理其他员工分页
         /// </summary>
-        /// <param name="getUserAgentViewPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserAgentViewDto>> GetUserInfoAgentView(GetUserAgentViewPage getUserAgentViewPage)
+        public async Task<ResultPaged<UserAgentViewDto>> GetUserInfoAgentView(GetUserAgentViewPage getPage)
         {
             try
             {
-                return await _userAgentRepository.GetUserInfoAgentView(getUserAgentViewPage);
+                return await _userAgentRepository.GetUserInfoAgentView(getPage);
             }
             catch (Exception ex)
             {
@@ -67,21 +67,21 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 新增员工代理人
         /// </summary>
-        /// <param name="userAgentUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertUserAgent(UserAgentUpsert userAgentUpsert)
+        public async Task<Result<int>> InsertUserAgent(UserAgentUpsert upsert)
         {
             try
             {
                 // 检查被代理员工是否与代理员工一致
-                if (userAgentUpsert.SubstituteUserId == userAgentUpsert.AgentUserId)
+                if (upsert.SubstituteUserId == upsert.AgentUserId)
                 {
                     // 被代理员工不能和代理员工相同
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentSameEmployee"));
                 }
 
                 // 查询被代理员工已代理其他员工
-                bool subAgentIsAgent = await _userAgentRepository.GetSubAgentIsAgent(long.Parse(userAgentUpsert.SubstituteUserId));
+                bool subAgentIsAgent = await _userAgentRepository.GetSubAgentIsAgent(long.Parse(upsert.SubstituteUserId));
                 if (subAgentIsAgent)
                 {
                     // 被代理员工已代理其他员工，不能嵌套代理
@@ -89,7 +89,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 }
 
                 // 查询被代理员工已被其他员工代理
-                bool subAgentIsSubAgent = await _userAgentRepository.GetSubAgentIsSubAgent(long.Parse(userAgentUpsert.SubstituteUserId));
+                bool subAgentIsSubAgent = await _userAgentRepository.GetSubAgentIsSubAgent(long.Parse(upsert.SubstituteUserId));
                 if (subAgentIsSubAgent)
                 {
                     // 被代理员工已被其他员工代理，不可多人员代理
@@ -97,14 +97,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 }
 
                 // 查询代理员工已被其他员工代理
-                bool agentIsSubAgent = await _userAgentRepository.GetAgentIsSubAgent(long.Parse(userAgentUpsert.AgentUserId));
+                bool agentIsSubAgent = await _userAgentRepository.GetAgentIsSubAgent(long.Parse(upsert.AgentUserId));
                 if (agentIsSubAgent)
                 {
                     // 代理员工已被其他员工代理，不能作为代理员工
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentAlreadyAgented"));
                 }
                 // 查询代理员工已代理其他员工
-                bool agentIsAgent = await _userAgentRepository.GetAgentIsAgent(long.Parse(userAgentUpsert.AgentUserId));
+                bool agentIsAgent = await _userAgentRepository.GetAgentIsAgent(long.Parse(upsert.AgentUserId));
                 if (agentIsAgent)
                 {
                     // 代理员工已代理其他员工，不可多人员代理
@@ -116,19 +116,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     // 重新配置代理人
                     UserAgentEntity insertUserAgent = new UserAgentEntity
                     {
-                        SubstituteUserId = long.Parse(userAgentUpsert.SubstituteUserId),
-                        AgentUserId = long.Parse(userAgentUpsert.AgentUserId),
-                        StartTime = userAgentUpsert.StartTime,
-                        EndTime = userAgentUpsert.EndTime,
+                        SubstituteUserId = long.Parse(upsert.SubstituteUserId),
+                        AgentUserId = long.Parse(upsert.AgentUserId),
+                        StartTime = upsert.StartTime,
+                        EndTime = upsert.EndTime,
                         CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                        ModifiedBy = _loginuser.UserId,
-                        ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        CreatedDate = DateTime.Now,
                     };
                     // 新增员工代理人配置
                     int insertUserAgentCount = await _userAgentRepository.InsertUserAgent(insertUserAgent);
                     // 更新员工代理状态
-                    var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(userAgentUpsert.AgentUserId), 1);
+                    var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(upsert.AgentUserId), 1);
                     await _db.CommitTranAsync();
 
                     return insertUserAgentCount >= 1 && updateUserAgentCount >= 1
@@ -147,16 +145,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 删除员工代理关系（被动）
         /// </summary>
-        /// <param name="userAgentDel"></param>
+        /// <param name="upsertdel"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteUserAgent(UserAgentDel userAgentDel)
+        public async Task<Result<int>> DeleteUserAgent(UserAgentDel upsertdel)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除员工代理配置
-                var delSubAgentCount = await _userAgentRepository.DeleteUserAgent(long.Parse(userAgentDel.SubstituteUserId), long.Parse(userAgentDel.AgentUserId));
-                var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(userAgentDel.AgentUserId), 0);
+                var delSubAgentCount = await _userAgentRepository.DeleteUserAgent(long.Parse(upsertdel.SubstituteUserId), long.Parse(upsertdel.AgentUserId));
+                var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(upsertdel.AgentUserId), 0);
                 if (delSubAgentCount >= 1 && updateUserAgentCount >= 1)
                 {
                     await _db.CommitTranAsync();
@@ -179,13 +177,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询此员工代理了哪些人列表
         /// </summary>
-        /// <param name="getUserAgentProactiveList"></param>
+        /// <param name="getList"></param>
         /// <returns></returns>
-        public async Task<Result<List<UserAgentProactiveDto>>> GetUserAgentProactiveList(GetUserAgentProactiveList getUserAgentProactiveList)
+        public async Task<Result<List<UserAgentProactiveDto>>> GetUserAgentProactiveList(GetUserAgentProactiveList getList)
         {
             try
             {
-                return await _userAgentRepository.GetUserAgentProactiveList(getUserAgentProactiveList);
+                return await _userAgentRepository.GetUserAgentProactiveList(getList);
             }
             catch (Exception ex)
             {
@@ -197,13 +195,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询此员工被哪些人代理列表
         /// </summary>
-        /// <param name="getUserAgentPassiveList"></param>
+        /// <param name="getList"></param>
         /// <returns></returns>
-        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentPassiveList(GetUserAgentPassiveList getUserAgentPassiveList)
+        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentPassiveList(GetUserAgentPassiveList getList)
         {
             try
             {
-                return await _userAgentRepository.GetUserAgentPassiveList(getUserAgentPassiveList);
+                return await _userAgentRepository.GetUserAgentPassiveList(getList);
             }
             catch (Exception ex)
             {
@@ -213,15 +211,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
-        /// 部门下拉框
+        /// 部门下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
         {
             try
             {
-                var deptDrop = await _userAgentRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(deptDrop, "");
+                var drop = await _userAgentRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {

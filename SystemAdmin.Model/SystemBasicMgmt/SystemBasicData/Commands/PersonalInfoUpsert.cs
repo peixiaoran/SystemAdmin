@@ -6,7 +6,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Commands
     /// <summary>
     /// 个人信息修改类
     /// </summary>
-    public class PersonalInfoUpdate
+    public class PersonalInfoUpsert
     {
         /// <summary>
         /// 员工Id

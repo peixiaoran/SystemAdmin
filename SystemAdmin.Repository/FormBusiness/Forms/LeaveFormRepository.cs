@@ -115,7 +115,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 请假类别下拉框
+        /// 请假类别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<LeaveTypeDropDto>> GetLeaveTypeDropDown()

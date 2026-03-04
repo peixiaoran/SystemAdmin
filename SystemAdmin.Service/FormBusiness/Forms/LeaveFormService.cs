@@ -93,14 +93,14 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// <summary>
         /// 保存请假表单
         /// </summary>
-        /// <param name="leaveFormSave"></param>
+        /// <param name="formSave"></param>
         /// <returns></returns>
-        public async Task<Result<int>> SaveLeaveForm(LeaveFormSave leaveFormSave)
+        public async Task<Result<int>> SaveLeaveForm(LeaveFormSave formSave)
         {
             try
             {
                 // 判断是否有权限申请该表单类型
-                bool isCanApply = await _formAuthRepository.HasUserApplyFormType(_loginuser.UserId, long.Parse(leaveFormSave.FormTypeId), FormOp.Apply);
+                bool isCanApply = await _formAuthRepository.HasUserApplyFormType(_loginuser.UserId, long.Parse(formSave.FormTypeId), FormOp.Apply);
                 if (!isCanApply)
                 {
                     return Result<int>.Failure(403, _localization.ReturnMsg($"{_publicthis}NotPermissionApply"));
@@ -108,22 +108,22 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                 await _db.BeginTranAsync();
                 // 保存主表单
-                var saveFormInfo = await _stepBeforeStart.SaveFormInfo(long.Parse(leaveFormSave.FormId), leaveFormSave.Description, FormStatus.PendingSubmission.ToEnumString(), leaveFormSave.ImportanceCode, _loginuser.UserId);
+                var saveFormInfo = await _stepBeforeStart.SaveFormInfo(long.Parse(formSave.FormId), formSave.Description, FormStatus.PendingSubmission.ToEnumString(), formSave.ImportanceCode, _loginuser.UserId);
                 LeaveFormEntity saveLeaveFormEntity = new LeaveFormEntity()
                 {
-                    FormId = long.Parse(leaveFormSave.FormId),
-                    FormNo = leaveFormSave.FormNo,
-                    ApplicantTime = leaveFormSave.ApplicantTime,
-                    ApplicantUserNo = leaveFormSave.ApplicantUserNo,
-                    ApplicantUserName = leaveFormSave.ApplicantUserName,
-                    ApplicantDeptId = leaveFormSave.ApplicantDeptId,
-                    ApplicantDeptName = leaveFormSave.ApplicantDeptName,
-                    LeaveTypeCode = leaveFormSave.LeaveTypeCode,
-                    LeaveReason = leaveFormSave.LeaveReason,
-                    LeaveStartTime = leaveFormSave.LeaveStartTime,
-                    LeaveEndTime = leaveFormSave.LeaveEndTime,
-                    LeaveHours = leaveFormSave.LeaveHours,
-                    LeaveHandoverUserName = leaveFormSave.LeaveHandoverUserName,
+                    FormId = long.Parse(formSave.FormId),
+                    FormNo = formSave.FormNo,
+                    ApplicantTime = formSave.ApplicantTime,
+                    ApplicantUserNo = formSave.ApplicantUserNo,
+                    ApplicantUserName = formSave.ApplicantUserName,
+                    ApplicantDeptId = formSave.ApplicantDeptId,
+                    ApplicantDeptName = formSave.ApplicantDeptName,
+                    LeaveTypeCode = formSave.LeaveTypeCode,
+                    LeaveReason = formSave.LeaveReason,
+                    LeaveStartTime = formSave.LeaveStartTime,
+                    LeaveEndTime = formSave.LeaveEndTime,
+                    LeaveHours = formSave.LeaveHours,
+                    LeaveHandoverUserName = formSave.LeaveHandoverUserName,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
@@ -163,7 +163,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 请假类别下拉框
+        /// 请假类别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDropDown()
@@ -173,7 +173,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 重要程度下拉框
+        /// 重要程度下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<ImportanceDropDto>>> GetImportanceDropDown()
@@ -183,7 +183,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 查询表单需要签核审批人
+        /// 查询表单审批流程
         /// </summary>
         /// <param name="fromId"></param>
         /// <returns></returns>
@@ -191,8 +191,8 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                var workflowAllApproveUser = await _stepBeforeStart.GetWorkflowAllApproveUser(long.Parse(fromId));
-                return Result<List<WorkflowApproveUser>>.Ok(workflowAllApproveUser);
+                var appUser = await _stepBeforeStart.GetWorkflowAllApproveUser(long.Parse(fromId));
+                return Result<List<WorkflowApproveUser>>.Ok(appUser);
             }
             catch (Exception ex)
             {

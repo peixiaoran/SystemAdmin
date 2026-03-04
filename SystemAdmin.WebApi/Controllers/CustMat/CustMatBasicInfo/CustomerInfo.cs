@@ -22,41 +22,41 @@ namespace SystemAdmin.WebApi.Controllers.CustMat.CustMatBasicInfo
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[客户信息] 新增客户信息")]
-        public async Task<Result<int>> InsertCustomerInfo([FromBody] CustomerInfoUpsert customerInfoUpsert)
+        public async Task<Result<int>> InsertCustomerInfo([FromBody] CustomerInfoUpsert upsert)
         {
-            return await _customerInfoService.InsertCustomerInfo(customerInfoUpsert);
+            return await _customerInfoService.InsertCustomerInfo(upsert);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[客户信息] 删除客户信息")]
-        public async Task<Result<int>> DeleteCustomerInfo([FromBody] CustomerInfoUpsert customerInfoUpsert)
+        public async Task<Result<int>> DeleteCustomerInfo([FromBody] CustomerInfoUpsert upsert)
         {
-            return await _customerInfoService.DeleteCustomerInfo(customerInfoUpsert);
+            return await _customerInfoService.DeleteCustomerInfo(upsert);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[客户信息] 修改客户信息")]
-        public async Task<Result<int>> UpdateCustomerInfo([FromBody] CustomerInfoUpsert customerInfoUpsert)
+        public async Task<Result<int>> UpdateCustomerInfo([FromBody] CustomerInfoUpsert upsert)
         {
-            return await _customerInfoService.UpdateCustomerInfo(customerInfoUpsert);
+            return await _customerInfoService.UpdateCustomerInfo(upsert);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[客户信息] 查询客户信息实体")]
-        public async Task<Result<CustomerInfoDto>> GetCustomerInfoEntity([FromBody] GetCustomerInfoEntity getCustomerInfoEntity)
+        public async Task<Result<CustomerInfoDto>> GetCustomerInfoEntity([FromBody] GetCustomerInfoEntity getEntity)
         {
-            return await _customerInfoService.GetCustomerInfoEntity(getCustomerInfoEntity);
+            return await _customerInfoService.GetCustomerInfoEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[客户信息] 查询客户信息分页")]
-        public async Task<ResultPaged<CustomerInfoDto>> GetCustomerInfoPage([FromBody] GetCustomerInfoPage getCustomerInfoPage)
+        public async Task<ResultPaged<CustomerInfoDto>> GetCustomerInfoPage([FromBody] GetCustomerInfoPage getPage)
         {
-            return await _customerInfoService.GetCustomerInfoPage(getCustomerInfoPage);
+            return await _customerInfoService.GetCustomerInfoPage(getPage);
         }
     }
 }

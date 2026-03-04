@@ -31,38 +31,38 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 新增菜单
         /// </summary>
-        /// <param name="menuUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertSMenu(MenuInfoUpsert menuUpsert)
+        public async Task<Result<int>> InsertSMenu(MenuInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var insertSMenu = new MenuInfoEntity
+                MenuInfoEntity entity = new MenuInfoEntity
                 {
                     MenuId = SnowFlakeSingle.Instance.NextId(),
-                    MenuCode = menuUpsert.MenuCode,
-                    MenuNameCn = menuUpsert.MenuNameCn,
-                    MenuNameEn = menuUpsert.MenuNameEn,
-                    ParentMenuId = long.Parse(menuUpsert.ParentMenuId),
-                    ModuleId = long.Parse(menuUpsert.ModuleId),
+                    MenuCode = upsert.MenuCode,
+                    MenuNameCn = upsert.MenuNameCn,
+                    MenuNameEn = upsert.MenuNameEn,
+                    ParentMenuId = long.Parse(upsert.ParentMenuId),
+                    ModuleId = long.Parse(upsert.ModuleId),
                     MenuType = MenuType.SecondaryMenu.ToEnumString(),
-                    RoutePath = menuUpsert.RoutePath,
-                    MenuIcon = menuUpsert.MenuIcon,
-                    SortOrder = menuUpsert.SortOrder,
-                    IsVisible = menuUpsert.IsVisible,
-                    Path = menuUpsert.Path,
+                    RoutePath = upsert.RoutePath,
+                    MenuIcon = upsert.MenuIcon,
+                    SortOrder = upsert.SortOrder,
+                    IsVisible = upsert.IsVisible,
+                    Path = upsert.Path,
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    Redirect = menuUpsert.Redirect,
-                    Remark = menuUpsert.Remark
+                    CreatedDate = DateTime.Now,
+                    Redirect = upsert.Redirect,
+                    Remark = upsert.Remark
                 };
 
-                int insertSMenuCount = await _sMenuRepository.InsertSMenu(insertSMenu);
+                int count = await _sMenuRepository.InsertSMenu(entity);
                 await _db.CommitTranAsync();
 
-                return insertSMenuCount >= 1
-                        ? Result<int>.Ok(insertSMenuCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -76,17 +76,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 删除二级菜单
         /// </summary>
-        /// <param name="menuUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteSMenu(MenuInfoUpsert menuUpsert)
+        public async Task<Result<int>> DeleteSMenu(MenuInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除二级菜单
-                var delSMenuCount = await _sMenuRepository.DeleteSMenu(long.Parse(menuUpsert.MenuId));
+                var delSMenuCount = await _sMenuRepository.DeleteSMenu(long.Parse(upsert.MenuId));
                 // 删除角色二级菜单
-                var delRoleSMenuCount = await _sMenuRepository.DeleteRoleSMenu(long.Parse(menuUpsert.MenuId));
+                var delRoleSMenuCount = await _sMenuRepository.DeleteRoleSMenu(long.Parse(upsert.MenuId));
 
                 await _db.CommitTranAsync();
 
@@ -105,37 +105,37 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 修改二级菜单
         /// </summary>
-        /// <param name="menuUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateSMenu(MenuInfoUpsert menuUpsert)
+        public async Task<Result<int>> UpdateSMenu(MenuInfoUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var updateSMenu = new MenuInfoEntity
+                MenuInfoEntity entity = new MenuInfoEntity
                 {
-                    MenuId = long.Parse(menuUpsert.MenuId),
-                    ModuleId = long.Parse(menuUpsert.ModuleId),
-                    ParentMenuId = long.Parse(menuUpsert.ParentMenuId),
-                    MenuCode = menuUpsert.MenuCode,
-                    MenuNameCn = menuUpsert.MenuNameCn,
-                    MenuNameEn = menuUpsert.MenuNameEn,
-                    Path = menuUpsert.Path,
-                    MenuIcon = menuUpsert.MenuIcon,
-                    SortOrder = menuUpsert.SortOrder,
-                    IsVisible = menuUpsert.IsVisible,
-                    RoutePath = menuUpsert.RoutePath,
+                    MenuId = long.Parse(upsert.MenuId),
+                    ModuleId = long.Parse(upsert.ModuleId),
+                    ParentMenuId = long.Parse(upsert.ParentMenuId),
+                    MenuCode = upsert.MenuCode,
+                    MenuNameCn = upsert.MenuNameCn,
+                    MenuNameEn = upsert.MenuNameEn,
+                    Path = upsert.Path,
+                    MenuIcon = upsert.MenuIcon,
+                    SortOrder = upsert.SortOrder,
+                    IsVisible = upsert.IsVisible,
+                    RoutePath = upsert.RoutePath,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                    Redirect = menuUpsert.Redirect,
-                    Remark = menuUpsert.Remark
+                    ModifiedDate = DateTime.Now,
+                    Redirect = upsert.Redirect,
+                    Remark = upsert.Remark
                 };
 
-                int updateSMenuCount = await _sMenuRepository.UpdateSMenu(updateSMenu);
+                int count = await _sMenuRepository.UpdateSMenu(entity);
                 await _db.CommitTranAsync();
 
-                return updateSMenuCount >= 1
-                        ? Result<int>.Ok(updateSMenuCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -149,14 +149,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询菜单实体
         /// </summary>
-        /// <param name="getMenuEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<MenuInfoDto>> GetSMenuEntity(GetMenuInfoEntity getMenuEntity)
+        public async Task<Result<MenuInfoDto>> GetSMenuEntity(GetMenuInfoEntity getEntity)
         {
             try
             {
-                var smenuEntity = await _sMenuRepository.GetSMenuEntity(long.Parse(getMenuEntity.MenuId));
-                return Result<MenuInfoDto>.Ok(smenuEntity, "");
+                var entity = await _sMenuRepository.GetSMenuEntity(long.Parse(getEntity.MenuId));
+                return Result<MenuInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -168,14 +168,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询菜单分页
         /// </summary>
-        /// <param name="getMenuPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<MenuInfoDto>> GetSMenuPage(GetMenuInfoPage getMenuPage)
+        public async Task<ResultPaged<MenuInfoDto>> GetSMenuPage(GetMenuInfoPage getPage)
         {
             try
             {
-                var smenuPage = await _sMenuRepository.GetSMenuPage(getMenuPage);
-                return smenuPage;
+                var page = await _sMenuRepository.GetSMenuPage(getPage);
+                return page;
             }
             catch (Exception ex)
             {
@@ -185,15 +185,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
-        /// 模块下拉框
+        /// 模块下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
         {
             try
             {
-                var moduleDrop = await _sMenuRepository.GetModuleDropDown();
-                return Result<List<ModuleDropDto>>.Ok(moduleDrop, "");
+                var drop = await _sMenuRepository.GetModuleDropDown();
+                return Result<List<ModuleDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -203,16 +203,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
-        /// 一级菜单下拉框
+        /// 一级菜单下拉
         /// </summary>
-        /// <param name="getPMenuDropDown"></param>
+        /// <param name="getDrop"></param>
         /// <returns></returns>
-        public async Task<Result<List<MenuDropDto>>> GetPMenuDropDown(GetPMenuDropDown getPMenuDropDown)
+        public async Task<Result<List<MenuDropDto>>> GetPMenuDropDown(GetPMenuDropDown getDrop)
         {
             try
             {
-                var pmenuDrop = await _sMenuRepository.GetPMenuDropDown(long.Parse(getPMenuDropDown.ModuleId));
-                return Result<List<MenuDropDto>>.Ok(pmenuDrop, "");
+                var drop = await _sMenuRepository.GetPMenuDropDown(long.Parse(getDrop.ModuleId));
+                return Result<List<MenuDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {

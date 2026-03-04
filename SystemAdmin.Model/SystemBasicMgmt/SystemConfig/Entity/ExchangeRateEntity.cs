@@ -41,7 +41,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity
         /// <summary>
         /// 创建时间
         /// </summary>
-        public string CreatedDate { get; set; } = string.Empty;
+        public DateTime? CreatedDate { get; set; }
 
         /// <summary>
         /// 修改人
@@ -51,6 +51,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity
         /// <summary>
         /// 修改时间
         /// </summary>
-        public string? ModifiedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
     }
 }

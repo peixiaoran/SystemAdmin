@@ -30,33 +30,33 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 新增表单类别
         /// </summary>
-        /// <param name="formTypeUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertFormTypeInfo(FormTypeUpsert formTypeUpsert)
+        public async Task<Result<int>> InsertFormTypeInfo(FormTypeUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                FormTypeEntity insertFromGroup = new FormTypeEntity()
+                FormTypeEntity entity = new FormTypeEntity()
                 {
                     FormTypeId = SnowFlakeSingle.Instance.NextId(),
-                    FormGroupId = long.Parse(formTypeUpsert.FormGroupId),
-                    FormTypeNameCn = formTypeUpsert.FormTypeNameCn,
-                    FormTypeNameEn = formTypeUpsert.FormTypeNameEn,
-                    Prefix = formTypeUpsert.Prefix.Trim(),
-                    ApprovalPath = formTypeUpsert.ApprovalPath,
-                    ViewPath = formTypeUpsert.ViewPath,
-                    SortOrder = formTypeUpsert.SortOrder,
-                    DescriptionCn = formTypeUpsert.DescriptionCn,
-                    DescriptionEn = formTypeUpsert.DescriptionEn,
+                    FormGroupId = long.Parse(upsert.FormGroupId),
+                    FormTypeNameCn = upsert.FormTypeNameCn,
+                    FormTypeNameEn = upsert.FormTypeNameEn,
+                    Prefix = upsert.Prefix.Trim(),
+                    ApprovalPath = upsert.ApprovalPath,
+                    ViewPath = upsert.ViewPath,
+                    SortOrder = upsert.SortOrder,
+                    DescriptionCn = upsert.DescriptionCn,
+                    DescriptionEn = upsert.DescriptionEn,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int insertFormTypeCount = await _formTypeRepository.InsertFormTypeInfo(insertFromGroup);
+                int count = await _formTypeRepository.InsertFormTypeInfo(entity);
                 await _db.CommitTranAsync();
 
-                return insertFormTypeCount >= 1
-                        ? Result<int>.Ok(insertFormTypeCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -70,15 +70,17 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 删除表单类别
         /// </summary>
-        /// <param name="formTypeUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteFormTypeInfo(FormTypeUpsert formTypeUpsert)
+        public async Task<Result<int>> DeleteFormTypeInfo(FormTypeUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                int delFormTypeCount = await _formTypeRepository.DeleteFormTypeInfo(long.Parse(formTypeUpsert.FormTypeId));
-                int delUserTypeBindCount = await _formTypeRepository.DeleteUserFormTypeBind(long.Parse(formTypeUpsert.FormTypeId));
+                // 删除表单类别
+                int delFormTypeCount = await _formTypeRepository.DeleteFormTypeInfo(long.Parse(upsert.FormTypeId));
+                // 删除用户表单绑定
+                int delUserTypeBindCount = await _formTypeRepository.DeleteUserFormTypeBind(long.Parse(upsert.FormTypeId));
                 await _db.CommitTranAsync();
 
                 return delFormTypeCount >= 1
@@ -96,33 +98,33 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 修改表单类别
         /// </summary>
-        /// <param name="formTypeUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateFormTypeInfo(FormTypeUpsert formTypeUpsert)
+        public async Task<Result<int>> UpdateFormTypeInfo(FormTypeUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
                 FormTypeEntity updateFormType = new FormTypeEntity()
                 {
-                    FormTypeId = long.Parse(formTypeUpsert.FormTypeId),
-                    FormGroupId = long.Parse(formTypeUpsert.FormGroupId),
-                    FormTypeNameCn = formTypeUpsert.FormTypeNameCn,
-                    FormTypeNameEn = formTypeUpsert.FormTypeNameEn,
-                    Prefix = formTypeUpsert.Prefix,
-                    ApprovalPath = formTypeUpsert.ApprovalPath,
-                    ViewPath = formTypeUpsert.ViewPath,
-                    SortOrder = formTypeUpsert.SortOrder,
-                    DescriptionCn = formTypeUpsert.DescriptionCn,
-                    DescriptionEn = formTypeUpsert.DescriptionEn,
+                    FormTypeId = long.Parse(upsert.FormTypeId),
+                    FormGroupId = long.Parse(upsert.FormGroupId),
+                    FormTypeNameCn = upsert.FormTypeNameCn,
+                    FormTypeNameEn = upsert.FormTypeNameEn,
+                    Prefix = upsert.Prefix,
+                    ApprovalPath = upsert.ApprovalPath,
+                    ViewPath = upsert.ViewPath,
+                    SortOrder = upsert.SortOrder,
+                    DescriptionCn = upsert.DescriptionCn,
+                    DescriptionEn = upsert.DescriptionEn,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int updateFormTypeCount = await _formTypeRepository.UpdateFormTypeInfo(updateFormType);
+                int count = await _formTypeRepository.UpdateFormTypeInfo(updateFormType);
                 await _db.CommitTranAsync();
 
-                return updateFormTypeCount >= 1
-                        ? Result<int>.Ok(updateFormTypeCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -136,14 +138,14 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 查询表单类别实体
         /// </summary>
-        /// <param name="getFormTypeEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<FormTypeDto>> GetFormTypeEntity(GetFormTypeEntity getFormTypeEntity)
+        public async Task<Result<FormTypeDto>> GetFormTypeEntity(GetFormTypeEntity getEntity)
         {
             try
             {
-                var formTypeEntity = await _formTypeRepository.GetFormTypeEntity(long.Parse(getFormTypeEntity.FormTypeId));
-                return Result<FormTypeDto>.Ok(formTypeEntity, "");
+                var entity = await _formTypeRepository.GetFormTypeEntity(long.Parse(getEntity.FormTypeId));
+                return Result<FormTypeDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -155,13 +157,13 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 查询表单类别分页
         /// </summary>
-        /// <param name="getFormTypePage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<FormTypeDto>> GetFormTypePage(GetFormTypePage getFormTypePage)
+        public async Task<ResultPaged<FormTypeDto>> GetFormTypePage(GetFormTypePage getPage)
         {
             try
             {
-                return await _formTypeRepository.GetFormTypePage(getFormTypePage);
+                return await _formTypeRepository.GetFormTypePage(getPage);
             }
             catch (Exception ex)
             {
@@ -171,15 +173,15 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         }
 
         /// <summary>
-        /// 查询表单类别分页
+        /// 查询表单类别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
         {
             try
             {
-                var formGroupDrop = await _formTypeRepository.GetFormGroupDropDown();
-                return Result<List<FormGroupDropDto>>.Ok(formGroupDrop, "");
+                var drop = await _formTypeRepository.GetFormGroupDropDown();
+                return Result<List<FormGroupDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {

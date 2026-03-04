@@ -30,29 +30,29 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增部门级别
         /// </summary>
-        /// <param name="deptLevelUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertDepartmentLevel(DepartmentLevelUpsert deptLevelUpsert)
+        public async Task<Result<int>> InsertDepartmentLevel(DepartmentLevelUpsert upsert)
         {
             try
             {
-                await _db.BeginTranAsync();
                 DepartmentLevelEntity insertDeptLevel = new DepartmentLevelEntity()
                 {
                     DepartmentLevelId = SnowFlakeSingle.Instance.NextId(),
-                    DepartmentLevelCode = deptLevelUpsert.DepartmentLevelCode,
-                    DepartmentLevelNameCn = deptLevelUpsert.DepartmentLevelNameCn,
-                    DepartmentLevelNameEn = deptLevelUpsert.DepartmentLevelNameEn,
-                    SortOrder = deptLevelUpsert.SortOrder,
-                    Description = deptLevelUpsert.Description,
+                    DepartmentLevelCode = upsert.DepartmentLevelCode,
+                    DepartmentLevelNameCn = upsert.DepartmentLevelNameCn,
+                    DepartmentLevelNameEn = upsert.DepartmentLevelNameEn,
+                    SortOrder = upsert.SortOrder,
+                    Description = upsert.Description,
                     CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+                    CreatedDate = DateTime.Now,
                 };
-                int insertDeptLevelCount = await _deptLevelRepository.InsertDepartmentLevel(insertDeptLevel);
+                await _db.BeginTranAsync();
+                int count = await _deptLevelRepository.InsertDepartmentLevel(insertDeptLevel);
                 await _db.CommitTranAsync();
 
-                return insertDeptLevelCount >= 1
-                        ? Result<int>.Ok(insertDeptLevelCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -66,18 +66,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 删除部门级别
         /// </summary>
-        /// <param name="deptLevelUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteDepartmentLevel(DepartmentLevelUpsert deptLevelUpsert)
+        public async Task<Result<int>> DeleteDepartmentLevel(DepartmentLevelUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                int delDeptLevelCount = await _deptLevelRepository.DeleteDepartmentLevel(long.Parse(deptLevelUpsert.DepartmentLevelId));
+                int count = await _deptLevelRepository.DeleteDepartmentLevel(long.Parse(upsert.DepartmentLevelId));
                 await _db.CommitTranAsync();
 
-                return delDeptLevelCount >= 1
-                        ? Result<int>.Ok(delDeptLevelCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
@@ -91,29 +91,29 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改部门级别
         /// </summary>
-        /// <param name="deptLevelUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateDepartmentLevel(DepartmentLevelUpsert deptLevelUpsert)
+        public async Task<Result<int>> UpdateDepartmentLevel(DepartmentLevelUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                DepartmentLevelEntity updateDeptLevel = new DepartmentLevelEntity()
+                DepartmentLevelEntity entity = new DepartmentLevelEntity()
                 {
-                    DepartmentLevelId = long.Parse(deptLevelUpsert.DepartmentLevelId),
-                    DepartmentLevelCode = deptLevelUpsert.DepartmentLevelCode,
-                    DepartmentLevelNameCn = deptLevelUpsert.DepartmentLevelNameCn,
-                    DepartmentLevelNameEn = deptLevelUpsert.DepartmentLevelNameEn,
-                    SortOrder = deptLevelUpsert.SortOrder,
-                    Description = deptLevelUpsert.Description,
+                    DepartmentLevelId = long.Parse(upsert.DepartmentLevelId),
+                    DepartmentLevelCode = upsert.DepartmentLevelCode,
+                    DepartmentLevelNameCn = upsert.DepartmentLevelNameCn,
+                    DepartmentLevelNameEn = upsert.DepartmentLevelNameEn,
+                    SortOrder = upsert.SortOrder,
+                    Description = upsert.Description,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    ModifiedDate = DateTime.Now
                 };
-                int updateDeptLevelcount = await _deptLevelRepository.UpdateDepartmentLevel(updateDeptLevel);
+                int count = await _deptLevelRepository.UpdateDepartmentLevel(entity);
                 await _db.CommitTranAsync();
 
-                return updateDeptLevelcount >= 1
-                        ? Result<int>.Ok(updateDeptLevelcount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
@@ -127,14 +127,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询部门级别实体
         /// </summary>
-        /// <param name="getDeptLevelEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<DepartmentLevelDto>> GetDepartmentLevelEntity(GetDepartmentLevelEntity getDeptLevelEntity)
+        public async Task<Result<DepartmentLevelDto>> GetDepartmentLevelEntity(GetDepartmentLevelEntity getEntity)
         {
             try
             {
-                var depatLevelEntity = await _deptLevelRepository.GetDepartmentLevelEntity(long.Parse(getDeptLevelEntity.DepartmentLevelId));
-                return Result<DepartmentLevelDto>.Ok(depatLevelEntity, "");
+                var entity = await _deptLevelRepository.GetDepartmentLevelEntity(long.Parse(getEntity.DepartmentLevelId));
+                return Result<DepartmentLevelDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -151,8 +151,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var deptLevelList = await _deptLevelRepository.GetDepartmentLevelList();
-                return Result<List<DepartmentLevelDto>>.Ok(deptLevelList, "");
+                var list = await _deptLevelRepository.GetDepartmentLevelList();
+                return Result<List<DepartmentLevelDto>>.Ok(list, "");
             }
             catch (Exception ex)
             {

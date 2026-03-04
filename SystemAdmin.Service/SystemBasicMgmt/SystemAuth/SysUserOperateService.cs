@@ -60,8 +60,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             try
             {
                 var ip = GetLocalIPv4();
-                var now = DateTime.Now;
-                var nowStr = now.ToString("yyyy-MM-dd HH:mm:ss");
+                var nowTime = DateTime.Now;
 
                 // 查询用户
                 var user = await _sysUserOperateRepository.LoginGetUserInfo(sysLogin);
@@ -75,7 +74,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                         UserId = 0,
                         StatusId = LoginBehavior.AccountNotExist.ToEnumString(),
                         IP = ip,
-                        LoginDate = nowStr
+                        LoginDate = nowTime
                     });
                     await _db.CommitTranAsync();
 
@@ -100,7 +99,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                         UserId = user.UserId,
                         StatusId = LoginBehavior.IncorrectPassword.ToEnumString(),
                         IP = ip,
-                        LoginDate = nowStr
+                        LoginDate = nowTime
                     });
 
                     // 获取并累加错误次数
@@ -113,7 +112,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                         {
                             UserId = user.UserId,
                             NumberErrors = 1,
-                            CreatedDate = nowStr
+                            CreatedDate = nowTime
                         });
                     }
                     else
@@ -138,7 +137,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 }
 
                 // 密码是否过期
-                if (Convert.ToDateTime(user.ExpirationTime) < now)
+                if (user.ExpirationTime < nowTime)
                 {
                     await _db.CommitTranAsync();
                     return Result<SysUserLoginReturnDto>.Failure(210, _localization.ReturnMsg($"{_this}PasswordExpiration"));
@@ -150,7 +149,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     UserId = user.UserId,
                     StatusId = LoginBehavior.LoginSuccessful.ToEnumString(),
                     IP = ip,
-                    LoginDate = nowStr
+                    LoginDate = nowTime
                 });
 
                 // 清空锁定记录
@@ -200,7 +199,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     UserId = user.UserId,
                     StatusId = LoginBehavior.LoggedOut.ToEnumString(),
                     IP = GetLocalIPv4(),
-                    LoginDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    LoginDate = DateTime.Now
                 };
                 var insertLogOutCount = await _sysUserOperateRepository.AddUserLogOutInfo(logOutLog);
                 await _db.CommitTranAsync();
@@ -312,7 +311,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     string saltString = Convert.ToBase64String(salt);
                     string passwordHash = HashPasswordWithArgon2id(userUnlock.PassWord, salt);
 
-                    int unlockFreezeCount = await _sysUserOperateRepository.UnlockUserFreeze(user.UserId, passwordHash, saltString, DateTime.Now.AddDays(user.ExpirationDays).ToString("yyyy-MM-dd HH:mm:ss"));
+                    int unlockFreezeCount = await _sysUserOperateRepository.UnlockUserFreeze(user.UserId, passwordHash, saltString, DateTime.Now.AddDays(user.ExpirationDays));
                     await _sysUserOperateRepository.DeleleUserLockLog(user.UserId);
                     await _db.CommitTranAsync();
 
@@ -349,7 +348,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 }
 
                 // 判断账号密码是否过期
-                if (Convert.ToDateTime(user.ExpirationTime) > DateTime.Now)
+                if (user.ExpirationTime > DateTime.Now)
                 {
                     return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}PasswordNotExpiration"));
                 }
@@ -381,14 +380,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         /// <summary>
         /// 密码过期（重置密码）
         /// </summary>
-        /// <param name="pwdExpirationUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UserPwdExpiration(PwdExpiration pwdExpirationUpsert)
+        public async Task<Result<int>> UserPwdExpiration(PwdExpiration upsert)
         {
             try
             {
                 // 查询员工信息
-                var user = await _sysUserOperateRepository.GetUserInfo(pwdExpirationUpsert.UserNo);
+                var user = await _sysUserOperateRepository.GetUserInfo(upsert.UserNo);
 
                 // 判断员工是否在职
                 if (user == null)
@@ -399,31 +398,31 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 // 获取缓存中的验证码（注意不是创建）
                 // 查询存入缓存中的验证码
                 var cachedCode = await _cache.GetOrCreateAsync(
-                    pwdExpirationUpsert.UserNo,
+                    upsert.UserNo,
                     ct => new ValueTask<string>("")
                 );
 
                 // 如果缓存中没有验证码，说明验证码已过期或未发送
-                if (string.IsNullOrEmpty(pwdExpirationUpsert.VerificationCode))
+                if (string.IsNullOrEmpty(upsert.VerificationCode))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}VcCodeExpired"));
                 }
 
                 // 验证验证码是否匹配
-                if (!string.Equals(cachedCode, pwdExpirationUpsert.VerificationCode))
+                if (!string.Equals(cachedCode, upsert.VerificationCode))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}VcCodeError"));
                 }
 
                 // 验证密码格式
-                if (!ValidatePassword(pwdExpirationUpsert.PassWord))
+                if (!ValidatePassword(upsert.PassWord))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}ValidationPassWrodError"));
                 }
 
                 // 密码不能与老密码相同
                 await _db.BeginTranAsync();
-                var oldHash = HashPasswordWithArgon2id(pwdExpirationUpsert.PassWord, Convert.FromBase64String(user.PwdSalt));
+                var oldHash = HashPasswordWithArgon2id(upsert.PassWord, Convert.FromBase64String(user.PwdSalt));
                 if (oldHash == user.PassWord)
                 {
                     await _db.RollbackTranAsync();
@@ -434,19 +433,19 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     // 加密密码
                     byte[] salt = GenerateSalt();
                     string saltString = Convert.ToBase64String(salt);
-                    string passwordHash = HashPasswordWithArgon2id(pwdExpirationUpsert.PassWord, salt);
+                    string passwordHash = HashPasswordWithArgon2id(upsert.PassWord, salt);
 
                     // 更新员工密码
-                    int updateCount = await _sysUserOperateRepository.PwdExpirationUpdate(user.UserId, passwordHash, saltString, DateTime.Now.AddDays(user.ExpirationDays).ToString("yyyy-MM-dd HH:mm:ss"));
+                    int count = await _sysUserOperateRepository.PwdExpirationUpdate(user.UserId, passwordHash, saltString, DateTime.Now.AddDays(user.ExpirationDays));
                     // 清空员工锁定记录
                     await _sysUserOperateRepository.EmptyUserLock(user.UserId);
                     await _db.CommitTranAsync();
 
                     // 清除验证码缓存
-                    await _cache.RemoveAsync(pwdExpirationUpsert.UserNo);
+                    await _cache.RemoveAsync(upsert.UserNo);
 
-                    return updateCount >= 1
-                            ? Result<int>.Ok(updateCount, _localization.ReturnMsg($"{_this}UpdatePassWrodSuccess"))
+                    return count >= 1
+                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdatePassWrodSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdatePassWrodFailed"));
                 }
             }

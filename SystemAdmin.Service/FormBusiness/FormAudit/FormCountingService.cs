@@ -22,13 +22,13 @@ namespace SystemAdmin.Service.FormBusiness.FormAudit
         /// <summary>
         /// 查询表单计数信息分页
         /// </summary>
-        /// <param name="getFormCountingPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<FormCountingDto>> GetFormCountingPage(GetFormCountingPage getFormCountingPage)
+        public async Task<ResultPaged<FormCountingDto>> GetFormCountingPage(GetFormCountingPage getPage)
         {
             try
             {
-                return await _formCountingRepository.GetFormCountingPage(getFormCountingPage);
+                return await _formCountingRepository.GetFormCountingPage(getPage);
             }
             catch (Exception ex)
             {

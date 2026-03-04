@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormProcessConfig.Queries
 {
     /// <summary>
-    /// 查询表单类型下拉框请求参数
+    /// 查询表单类型下拉请求参数
     /// </summary>
     public class GetFormTypeDropDown
     {

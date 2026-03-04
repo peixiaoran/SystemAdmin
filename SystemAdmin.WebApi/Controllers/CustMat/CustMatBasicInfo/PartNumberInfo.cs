@@ -22,41 +22,41 @@ namespace SystemAdmin.WebApi.Controllers.CustMat.CustMatBasicInfo
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[料号信息] 新增料号信息")]
-        public async Task<Result<int>> InsertPartNumberInfo([FromBody] PartNumberInfoUpsert partNumberUpsert)
+        public async Task<Result<int>> InsertPartNumberInfo([FromBody] PartNumberInfoUpsert upsert)
         {
-            return await _partNumberService.InsertPartNumberInfo(partNumberUpsert);
+            return await _partNumberService.InsertPartNumberInfo(upsert);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[料号信息] 删除料号信息")]
-        public async Task<Result<int>> DeletePartNumberInfo([FromBody] PartNumberInfoUpsert partNumberUpsert)
+        public async Task<Result<int>> DeletePartNumberInfo([FromBody] PartNumberInfoUpsert upsert)
         {
-            return await _partNumberService.DeletePartNumberInfo(partNumberUpsert);
+            return await _partNumberService.DeletePartNumberInfo(upsert);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[料号信息] 修改料号信息")]
-        public async Task<Result<int>> UpdatePartNumberInfo([FromBody] PartNumberInfoUpsert partNumberUpsert)
+        public async Task<Result<int>> UpdatePartNumberInfo([FromBody] PartNumberInfoUpsert upsert)
         {
-            return await _partNumberService.UpdatePartNumberInfo(partNumberUpsert);
+            return await _partNumberService.UpdatePartNumberInfo(upsert);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[料号信息] 查询料号信息实体")]
-        public async Task<Result<PartNumberInfoDto>> GetPartNumberInfoEntity([FromBody] GetPartNumberInfoEntity getPartNumberInfoEntity)
+        public async Task<Result<PartNumberInfoDto>> GetPartNumberInfoEntity([FromBody] GetPartNumberInfoEntity getEntity)
         {
-            return await _partNumberService.GetPartNumberInfoEntity(getPartNumberInfoEntity);
+            return await _partNumberService.GetPartNumberInfoEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("客户生产订单-相关基础信息")]
         [EndpointSummary("[料号信息] 查询料号信息分页")]
-        public async Task<ResultPaged<PartNumberInfoDto>> GetPartNumberInfoPage([FromBody] GetPartNumberInfoPage getPartNumberInfoPage)
+        public async Task<ResultPaged<PartNumberInfoDto>> GetPartNumberInfoPage([FromBody] GetPartNumberInfoPage getPage)
         {
-            return await _partNumberService.GetPartNumberInfoPage(getPartNumberInfoPage);
+            return await _partNumberService.GetPartNumberInfoPage(getPage);
         }
     }
 }

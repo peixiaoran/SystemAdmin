@@ -112,28 +112,28 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询角色分页
         /// </summary>
-        /// <param name="getRolePage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<RoleInfoDto>> GetRolePage(GetRoleInfoPage getRolePage)
+        public async Task<ResultPaged<RoleInfoDto>> GetRolePage(GetRoleInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<RoleInfoEntity>()
                            .With(SqlWith.NoLock);
 
             // 角色编码
-            if (!string.IsNullOrEmpty(getRolePage.RoleCode))
+            if (!string.IsNullOrEmpty(getPage.RoleCode))
             {
-                query = query.Where(role => role.RoleCode.Contains(getRolePage.RoleCode));
+                query = query.Where(role => role.RoleCode.Contains(getPage.RoleCode));
             }
             // 角色名称
-            if (!string.IsNullOrEmpty(getRolePage.RoleName))
+            if (!string.IsNullOrEmpty(getPage.RoleName))
             {
                 query = query.Where(role =>
-                    role.RoleNameCn.Contains(getRolePage.RoleName) ||
-                    role.RoleNameEn.Contains(getRolePage.RoleName));
+                    role.RoleNameCn.Contains(getPage.RoleName) ||
+                    role.RoleNameEn.Contains(getPage.RoleName));
             }
 
-            var rolePage = await query.ToPageListAsync(getRolePage.PageIndex, getRolePage.PageSize, totalCount);
+            var rolePage = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<RoleInfoDto>.Ok(rolePage.Adapt<List<RoleInfoDto>>(), totalCount, "");
         }
 
@@ -231,7 +231,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
-        /// 角色模块下拉框
+        /// 角色模块下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<RoleModuleDropDto>> GetRoleModuleDropDown(long roleId)

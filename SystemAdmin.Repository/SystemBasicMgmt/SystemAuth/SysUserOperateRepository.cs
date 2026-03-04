@@ -160,7 +160,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         /// <param name="salt"></param>
         /// <param name="expirationTime"></param>
         /// <returns></returns>
-        public async Task<int> UnlockUserFreeze(long userId, string passWord, string salt, string expirationTime)
+        public async Task<int> UnlockUserFreeze(long userId, string passWord, string salt, DateTime expirationTime)
         {
             return await _db.Updateable<UserInfoEntity>()
                             .SetColumns(userinfo => new UserInfoEntity
@@ -193,7 +193,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         /// <param name="pwdSalt"></param>
         /// <param name="expirationTime"></param>
         /// <returns></returns>
-        public async Task<int> PwdExpirationUpdate(long userId, string passWord, string pwdSalt, string expirationTime)
+        public async Task<int> PwdExpirationUpdate(long userId, string passWord, string pwdSalt, DateTime expirationTime)
         {
             return await _db.Updateable<UserInfoEntity>()
                             .SetColumns(user => new UserInfoEntity

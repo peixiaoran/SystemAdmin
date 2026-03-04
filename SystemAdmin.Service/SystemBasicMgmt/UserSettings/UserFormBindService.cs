@@ -77,20 +77,20 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 await _db.BeginTranAsync();
                 var delUserFormCount = await _userFormBindRepository.DeleteUserFormBind(long.Parse(userFormBindUpsert.UserId));
                 var insertUserFormBindEntity = userFormBindUpsert.FormGroupTypeId
-                                             .Select(id => new UserFormBindEntity
-                                             {
-                                                 UserId = long.Parse(userFormBindUpsert.UserId),
-                                                 FormGroupTypeId = long.Parse(id),
-                                                 CreatedBy = _loginuser.UserId,
-                                                 CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
-                                             }).ToList();
+                                              .Select(id => new UserFormBindEntity
+                                              {
+                                                  UserId = long.Parse(userFormBindUpsert.UserId),
+                                                  FormGroupTypeId = long.Parse(id),
+                                                  CreatedBy = _loginuser.UserId,
+                                                  CreatedDate = DateTime.Now
+                                              }).ToList();
 
                 insertUserFormBindEntity.ForEach(userform =>
                 {
                     userform.CreatedBy = _loginuser.UserId;
-                    userform.CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    userform.CreatedDate = DateTime.Now;
                     userform.ModifiedBy = _loginuser.UserId;
-                    userform.ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    userform.ModifiedDate = DateTime.Now;
                 });
                 var insertUserFormCount = await _userFormBindRepository.InsertUserFormBind(insertUserFormBindEntity);
                 await _db.CommitTranAsync();
@@ -106,7 +106,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
-        /// 部门下拉框
+        /// 部门下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()

@@ -123,13 +123,13 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 查询料号信息实体
         /// </summary>
-        /// <param name="getPartNumberInfoEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<PartNumberInfoDto>> GetPartNumberInfoEntity(GetPartNumberInfoEntity getPartNumberInfoEntity)
+        public async Task<Result<PartNumberInfoDto>> GetPartNumberInfoEntity(GetPartNumberInfoEntity getEntity)
         {
             try
             {
-                var partNumberInfoEntity = await _partNumberInfoRepository.GetPartNumberInfoEntity(long.Parse(getPartNumberInfoEntity.PartNumberId));
+                var partNumberInfoEntity = await _partNumberInfoRepository.GetPartNumberInfoEntity(long.Parse(getEntity.PartNumberId));
                 return Result<PartNumberInfoDto>.Ok(partNumberInfoEntity, "");
             }
             catch (Exception ex)
@@ -142,13 +142,13 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         /// <summary>
         /// 查询料号信息分页
         /// </summary>
-        /// <param name="getPartNumberInfoPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<PartNumberInfoDto>> GetPartNumberInfoPage(GetPartNumberInfoPage getPartNumberInfoPage)
+        public async Task<ResultPaged<PartNumberInfoDto>> GetPartNumberInfoPage(GetPartNumberInfoPage getPage)
         {
             try
             {
-                return await _partNumberInfoRepository.GetPartNumberInfoPage(getPartNumberInfoPage);
+                return await _partNumberInfoRepository.GetPartNumberInfoPage(getPage);
             }
             catch (Exception ex)
             {
