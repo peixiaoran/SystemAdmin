@@ -32,13 +32,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工兼任分页
         /// </summary>
-        /// <param name="getUserPartTimePage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserPartTimeDto>> GetUserPartTimePage(GetUserPartTimePage getUserPartTimePage)
+        public async Task<ResultPaged<UserPartTimeDto>> GetUserPartTimePage(GetUserPartTimePage getPage)
         {
             try
             {
-                return await _userPartTimeRepository.GetUserPartTimePage(getUserPartTimePage);
+                return await _userPartTimeRepository.GetUserPartTimePage(getPage);
             }
             catch (Exception ex)
             {
@@ -68,30 +68,30 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 新增员工兼任
         /// </summary>
-        /// <param name="userPartTimeInsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertUserPartTime(UserPartTimeInsert userPartTimeInsert)
+        public async Task<Result<int>> InsertUserPartTime(UserPartTimeInsert upsert)
         {
             try
             {
                 UserPartTimeEntity insertUserPartTimeEntity = new UserPartTimeEntity()
                 {
-                    UserId = long.Parse(userPartTimeInsert.UserId),
-                    PartTimeDeptId = long.Parse(userPartTimeInsert.PartTimeDeptId),
-                    PartTimePositionId = long.Parse(userPartTimeInsert.PartTimePositionId),
-                    StartTime = userPartTimeInsert.StartTime,
-                    EndTime = userPartTimeInsert.EndTime,
+                    UserId = long.Parse(upsert.UserId),
+                    PartTimeDeptId = long.Parse(upsert.PartTimeDeptId),
+                    PartTimePositionId = long.Parse(upsert.PartTimePositionId),
+                    StartTime = upsert.StartTime,
+                    EndTime = upsert.EndTime,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
 
                 await _db.BeginTranAsync();
                 // 判断员工是否有重复（按照员工Id、兼任部门）
-                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeInsert.UserId), long.Parse(userPartTimeInsert.PartTimeDeptId));
+                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(upsert.UserId), long.Parse(upsert.PartTimeDeptId));
                 if (userpartTimeAny)
                 {
                     var insertUserPartTimeCount = await _userPartTimeRepository.InsertUserPartTime(insertUserPartTimeEntity);
-                    await _userPartTimeRepository.UpdateUserPartTime(long.Parse(userPartTimeInsert.UserId), 1);
+                    await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsert.UserId), 1);
                     await _db.CommitTranAsync();
 
                     return insertUserPartTimeCount >= 1
@@ -115,20 +115,20 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 删除员工兼任
         /// </summary>
-        /// <param name="userPartTimeUpdateDel"></param>
+        /// <param name="upsertdel"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteUserPartTime(UserPartTimeUpdateDel userPartTimeUpdateDel)
+        public async Task<Result<int>> DeleteUserPartTime(UserPartTimeUpdateDel upsertdel)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除员工兼任
-                var delUserPartTimeCount = await _userPartTimeRepository.DeleteUserPartTime(userPartTimeUpdateDel);
+                var delUserPartTimeCount = await _userPartTimeRepository.DeleteUserPartTime(upsertdel);
                 // 判断员工是否还有兼任，如果没有就修改兼任状态为0
-                var userPartTimeIsExist = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(userPartTimeUpdateDel.Old_UserId));
+                var userPartTimeIsExist = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(upsertdel.Old_UserId));
                 if (!userPartTimeIsExist)
                 {
-                    await _userPartTimeRepository.UpdateUserPartTime(long.Parse(userPartTimeUpdateDel.Old_UserId), 0);
+                    await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsertdel.Old_UserId), 0);
                 }
                 await _db.CommitTranAsync();
 
@@ -147,13 +147,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工兼任实体
         /// </summary>
-        /// <param name="getUserPartTimeEntity"></param>
+        /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<UserPartTimeDto>> GetUserPartTimeEntity(GetUserPartTimeEntity getUserPartTimeEntity)
+        public async Task<Result<UserPartTimeDto>> GetUserPartTimeEntity(GetUserPartTimeEntity getEntity)
         {
             try
             {
-                var userparttimeEntity = await _userPartTimeRepository.GetUserPartTimeList(getUserPartTimeEntity);
+                var userparttimeEntity = await _userPartTimeRepository.GetUserPartTimeList(getEntity);
                 return Result<UserPartTimeDto>.Ok(userparttimeEntity, "");
             }
             catch (Exception ex)
@@ -166,35 +166,35 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 修改员工兼任
         /// </summary>
-        /// <param name="userPartTimeUpdateDel"></param>
+        /// <param name="upsertdel"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateUserPartTime(UserPartTimeUpdateDel userPartTimeUpdateDel)
+        public async Task<Result<int>> UpdateUserPartTime(UserPartTimeUpdateDel upsertdel)
         {
             try
             {
                 // 判断员工是否有重复（按照员工Id、新兼任部门）
-                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(userPartTimeUpdateDel.UserId), long.Parse(userPartTimeUpdateDel.PartTimeDeptId));
+                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(upsertdel.UserId), long.Parse(upsertdel.PartTimeDeptId));
                 if (userpartTimeAny)
                 {
                     await _db.BeginTranAsync();
                     UserPartTimeEntity updateUserPartTimeEntity = new UserPartTimeEntity()
                     {
-                        UserId = long.Parse(userPartTimeUpdateDel.UserId),
-                        PartTimeDeptId = long.Parse(userPartTimeUpdateDel.PartTimeDeptId),
-                        StartTime = userPartTimeUpdateDel.StartTime,
-                        EndTime = userPartTimeUpdateDel.EndTime,
+                        UserId = long.Parse(upsertdel.UserId),
+                        PartTimeDeptId = long.Parse(upsertdel.PartTimeDeptId),
+                        StartTime = upsertdel.StartTime,
+                        EndTime = upsertdel.EndTime,
                         ModifiedBy = _loginuser.UserId,
                         ModifiedDate = DateTime.Now
                     };
-                    var updateUserPartTimeCount = await _userPartTimeRepository.UpdateUserPartTime(userPartTimeUpdateDel, updateUserPartTimeEntity);
+                    var updateUserPartTimeCount = await _userPartTimeRepository.UpdateUserPartTime(upsertdel, updateUserPartTimeEntity);
                     // 判断老员工是否还有兼任，如果没有就修改兼任状态为0
-                    var OldUserPartTimeIsExist = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(userPartTimeUpdateDel.Old_UserId));
+                    var OldUserPartTimeIsExist = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(upsertdel.Old_UserId));
                     if (!OldUserPartTimeIsExist)
                     {
-                        await _userPartTimeRepository.UpdateUserPartTime(long.Parse(userPartTimeUpdateDel.Old_UserId), 0);
+                        await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsertdel.Old_UserId), 0);
                     }
                     // 修改新员工的兼任状态为1
-                    await _userPartTimeRepository.UpdateUserPartTime(long.Parse(userPartTimeUpdateDel.UserId), 1);
+                    await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsertdel.UserId), 1);
                     await _db.CommitTranAsync();
 
                     return updateUserPartTimeCount >= 1

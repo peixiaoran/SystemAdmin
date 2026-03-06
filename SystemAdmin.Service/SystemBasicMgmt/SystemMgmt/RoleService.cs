@@ -220,28 +220,28 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 修改角色模块绑定
         /// </summary>
-        /// <param name="roleModuleUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateRoleModuleList(RoleModuleUpsert roleModuleUpsert)
+        public async Task<Result<int>> UpdateRoleModuleList(RoleModuleUpsert upsert)
         {
             try
             {
-                List<long> unSelectdModuleIds = roleModuleUpsert.UnSelectedModuleIds
+                List<long> unSelectdModuleIds = upsert.UnSelectedModuleIds
                                                 .Where(moduleId => long.TryParse(moduleId, out _))
                                                 .Select(long.Parse)
                                                 .ToList();
                 // 查询未选中模块下的菜单Id
                 var delMenuIds = await _roleRepository.GetMenuIds(unSelectdModuleIds);
                 // 删除角色菜单绑定
-                var delRoleMenuCount = await _roleRepository.DeleleRoleMenu(long.Parse(roleModuleUpsert.RoleId), delMenuIds);
+                var delRoleMenuCount = await _roleRepository.DeleleRoleMenu(long.Parse(upsert.RoleId), delMenuIds);
                 // 删除角色全部模块绑定
-                var delRoleModuleCount = await _roleRepository.DeleleRoleModule(long.Parse(roleModuleUpsert.RoleId));
+                var delRoleModuleCount = await _roleRepository.DeleleRoleModule(long.Parse(upsert.RoleId));
 
                 // 再新增角色模块绑定
-                List<RoleModuleEntity> insertRoleModuleList = roleModuleUpsert.SelectedModuleIds
+                List<RoleModuleEntity> insertRoleModuleList = upsert.SelectedModuleIds
                                        .Select(moduleId => new RoleModuleEntity
                                        {
-                                           RoleId = long.Parse(roleModuleUpsert.RoleId),
+                                           RoleId = long.Parse(upsert.RoleId),
                                            ModuleId = long.Parse(moduleId),
                                            CreatedBy = _loginuser.UserId,
                                            CreatedDate = DateTime.Now,
@@ -265,11 +265,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// 角色模块下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(GetRoleModuleDropDown getRoleModuleDrop)
+        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(GetRoleModuleDropDown getDrop)
         {
             try
             {
-                var roleModuleDrop = await _roleRepository.GetRoleModuleDropDown(long.Parse(getRoleModuleDrop.RoleId));
+                var roleModuleDrop = await _roleRepository.GetRoleModuleDropDown(long.Parse(getDrop.RoleId));
                 return Result<List<RoleModuleDropDto>>.Ok(roleModuleDrop, "");
             }
             catch (Exception ex)

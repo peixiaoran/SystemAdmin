@@ -26,51 +26,51 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 新增审批步骤信息
         /// </summary>
-        /// <param name="workflowStep"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowStep(WorkflowStepEntity workflowStep)
+        public async Task<int> InsertWorkflowStep(WorkflowStepEntity upsert)
         {
-            return await _db.Insertable(workflowStep).ExecuteCommandAsync();
+            return await _db.Insertable(upsert).ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 新增审批步骤组织架构来源
         /// </summary>
-        /// <param name="workflowStepOrg"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowStepOrg(WorkflowStepOrgEntity workflowStepOrg)
+        public async Task<int> InsertWorkflowStepOrg(WorkflowStepOrgEntity entity)
         {
-            return await _db.Insertable(workflowStepOrg).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
         ///  新增审批步骤指定部门员工级别来源
         /// </summary>
-        /// <param name="workflowStepDeptUser"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowStepDeptUser(WorkflowStepDeptUserEntity workflowStepDeptUser)
+        public async Task<int> InsertWorkflowStepDeptUser(WorkflowStepDeptUserEntity entity)
         {
-            return await _db.Insertable(workflowStepDeptUser).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 新增审批步骤指定员工来源
         /// </summary>
-        /// <param name="workflowStepUser"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowStepUser(WorkflowStepUserEntity workflowStepUser)
+        public async Task<int> InsertWorkflowStepUser(WorkflowStepUserEntity entity)
         {
-            return await _db.Insertable(workflowStepUser).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 新增审批步骤自定义来源
         /// </summary>
-        /// <param name="workflowStepCustom"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowStepCustom(WorkflowStepCustomEntity workflowStepCustom)
+        public async Task<int> InsertWorkflowStepCustom(WorkflowStepCustomEntity entity)
         {
-            return await _db.Insertable(workflowStepCustom).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -136,103 +136,103 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 修改审批步骤信息
         /// </summary>
-        /// <param name="workflowStep"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<int> UpdateWorkflowStep(WorkflowStepEntity workflowStep)
+        public async Task<int> UpdateWorkflowStep(WorkflowStepEntity upsert)
         {
-            return await _db.Updateable(workflowStep)
+            return await _db.Updateable(upsert)
                             .IgnoreColumns(step => new
                             {
                                 step.StepId,
                                 step.FormTypeId,
                                 step.CreatedBy,
                                 step.CreatedDate,
-                            }).Where(step => step.StepId == workflowStep.StepId)
+                            }).Where(step => step.StepId == upsert.StepId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 修改审批步骤组织架构来源
         /// </summary>
-        /// <param name="workflowStepOrg"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepOrg(WorkflowStepOrgEntity workflowStepOrg)
+        public async Task<int> UpdateWorkflowStepOrg(WorkflowStepOrgEntity entity)
         {
-            return await _db.Updateable(workflowStepOrg)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(step => new
                             {
                                 step.StepId,
                                 step.CreatedBy,
                                 step.CreatedDate,
-                            }).Where(step => step.StepId == workflowStepOrg.StepId)
+                            }).Where(step => step.StepId == entity.StepId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 修改审批步骤指定部门员工级别来源
         /// </summary>
-        /// <param name="workflowStepDeptUser"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepDeptUser(WorkflowStepDeptUserEntity workflowStepDeptUser)
+        public async Task<int> UpdateWorkflowStepDeptUser(WorkflowStepDeptUserEntity entity)
         {
-            return await _db.Updateable(workflowStepDeptUser)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(step => new
                             {
                                 step.StepId,
                                 step.CreatedBy,
                                 step.CreatedDate,
-                            }).Where(step => step.StepId == workflowStepDeptUser.StepId)
+                            }).Where(step => step.StepId == entity.StepId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 修改审批步骤指定员工来源
         /// </summary>
-        /// <param name="workflowStepUser"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepUser(WorkflowStepUserEntity workflowStepUser)
+        public async Task<int> UpdateWorkflowStepUser(WorkflowStepUserEntity entity)
         {
-            return await _db.Updateable(workflowStepUser)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(step => new
                             {
                                 step.StepId,
                                 step.CreatedBy,
                                 step.CreatedDate,
-                            }).Where(step => step.StepId == workflowStepUser.StepId)
+                            }).Where(step => step.StepId == entity.StepId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 修改审批步骤自定义来源
         /// </summary>
-        /// <param name="workflowStepCustom"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepCustom(WorkflowStepCustomEntity workflowStepCustom)
+        public async Task<int> UpdateWorkflowStepCustom(WorkflowStepCustomEntity entity)
         {
-            return await _db.Updateable(workflowStepCustom)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(step => new
                             {
                                 step.StepId,
                                 step.CreatedBy,
                                 step.CreatedDate,
-                            }).Where(step => step.StepId == workflowStepCustom.StepId)
+                            }).Where(step => step.StepId == entity.StepId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 查询审批步骤分页
         /// </summary>
-        /// <param name="getWorkflowStep"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<WorkflowStepPageDto>> GetWorkflowStepPage(GetWorkflowStepPage getWorkflowStep)
+        public async Task<ResultPaged<WorkflowStepPageDto>> GetWorkflowStepPage(GetWorkflowStepPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var workflowStepPage = await _db.Queryable<WorkflowStepEntity>()
                                             .With(SqlWith.NoLock)
-                                            .InnerJoin<DictionaryInfoEntity>((stepinfo, assigndic) => assigndic.DicType == " ApproverAssignment" && stepinfo.Assignment == assigndic.DicCode)
-                                            .Where((stepinfo, assigndic) => stepinfo.FormTypeId == long.Parse(getWorkflowStep.FormTypeId))
-                                            .OrderBy((stepinfo, assigndic) => stepinfo.CreatedDate)
-                                            .Select((stepinfo, assigndic) => new WorkflowStepPageDto()
+                                            .InnerJoin<DictionaryInfoEntity>((stepinfo, dic) => dic.DicType == " ApproverAssignment" && stepinfo.Assignment == dic.DicCode)
+                                            .Where((stepinfo, dic) => stepinfo.FormTypeId == long.Parse(getPage.FormTypeId))
+                                            .OrderBy((stepinfo, dic) => stepinfo.CreatedDate)
+                                            .Select((stepinfo, dic) => new WorkflowStepPageDto()
                                             {
                                                 StepId = stepinfo.StepId,
                                                 StepName = _lang.Locale == "zh-CN"
@@ -240,10 +240,10 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                                            : stepinfo.StepNameEn,
                                                 Assignment = int.Parse(stepinfo.Assignment),
                                                 AssignmentName = _lang.Locale == "zh-CN"
-                                                           ? assigndic.DicNameCn
-                                                           : assigndic.DicNameEn,
+                                                           ? dic.DicNameCn
+                                                           : dic.DicNameEn,
                                                 Description = stepinfo.Description,
-                                            }).ToPageListAsync(getWorkflowStep.PageIndex, getWorkflowStep.PageSize, totalCount);
+                                            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<WorkflowStepPageDto>.Ok(workflowStepPage.Adapt<List<WorkflowStepPageDto>>(), totalCount);
         }
 
@@ -254,12 +254,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <returns></returns>
         public async Task<WorkflowStepEntityDto> GetWorkflowStepEntity(long stepId)
         {
-            var workflowStepEntity = await _db.Queryable<WorkflowStepEntity>()
+            var entity = await _db.Queryable<WorkflowStepEntity>()
                                               .With(SqlWith.NoLock)
                                               .Where(step => step.FormTypeId == stepId)
                                               .OrderBy(step => step.CreatedDate)
                                               .ToListAsync();
-            return workflowStepEntity.Adapt<WorkflowStepEntityDto>();
+            return entity.Adapt<WorkflowStepEntityDto>();
         }
 
         /// <summary>

@@ -20,9 +20,6 @@ namespace SystemAdmin.CommonSetup.Security
 
         public async Task<string> UploadAsync(string objectName, Stream data, string contentType = "application/octet-stream")
         {
-            if (data == null || data.Length == 0)
-                throw new ArgumentException("Stream cannot be empty", nameof(data));
-
             var bucket = _settings.DefaultBucket;
 
             var ext = Path.GetExtension(objectName); // .jpg .png .pdf

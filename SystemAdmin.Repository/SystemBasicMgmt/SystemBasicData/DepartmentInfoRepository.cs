@@ -24,11 +24,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增部门信息
         /// </summary>
-        /// <param name="deptEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertDepartmentInfo(DepartmentInfoEntity deptEntity)
+        public async Task<int> InsertDepartmentInfo(DepartmentInfoEntity entity)
         {
-            return await _db.Insertable(deptEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -68,17 +68,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改部门信息
         /// </summary>
-        /// <param name="deptEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateDepartmentInfo(DepartmentInfoEntity deptEntity)
+        public async Task<int> UpdateDepartmentInfo(DepartmentInfoEntity entity)
         {
-            return await _db.Updateable(deptEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(dept => new
                             {
                                 dept.DepartmentId,
                                 dept.CreatedBy,
                                 dept.CreatedDate,
-                            }).Where(dept => dept.DepartmentId == deptEntity.DepartmentId)
+                            }).Where(dept => dept.DepartmentId == entity.DepartmentId)
                             .ExecuteCommandAsync();
         }
 
@@ -89,29 +89,29 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<DepartmentInfoDto> GetDepartmentInfoEntity(long deptId)
         {
-            var deptEntity = await _db.Queryable<DepartmentInfoEntity>()
+            var entity = await _db.Queryable<DepartmentInfoEntity>()
                                       .With(SqlWith.NoLock)
                                       .Where(dept => dept.DepartmentId == deptId)
                                       .FirstAsync();
-            return _mapper.Map<DepartmentInfoDto>(deptEntity);
+            return _mapper.Map<DepartmentInfoDto>(entity);
         }
 
         /// <summary>
         /// 查询部门树
         /// </summary>
-        /// <param name="getDeptTree"></param>
+        /// <param name="getTree"></param>
         /// <returns></returns>
-        public async Task<List<DepartmentInfoDto>> GetDepartmentInfoTree(GetDepartmentTree getDeptTree)
+        public async Task<List<DepartmentInfoDto>> GetDepartmentInfoTree(GetDepartmentTree getTree)
         {
             var query = _db.Queryable<DepartmentInfoEntity>()
                            .With(SqlWith.NoLock);
 
-            if (!string.IsNullOrEmpty(getDeptTree.DepartmentCode))
-                query = query.Where(dept => dept.DepartmentCode.Contains(getDeptTree.DepartmentCode));
+            if (!string.IsNullOrEmpty(getTree.DepartmentCode))
+                query = query.Where(dept => dept.DepartmentCode.Contains(getTree.DepartmentCode));
 
-            if (!string.IsNullOrEmpty(getDeptTree.DepartmentName))
-                query = query.Where(dept => dept.DepartmentNameCn.Contains(getDeptTree.DepartmentName)
-                                      || dept.DepartmentNameEn.Contains(getDeptTree.DepartmentName));
+            if (!string.IsNullOrEmpty(getTree.DepartmentName))
+                query = query.Where(dept => dept.DepartmentNameCn.Contains(getTree.DepartmentName)
+                                      || dept.DepartmentNameEn.Contains(getTree.DepartmentName));
 
             var matchedNodes = await query.Select(dept => new DepartmentInfoEntity
             {
@@ -186,7 +186,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .LeftJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
                             .OrderBy(dept => dept.SortOrder)
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {

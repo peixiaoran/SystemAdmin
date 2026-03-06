@@ -23,36 +23,40 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 新增汇率信息
         /// </summary>
-        /// <param name="exchangeRateEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertExchangeRate(ExchangeRateEntity exchangeRateEntity)
+        public async Task<int> InsertExchangeRate(ExchangeRateEntity entity)
         {
-            return await _db.Insertable(exchangeRateEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 删除汇率信息
         /// </summary>
         /// <param name="currencyCode"></param>
-        /// <param name="newExchangeCurrencyCode"></param>
+        /// <param name="exchangeCurrencyCode"></param>
         /// <param name="yearMonth"></param>
         /// <returns></returns>
         public async Task<int> DeleteExchangeRate(string currencyCode, string exchangeCurrencyCode, string yearMonth)
         {
             return await _db.Deleteable<ExchangeRateEntity>()
-                            .Where(exchangerate => exchangerate.CurrencyCode == currencyCode && exchangerate.ExchangeCurrencyCode == exchangeCurrencyCode && exchangerate.YearMonth == yearMonth)
+                            .Where(rate => rate.CurrencyCode == currencyCode && rate.ExchangeCurrencyCode == exchangeCurrencyCode && rate.YearMonth == yearMonth)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 修改汇率信息
         /// </summary>
-        /// <param name="exchangeRateEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateExchangeRate(ExchangeRateEntity exchangeRateEntity)
+        public async Task<int> UpdateExchangeRate(ExchangeRateEntity entity)
         {
-            return await _db.Updateable(exchangeRateEntity)
-                            .Where(changerate => changerate.ExchangeCurrencyCode == exchangeRateEntity.ExchangeCurrencyCode && changerate.YearMonth == exchangeRateEntity.YearMonth)
+            return await _db.Updateable(entity)
+                            .IgnoreColumns(rate => new
+                            {
+                                rate.CreatedBy,
+                                rate.CreatedDate,
+                            }).Where(rate => rate.ExchangeCurrencyCode == entity.ExchangeCurrencyCode && rate.YearMonth == entity.YearMonth)
                             .ExecuteCommandAsync();
         }
 
@@ -92,11 +96,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <returns></returns>
         public async Task<ExchangeRateDto> GetExchangeRateEntity(GetExchangeRateEntity getEntity)
         {
-            var exchangeRateEntity = await _db.Queryable<ExchangeRateEntity>()
+            var entity = await _db.Queryable<ExchangeRateEntity>()
                                               .With(SqlWith.NoLock)
-                                              .Where(exchangerate => exchangerate.CurrencyCode == getEntity.CurrencyCode && exchangerate.ExchangeCurrencyCode == getEntity.ExchangeCurrencyCode && getEntity.YearMonth == getEntity.YearMonth)
+                                              .Where(rate => rate.CurrencyCode == getEntity.CurrencyCode && rate.ExchangeCurrencyCode == getEntity.ExchangeCurrencyCode && getEntity.YearMonth == getEntity.YearMonth)
                                               .FirstAsync();
-            return exchangeRateEntity.Adapt<ExchangeRateDto>();
+            return entity.Adapt<ExchangeRateDto>();
         }
 
         /// <summary>
@@ -128,7 +132,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         {
             return await _db.Queryable<ExchangeRateEntity>()
                             .With(SqlWith.NoLock)
-                            .Where(exchangerate => exchangerate.CurrencyCode == currencyCode && exchangerate.ExchangeCurrencyCode == exchangeCurrencyCode && exchangerate.YearMonth == yearMonth)
+                            .Where(rate => rate.CurrencyCode == currencyCode && rate.ExchangeCurrencyCode == exchangeCurrencyCode && rate.YearMonth == yearMonth)
                             .AnyAsync();
         }
     }

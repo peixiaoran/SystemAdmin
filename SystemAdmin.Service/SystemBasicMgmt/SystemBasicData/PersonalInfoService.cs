@@ -65,11 +65,10 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 // 4. 上传到 MinIO
                 var avatarUrl = await _minioService.UploadAsync(file.FileName, file.OpenReadStream(), file.ContentType);
 
-                // 5. 更新用户头像地址
-                var updateAvatarCount = await _personalInfoRepository.UpdateUserAvatar(long.Parse(userId), avatarUrl);
+                // 5. 更新员工头像地址
+                var count = await _personalInfoRepository.UpdateUserAvatar(long.Parse(userId), avatarUrl);
 
-                // 6. 返回
-                return updateAvatarCount >= 1
+                return count >= 1
                         ? Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"))
                         : Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
             }
@@ -89,8 +88,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var userEntity = await _personalInfoRepository.GetPersonalInfoEntity(_loginuser.UserId);
-                return Result<PersonalInfoDto>.Ok(userEntity, "");
+                var entity = await _personalInfoRepository.GetPersonalInfoEntity(_loginuser.UserId);
+                return Result<PersonalInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -108,7 +107,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                await _db.BeginTranAsync();
                 UserInfoEntity user = await _personalInfoRepository.GetUserPasswordAndSalt(_loginuser.UserId);
 
                 string updatePassWord = string.Empty;
@@ -147,6 +145,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
+
+                await _db.BeginTranAsync();
                 var count = await _personalInfoRepository.UpdatePersonalInfo(_loginuser.UserId, entity);
                 await _db.CommitTranAsync();
 

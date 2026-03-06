@@ -59,6 +59,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
+
                         await _db.BeginTranAsync();
                         var count = await _ExchangeRateRepository.InsertExchangeRate(entity);
                         await _db.CommitTranAsync();
@@ -117,20 +118,19 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                 }
                 else
                 {
-                    await _db.BeginTranAsync();
-                    ExchangeRateEntity updateExchangeRate = new ExchangeRateEntity()
+                    ExchangeRateEntity entity = new ExchangeRateEntity()
                     {
                         CurrencyCode = upsert.CurrencyCode,
                         ExchangeCurrencyCode = upsert.ExchangeCurrencyCode,
                         ExchangeRate = upsert.ExchangeRate,
                         YearMonth = upsert.YearMonth,
                         Remark = upsert.Remark,
-                        CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now,
                         ModifiedBy = _loginuser.UserId,
                         ModifiedDate = DateTime.Now
                     };
-                    var count = await _ExchangeRateRepository.UpdateExchangeRate(updateExchangeRate);
+
+                    await _db.BeginTranAsync();
+                    var count = await _ExchangeRateRepository.UpdateExchangeRate(entity);
                     await _db.CommitTranAsync();
 
                     return count >= 1

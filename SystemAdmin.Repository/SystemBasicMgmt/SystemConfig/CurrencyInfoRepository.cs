@@ -18,11 +18,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 新增币别信息
         /// </summary>
-        /// <param name="currencyEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertCurrencyInfo(CurrencyInfoEntity currencyEntity)
+        public async Task<int> InsertCurrencyInfo(CurrencyInfoEntity entity)
         {
-            return await _db.Insertable(currencyEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -40,17 +40,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <summary>
         /// 修改币别信息
         /// </summary>
-        /// <param name="currencyEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateCurrencyInfo(CurrencyInfoEntity currencyEntity)
+        public async Task<int> UpdateCurrencyInfo(CurrencyInfoEntity entity)
         {
-            return await _db.Updateable(currencyEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(currency => new
                             {
                                 currency.CurrencyId,
                                 currency.CreatedBy,
                                 currency.CreatedDate,
-                            }).Where(currency => currency.CurrencyId == currencyEntity.CurrencyId)
+                            }).Where(currency => currency.CurrencyId == entity.CurrencyId)
                             .ExecuteCommandAsync();
         }
 
@@ -61,28 +61,28 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// <returns></returns>
         public async Task<CurrencyInfoDto> GetCurrencyInfoEntity(long currencyId)
         {
-            var currencyEntity = await _db.Queryable<CurrencyInfoEntity>()
+            var entity = await _db.Queryable<CurrencyInfoEntity>()
                                           .With(SqlWith.NoLock)
                                           .Where(currency => currency.CurrencyId == currencyId)
                                           .FirstAsync();
-            return currencyEntity.Adapt<CurrencyInfoDto>();
+            return entity.Adapt<CurrencyInfoDto>();
         }
 
         /// <summary>
         /// 查询币别分页
         /// </summary>
-        /// <param name="getCurrencyPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<CurrencyInfoDto>> GetCurrencyInfoPage(GetCurrencyInfoPage getCurrencyPage)
+        public async Task<ResultPaged<CurrencyInfoDto>> GetCurrencyInfoPage(GetCurrencyInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<CurrencyInfoEntity>()
                            .With(SqlWith.NoLock);
 
             // 币别代码
-            if (!string.IsNullOrEmpty(getCurrencyPage.CurrencyCode))
+            if (!string.IsNullOrEmpty(getPage.CurrencyCode))
             {
-                query = query.Where(currency => currency.CurrencyCode.Contains(getCurrencyPage.CurrencyCode));
+                query = query.Where(currency => currency.CurrencyCode.Contains(getPage.CurrencyCode));
             }
 
             // 排序
@@ -94,7 +94,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                 CurrencyCode = currency.CurrencyCode,
                 CurrencyNameCn = currency.CurrencyNameCn,
                 CurrencyNameEn = currency.CurrencyNameEn,
-            }).ToPageListAsync(getCurrencyPage.PageIndex, getCurrencyPage.PageSize, totalCount);
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<CurrencyInfoDto>.Ok(currencyPage, totalCount);
         }
     }

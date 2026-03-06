@@ -48,17 +48,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[系统字典] 查询字典实体")]
-        public async Task<Result<DictionaryInfoDto>> GetDictionaryInfoEntity([FromBody] GetDictionaryInfoEntity getDicEntity)
+        public async Task<Result<DictionaryInfoDto>> GetDictionaryInfoEntity([FromBody] GetDictionaryInfoEntity getEntity)
         {
-            return await _dictionaryService.GetDictionaryInfoEntity(getDicEntity);
+            return await _dictionaryService.GetDictionaryInfoEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[系统字典] 查询字典分页")]
-        public async Task<ResultPaged<DictionaryInfoDto>> GetDictionaryInfoPage([FromBody] GetDictionaryInfoPage getDicPage)
+        public async Task<ResultPaged<DictionaryInfoDto>> GetDictionaryInfoPage([FromBody] GetDictionaryInfoPage getPage)
         {
-            return await _dictionaryService.GetDictionaryInfoPage(getDicPage);
+            return await _dictionaryService.GetDictionaryInfoPage(getPage);
         }
 
         [HttpPost]
@@ -72,9 +72,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[系统字典] 字典类型下拉")]
-        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown(GetDicTypeDropDown getDicTypeDropDown)
+        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown(GetDicTypeDropDown getDrop)
         {
-            return await _dictionaryService.GetDicTypeDropDown(getDicTypeDropDown);
+            return await _dictionaryService.GetDicTypeDropDown(getDrop);
         }
     }
 }

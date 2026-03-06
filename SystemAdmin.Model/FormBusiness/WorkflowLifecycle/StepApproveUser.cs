@@ -1,30 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text.Json.Serialization;
+using SystemAdmin.Model.ModelHelper.ModelConverter;
 
 namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle
 {
     public class StepApproveUser
     {
         /// <summary>
-        /// 员工Id
+        /// 员工Id（本或兼）
         /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
         public long UserId { get; set; }
 
         /// <summary>
-        /// 员工姓名
+        /// 员工姓名（本或兼）
         /// </summary>
         public string UserName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 职级排序
+        /// 员工Id（代）
         /// </summary>
-        public int PositionSortOrder { get; set; }
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long AgentUserId { get; set; }
 
         /// <summary>
-        /// 签核类型（实任、兼任、代理）
+        /// 员工姓名（代）
         /// </summary>
-        public string AppointmentType { get; set; } = string.Empty;
+        public string AgentUserName { get; set; } = string.Empty;
 
         /// <summary>
         /// 签核类型名称（实任、兼任、代理）

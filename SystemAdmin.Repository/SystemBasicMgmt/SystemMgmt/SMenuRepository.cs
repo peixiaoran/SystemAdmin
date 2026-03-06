@@ -24,11 +24,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 新增二级菜单
         /// </summary>
-        /// <param name="menuEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertSMenu(MenuInfoEntity menuEntity)
+        public async Task<int> InsertSMenu(MenuInfoEntity entity)
         {
-            return await _db.Insertable(menuEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -58,17 +58,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 修改二级菜单
         /// </summary>
-        /// <param name="menuEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateSMenu(MenuInfoEntity menuEntity)
+        public async Task<int> UpdateSMenu(MenuInfoEntity entity)
         {
-            return await _db.Updateable(menuEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(smenu => new
                             {
                                 smenu.MenuType,
                                 smenu.CreatedBy,
                                 smenu.CreatedDate,
-                            }).Where(smenu => smenu.MenuId == menuEntity.MenuId)
+                            }).Where(smenu => smenu.MenuId == entity.MenuId)
                             .ExecuteCommandAsync();
         }
 

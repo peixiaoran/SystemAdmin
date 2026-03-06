@@ -16,7 +16,7 @@
         public string StepId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 用户Ids
+        /// 员工Ids
         /// </summary>
         public string UserIds { get; set; } = string.Empty;
     }

@@ -25,21 +25,21 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增员工
         /// </summary>
-        /// <param name="userEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertUserInfo(UserInfoEntity userEntity)
+        public async Task<int> InsertUserInfo(UserInfoEntity entity)
         {
-            return await _db.Insertable(userEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 新增员工角色
         /// </summary>
-        /// <param name="userRoleEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertUserRole(UserRoleEntity userRoleEntity)
+        public async Task<int> InsertUserRole(UserRoleEntity entity)
         {
-            return await _db.Insertable(userRoleEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -49,7 +49,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<int> DeleteUserInfo(long userId)
         {
-            return await _db.Deleteable<UserInfoEntity>().Where(user => user.UserId == userId).ExecuteCommandAsync();
+            return await _db.Deleteable<UserInfoEntity>()
+                            .Where(user => user.UserId == userId)
+                            .ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -59,7 +61,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<int> DeleteUserRoleInfo(long userId)
         {
-            return await _db.Deleteable<UserRoleEntity>().Where(user => user.UserId == userId).ExecuteCommandAsync();
+            return await _db.Deleteable<UserRoleEntity>()
+                            .Where(user => user.UserId == userId)
+                            .ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -113,11 +117,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改员工
         /// </summary>
-        /// <param name="userEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateUserInfo(UserInfoEntity userEntity)
+        public async Task<int> UpdateUserInfo(UserInfoEntity entity)
         {
-            return await _db.Updateable(userEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(user => new
                             {
                                 user.UserId,
@@ -125,24 +129,24 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                 user.CreatedDate,
                                 user.IsAgent,
                                 user.IsPartTime,
-                            }).Where(user => user.UserId == userEntity.UserId)
+                            }).Where(user => user.UserId == entity.UserId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 修改员工角色
         /// </summary>
-        /// <param name="userEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateUserRoleInfo(UserRoleEntity userEntity)
+        public async Task<int> UpdateUserRoleInfo(UserRoleEntity entity)
         {
-            return await _db.Updateable(userEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(userrole => new
                             {
                                 userrole.UserId,
                                 userrole.CreatedBy,
                                 userrole.CreatedDate,
-                            }).Where(userrole => userrole.UserId == userEntity.UserId)
+                            }).Where(userrole => userrole.UserId == entity.UserId)
                             .ExecuteCommandAsync();
         }
 
@@ -167,7 +171,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<UserInfoEntityDto> GetUserInfoEntity(long userId)
         {
-            var userEntity = await _db.Queryable<UserInfoEntity>()
+            var entity = await _db.Queryable<UserInfoEntity>()
                                       .With(SqlWith.NoLock)
                                       .InnerJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
                                       .InnerJoin<RoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
@@ -199,7 +203,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                           ExpirationDays = user.ExpirationDays,
                                           ExpirationTime = user.ExpirationTime
                                       }).FirstAsync();
-            return userEntity.Adapt<UserInfoEntityDto>();
+            return entity.Adapt<UserInfoEntityDto>();
         }
 
         /// <summary>
@@ -391,11 +395,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 查询用户信息列表（导出Excel）
+        /// 查询员工信息列表（导出Excel）
         /// </summary>
-        /// <param name="getUserInfoExcel"></param>
+        /// <param name="getUserExcel"></param>
         /// <returns></returns>
-        public async Task<List<UserInfoExcelDto>> GetUserInfoExcel(GetUserInfoExcel getUserInfoExcel)
+        public async Task<List<UserInfoExcelDto>> GetUserInfoExcel(GetUserInfoExcel getUserExcel)
         {
             var query = _db.Queryable<UserInfoEntity>()
                            .With(SqlWith.NoLock)
@@ -405,22 +409,22 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                            .InnerJoin<NationalityInfoEntity>((user, userrole, deptinfo, userposition, nation) => user.Nationality == nation.NationId);
 
             // 员工工号
-            if (!string.IsNullOrEmpty(getUserInfoExcel.UserNo))
+            if (!string.IsNullOrEmpty(getUserExcel.UserNo))
             {
                 query = query.Where(user =>
-                    user.UserNo.Contains(getUserInfoExcel.UserNo));
+                    user.UserNo.Contains(getUserExcel.UserNo));
             }
             // 员工姓名
-            if (!string.IsNullOrEmpty(getUserInfoExcel.UserName))
+            if (!string.IsNullOrEmpty(getUserExcel.UserName))
             {
                 query = query.Where(user =>
-                    user.UserNameCn.Contains(getUserInfoExcel.UserName) ||
-                    user.UserNameEn.Contains(getUserInfoExcel.UserName));
+                    user.UserNameCn.Contains(getUserExcel.UserName) ||
+                    user.UserNameEn.Contains(getUserExcel.UserName));
             }
             // 部门Id
-            if (getUserInfoExcel.DepartmentId != "-1")
+            if (getUserExcel.DepartmentId != "-1")
             {
-                query = query.Where(user => user.DepartmentId == long.Parse(getUserInfoExcel.DepartmentId));
+                query = query.Where(user => user.DepartmentId == long.Parse(getUserExcel.DepartmentId));
             }
 
             // 排序

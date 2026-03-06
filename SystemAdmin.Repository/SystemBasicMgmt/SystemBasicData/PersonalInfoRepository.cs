@@ -31,36 +31,13 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         {
             return await _db.Queryable<UserInfoEntity>()
                             .With(SqlWith.NoLock)
-                            
-                            .InnerJoin<UserRoleEntity>(
-                                (userinfo, userrole) =>
-                                    userinfo.UserId == userrole.UserId)
-                            
-                            .InnerJoin<RoleInfoEntity>(
-                                (userinfo, userrole, roleinfo) =>
-                                    userrole.RoleId == roleinfo.RoleId)
-                            
-                            .InnerJoin<DepartmentInfoEntity>(
-                                (userinfo, userrole, roleinfo, deptinfo) =>
-                                    userinfo.DepartmentId == deptinfo.DepartmentId)
-                            
-                            .InnerJoin<DepartmentLevelEntity>(
-                                (userinfo, userrole, roleinfo, deptinfo, deptlevelinfo) =>
-                                    deptinfo.DepartmentLevelId == deptlevelinfo.DepartmentLevelId)
-                            
-                            .InnerJoin<UserPositionEntity>(
-                                (userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition) =>
-                                    userinfo.PositionId == userposition.PositionId)
-                            
-                            .InnerJoin<UserLaborEntity>(
-                                (userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor) =>
-                                    userinfo.LaborId == userlabor.LaborId)
-                            
-                            .InnerJoin<NationalityInfoEntity>(
-                                (userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) =>
-                                    userinfo.Nationality == nation.NationId)
-                            
-                             .Where((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) => userinfo.UserId ==  loginUserId)
+                            .InnerJoin<UserRoleEntity>((userinfo, userrole) => userinfo.UserId == userrole.UserId)
+                            .InnerJoin<RoleInfoEntity>((userinfo, userrole, roleinfo) => userrole.RoleId == roleinfo.RoleId)
+                            .InnerJoin<DepartmentInfoEntity>((userinfo, userrole, roleinfo, deptinfo) => userinfo.DepartmentId == deptinfo.DepartmentId)
+                            .InnerJoin<DepartmentLevelEntity>((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo) => deptinfo.DepartmentLevelId == deptlevelinfo.DepartmentLevelId)
+                            .InnerJoin<UserPositionEntity>((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition) => userinfo.PositionId == userposition.PositionId).InnerJoin<UserLaborEntity>((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor) => userinfo.LaborId == userlabor.LaborId)
+                            .InnerJoin<NationalityInfoEntity>((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) => userinfo.Nationality == nation.NationId)
+                            .Where((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) => userinfo.UserId == loginUserId)
                              .Select((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) => new PersonalInfoDto
                              {
                                  UserId = userinfo.UserId,
@@ -93,11 +70,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 个人信息修改
         /// </summary>
         /// <param name="loginUserId"></param>
-        /// <param name="userEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdatePersonalInfo(long loginUserId, UserInfoEntity userEntity)
+        public async Task<int> UpdatePersonalInfo(long loginUserId, UserInfoEntity entity)
         {
-            return await _db.Updateable(userEntity)
+            return await _db.Updateable(entity)
                             .UpdateColumns(user => new
                             {
                                 user.PassWord,

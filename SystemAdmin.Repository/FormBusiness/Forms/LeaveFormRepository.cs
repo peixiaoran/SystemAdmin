@@ -22,28 +22,28 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         /// <summary>
         /// 初始化请假表单
         /// </summary>
-        /// <param name="leaveFormEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InitLeaveForm(LeaveFormEntity leaveFormEntity)
+        public async Task<int> InitLeaveForm(LeaveFormEntity entity)
         {
-            return await _db.Insertable(leaveFormEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 保存请假表单
         /// </summary>
-        /// <param name="leaveFormEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> SaveLeaveForm(LeaveFormEntity leaveFormEntity)
+        public async Task<int> SaveLeaveForm(LeaveFormEntity entity)
         {
-            return await _db.Updateable(leaveFormEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(leave => new
                             {
                                 leave.FormId,
                                 leave.FormNo,
                                 leave.CreatedBy,
                                 leave.CreatedDate,
-                            }).Where(leave => leave.FormId == leaveFormEntity.FormId)
+                            }).Where(leave => leave.FormId == entity.FormId)
                             .ExecuteCommandAsync();
         } 
 
@@ -85,7 +85,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 查询用户基本信息
+        /// 查询员工基本信息
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>

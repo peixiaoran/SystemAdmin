@@ -47,6 +47,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now,
                 };
+
                 await _db.BeginTranAsync();
                 int count = await _deptLevelRepository.InsertDepartmentLevel(insertDeptLevel);
                 await _db.CommitTranAsync();
@@ -97,7 +98,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                await _db.BeginTranAsync();
                 DepartmentLevelEntity entity = new DepartmentLevelEntity()
                 {
                     DepartmentLevelId = long.Parse(upsert.DepartmentLevelId),
@@ -109,6 +109,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
+
+                await _db.BeginTranAsync();
                 int count = await _deptLevelRepository.UpdateDepartmentLevel(entity);
                 await _db.CommitTranAsync();
 

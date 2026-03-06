@@ -26,7 +26,7 @@
         public bool UseStartTls { get; set; } = true;
 
         /// <summary>
-        /// SMTP 登录用户名，一般为邮箱地址
+        /// SMTP 登录员工名，一般为邮箱地址
         /// </summary>
         public string UserName { get; set; } = string.Empty;
 

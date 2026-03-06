@@ -24,25 +24,25 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 新增员工兼任")]
-        public async Task<Result<int>> InsertUserPartTime([FromBody] UserPartTimeInsert userPartTimeInsert)
+        public async Task<Result<int>> InsertUserPartTime([FromBody] UserPartTimeInsert upsert)
         {
-            return await _userPartTimeService.InsertUserPartTime(userPartTimeInsert);
+            return await _userPartTimeService.InsertUserPartTime(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 删除员工兼任")]
-        public async Task<Result<int>> DeleteUserPartTime([FromBody] UserPartTimeUpdateDel userPartTimeUpdateDel)
+        public async Task<Result<int>> DeleteUserPartTime([FromBody] UserPartTimeUpdateDel upsertdel)
         {
-            return await _userPartTimeService.DeleteUserPartTime(userPartTimeUpdateDel);
+            return await _userPartTimeService.DeleteUserPartTime(upsertdel);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 修改员工兼任")]
-        public async Task<Result<int>> UpdateUserPartTime([FromBody] UserPartTimeUpdateDel userPartTimeUpdateDel)
+        public async Task<Result<int>> UpdateUserPartTime([FromBody] UserPartTimeUpdateDel upsertdel)
         {
-            return await _userPartTimeService.UpdateUserPartTime(userPartTimeUpdateDel);
+            return await _userPartTimeService.UpdateUserPartTime(upsertdel);
         }
 
         [HttpPost]
@@ -56,17 +56,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 查询员工兼任分页")]
-        public async Task<ResultPaged<UserPartTimeDto>> GetUserPartTimePage(GetUserPartTimePage getUserPartTimePage)
+        public async Task<ResultPaged<UserPartTimeDto>> GetUserPartTimePage(GetUserPartTimePage getPage)
         {
-            return await _userPartTimeService.GetUserPartTimePage(getUserPartTimePage);
+            return await _userPartTimeService.GetUserPartTimePage(getPage);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 查询员工兼任实体")]
-        public async Task<Result<UserPartTimeDto>> GetUserPartTimeEntity(GetUserPartTimeEntity getUserPartTimeEntity)
+        public async Task<Result<UserPartTimeDto>> GetUserPartTimeEntity(GetUserPartTimeEntity getEntity)
         {
-            return await _userPartTimeService.GetUserPartTimeEntity(getUserPartTimeEntity);
+            return await _userPartTimeService.GetUserPartTimeEntity(getEntity);
         }
 
         [HttpPost]

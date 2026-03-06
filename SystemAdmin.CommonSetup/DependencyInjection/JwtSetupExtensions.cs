@@ -47,7 +47,7 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
             // 3. 注册 JwtTokenService（生成 Token & 写 Cookie，用的是私钥） → Singleton
             services.AddSingleton<JwtTokenService>();
 
-            // 4. 注册 CurrentUser（基于 HttpContext.User 的当前用户访问器） → Scoped
+            // 4. 注册 CurrentUser（基于 HttpContext.User 的当前员工访问器） → Scoped
             services.AddScoped<CurrentUser>();
 
             // 5. 构造验证用 ECDSA 公钥（JwtBearer 用）

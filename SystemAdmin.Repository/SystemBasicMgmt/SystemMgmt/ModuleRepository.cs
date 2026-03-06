@@ -18,11 +18,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 新增模块
         /// </summary>
-        /// <param name="moduleEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertModule(ModuleInfoEntity moduleEntity)
+        public async Task<int> InsertModule(ModuleInfoEntity entity)
         {
-            return await _db.Insertable(moduleEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -89,17 +89,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 修改模块
         /// </summary>
-        /// <param name="moduleEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateModule(ModuleInfoEntity moduleEntity)
+        public async Task<int> UpdateModule(ModuleInfoEntity entity)
         {
-            return await _db.Updateable(moduleEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(module => new
                             {
                                 module.ModuleCode,
                                 module.CreatedBy,
                                 module.CreatedDate,
-                            }).Where(module => module.ModuleId == moduleEntity.ModuleId)
+                            }).Where(module => module.ModuleId == entity.ModuleId)
                             .ExecuteCommandAsync();
         }
 
@@ -110,11 +110,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <returns></returns>
         public async Task<ModuleInfoDto> GetModuleEntity(long moduleId)
         {
-            var moduleEntity = await _db.Queryable<ModuleInfoEntity>()
+            var entity = await _db.Queryable<ModuleInfoEntity>()
                                         .With(SqlWith.NoLock)
                                         .Where(module => module.ModuleId == moduleId)
                                         .FirstAsync();
-            return moduleEntity.Adapt<ModuleInfoDto>();
+            return entity.Adapt<ModuleInfoDto>();
         }
 
         /// <summary>

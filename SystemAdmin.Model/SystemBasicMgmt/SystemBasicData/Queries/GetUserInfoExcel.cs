@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries
 {
     /// <summary>
-    /// 导出用户信息Excel请求参数
+    /// 导出员工信息Excel请求参数
     /// </summary>
     public class GetUserInfoExcel
     {
