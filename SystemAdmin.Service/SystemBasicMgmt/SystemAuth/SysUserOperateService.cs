@@ -62,7 +62,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 var ip = GetLocalIPv4();
                 var nowTime = DateTime.Now;
 
-                // 查询用户
+                // 查询员工
                 var user = await _sysUserOperateRepository.LoginGetUserInfo(sysLogin);
 
                 if (user == null)

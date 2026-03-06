@@ -24,9 +24,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工分页
         /// </summary>
-        /// <param name="getUserAgentPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserAgentDto>> GetUserInfoPage(GetUserAgentPage getUserAgentPage)
+        public async Task<ResultPaged<UserAgentDto>> GetUserInfoPage(GetUserAgentPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserInfoEntity>()
@@ -39,25 +39,25 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            .Where((user, dept, userpos, userlabor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
             // 员工工号
-            if (!string.IsNullOrEmpty(getUserAgentPage.UserNo))
+            if (!string.IsNullOrEmpty(getPage.UserNo))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNo.Contains(getUserAgentPage.UserNo));
+                    user.UserNo.Contains(getPage.UserNo));
             }
             // 员工姓名
-            if (!string.IsNullOrEmpty(getUserAgentPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.UserName))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNameCn.Contains(getUserAgentPage.UserName) ||
-                    user.UserNameEn.Contains(getUserAgentPage.UserName));
+                    user.UserNameCn.Contains(getPage.UserName) ||
+                    user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门Id（仅在工号与姓名都为空时）
-            if (!string.IsNullOrEmpty(getUserAgentPage.DepartmentId)
-                && string.IsNullOrEmpty(getUserAgentPage.UserNo)
-                && string.IsNullOrEmpty(getUserAgentPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.DepartmentId)
+                && string.IsNullOrEmpty(getPage.UserNo)
+                && string.IsNullOrEmpty(getPage.UserName))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.DepartmentId == long.Parse(getUserAgentPage.DepartmentId));
+                    user.DepartmentId == long.Parse(getPage.DepartmentId));
             }
 
             //排序
@@ -85,16 +85,16 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            : nation.NationNameEn,
                 IsAgent = user.IsAgent,
                 IsApproval = user.IsApproval,
-            }).ToPageListAsync(getUserAgentPage.PageIndex, getUserAgentPage.PageSize, totalCount);
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserAgentDto>.Ok(userPage.Adapt<List<UserAgentDto>>(), totalCount, "");
         }
 
         /// <summary>
         /// 查询可代理其他员工分页
         /// </summary>
-        /// <param name="getUserAgentViewPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserAgentViewDto>> GetUserInfoAgentView(GetUserAgentViewPage getUserAgentViewPage)
+        public async Task<ResultPaged<UserAgentViewDto>> GetUserInfoAgentView(GetUserAgentViewPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserInfoEntity>()
@@ -103,28 +103,28 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            .InnerJoin<UserPositionEntity>((user, dept, userpos) => user.PositionId == userpos.PositionId)
                            .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
                            .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) => user.Nationality == nation.NationId)
-                           .Where((user, dept, userpos, userlabor, nation) => user.IsAgent == 0 && user.UserId != long.Parse(getUserAgentViewPage.SubstituteUserId) && user.IsFreeze == 0);
+                           .Where((user, dept, userpos, userlabor, nation) => user.IsAgent == 0 && user.UserId != long.Parse(getPage.SubstituteUserId) && user.IsFreeze == 0);
 
             // 员工工号
-            if (!string.IsNullOrEmpty(getUserAgentViewPage.UserNo))
+            if (!string.IsNullOrEmpty(getPage.UserNo))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNo == getUserAgentViewPage.UserNo);
+                    user.UserNo == getPage.UserNo);
             }
             // 员工姓名
-            if (!string.IsNullOrEmpty(getUserAgentViewPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.UserName))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNameCn.Contains(getUserAgentViewPage.UserName) ||
-                    user.UserNameEn.Contains(getUserAgentViewPage.UserName));
+                    user.UserNameCn.Contains(getPage.UserName) ||
+                    user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门 Id（仅在员工工号与姓名均为空时）
-            if (!string.IsNullOrEmpty(getUserAgentViewPage.DepartmentId)
-                && string.IsNullOrEmpty(getUserAgentViewPage.UserNo)
-                && string.IsNullOrEmpty(getUserAgentViewPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.DepartmentId)
+                && string.IsNullOrEmpty(getPage.UserNo)
+                && string.IsNullOrEmpty(getPage.UserName))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.DepartmentId == long.Parse(getUserAgentViewPage.DepartmentId));
+                    user.DepartmentId == long.Parse(getPage.DepartmentId));
             }
 
             // 排序
@@ -150,18 +150,18 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 NationalityName = _lang.Locale == "zh-CN"
                            ? nation.NationNameCn
                            : nation.NationNameEn,
-            }).ToPageListAsync(getUserAgentViewPage.PageIndex, getUserAgentViewPage.PageSize, totalCount);
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserAgentViewDto>.Ok(userAgentPage, totalCount, "");
         }
 
         /// <summary>
         /// 新增员工代理人
         /// </summary>
-        /// <param name="userAgentEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertUserAgent(UserAgentEntity userAgentEntity)
+        public async Task<int> InsertUserAgent(UserAgentEntity entity)
         {
-            return await _db.Insertable(userAgentEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>

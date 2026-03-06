@@ -77,11 +77,11 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         /// <summary>
         /// 开始时间
         /// </summary>
-        public string StartTime { get; set; } = string.Empty;
+        public DateTime StartTime { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public string EndTime { get; set; } = string.Empty;
+        public DateTime EndTime { get; set; }
     }
 }

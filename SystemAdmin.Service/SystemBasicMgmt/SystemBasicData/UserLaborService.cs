@@ -36,7 +36,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                await _db.BeginTranAsync();
                 UserLaborEntity entity = new UserLaborEntity()
                 {
                     LaborId = SnowFlakeSingle.Instance.NextId(),
@@ -46,6 +45,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
+
+                await _db.BeginTranAsync();
                 var count = await _userLaborRepository.InsertUserLabor(entity);
                 await _db.CommitTranAsync();
 
@@ -95,7 +96,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                await _db.BeginTranAsync();
                 UserLaborEntity entity = new UserLaborEntity()
                 {
                     LaborId = long.Parse(upsert.LaborId),
@@ -105,6 +105,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
+
+                await _db.BeginTranAsync();
                 var count = await _userLaborRepository.UpdateUserLabor(entity);
                 await _db.CommitTranAsync();
 

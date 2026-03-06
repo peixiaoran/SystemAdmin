@@ -78,17 +78,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 修改角色模块绑定")]
-        public async Task<Result<int>> UpdateRoleModuleList(RoleModuleUpsert roleModuleUpsert)
+        public async Task<Result<int>> UpdateRoleModuleList(RoleModuleUpsert upsert)
         {
-            return await _roleService.UpdateRoleModuleList(roleModuleUpsert);
+            return await _roleService.UpdateRoleModuleList(upsert);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 角色模块下拉")]
-        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(GetRoleModuleDropDown getRoleModuleDrop)
+        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(GetRoleModuleDropDown getDrop)
         {
-            return await _roleService.GetRoleModuleDropDown(getRoleModuleDrop);
+            return await _roleService.GetRoleModuleDropDown(getDrop);
         }
 
         [HttpPost]

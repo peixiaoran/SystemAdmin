@@ -50,6 +50,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     RemarkCh = upsert.RemarkCh,
                     RemarkEn = upsert.RemarkEn
                 };
+
                 await _db.BeginTranAsync();
                 int count = await _moduleRepository.InsertModule(entity);
                 await _db.CommitTranAsync();
@@ -123,6 +124,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     RemarkCh = upsert.RemarkCh,
                     RemarkEn = upsert.RemarkEn
                 };
+
                 await _db.BeginTranAsync();
                 int count = await _moduleRepository.UpdateModule(entity);
                 await _db.CommitTranAsync();

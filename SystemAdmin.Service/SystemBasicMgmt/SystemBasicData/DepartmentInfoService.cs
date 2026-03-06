@@ -36,7 +36,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                await _db.BeginTranAsync();
                 bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(upsert.DepartmentCode);
                 if (codeExist)
                 {
@@ -60,6 +59,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now,
                     };
+
+                    await _db.BeginTranAsync();
                     int insertDeptCount = await _deptInfoRepository.InsertDepartmentInfo(insertDept);
                     await _db.CommitTranAsync();
 
@@ -197,6 +198,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                         ModifiedBy = _loginuser.UserId,
                         ModifiedDate = DateTime.Now,
                     };
+
                     await _db.BeginTranAsync();
                     int count = await _deptInfoRepository.UpdateDepartmentInfo(updateDept);
                     await _db.CommitTranAsync();

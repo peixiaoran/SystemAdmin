@@ -72,7 +72,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 // 4. 上传到 MinIO
                 var avatarUrl = await _minioService.UploadAsync(file.FileName, file.OpenReadStream(), file.ContentType);
 
-                // 5. 返回
                 return Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"));
             }
             catch (Exception ex)
@@ -91,6 +90,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
+                await _db.BeginTranAsync();
                 // 1. 判空
                 if (file == null || file.Length == 0)
                 {
@@ -116,16 +116,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 // 4. 上传到 MinIO
                 var avatarUrl = await _minioService.UploadAsync(file.FileName, file.OpenReadStream(), file.ContentType);
 
-                // 5. 更新用户头像地址
                 var updateAvatarCount = await _userInfoRepository.UpdateUserAvatar(long.Parse(userId), avatarUrl);
+                await _db.CommitTranAsync();
 
-                // 6. 返回
                 return updateAvatarCount >= 1
                         ? Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"))
                         : Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
             }
             catch (Exception ex)
             {
+                await _db.RollbackTranAsync();
                 _logger.LogError(ex, "Avatar upload failed: {Message}", ex.Message);
                 return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
             }
@@ -156,7 +156,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 string saltString = Convert.ToBase64String(salt);
                 long userId = SnowFlakeSingle.Instance.NextId();
 
-                await _db.BeginTranAsync();
                 // 新增员工信息
                 UserInfoEntity insertUser = new UserInfoEntity()
                 {
@@ -187,17 +186,19 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
+
+                await _db.BeginTranAsync();
                 int insertUserCount = await _userInfoRepository.InsertUserInfo(insertUser);
 
                 // 新增员工权限
-                UserRoleEntity insertUserRoleEntity = new UserRoleEntity()
+                UserRoleEntity insertUserRole = new UserRoleEntity()
                 {
                     UserId = userId,
                     RoleId = long.Parse(upsert.RoleId),
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
-                int insertUserRoleCount = await _userInfoRepository.InsertUserRole(insertUserRoleEntity);
+                int insertUserRoleCount = await _userInfoRepository.InsertUserRole(insertUserRole);
                 await _db.CommitTranAsync();
 
                 return insertUserCount >= 1 && insertUserRoleCount >= 1
@@ -260,7 +261,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 string updatePassWord = string.Empty;
                 string updateSaltString = string.Empty;
 
-                await _db.BeginTranAsync();
                 if (!string.IsNullOrEmpty(upsert.PassWord))
                 {
                     if (!ValidatePassword(upsert.PassWord))
@@ -312,6 +312,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
+
+                await _db.BeginTranAsync();
                 int updateUserCount = await _userInfoRepository.UpdateUserInfo(entity);
 
                 // 修改员工角色
@@ -466,13 +468,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 导出员工信息Excel
         /// </summary>
-        /// <param name="getUserInfoExcel"></param>
+        /// <param name="getUserExcel"></param>
         /// <returns></returns>
-        public async Task<byte[]> GetUserInfoExcel(GetUserInfoExcel getUserInfoExcel)
+        public async Task<byte[]> GetUserInfoExcel(GetUserInfoExcel getUserExcel)
         {
             try
             {
-                var list = await _userInfoRepository.GetUserInfoExcel(getUserInfoExcel);
+                var list = await _userInfoRepository.GetUserInfoExcel(getUserExcel);
 
                 // EPPlus License
                 ExcelPackage.License.SetNonCommercialPersonal("Your Name");

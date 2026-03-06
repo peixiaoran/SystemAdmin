@@ -286,7 +286,7 @@
     <value>是否冻结</value>
   </data>
   <data name="UserExcel_UserInfo" xml:space="preserve">
-    <value>用户信息</value>
+    <value>员工信息</value>
   </data>
   <data name="UserExcel_HireDate" xml:space="preserve">
     <value>入职日期</value>

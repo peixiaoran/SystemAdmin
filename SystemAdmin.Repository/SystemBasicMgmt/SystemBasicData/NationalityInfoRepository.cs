@@ -17,11 +17,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增国籍
         /// </summary>
-        /// <param name="nationInfoEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertNationalityInfo(NationalityInfoEntity nationInfoEntity)
+        public async Task<int> InsertNationalityInfo(NationalityInfoEntity entity)
         {
-            return await _db.Insertable(nationInfoEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -39,17 +39,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改国籍
         /// </summary>
-        /// <param name="nationInfoEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateNationalityInfo(NationalityInfoEntity nationInfoEntity)
+        public async Task<int> UpdateNationalityInfo(NationalityInfoEntity entity)
         {
-            return await _db.Updateable(nationInfoEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(Nationality => new
                             {
                                 Nationality.NationId,
                                 Nationality.CreatedBy,
                                 Nationality.CreatedDate,
-                            }).Where(Nationality => Nationality.NationId == nationInfoEntity.NationId)
+                            }).Where(Nationality => Nationality.NationId == entity.NationId)
                             .ExecuteCommandAsync();
         }
 

@@ -23,25 +23,25 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工表单绑定] 查询员工分页")]
-        public async Task<ResultPaged<UserFormBindDto>> GetUserInfoPage([FromBody] GetUserFormBindPage getUserFormBindPage)
+        public async Task<ResultPaged<UserFormBindDto>> GetUserInfoPage([FromBody] GetUserFormBindPage getPage)
         {
-            return await _userFormBindService.GetUserInfoPage(getUserFormBindPage);
+            return await _userFormBindService.GetUserInfoPage(getPage);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工表单绑定] 查询员工表单绑定树")]
-        public async Task<Result<List<UserFormBindViewTreeDto>>> GetUserFormBindViewTree([FromBody] GetUserFormBindViewTree getUserFormBindViewTree)
+        public async Task<Result<List<UserFormBindViewTreeDto>>> GetUserFormBindViewTree([FromBody] GetUserFormBindViewTree getTree)
         {
-            return await _userFormBindService.GetUserFormBindViewTree(getUserFormBindViewTree);
+            return await _userFormBindService.GetUserFormBindViewTree(getTree);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工表单绑定] 更新员工表单绑定")]
-        public async Task<Result<int>> UpdateUserFormBind([FromBody] UserFormBindUpsert userFormBindUpsert)
+        public async Task<Result<int>> UpdateUserFormBind([FromBody] UserFormBindUpsert upsert)
         {
-            return await _userFormBindService.UpdateUserFormBind(userFormBindUpsert);
+            return await _userFormBindService.UpdateUserFormBind(upsert);
         }
 
         [HttpPost]

@@ -46,7 +46,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         /// <summary>
         /// 入职日期
         /// </summary>
-        public string HireDate { get; set; } = string.Empty;
+        public DateTime HireDate { get; set; }
 
         /// <summary>
         /// 国籍

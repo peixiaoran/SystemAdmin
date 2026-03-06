@@ -22,11 +22,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 新增角色
         /// </summary>
-        /// <param name="roleEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertRole(RoleInfoEntity roleEntity)
+        public async Task<int> InsertRole(RoleInfoEntity entity)
         {
-            return await _db.Insertable(roleEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -81,17 +81,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 修改角色
         /// </summary>
-        /// <param name="roleEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateRole(RoleInfoEntity roleEntity)
+        public async Task<int> UpdateRole(RoleInfoEntity entity)
         {
-            return await _db.Updateable(roleEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(role => new
                             {
                                 role.RoleCode,
                                 role.CreatedBy,
                                 role.CreatedDate,
-                            }).Where(role => role.RoleId == roleEntity.RoleId)
+                            }).Where(role => role.RoleId == entity.RoleId)
                             .ExecuteCommandAsync();
         }
 
@@ -102,11 +102,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <returns></returns>
         public async Task<RoleInfoDto> GetRoleEntity(long roleId)
         {
-            var roleEntity = await _db.Queryable<RoleInfoEntity>()
+            var entity = await _db.Queryable<RoleInfoEntity>()
                                       .With(SqlWith.NoLock)
                                       .Where(role => role.RoleId == roleId)
                                       .FirstAsync();
-            return roleEntity.Adapt<RoleInfoDto>();
+            return entity.Adapt<RoleInfoDto>();
         }
 
         /// <summary>
@@ -144,7 +144,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <returns></returns>
         public async Task<List<RoleModuleDto>> GetRoleModuleList(long roleId)
         {
-            var roleModuleList = await _db.Queryable<ModuleInfoEntity>()
+            var entityList = await _db.Queryable<ModuleInfoEntity>()
                                           .With(SqlWith.NoLock)
                                           .LeftJoin<RoleModuleEntity>((module, rolemodule) => module.ModuleId == rolemodule.ModuleId && rolemodule.RoleId == roleId)
                                           .Select((module, rolemodule) => new RoleModuleDto
@@ -155,7 +155,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
                                                            : module.ModuleNameEn,
                                               IsChecked = SqlFunc.IsNull(rolemodule.RoleId, 0) > 0
                                           }).ToListAsync();
-            return roleModuleList;
+            return entityList;
         }
 
         /// <summary>
@@ -223,11 +223,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 新增角色模块绑定
         /// </summary>
-        /// <param name="roleModuleList"></param>
+        /// <param name="entityList"></param>
         /// <returns></returns>
-        public async Task<int> InsertRoleModule(List<RoleModuleEntity> roleModuleList)
+        public async Task<int> InsertRoleModule(List<RoleModuleEntity> entityList)
         {
-            return await _db.Insertable(roleModuleList).ExecuteCommandAsync();
+            return await _db.Insertable(entityList).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -279,11 +279,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 新增角色菜单绑定
         /// </summary>
-        /// <param name="roleMenuList"></param>
+        /// <param name="entityList"></param>
         /// <returns></returns>
-        public async Task<int> InsertRoleMenu(List<RoleMenuEntity> roleMenuList)
+        public async Task<int> InsertRoleMenu(List<RoleMenuEntity> entityList)
         {
-            return await _db.Insertable(roleMenuList).ExecuteCommandAsync();
+            return await _db.Insertable(entityList).ExecuteCommandAsync();
         }
     }
 }

@@ -23,11 +23,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 新增一级菜单
         /// </summary>
-        /// <param name="menuEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertPMenu(MenuInfoEntity menuEntity)
+        public async Task<int> InsertPMenu(MenuInfoEntity entity)
         {
-            return await _db.Insertable(menuEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -95,18 +95,18 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 修改一级菜单
         /// </summary>
-        /// <param name="menuEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdatePMenu(MenuInfoEntity menuEntity)
+        public async Task<int> UpdatePMenu(MenuInfoEntity entity)
         {
-            return await _db.Updateable(menuEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(pmenu => new
                             {
                                 pmenu.MenuCode,
                                 pmenu.MenuType,
                                 pmenu.CreatedBy,
                                 pmenu.CreatedDate,
-                            }).Where(pmenu => pmenu.MenuId == menuEntity.MenuId)
+                            }).Where(pmenu => pmenu.MenuId == entity.MenuId)
                             .ExecuteCommandAsync();
         }
 
@@ -117,11 +117,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <returns></returns>
         public async Task<MenuInfoDto> GetPMenuEntity(long pmenuId)
         {
-            var menuEntity = await _db.Queryable<MenuInfoEntity>()
+            var entity = await _db.Queryable<MenuInfoEntity>()
                                       .With(SqlWith.NoLock)
                                       .Where(pmenu => pmenu.MenuType == "PrimaryMenu" && pmenu.MenuId == pmenuId)
                                       .FirstAsync();
-            return menuEntity.Adapt<MenuInfoDto>();
+            return entity.Adapt<MenuInfoDto>();
         }
 
         /// <summary>

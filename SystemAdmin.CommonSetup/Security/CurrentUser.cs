@@ -4,7 +4,7 @@ using System.Security.Claims;
 namespace SystemAdmin.CommonSetup.Security
 {
     /// <summary>
-    /// 当前登录用户信息访问器
+    /// 当前登录员工信息访问器
     /// </summary>
     public class CurrentUser
     {

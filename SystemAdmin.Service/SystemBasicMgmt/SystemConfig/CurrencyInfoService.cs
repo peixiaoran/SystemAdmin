@@ -36,7 +36,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                await _db.BeginTranAsync();
                 CurrencyInfoEntity insertCurrencyEntity = new CurrencyInfoEntity()
                 {
                     CurrencyId = SnowFlakeSingle.Instance.NextId(),
@@ -47,6 +46,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
+
+                await _db.BeginTranAsync();
                 var count = await _currencyInfoRepository.InsertCurrencyInfo(insertCurrencyEntity);
                 await _db.CommitTranAsync();
 
@@ -96,7 +97,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                await _db.BeginTranAsync();
                 CurrencyInfoEntity entity = new CurrencyInfoEntity()
                 {
                     CurrencyId = long.Parse(upsert.CurrencyId),
@@ -107,6 +107,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
+
+                await _db.BeginTranAsync();
                 var count = await _currencyInfoRepository.UpdateCurrencyInfo(entity);
                 await _db.CommitTranAsync();
 

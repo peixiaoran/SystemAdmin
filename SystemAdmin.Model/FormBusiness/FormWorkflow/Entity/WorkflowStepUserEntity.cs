@@ -20,7 +20,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long StepId { get; set; }
 
         /// <summary>
-        /// 用户Ids
+        /// 员工Ids
         /// </summary>
         public string UserIds { get; set; } = string.Empty;
 
@@ -32,16 +32,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// <summary>
         /// 创建日期
         /// </summary>
-        public string CreatedDate { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 修改人
-        /// </summary>
-        public long? ModifiedBy { get; set; }
-
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        public string? ModifiedDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
     }
 }

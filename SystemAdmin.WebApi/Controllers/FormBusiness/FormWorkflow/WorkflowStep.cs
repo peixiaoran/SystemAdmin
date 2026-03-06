@@ -119,7 +119,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[员工信息] 查询用户信息分页")]
+        [EndpointSummary("[员工信息] 查询员工信息分页")]
         public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
         {
             return await _workflowStepService.GetUserInfoPage(getPage);

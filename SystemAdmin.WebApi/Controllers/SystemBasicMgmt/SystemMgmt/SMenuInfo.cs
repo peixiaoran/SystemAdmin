@@ -69,9 +69,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 一级菜单下拉")]
-        public async Task<Result<List<MenuDropDto>>> GetPMenuDropDown([FromBody] GetPMenuDropDown getPMenuDropDown)
+        public async Task<Result<List<MenuDropDto>>> GetPMenuDropDown([FromBody] GetPMenuDropDown getDrop)
         {
-            return await _sMenuInfoService.GetPMenuDropDown(getPMenuDropDown);
+            return await _sMenuInfoService.GetPMenuDropDown(getDrop);
         }
     }
 }

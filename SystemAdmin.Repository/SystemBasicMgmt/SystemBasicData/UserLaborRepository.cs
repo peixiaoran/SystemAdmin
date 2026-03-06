@@ -18,11 +18,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增职业
         /// </summary>
-        /// <param name="userLaborEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertUserLabor(UserLaborEntity userLaborEntity)
+        public async Task<int> InsertUserLabor(UserLaborEntity entity)
         {
-            return await _db.Insertable(userLaborEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -40,17 +40,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改职业
         /// </summary>
-        /// <param name="userLaborEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateUserLabor(UserLaborEntity userLaborEntity)
+        public async Task<int> UpdateUserLabor(UserLaborEntity entity)
         {
-            return await _db.Updateable(userLaborEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(userlabor => new
                             {
                                 userlabor.LaborId,
                                 userlabor.CreatedBy,
                                 userlabor.CreatedDate,
-                            }).Where(userlabor => userlabor.LaborId == userLaborEntity.LaborId)
+                            }).Where(userlabor => userlabor.LaborId == entity.LaborId)
                             .ExecuteCommandAsync();
         }
 
@@ -61,11 +61,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<UserLaborDto> GetUserLaborEntity(long laborId)
         {
-            var userLaborEntity = await _db.Queryable<UserLaborEntity>()
+            var entity = await _db.Queryable<UserLaborEntity>()
                                            .With(SqlWith.NoLock)
                                            .Where(userPos => userPos.LaborId == laborId)
                                            .FirstAsync();
-            return userLaborEntity.Adapt<UserLaborDto>();
+            return entity.Adapt<UserLaborDto>();
         }
 
         /// <summary>

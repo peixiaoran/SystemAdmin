@@ -24,14 +24,12 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
-        private readonly LocalizationService _localization;
-        private readonly string _this = "FormBusiness.WorkflowLifecycle.StepBeforeStart";
+        //private readonly string _this = "FormBusiness.WorkflowLifecycle.StepBeforeStart";
 
-        public StepBeforeStartHandler(SqlSugarScope db, Language lang, LocalizationService _localizationService)
+        public StepBeforeStartHandler(SqlSugarScope db, Language lang)
         {
             _db = db;
             _lang = lang;
-            _localization = _localizationService;
         }
         /// <summary>
         /// 初始化表单
@@ -197,38 +195,45 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     {
                         WorkflowApproveUser approveItem = new WorkflowApproveUser();
 
-                        List<StepApproveUser> user = new List<StepApproveUser>();
-                        user.Add(new StepApproveUser
+                        // 查询签核类型（本、兼、代、自动指派）
+                        var appTypePrimary = await _db.Queryable<DictionaryInfoEntity>()
+                                                      .With(SqlWith.NoLock)
+                                                      .Where(app => app.DicType == "AppointmentType" && app.DicCode == "Primary")
+                                                      .FirstAsync();
+
+                        List<StepApproveUser> stepApproveUsers = new List<StepApproveUser>();
+                        stepApproveUsers.Add(new StepApproveUser
                         {
                             UserId = appUserInfo.UserId,
                             UserName = _lang.Locale == "zh-CN"
-                                       ? appUserInfo.UserNameCn
-                                       : appUserInfo.UserNameEn,
-                            AppointmentType = "",
-                            AppointmentTypeName = ""
+                                              ? appUserInfo.UserNameCn
+                                              : appUserInfo.UserNameEn,
+                            AppointmentTypeName = _lang.Locale == "zh-CN"
+                                              ? appTypePrimary.DicNameCn
+                                              : appTypePrimary.DicNameEn
                         });
 
                         approveItem.StepId = nowStep.StepId;
                         approveItem.StepName = _lang.Locale == "zh-CN"
                                                ? nowStep.StepNameCn
                                                : nowStep.StepNameEn;
-                        approveItem.stepApproveUsers = user;
+                        approveItem.stepApproveUsers = stepApproveUsers;
                         approveList.Add(approveItem);
                     }
                     else
                     {
                         // 申请人所有的上级部门
                         var parentDeptList = await _db.Queryable<DepartmentInfoEntity>()
-                                                          .With(SqlWith.NoLock)
-                                                          .ToParentListAsync(dept => dept.ParentId, appUserInfo.DepartmentId);
+                                                      .With(SqlWith.NoLock)
+                                                      .ToParentListAsync(dept => dept.ParentId, appUserInfo.DepartmentId);
 
                         // 步骤审批要求（部门级别、职级）
                         var stepOrg = await _db.Queryable<WorkflowStepOrgEntity>()
                                                .With(SqlWith.NoLock)
                                                .Where(org => org.StepId == nowStep.StepId)
                                                .FirstAsync();
-
-                        var orgApproveUser = await GetStepApproveUserByOrg(appUserInfo.UserId, appUserInfo.DepartmentId, appUserInfo.PositionId, nowStep.ApproveMode, parentDeptList, stepOrg.DeptLeaveId, stepOrg.PositionIds);
+                        // 查询此步骤的审批人
+                        var orgApproveUser = await GetStepApproveUserByOrg(appUserInfo, nowStep.ApproveMode, parentDeptList, stepOrg.DeptLeaveId, stepOrg.PositionId);
 
                         WorkflowApproveUser approveItem = new WorkflowApproveUser();
                         approveItem.StepId = nowStep.StepId;
@@ -264,139 +269,290 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         /// <summary>
         /// 查询组织架构步骤的审批人
         /// </summary>
-        /// <param name="appUserId"></param>
-        /// <param name="appDeptId"></param>
-        /// <param name="appPositionId"></param>
+        /// <param name="appUserEntity"></param>
         /// <param name="approveMode"></param>
+        /// <param name="parentDeptList"></param>
         /// <param name="deptLevelId"></param>
-        /// <param name="userPositionIds"></param>
+        /// <param name="positionId"></param>
         /// <returns></returns>
-        public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(long appUserId, long appDeptId, long appPositionId, string approveMode, List<DepartmentInfoEntity> parentDeptList, long deptLevelId, string userPositionIds)
+        public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(UserInfoEntity appUserEntity, string approveMode, List<DepartmentInfoEntity> parentDeptList, long deptLevelId, long positionId)
         {
-            var positionIdSet = userPositionIds
-                .Split(',', StringSplitOptions.RemoveEmptyEntries)
-                .Select(long.Parse)
-                .ToHashSet();
-
             // 步骤最终审批人列表
             var finalApprovers = new List<StepApproveUser>();
 
+            // 申请人职级信息
+            var appPosSortOrder = await _db.Queryable<UserPositionEntity>().Where(position => position.PositionId == appUserEntity.PositionId).FirstAsync();
+
             // 申请人所有上级部门Ids
-            var parentDeptIdsList = parentDeptList.Select(dept => dept.DepartmentId).ToList();
+            var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
 
-            // 查询此步骤符合级别的部门
-            var stepDeptIds = parentDeptList
-                .Where(dept => dept.DepartmentLevelId == deptLevelId)
-                .Select(dept => dept.DepartmentId)
-                .ToList();
+            // 查询符合步骤条件的签核人，带有注本、兼、代的标识并按照入职时间正序排序
+            var appPirConUserSql = @"SELECT
+                                            t.UserId,
+                                            t.UserName,
+                                            t.AppointmentTypeName,
+                                            t.AgentUserId,
+                                            t.AgentUserName
+                                        FROM
+                                        (
+                                            SELECT
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN
+                                                        (SELECT TOP 1 
+                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = 'Primary')
+                                                    ELSE
+                                                        (SELECT TOP 1 
+                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = 'Agent')
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
+                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
+                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
+                                                AND agent.StartTime <= GETDATE()
+                                                AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsApproval = 1
+                                                AND dept.DepartmentLevelId = @pdeptLevelId
+                                                AND users.PositionId = @pposId
+                                                AND position.SortOrder < @pappPosSortOrder
 
-            // 查询签核类型（实、兼、代、自动升级）
-            var appointmentType = _db.Queryable<DictionaryInfoEntity>()
-                                     .With(SqlWith.NoLock)
-                                     .Where(appointment => appointment.DicType == "AppointmentType")
-                                     .ToList();
-            var appTypeIncumbent = appointmentType.Where(app => app.DicCode == "Incumbent").First();
+                                            UNION ALL
 
-            // 查询实职步骤条件审批人
-            var approveIncumbentUsers = await _db.Queryable<UserInfoEntity>()
-                                           .InnerJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId)
-                                           .With(SqlWith.NoLock)
-                                           .Where((user, position) => stepDeptIds.Contains(user.DepartmentId) && positionIdSet.Contains(user.PositionId) && user.IsApproval == 1 && user.PositionId != appPositionId)
-                                           .OrderByDescending((user, position) => position.SortOrder)
-                                           .Select((user, position) => new StepApproveUser()
-                                           {
-                                               UserId = user.UserId,
-                                               UserName = _lang.Locale == "zh-CN"
-                                                          ? user.UserNameCn
-                                                          : user.UserNameEn,
-                                               PositionSortOrder = position.SortOrder,
-                                               AppointmentType = appTypeIncumbent.DicCode,
-                                               AppointmentTypeName = _lang.Locale == "zh-CN"
-                                                                     ? appTypeIncumbent.DicNameCn
-                                                                     : appTypeIncumbent.DicNameEn
-                                           }).ToListAsync();
-            // 找到实职当中有被代理的人员并替换成代理人
-            approveIncumbentUsers = await GetApproveUserAgent(approveIncumbentUsers);
+                                            SELECT
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN
+                                                        (SELECT TOP 1 
+                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = 'Concurrent')
+                                                    ELSE
+                                                        (SELECT TOP 1 
+                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = 'Concurrent-Agent')
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
+                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
+                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
+                                                AND agent.StartTime <= GETDATE()
+                                                AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsApproval = 1
+                                                AND dept.DepartmentLevelId = @pdeptLevelId
+                                                AND part.PartTimePositionId = @pposId
+                                                AND position.SortOrder < @pappPosSortOrder
+                                        ) t ORDER BY t.HireDate ASC;";
 
-            if (approveIncumbentUsers.Count() > 0)
+            var appPirConUserPar = new List<SugarParameter>
+            {
+                new SugarParameter("@plocale", _lang.Locale),
+                new SugarParameter("@pdeptLevelId", deptLevelId),
+                new SugarParameter("@pposId", positionId),
+                new SugarParameter("@pappPosSortOrder", appPosSortOrder.SortOrder),
+            };
+
+            // 查询符合条件审批人
+            var approveUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(appPirConUserSql, appPirConUserPar);
+            if (approveUser.Count() > 0)
             {
                 if (approveMode == ApproveMode.Ss.ToEnumString())
                 {
-                    finalApprovers = approveIncumbentUsers.Take(1).ToList();
+                    finalApprovers = approveUser.Take(1).ToList();
                 }
                 else if (approveMode == ApproveMode.Cs.ToEnumString())
                 {
-                    finalApprovers = approveIncumbentUsers.ToList();
+                    finalApprovers = approveUser;
                 }
             }
-            // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动升级）
+
+            // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动指派）
             else
             {
                 var deptLevelMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
                                                  .With(SqlWith.NoLock)
                                                  .MaxAsync(deptlevel => deptlevel.SortOrder);
-
                 var posMaxOrder = await _db.Queryable<UserPositionEntity>()
                                            .With(SqlWith.NoLock)
                                            .MaxAsync(position => position.SortOrder);
-
                 var stepDeptMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
                                                 .With(SqlWith.NoLock)
                                                 .Where(dept => dept.DepartmentLevelId == deptLevelId)
                                                 .MaxAsync(position => position.SortOrder);
-
                 var stepPosMaxOrder = await _db.Queryable<UserPositionEntity>()
                                                .With(SqlWith.NoLock)
-                                               .Where(position => positionIdSet.Contains(position.PositionId))
+                                               .Where(position => position.PositionId == positionId)
                                                .MaxAsync(position => position.SortOrder);
 
                 List<StepApproveUser> heightLevelApproveUser = new List<StepApproveUser>();
-                for (long itemDeptOrder = stepDeptMaxOrder; itemDeptOrder > 0 && itemDeptOrder <= deptLevelMaxOrder;)
+
+                for (int itemDeptOrder = stepDeptMaxOrder; itemDeptOrder > 0 && itemDeptOrder <= deptLevelMaxOrder;)
                 {
                     for (int itemPosOrder = stepPosMaxOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
                     {
-                        var highLevelUserInfo = await _db.Queryable<UserInfoEntity>()
-                                                         .With(SqlWith.NoLock)
-                                                         .InnerJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId)
-                                                         .InnerJoin<DepartmentInfoEntity>((user, position, dept) => user.DepartmentId == dept.DepartmentId)
-                                                         .InnerJoin<DepartmentLevelEntity>((user, position, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                                                         .Where((user, position, dept, deptlevel) => parentDeptIdsList.Contains(dept.DepartmentId) && position.SortOrder == itemPosOrder && deptlevel.SortOrder == itemDeptOrder && position.PositionId != appPositionId && user.IsApproval == 1)
-                                                         .OrderByDescending((user, position, dept, deptlevel) => position.SortOrder)
-                                                         .Select((user, position, dept, deptlevel) => user)
-                                                         .ToListAsync();
-                        if (highLevelUserInfo.Count > 0)
+                        var deptInSql = string.Join(", ", parentDeptIds);
+
+                        // 查询高阶签核人，带有注本、兼、代的标识并按照职级倒序、入职时间正序排序
+                        var highAppPirConUserSql = $@"SELECT
+                                                            t.UserId,
+                                                            t.UserName,
+                                                            t.AppointmentTypeName,
+                                                            t.AgentUserId,
+                                                            t.AgentUserName
+                                                        FROM
+                                                        (
+                                                            SELECT
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN
+                                                                        (
+                                                                            SELECT TOP 1
+                                                                                CASE
+                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                                    ELSE DicNameEn
+                                                                                END
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = 'Auto-Primary'
+                                                                        )
+                                                                    ELSE
+                                                                        (
+                                                                            SELECT TOP 1
+                                                                                CASE
+                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                                    ELSE DicNameEn
+                                                                                END
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = 'Auto-Agent'
+                                                                        )
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
+                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser
+                                                                ON agent.AgentUserId = agentuser.UserId
+                                                            WHERE 
+                                                              users.IsEmployed = 1
+                                                              AND users.IsApproval = 1
+                                                              AND dept.DepartmentId IN ({deptInSql})
+                                                              AND deptlevel.SortOrder = @psortOrder
+                                                              AND position.SortOrder < @pappPosSortOrder
+
+                                                            UNION ALL
+
+                                                            SELECT
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN
+                                                                        (
+                                                                            SELECT TOP 1
+                                                                                CASE
+                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                                    ELSE DicNameEn
+                                                                                END
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = 'Auto-Concurrent'
+                                                                        )
+                                                                    ELSE
+                                                                        (
+                                                                            SELECT TOP 1
+                                                                                CASE
+                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                                    ELSE DicNameEn
+                                                                                END
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = 'Auto-Concurrent-Agent'
+                                                                        )
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
+                                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
+                                                            WHERE 
+                                                              users.IsEmployed = 1
+                                                              AND users.IsApproval = 1
+                                                              AND dept.DepartmentId IN ({deptInSql})
+                                                              AND deptlevel.SortOrder = @psortOrder
+                                                              AND position.SortOrder < @pappPosSortOrder
+                                                        ) t ORDER BY SortOrder DESC,t.HireDate ASC;";
+
+                        var highAppPirConUserPar = new List<SugarParameter>
                         {
-                            // 自动上签
-                            var appTypeEscalation = appointmentType.Where(app => app.DicCode == "Auto-Incumbent").First();
+                            new SugarParameter("@plocale", _lang.Locale),
+                            new SugarParameter("@psortOrder", itemDeptOrder),
+                            new SugarParameter("@pappPosSortOrder", appPosSortOrder.SortOrder),
+                        };
+                        for (int i = 0; i < parentDeptIds.Count; i++)
+                        {
+                            highAppPirConUserPar.Add(new SugarParameter($"@dept{i}", parentDeptIds[i]));
+                        }
+
+                        // 查询符合条件审批人
+                        var highLevelUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(highAppPirConUserSql, highAppPirConUserPar);
+                        if (highLevelUser.Count > 0)
+                        {
                             if (approveMode == ApproveMode.Ss.ToEnumString())
                             {
-                                heightLevelApproveUser = highLevelUserInfo
-                                    .Select(user => new StepApproveUser
-                                    {
-                                        UserId = user.UserId,
-                                        UserName = _lang.Locale == "zh-CN"
-                                                   ? user.UserNameCn
-                                                   : user.UserNameEn,
-                                        AppointmentType = appTypeEscalation.DicCode,
-                                        AppointmentTypeName = _lang.Locale == "zh-CN"
-                                                              ? appTypeEscalation.DicNameCn
-                                                              : appTypeEscalation.DicNameEn
-                                    }).Take(1).ToList();
+                                heightLevelApproveUser = highLevelUser.Take(1).ToList();
                             }
                             else if (approveMode == ApproveMode.Cs.ToEnumString())
                             {
-                                heightLevelApproveUser = highLevelUserInfo
-                                    .Select(user => new StepApproveUser
-                                    {
-                                        UserId = user.UserId,
-                                        UserName = _lang.Locale == "zh-CN"
-                                                   ? user.UserNameCn
-                                                   : user.UserNameEn,
-                                        AppointmentType = appTypeEscalation.DicCode,
-                                        AppointmentTypeName = _lang.Locale == "zh-CN"
-                                                              ? appTypeEscalation.DicNameCn
-                                                              : appTypeEscalation.DicNameEn
-                                    }).ToList();
+                                heightLevelApproveUser = highLevelUser;
                             }
                             itemDeptOrder = -1;
                             itemPosOrder = -1;
@@ -418,46 +574,6 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                 finalApprovers.AddRange(heightLevelApproveUser);
             }
             return finalApprovers;
-        }
-
-        /// <summary>
-        /// 查询签核人员的代理人员
-        /// </summary>
-        /// <param name="approveUser"></param>
-        /// <returns></returns>
-        public async Task<List<StepApproveUser>> GetApproveUserAgent(List<StepApproveUser> approveUser)
-        {
-            // 查询签核类型（实、兼、代、自动升级）
-            var appointmentType = _db.Queryable<DictionaryInfoEntity>()
-                                     .With(SqlWith.NoLock)
-                                     .Where(appointment => appointment.DicType == "AppointmentType")
-                                     .ToList();
-
-            var appTypeActing = appointmentType.Where(app => app.DicCode == "Acting").First();
-            var allUser = _db.Queryable<UserInfoEntity>()
-                             .InnerJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId);
-
-            var userAgent = _db.Queryable<UserAgentEntity>()
-                               .InnerJoin<UserInfoEntity>((useragent, user) => useragent.SubstituteUserId == user.UserId)
-                               .Where((useragent, user) => SqlFunc.ToDate(useragent.StartTime) <= DateTime.Now && SqlFunc.ToDate(useragent.EndTime) >= DateTime.Now);
-
-            foreach (var appuser in approveUser)
-            {
-                var agentItem = userAgent.Where((useragent, user) => useragent.SubstituteUserId == appuser.UserId).First();
-                if (agentItem != null)
-                {
-                    var agent = allUser.Where((user, position) => user.UserId == agentItem.AgentUserId).First();
-                    appuser.UserId = agent.UserId;
-                    appuser.UserName = _lang.Locale == "zh-CN"
-                                    ? agent.UserNameCn
-                                    : agent.UserNameEn;
-                    appuser.AppointmentType = appTypeActing.DicCode;
-                    appuser.AppointmentTypeName = _lang.Locale == "zh-CN"
-                                               ? appTypeActing.DicNameCn
-                                               : appTypeActing.DicNameEn;
-                }
-            }
-            return approveUser;
         }
     }
 }

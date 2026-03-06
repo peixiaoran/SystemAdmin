@@ -23,17 +23,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工代理] 查询员工分页")]
-        public async Task<ResultPaged<UserAgentDto>> GetUserInfoPage([FromBody] GetUserAgentPage getUserAgentPage)
+        public async Task<ResultPaged<UserAgentDto>> GetUserInfoPage([FromBody] GetUserAgentPage getPage)
         {
-            return await _userAgentService.GetUserInfoPage(getUserAgentPage);
+            return await _userAgentService.GetUserInfoPage(getPage);
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工代理] 查询可代理员工")]
-        public async Task<ResultPaged<UserAgentViewDto>> GetUserInfoAgentView([FromBody] GetUserAgentViewPage getUserAgentView)
+        public async Task<ResultPaged<UserAgentViewDto>> GetUserInfoAgentView([FromBody] GetUserAgentViewPage getPage)
         {
-            return await _userAgentService.GetUserInfoAgentView(getUserAgentView);
+            return await _userAgentService.GetUserInfoAgentView(getPage);
         }
 
         [HttpPost]

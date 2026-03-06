@@ -55,7 +55,7 @@ namespace SystemAdmin.CommonSetup.Security
                 secureOption,
                 cancellationToken);
 
-            // 如果配置了用户名，则进行 SMTP 身份认证
+            // 如果配置了员工名，则进行 SMTP 身份认证
             if (!string.IsNullOrWhiteSpace(_options.UserName))
             {
                 await client.AuthenticateAsync(

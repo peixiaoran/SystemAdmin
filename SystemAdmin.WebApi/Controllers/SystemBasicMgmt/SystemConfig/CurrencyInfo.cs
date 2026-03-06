@@ -47,17 +47,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[币别信息] 查询币别实体")]
-        public async Task<Result<CurrencyInfoDto>> GetCurrencyInfoEntity([FromBody] GetCurrencyInfoEntity getCurrencyEntity)
+        public async Task<Result<CurrencyInfoDto>> GetCurrencyInfoEntity([FromBody] GetCurrencyInfoEntity getEntity)
         {
-            return await _currencyInfoService.GetCurrencyInfoEntity(getCurrencyEntity);
+            return await _currencyInfoService.GetCurrencyInfoEntity(getEntity);
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[币别信息] 查询币别分页")]
-        public async Task<ResultPaged<CurrencyInfoDto>> GetCurrencyInfoPage([FromBody] GetCurrencyInfoPage getCurrencyPage)
+        public async Task<ResultPaged<CurrencyInfoDto>> GetCurrencyInfoPage([FromBody] GetCurrencyInfoPage getPage)
         {
-            return await _currencyInfoService.GetCurrencyInfoPage(getCurrencyPage);
+            return await _currencyInfoService.GetCurrencyInfoPage(getPage);
         }
     }
 }

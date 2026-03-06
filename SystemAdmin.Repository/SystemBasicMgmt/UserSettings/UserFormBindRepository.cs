@@ -24,9 +24,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工分页
         /// </summary>
-        /// <param name="getUserFormBindPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserFormBindDto>> GetUserInfoPage(GetUserFormBindPage getUserFormBindPage)
+        public async Task<ResultPaged<UserFormBindDto>> GetUserInfoPage(GetUserFormBindPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserInfoEntity>()
@@ -39,25 +39,25 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            .Where((user, dept, userpos, userlabor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
             // 员工工号
-            if (!string.IsNullOrEmpty(getUserFormBindPage.UserNo))
+            if (!string.IsNullOrEmpty(getPage.UserNo))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNo.Contains(getUserFormBindPage.UserNo));
+                    user.UserNo.Contains(getPage.UserNo));
             }
             // 员工姓名
-            if (!string.IsNullOrEmpty(getUserFormBindPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.UserName))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNameCn.Contains(getUserFormBindPage.UserName) ||
-                    user.UserNameEn.Contains(getUserFormBindPage.UserName));
+                    user.UserNameCn.Contains(getPage.UserName) ||
+                    user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门 Id（仅在工号与姓名为空时）
-            if (!string.IsNullOrEmpty(getUserFormBindPage.DepartmentId)
-                && string.IsNullOrEmpty(getUserFormBindPage.UserNo)
-                && string.IsNullOrEmpty(getUserFormBindPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.DepartmentId)
+                && string.IsNullOrEmpty(getPage.UserNo)
+                && string.IsNullOrEmpty(getPage.UserName))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.DepartmentId == long.Parse(getUserFormBindPage.DepartmentId));
+                    user.DepartmentId == long.Parse(getPage.DepartmentId));
             }
 
             // 排序
@@ -84,7 +84,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            ? nation.NationNameCn
                            : nation.NationNameEn,
                 IsApproval = user.IsApproval,
-            }).ToPageListAsync(getUserFormBindPage.PageIndex, getUserFormBindPage.PageSize, totalCount);
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserFormBindDto>.Ok(userPage, totalCount, "");
         }
 
@@ -163,11 +163,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 新增员工表单绑定
         /// </summary>
-        /// <param name="userFormBindList"></param>
+        /// <param name="entityList"></param>
         /// <returns></returns>
-        public async Task<int> InsertUserFormBind(List<UserFormBindEntity> userFormBindList)
+        public async Task<int> InsertUserFormBind(List<UserFormBindEntity> entityList)
         {
-            return await _db.Insertable(userFormBindList).ExecuteCommandAsync();
+            return await _db.Insertable(entityList).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .LeftJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
                             .OrderBy((dept, deptlevel) => new { deptlevel.DepartmentLevelCode, dept.SortOrder })
                             .Select((dept, deptlevel) => new DepartmentDropDto
                             {

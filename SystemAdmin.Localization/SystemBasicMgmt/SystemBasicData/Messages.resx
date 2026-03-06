@@ -297,7 +297,7 @@
   </data>
   <data name="UserExcel_UserInfo" xml:space="preserve">
     <value>员工信息</value>
-    <comment>员工Excel导出-用户信息</comment>
+    <comment>员工Excel导出-员工信息</comment>
   </data>
   <data name="UserExcel_HireDate" xml:space="preserve">
     <value>入职日期</value>

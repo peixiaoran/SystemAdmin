@@ -79,7 +79,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                 await _db.BeginTranAsync();
                 // 删除表单类别
                 int delFormTypeCount = await _formTypeRepository.DeleteFormTypeInfo(long.Parse(upsert.FormTypeId));
-                // 删除用户表单绑定
+                // 删除员工表单绑定
                 int delUserTypeBindCount = await _formTypeRepository.DeleteUserFormTypeBind(long.Parse(upsert.FormTypeId));
                 await _db.CommitTranAsync();
 

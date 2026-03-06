@@ -56,6 +56,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
+
                     await _db.BeginTranAsync();
                     var count = await _dictionaryRepository.InsertDictionaryInfo(entity);
                     await _db.CommitTranAsync();
@@ -119,6 +120,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
+
                 await _db.BeginTranAsync();
                 var count = await _dictionaryRepository.UpdateDictionaryInfo(entity);
                 await _db.CommitTranAsync();

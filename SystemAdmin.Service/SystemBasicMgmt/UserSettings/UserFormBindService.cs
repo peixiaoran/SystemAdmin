@@ -31,13 +31,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工分页
         /// </summary>
-        /// <param name="getUserFormBindPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserFormBindDto>> GetUserInfoPage(GetUserFormBindPage getUserFormBindPage)
+        public async Task<ResultPaged<UserFormBindDto>> GetUserInfoPage(GetUserFormBindPage getPage)
         {
             try
             {
-                return await _userFormBindRepository.GetUserInfoPage(getUserFormBindPage);
+                return await _userFormBindRepository.GetUserInfoPage(getPage);
             }
             catch (Exception ex)
             {
@@ -49,13 +49,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工绑定表单树
         /// </summary>
-        /// <param name="getUserFormBindViewTree"></param>
+        /// <param name="getTree"></param>
         /// <returns></returns>
-        public async Task<Result<List<UserFormBindViewTreeDto>>> GetUserFormBindViewTree(GetUserFormBindViewTree getUserFormBindViewTree)
+        public async Task<Result<List<UserFormBindViewTreeDto>>> GetUserFormBindViewTree(GetUserFormBindViewTree getTree)
         {
             try
             {
-                var userFormBindTree = await _userFormBindRepository.GetUserFormBindViewTree(long.Parse(getUserFormBindViewTree.UserId));
+                var userFormBindTree = await _userFormBindRepository.GetUserFormBindViewTree(long.Parse(getTree.UserId));
                 return Result<List<UserFormBindViewTreeDto>>.Ok(userFormBindTree, "");
             }
             catch (Exception ex)
@@ -68,18 +68,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 更新员工表单绑定
         /// </summary>
-        /// <param name="userFormBindUpsert"></param>
+        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateUserFormBind(UserFormBindUpsert userFormBindUpsert)
+        public async Task<Result<int>> UpdateUserFormBind(UserFormBindUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var delUserFormCount = await _userFormBindRepository.DeleteUserFormBind(long.Parse(userFormBindUpsert.UserId));
-                var insertUserFormBindEntity = userFormBindUpsert.FormGroupTypeId
+                var delUserFormCount = await _userFormBindRepository.DeleteUserFormBind(long.Parse(upsert.UserId));
+                var insertUserFormBindEntity = upsert.FormGroupTypeId
                                               .Select(id => new UserFormBindEntity
                                               {
-                                                  UserId = long.Parse(userFormBindUpsert.UserId),
+                                                  UserId = long.Parse(upsert.UserId),
                                                   FormGroupTypeId = long.Parse(id),
                                                   CreatedBy = _loginuser.UserId,
                                                   CreatedDate = DateTime.Now

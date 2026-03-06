@@ -55,6 +55,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     CreatedDate = DateTime.Now,
                     Remark = upsert.Remark
                 };
+
                 await _db.BeginTranAsync();
                 int count = await _pMenuRepository.InsertPMenu(insertPMenu);
                 await _db.CommitTranAsync();
@@ -110,7 +111,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                await _db.BeginTranAsync();
                 MenuInfoEntity entity = new MenuInfoEntity
                 {
                     MenuId = long.Parse(upsert.MenuId),
@@ -127,6 +127,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     Redirect = upsert.Redirect,
                     Remark = upsert.Remark
                 };
+
+                await _db.BeginTranAsync();
                 int count = await _pMenuRepository.UpdatePMenu(entity);
                 await _db.CommitTranAsync();
 

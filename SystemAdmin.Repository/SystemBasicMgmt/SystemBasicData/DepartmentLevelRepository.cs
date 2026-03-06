@@ -17,11 +17,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 新增部门级别信息
         /// </summary>
-        /// <param name="deptLevelEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertDepartmentLevel(DepartmentLevelEntity deptLevelEntity)
+        public async Task<int> InsertDepartmentLevel(DepartmentLevelEntity entity)
         {
-            return await _db.Insertable(deptLevelEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -39,17 +39,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 修改部门级别信息
         /// </summary>
-        /// <param name="deptEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateDepartmentLevel(DepartmentLevelEntity deptEntity)
+        public async Task<int> UpdateDepartmentLevel(DepartmentLevelEntity entity)
         {
-            return await _db.Updateable(deptEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(deptlevel => new
                             {
                                 deptlevel.DepartmentLevelId,
                                 deptlevel.CreatedBy,
                                 deptlevel.CreatedDate,
-                            }).Where(deptlevel => deptlevel.DepartmentLevelId == deptEntity.DepartmentLevelId)
+                            }).Where(deptlevel => deptlevel.DepartmentLevelId == entity.DepartmentLevelId)
                             .ExecuteCommandAsync();
         }
 
@@ -60,11 +60,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<DepartmentLevelDto> GetDepartmentLevelEntity(long deptLevelId)
         {
-            var deptLevelEntity = await _db.Queryable<DepartmentLevelEntity>()
+            var entity = await _db.Queryable<DepartmentLevelEntity>()
                                            .With(SqlWith.NoLock)
                                            .Where(deptlevel => deptlevel.DepartmentLevelId == deptLevelId)
                                            .FirstAsync();
-            return deptLevelEntity.Adapt<DepartmentLevelDto>();
+            return entity.Adapt<DepartmentLevelDto>();
         }
 
         /// <summary>

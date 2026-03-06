@@ -21,11 +21,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <summary>
         /// 新增控件
         /// </summary>
-        /// <param name="controlInfoEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertControlInfo(ControlInfoEntity controlInfoEntity)
+        public async Task<int> InsertControlInfo(ControlInfoEntity entity)
         {
-            return await _db.Insertable(controlInfoEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -43,17 +43,17 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <summary>
         /// 修改控件
         /// </summary>
-        /// <param name="controlInfoEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateControlInfo(ControlInfoEntity controlInfoEntity)
+        public async Task<int> UpdateControlInfo(ControlInfoEntity entity)
         {
-            return await _db.Updateable(controlInfoEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(formcontrol => new
                             {
                                 formcontrol.ControlCode,
                                 formcontrol.CreatedBy,
                                 formcontrol.CreatedDate,
-                            }).Where(formcontrol => formcontrol.ControlCode == controlInfoEntity.ControlCode)
+                            }).Where(formcontrol => formcontrol.ControlCode == entity.ControlCode)
                             .ExecuteCommandAsync();
         }
 
@@ -64,11 +64,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <returns></returns>
         public async Task<ControlInfoDto> GetControlInfoEntity(string controlCode)
         {
-            var controlInfoEntity = await _db.Queryable<ControlInfoEntity>()
+            var entity = await _db.Queryable<ControlInfoEntity>()
                                              .With(SqlWith.NoLock)
                                              .Where(formcontrol => formcontrol.ControlCode == controlCode)
                                              .FirstAsync();
-            return controlInfoEntity.Adapt<ControlInfoDto>();
+            return entity.Adapt<ControlInfoDto>();
         }
 
         /// <summary>

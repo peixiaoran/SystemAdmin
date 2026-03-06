@@ -22,11 +22,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <summary>
         /// 新增表单类别
         /// </summary>
-        /// <param name="formTypeEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertFormTypeInfo(FormTypeEntity formTypeEntity)
+        public async Task<int> InsertFormTypeInfo(FormTypeEntity entity)
         {
-            return await _db.Insertable(formTypeEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -56,17 +56,17 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <summary>
         /// 修改表单类别
         /// </summary>
-        /// <param name="formTypeEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateFormTypeInfo(FormTypeEntity formTypeEntity)
+        public async Task<int> UpdateFormTypeInfo(FormTypeEntity entity)
         {
-            return await _db.Updateable(formTypeEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(formType => new
                             {
                                 formType.FormTypeId,
                                 formType.CreatedBy,
                                 formType.CreatedDate,
-                            }).Where(formType => formType.FormTypeId == formTypeEntity.FormTypeId)
+                            }).Where(formType => formType.FormTypeId == entity.FormTypeId)
                             .ExecuteCommandAsync();
         }
 
@@ -77,11 +77,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <returns></returns>
         public async Task<FormTypeDto> GetFormTypeEntity(long formTypeId)
         {
-            var formTypeEntity = await _db.Queryable<FormTypeEntity>()
+            var entity = await _db.Queryable<FormTypeEntity>()
                                           .With(SqlWith.NoLock)
                                           .Where(formType => formType.FormTypeId == formTypeId)
                                           .FirstAsync();
-            return formTypeEntity.Adapt<FormTypeDto>();
+            return entity.Adapt<FormTypeDto>();
         }
 
         /// <summary>
