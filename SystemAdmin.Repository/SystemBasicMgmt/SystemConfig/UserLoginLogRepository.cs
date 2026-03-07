@@ -29,7 +29,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
             var query = _db.Queryable<UserLogOutEntity>()
                            .With(SqlWith.NoLock)
                            .LeftJoin<UserInfoEntity>((userloginlog, userinfo) => userloginlog.UserId == userinfo.UserId)
-                           .LeftJoin<DictionaryInfoEntity>((userloginlog, userinfo, loginbehaviordic) => userloginlog.StatusId == loginbehaviordic.DicCode && loginbehaviordic.DicType == "LoginBehavior")
+                           .LeftJoin<DictionaryInfoEntity>((userloginlog, userinfo, loginbehaviordic) => userloginlog.LoginType == loginbehaviordic.DicCode && loginbehaviordic.DicType == "LoginBehavior")
                            .OrderByDescending((userloginlog, userinfo, loginbehaviordic) => new { userloginlog.LoginDate});
 
             // IP
@@ -53,19 +53,20 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                 query = query.Where((userloginlog, userinfo, loginbehaviordic) => Convert.ToDateTime(userloginlog.LoginDate) <= Convert.ToDateTime(getPage.EndTime));
             }
 
-            var userLoginLogPage = await query.Select((userloginlog, userinfo, loginbehaviordic) => new UserLogOutDto
+            var page = await query.Select((userloginlog, userinfo, loginbehaviordic) => new UserLogOutDto
             {
                 UserNo = userinfo.UserNo,
                 UserName = _lang.Locale == "zh-CN"
                            ? userinfo.UserNameCn
                            : userinfo.UserNameEn,
                 IP = userloginlog.IP,
-                StatusName = _lang.Locale == "zh-CN"
+                LoginType = userloginlog.LoginType,
+                LoginTypeName = _lang.Locale == "zh-CN"
                            ? loginbehaviordic.DicNameCn
                            : loginbehaviordic.DicNameEn,
                 LoginDate = userloginlog.LoginDate,
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<UserLogOutDto>.Ok(userLoginLogPage, totalCount, "");
+            return ResultPaged<UserLogOutDto>.Ok(page, totalCount, "");
         }
     }
 }

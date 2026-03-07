@@ -153,19 +153,19 @@
   <data name="UserFormBindInsertSuccess" xml:space="preserve">
     <value>表单配置成功</value>
   </data>
-  <data name="AgentSameEmployee" xml:space="preserve">
+  <data name="UserAgentSameEmployee" xml:space="preserve">
     <value>被代理员工与代理员工不能为同一人</value>
   </data>
-  <data name="TargetHasAgentRole" xml:space="preserve">
+  <data name="UserAgentTargetHasAgentRole" xml:space="preserve">
     <value>被代理员工已代理其他员工，不能嵌套代理</value>
   </data>
-  <data name="TargetAlreadyAgented" xml:space="preserve">
+  <data name="UserAgentTargetAlreadyAgented" xml:space="preserve">
     <value>被代理员工已被其他员工代理，不可多人员代理</value>
   </data>
-  <data name="AgentAlreadyAgented" xml:space="preserve">
+  <data name="UserAgentAlreadyAgented" xml:space="preserve">
     <value>代理员工已被其他员工代理，不能作为代理员工</value>
   </data>
-  <data name="AgentHasMultipleTargets" xml:space="preserve">
+  <data name="UserAgentHasMultipleTargets" xml:space="preserve">
     <value>代理员工已代理其他员工，不可多人员代理</value>
   </data>
 </root>

@@ -28,6 +28,12 @@ namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle
         public string AgentUserName { get; set; } = string.Empty;
 
         /// <summary>
+        /// 签核类型（实任、兼任、代理）
+        /// </summary>
+
+        public string AppointmentType { get; set; } = string.Empty;
+
+        /// <summary>
         /// 签核类型名称（实任、兼任、代理）
         /// </summary>
 

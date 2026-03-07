@@ -74,34 +74,33 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                UserPartTimeEntity insertUserPartTimeEntity = new UserPartTimeEntity()
-                {
-                    UserId = long.Parse(upsert.UserId),
-                    PartTimeDeptId = long.Parse(upsert.PartTimeDeptId),
-                    PartTimePositionId = long.Parse(upsert.PartTimePositionId),
-                    StartTime = upsert.StartTime,
-                    EndTime = upsert.EndTime,
-                    CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now
-                };
-
-                await _db.BeginTranAsync();
                 // 判断员工是否有重复（按照员工Id、兼任部门）
-                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(upsert.UserId), long.Parse(upsert.PartTimeDeptId));
-                if (userpartTimeAny)
+                var isPartTime = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(upsert.UserId), long.Parse(upsert.PartTimeDeptId), long.Parse(upsert.PartTimePositionId));
+                if (isPartTime)
                 {
-                    var insertUserPartTimeCount = await _userPartTimeRepository.InsertUserPartTime(insertUserPartTimeEntity);
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsExist"));
+                }
+                else
+                {
+                    await _db.BeginTranAsync();
+
+                    UserPartTimeEntity entity = new UserPartTimeEntity()
+                    {
+                        UserId = long.Parse(upsert.UserId),
+                        PartTimeDeptId = long.Parse(upsert.PartTimeDeptId),
+                        PartTimePositionId = long.Parse(upsert.PartTimePositionId),
+                        StartTime = upsert.StartTime,
+                        EndTime = upsert.EndTime,
+                        CreatedBy = _loginuser.UserId,
+                        CreatedDate = DateTime.Now
+                    };
+                    var insertUserPartTimeCount = await _userPartTimeRepository.InsertUserPartTime(entity);
                     await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsert.UserId), 1);
                     await _db.CommitTranAsync();
 
                     return insertUserPartTimeCount >= 1
                             ? Result<int>.Ok(insertUserPartTimeCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
-                }
-                else
-                {
-                    await _db.CommitTranAsync();
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsExist"));
                 }
             }
             catch (Exception ex)
@@ -123,17 +122,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
             {
                 await _db.BeginTranAsync();
                 // 删除员工兼任
-                var delUserPartTimeCount = await _userPartTimeRepository.DeleteUserPartTime(upsertdel);
+                var count = await _userPartTimeRepository.DeleteUserPartTime(upsertdel);
                 // 判断员工是否还有兼任，如果没有就修改兼任状态为0
-                var userPartTimeIsExist = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(upsertdel.Old_UserId));
-                if (!userPartTimeIsExist)
+                var isPartTime = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(upsertdel.Old_UserId));
+                if (!isPartTime)
                 {
                     await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsertdel.Old_UserId), 0);
                 }
                 await _db.CommitTranAsync();
 
-                return delUserPartTimeCount >= 1
-                        ? Result<int>.Ok(delUserPartTimeCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
             catch (Exception ex)
@@ -153,8 +152,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var userparttimeEntity = await _userPartTimeRepository.GetUserPartTimeList(getEntity);
-                return Result<UserPartTimeDto>.Ok(userparttimeEntity, "");
+                var entity = await _userPartTimeRepository.GetUserPartTimeList(getEntity);
+                return Result<UserPartTimeDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
@@ -172,24 +171,30 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                // 判断员工是否有重复（按照员工Id、新兼任部门）
-                var userpartTimeAny = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(upsertdel.UserId), long.Parse(upsertdel.PartTimeDeptId));
-                if (userpartTimeAny)
+                // 判断员工是否有重复（按照员工Id、新兼任部门、新兼任职级）
+                var isPartTime = await _userPartTimeRepository.GetUserPartTimeCount(long.Parse(upsertdel.UserId), long.Parse(upsertdel.PartTimeDeptId), long.Parse(upsertdel.PartTimePositionId));
+                if (isPartTime)
                 {
-                    await _db.BeginTranAsync();
-                    UserPartTimeEntity updateUserPartTimeEntity = new UserPartTimeEntity()
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsExist"));
+                }
+                else
+                {
+                    UserPartTimeEntity entity = new UserPartTimeEntity()
                     {
                         UserId = long.Parse(upsertdel.UserId),
                         PartTimeDeptId = long.Parse(upsertdel.PartTimeDeptId),
+                        PartTimePositionId = long.Parse(upsertdel.PartTimePositionId),
                         StartTime = upsertdel.StartTime,
                         EndTime = upsertdel.EndTime,
                         ModifiedBy = _loginuser.UserId,
                         ModifiedDate = DateTime.Now
                     };
-                    var updateUserPartTimeCount = await _userPartTimeRepository.UpdateUserPartTime(upsertdel, updateUserPartTimeEntity);
+
+                    await _db.BeginTranAsync();
+                    var updateUserPartTimeCount = await _userPartTimeRepository.UpdateUserPartTime(upsertdel, entity);
                     // 判断老员工是否还有兼任，如果没有就修改兼任状态为0
-                    var OldUserPartTimeIsExist = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(upsertdel.Old_UserId));
-                    if (!OldUserPartTimeIsExist)
+                    var oldUserPartTimeIsExist = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(upsertdel.Old_UserId));
+                    if (!oldUserPartTimeIsExist)
                     {
                         await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsertdel.Old_UserId), 0);
                     }
@@ -200,10 +205,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     return updateUserPartTimeCount >= 1
                             ? Result<int>.Ok(updateUserPartTimeCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
-                }
-                else
-                {
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsExist"));
                 }
             }
             catch (Exception ex)
@@ -222,8 +223,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var LaborDrop = await _userPartTimeRepository.GetLaborDropDown();
-                return Result<List<UserLaborDropDto>>.Ok(LaborDrop, "");
+                var drop = await _userPartTimeRepository.GetLaborDropDown();
+                return Result<List<UserLaborDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -240,8 +241,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var deptDrop = await _userPartTimeRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(deptDrop, "");
+                var drop = await _userPartTimeRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
@@ -258,8 +259,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var userPositionDrop = await _userPartTimeRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(userPositionDrop, "");
+                var drop = await _userPartTimeRepository.GetUserPositionDropDown();
+                return Result<List<UserPositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {

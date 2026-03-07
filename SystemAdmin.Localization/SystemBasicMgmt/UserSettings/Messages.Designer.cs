@@ -63,45 +63,9 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         /// <summary>
         ///   查找类似 代理员工已被其他员工代理，不能作为代理员工 的本地化字符串。
         /// </summary>
-        internal static string AgentAlreadyAgented {
+        internal static string UserAgentAlreadyAgented {
             get {
-                return ResourceManager.GetString("AgentAlreadyAgented", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 代理员工已代理其他员工，不可多人员代理 的本地化字符串。
-        /// </summary>
-        internal static string AgentHasMultipleTargets {
-            get {
-                return ResourceManager.GetString("AgentHasMultipleTargets", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 被代理员工与代理员工不能为同一人 的本地化字符串。
-        /// </summary>
-        internal static string AgentSameEmployee {
-            get {
-                return ResourceManager.GetString("AgentSameEmployee", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 被代理员工已被其他员工代理，不可多人员代理 的本地化字符串。
-        /// </summary>
-        internal static string TargetAlreadyAgented {
-            get {
-                return ResourceManager.GetString("TargetAlreadyAgented", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 被代理员工已代理其他员工，不能嵌套代理 的本地化字符串。
-        /// </summary>
-        internal static string TargetHasAgentRole {
-            get {
-                return ResourceManager.GetString("TargetHasAgentRole", resourceCulture);
+                return ResourceManager.GetString("UserAgentAlreadyAgented", resourceCulture);
             }
         }
         
@@ -124,6 +88,15 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
+        ///   查找类似 代理员工已代理其他员工，不可多人员代理 的本地化字符串。
+        /// </summary>
+        internal static string UserAgentHasMultipleTargets {
+            get {
+                return ResourceManager.GetString("UserAgentHasMultipleTargets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 代理配置失败 的本地化字符串。
         /// </summary>
         internal static string UserAgentInsertFailed {
@@ -138,6 +111,33 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         internal static string UserAgentInsertSuccess {
             get {
                 return ResourceManager.GetString("UserAgentInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 被代理员工与代理员工不能为同一人 的本地化字符串。
+        /// </summary>
+        internal static string UserAgentSameEmployee {
+            get {
+                return ResourceManager.GetString("UserAgentSameEmployee", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 被代理员工已被其他员工代理，不可多人员代理 的本地化字符串。
+        /// </summary>
+        internal static string UserAgentTargetAlreadyAgented {
+            get {
+                return ResourceManager.GetString("UserAgentTargetAlreadyAgented", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 被代理员工已代理其他员工，不能嵌套代理 的本地化字符串。
+        /// </summary>
+        internal static string UserAgentTargetHasAgentRole {
+            get {
+                return ResourceManager.GetString("UserAgentTargetHasAgentRole", resourceCulture);
             }
         }
         

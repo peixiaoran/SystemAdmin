@@ -21,11 +21,6 @@
         public string Old_PartTimePositionId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 兼任职业Id（老）
-        /// </summary>
-        public string Old_PartTimeLaborId { get; set; } = string.Empty;
-
-        /// <summary>
         /// 员工Id
         /// </summary>
         public string UserId { get; set; } = string.Empty;
@@ -34,6 +29,11 @@
         /// 兼任部门Id
         /// </summary>
         public string PartTimeDeptId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 兼任职级Id
+        /// </summary>
+        public string PartTimePositionId { get; set; } = string.Empty;
 
         /// <summary>
         /// 开始时间

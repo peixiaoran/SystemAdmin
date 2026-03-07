@@ -72,7 +72,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                     {
                         UserId = 0,
-                        StatusId = LoginBehavior.AccountNotExist.ToEnumString(),
+                        LoginType = LoginBehavior.AccountNotExist.ToEnumString(),
                         IP = ip,
                         LoginDate = nowTime
                     });
@@ -97,7 +97,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                     {
                         UserId = user.UserId,
-                        StatusId = LoginBehavior.IncorrectPassword.ToEnumString(),
+                        LoginType = LoginBehavior.IncorrectPassword.ToEnumString(),
                         IP = ip,
                         LoginDate = nowTime
                     });
@@ -147,7 +147,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
                 {
                     UserId = user.UserId,
-                    StatusId = LoginBehavior.LoginSuccessful.ToEnumString(),
+                    LoginType = LoginBehavior.LoginSuccessful.ToEnumString(),
                     IP = ip,
                     LoginDate = nowTime
                 });
@@ -197,7 +197,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 var logOutLog = new UserLogOutEntity
                 {
                     UserId = user.UserId,
-                    StatusId = LoginBehavior.LoggedOut.ToEnumString(),
+                    LoginType = LoginBehavior.LoggedOut.ToEnumString(),
                     IP = GetLocalIPv4(),
                     LoginDate = DateTime.Now
                 };

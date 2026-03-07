@@ -1,10 +1,7 @@
-﻿using Dm.util;
-using SqlSugar;
-using System.Collections;
+﻿using SqlSugar;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
-using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.FormAudit.Entity;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
@@ -13,7 +10,6 @@ using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
 using SystemAdmin.Model.FormBusiness.WorkflowLifecycle;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
 {
@@ -191,6 +187,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                 // 组织架构
                 if (nowStep.Assignment == Assignment.Org.ToEnumString())
                 {
+                    // 如果是开始步骤，审批人默认为申请人
                     if (nowStep.IsStartStep == 1)
                     {
                         WorkflowApproveUser approveItem = new WorkflowApproveUser();
@@ -198,7 +195,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                         // 查询签核类型（本、兼、代、自动指派）
                         var appTypePrimary = await _db.Queryable<DictionaryInfoEntity>()
                                                       .With(SqlWith.NoLock)
-                                                      .Where(app => app.DicType == "AppointmentType" && app.DicCode == "Primary")
+                                                      .Where(app => app.DicType == "AppointmentType" && app.DicCode == AppointmentType.Primary.ToEnumString())
                                                       .FirstAsync();
 
                         List<StepApproveUser> stepApproveUsers = new List<StepApproveUser>();
@@ -206,11 +203,12 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                         {
                             UserId = appUserInfo.UserId,
                             UserName = _lang.Locale == "zh-CN"
-                                              ? appUserInfo.UserNameCn
-                                              : appUserInfo.UserNameEn,
+                                       ? appUserInfo.UserNameCn
+                                       : appUserInfo.UserNameEn,
+                            AppointmentType = appTypePrimary.DicCode,
                             AppointmentTypeName = _lang.Locale == "zh-CN"
-                                              ? appTypePrimary.DicNameCn
-                                              : appTypePrimary.DicNameEn
+                                       ? appTypePrimary.DicNameCn
+                                       : appTypePrimary.DicNameEn
                         });
 
                         approveItem.StepId = nowStep.StepId;
@@ -278,7 +276,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(UserInfoEntity appUserEntity, string approveMode, List<DepartmentInfoEntity> parentDeptList, long deptLevelId, long positionId)
         {
             // 步骤最终审批人列表
-            var finalApprovers = new List<StepApproveUser>();
+            var finalApprover = new List<StepApproveUser>();
 
             // 申请人职级信息
             var appPosSortOrder = await _db.Queryable<UserPositionEntity>().Where(position => position.PositionId == appUserEntity.PositionId).FirstAsync();
@@ -287,9 +285,10 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
 
             // 查询符合步骤条件的签核人，带有注本、兼、代的标识并按照入职时间正序排序
-            var appPirConUserSql = @"SELECT
+            var appCanUserSql = @"SELECT
                                             t.UserId,
                                             t.UserName,
+                                            t.AppointmentType,
                                             t.AppointmentTypeName,
                                             t.AgentUserId,
                                             t.AgentUserName
@@ -301,15 +300,25 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                 users.HireDate,
                                                 CASE
                                                     WHEN agentuser.UserId IS NULL THEN
+                                                        (SELECT TOP 1 DicCode
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
+                                                    ELSE
+                                                        (SELECT TOP 1 DicCode
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
+                                                END AS AppointmentType,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN
                                                         (SELECT TOP 1 
                                                                 CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
                                                          FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = 'Primary')
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
                                                     ELSE
                                                         (SELECT TOP 1 
                                                                 CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
                                                          FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = 'Agent')
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
                                                 END AS AppointmentTypeName,
                                                 agentuser.UserId AS AgentUserId,
                                                 CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
@@ -336,15 +345,25 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                 users.HireDate,
                                                 CASE
                                                     WHEN agentuser.UserId IS NULL THEN
+                                                        (SELECT TOP 1 DicCode
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
+                                                    ELSE
+                                                        (SELECT TOP 1 DicCode
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
+                                                END AS AppointmentType,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN
                                                         (SELECT TOP 1 
                                                                 CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
                                                          FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = 'Concurrent')
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
                                                     ELSE
                                                         (SELECT TOP 1 
                                                                 CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
                                                          FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = 'Concurrent-Agent')
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
                                                 END AS AppointmentTypeName,
                                                 agentuser.UserId AS AgentUserId,
                                                 CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
@@ -364,26 +383,24 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                 AND position.SortOrder < @pappPosSortOrder
                                         ) t ORDER BY t.HireDate ASC;";
 
-            var appPirConUserPar = new List<SugarParameter>
+            var appCanUserPar = new List<SugarParameter>
             {
                 new SugarParameter("@plocale", _lang.Locale),
+                new SugarParameter("@pprimary", AppointmentType.Primary.ToEnumString()),
+                new SugarParameter("@pagent", AppointmentType.Agent.ToEnumString()),
+                new SugarParameter("@pconcurrent", AppointmentType.Concurrent.ToEnumString()),
+                new SugarParameter("@pconcurrentagent", AppointmentType.ConcurrentAgent.ToEnumString()),
                 new SugarParameter("@pdeptLevelId", deptLevelId),
                 new SugarParameter("@pposId", positionId),
                 new SugarParameter("@pappPosSortOrder", appPosSortOrder.SortOrder),
             };
 
-            // 查询符合条件审批人
-            var approveUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(appPirConUserSql, appPirConUserPar);
-            if (approveUser.Count() > 0)
+            // 查询符合条件审批人候选人，注本、兼、代、兼代的标识并按照入职时间正序排序
+            var approveCanUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(appCanUserSql, appCanUserPar);
+            if (approveCanUser.Count() > 0)
             {
-                if (approveMode == ApproveMode.Ss.ToEnumString())
-                {
-                    finalApprovers = approveUser.Take(1).ToList();
-                }
-                else if (approveMode == ApproveMode.Cs.ToEnumString())
-                {
-                    finalApprovers = approveUser;
-                }
+                // 按照本、兼、代、兼代的顺序筛选最终审批人
+                finalApprover = await GetFinalStepApproveUserList(approveCanUser, ApproveMode.Single.ToEnumString(), "PirCon");
             }
 
             // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动指派）
@@ -404,18 +421,21 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                .Where(position => position.PositionId == positionId)
                                                .MaxAsync(position => position.SortOrder);
 
-                List<StepApproveUser> heightLevelApproveUser = new List<StepApproveUser>();
+                List<StepApproveUser> hightLevelApproveUser = new List<StepApproveUser>();
 
+                // 依次按照部门级别递减
                 for (int itemDeptOrder = stepDeptMaxOrder; itemDeptOrder > 0 && itemDeptOrder <= deptLevelMaxOrder;)
                 {
+                    // 依次按照职级递减
                     for (int itemPosOrder = stepPosMaxOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
                     {
                         var deptInSql = string.Join(", ", parentDeptIds);
 
-                        // 查询高阶签核人，带有注本、兼、代的标识并按照职级倒序、入职时间正序排序
-                        var highAppPirConUserSql = $@"SELECT
+                        // 查询高阶审批人候选人，注本、兼、代、兼代的标识并按照职级倒序、入职时间正序排序
+                        var highAppCanUserSql = $@"SELECT
                                                             t.UserId,
                                                             t.UserName,
+                                                            t.AppointmentType,
                                                             t.AppointmentTypeName,
                                                             t.AgentUserId,
                                                             t.AgentUserName
@@ -432,6 +452,22 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                                 CASE
                                                                     WHEN agentuser.UserId IS NULL THEN
                                                                         (
+                                                                            SELECT TOP 1 DicCode
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoprimary
+                                                                        )
+                                                                    ELSE
+                                                                        (
+                                                                            SELECT TOP 1 DicCode
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoagent
+                                                                        )
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN
+                                                                        (
                                                                             SELECT TOP 1
                                                                                 CASE
                                                                                     WHEN @plocale = 'zh-CN' THEN DicNameCn
@@ -439,7 +475,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                                                 END
                                                                             FROM Basic.DictionaryInfo
                                                                             WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = 'Auto-Primary'
+                                                                              AND DicCode = @pautoprimary
                                                                         )
                                                                     ELSE
                                                                         (
@@ -450,7 +486,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                                                 END
                                                                             FROM Basic.DictionaryInfo
                                                                             WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = 'Auto-Agent'
+                                                                              AND DicCode = @pautoagent
                                                                         )
                                                                 END AS AppointmentTypeName,
                                                                 agentuser.UserId AS AgentUserId,
@@ -473,6 +509,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                               AND users.IsApproval = 1
                                                               AND dept.DepartmentId IN ({deptInSql})
                                                               AND deptlevel.SortOrder = @psortOrder
+                                                              AND position.SortOrder = @pposOrder
                                                               AND position.SortOrder < @pappPosSortOrder
 
                                                             UNION ALL
@@ -488,6 +525,22 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                                 CASE
                                                                     WHEN agentuser.UserId IS NULL THEN
                                                                         (
+                                                                            SELECT TOP 1 DicCode
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoconcurrent
+                                                                        )
+                                                                    ELSE
+                                                                        (
+                                                                            SELECT TOP 1 DicCode
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoconcurrentagent
+                                                                        )
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN
+                                                                        (
                                                                             SELECT TOP 1
                                                                                 CASE
                                                                                     WHEN @plocale = 'zh-CN' THEN DicNameCn
@@ -495,7 +548,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                                                 END
                                                                             FROM Basic.DictionaryInfo
                                                                             WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = 'Auto-Concurrent'
+                                                                              AND DicCode = @pautoconcurrent
                                                                         )
                                                                     ELSE
                                                                         (
@@ -506,7 +559,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                                                 END
                                                                             FROM Basic.DictionaryInfo
                                                                             WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = 'Auto-Concurrent-Agent'
+                                                                              AND DicCode = @pautoconcurrentagent
                                                                         )
                                                                 END AS AppointmentTypeName,
                                                                 agentuser.UserId AS AgentUserId,
@@ -528,33 +581,32 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                               AND users.IsApproval = 1
                                                               AND dept.DepartmentId IN ({deptInSql})
                                                               AND deptlevel.SortOrder = @psortOrder
+                                                              AND position.SortOrder = @pposOrder
                                                               AND position.SortOrder < @pappPosSortOrder
                                                         ) t ORDER BY SortOrder DESC,t.HireDate ASC;";
 
-                        var highAppPirConUserPar = new List<SugarParameter>
+                        var highAppCanUserPar = new List<SugarParameter>
                         {
                             new SugarParameter("@plocale", _lang.Locale),
+                            new SugarParameter("@pautoprimary", AppointmentType.AutoPrimary.ToEnumString()),
+                            new SugarParameter("@pautoagent", AppointmentType.AutoAgent.ToEnumString()),
+                            new SugarParameter("@pautoconcurrent", AppointmentType.AutoConcurrent.ToEnumString()),
+                            new SugarParameter("@pautoconcurrentagent", AppointmentType.AutoConcurrentAgent.ToEnumString()),
                             new SugarParameter("@psortOrder", itemDeptOrder),
+                            new SugarParameter("@pposOrder", itemPosOrder),
                             new SugarParameter("@pappPosSortOrder", appPosSortOrder.SortOrder),
                         };
                         for (int i = 0; i < parentDeptIds.Count; i++)
                         {
-                            highAppPirConUserPar.Add(new SugarParameter($"@dept{i}", parentDeptIds[i]));
+                            highAppCanUserPar.Add(new SugarParameter($"@dept{i}", parentDeptIds[i]));
                         }
 
-                        // 查询符合条件审批人
-                        var highLevelUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(highAppPirConUserSql, highAppPirConUserPar);
+                        // 查询符合条件候选审批人
+                        var highLevelUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(highAppCanUserSql, highAppCanUserPar);
                         if (highLevelUser.Count > 0)
                         {
-                            if (approveMode == ApproveMode.Ss.ToEnumString())
-                            {
-                                heightLevelApproveUser = highLevelUser.Take(1).ToList();
-                            }
-                            else if (approveMode == ApproveMode.Cs.ToEnumString())
-                            {
-                                heightLevelApproveUser = highLevelUser;
-                            }
-                            itemDeptOrder = -1;
+                            // 按照本、兼、代、兼代的顺序筛选最终审批人
+                            hightLevelApproveUser = await GetFinalStepApproveUserList(highLevelUser, ApproveMode.Single.ToEnumString(), "Auto");
                             itemPosOrder = -1;
                         }
                         else
@@ -562,7 +614,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                             itemPosOrder--;
                         }
                     }
-                    if (heightLevelApproveUser.Count > 0)
+                    if (hightLevelApproveUser.Count > 0)
                     {
                         itemDeptOrder = -1;
                     }
@@ -571,9 +623,59 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                         itemDeptOrder--;
                     }
                 }
-                finalApprovers.AddRange(heightLevelApproveUser);
+                finalApprover.AddRange(hightLevelApproveUser);
             }
-            return finalApprovers;
+            return finalApprover;
+        }
+
+        /// <summary>
+        /// 按照本、兼、代、兼代的顺序筛选最终审批人
+        /// </summary>
+        /// <param name="stepApproveUser"></param>
+        /// <param name="approveMode"></param>
+        /// <param name="seekType"></param>
+        /// <returns></returns>
+        public async Task<List<StepApproveUser>> GetFinalStepApproveUserList(List<StepApproveUser> stepApproveUser, string approveMode, string seekType)
+        {
+            List<StepApproveUser> finalApproveUserList = new List<StepApproveUser>();
+
+            string AppTypePrimary = seekType == "PirCon" 
+                ? AppointmentType.Primary.ToEnumString() : AppointmentType.AutoPrimary.ToEnumString();
+            string AppTypeAgent = seekType == "PirCon" 
+                ? AppointmentType.Agent.ToEnumString() : AppointmentType.AutoAgent.ToEnumString();
+            string AppTypeConcurrent = seekType == "PirCon" 
+                ? AppointmentType.Concurrent.ToEnumString() : AppointmentType.AutoConcurrent.ToEnumString();
+            string AppTypeConcurrentAgent = seekType == "PirCon" 
+                ? AppointmentType.ConcurrentAgent.ToEnumString() : AppointmentType.AutoConcurrentAgent.ToEnumString();
+
+            if (approveMode == ApproveMode.Single.ToEnumString())
+            {
+                var primary = stepApproveUser.Where(user => user.AppointmentType == AppTypePrimary).Count();
+                var Agent = stepApproveUser.Where(user => user.AppointmentType == AppTypeAgent).Count();
+                var Concurrent = stepApproveUser.Where(user => user.AppointmentType == AppTypeConcurrent).Count();
+                var ConcurrentAgent = stepApproveUser.Where(user => user.AppointmentType == AppTypeConcurrentAgent).Count();
+                if (primary > 0)
+                {
+                    finalApproveUserList = stepApproveUser.Where(user => user.AppointmentType == AppTypePrimary).ToList();
+                }
+                else if (Agent > 0)
+                {
+                    finalApproveUserList = stepApproveUser.Where(user => user.AppointmentType == AppTypeAgent).ToList();
+                }
+                else if (Concurrent > 0)
+                {
+                    finalApproveUserList = stepApproveUser.Where(user => user.AppointmentType == AppTypeConcurrent).ToList();
+                }
+                else if (ConcurrentAgent > 0)
+                {
+                    finalApproveUserList = stepApproveUser.Where(user => user.AppointmentType == AppTypeConcurrentAgent).ToList();
+                }
+            }
+            else if (approveMode == ApproveMode.AndSingle.ToEnumString() || approveMode == ApproveMode.OrSingle.ToEnumString())
+            {
+                finalApproveUserList = stepApproveUser;
+            }
+            return finalApproveUserList;
         }
     }
 }

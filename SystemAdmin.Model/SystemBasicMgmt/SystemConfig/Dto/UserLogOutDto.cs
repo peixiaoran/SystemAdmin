@@ -21,9 +21,14 @@
         public string IP { get; set; } = string.Empty;
 
         /// <summary>
+        /// 登录状态
+        /// </summary>
+        public string LoginType { get; set; } = string.Empty;
+
+        /// <summary>
         /// 登录状态名称
         /// </summary>
-        public string StatusName { get; set; } = string.Empty;
+        public string LoginTypeName { get; set; } = string.Empty;
 
         /// <summary>
         /// 登录时间

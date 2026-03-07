@@ -112,7 +112,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 }
                 else
                 {
-                    await _db.BeginTranAsync();
                     // 重新配置代理人
                     UserAgentEntity insertUserAgent = new UserAgentEntity
                     {
@@ -123,6 +122,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now,
                     };
+
+                    await _db.BeginTranAsync();
                     // 新增员工代理人配置
                     int insertUserAgentCount = await _userAgentRepository.InsertUserAgent(insertUserAgent);
                     // 更新员工代理状态

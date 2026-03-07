@@ -52,9 +52,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                     user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门Id（仅在工号与姓名都为空时）
-            if (!string.IsNullOrEmpty(getPage.DepartmentId)
-                && string.IsNullOrEmpty(getPage.UserNo)
-                && string.IsNullOrEmpty(getPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.DepartmentId))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.DepartmentId == long.Parse(getPage.DepartmentId));
@@ -63,7 +61,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             //排序
             query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
 
-            var userPage = await query
+            var page = await query
             .Select((user, dept, userpos, userlabor, nation) => new UserAgentDto
             {
                 UserId = user.UserId,
@@ -86,7 +84,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 IsAgent = user.IsAgent,
                 IsApproval = user.IsApproval,
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<UserAgentDto>.Ok(userPage.Adapt<List<UserAgentDto>>(), totalCount, "");
+            return ResultPaged<UserAgentDto>.Ok(page.Adapt<List<UserAgentDto>>(), totalCount, "");
         }
 
         /// <summary>
@@ -119,9 +117,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                     user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门 Id（仅在员工工号与姓名均为空时）
-            if (!string.IsNullOrEmpty(getPage.DepartmentId)
-                && string.IsNullOrEmpty(getPage.UserNo)
-                && string.IsNullOrEmpty(getPage.UserName))
+            if (!string.IsNullOrEmpty(getPage.DepartmentId))
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.DepartmentId == long.Parse(getPage.DepartmentId));
@@ -130,7 +126,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             // 排序
             query = query.OrderBy((user, dept, userpos, userlabor, nation) => user.UserId);
 
-            var userAgentPage = await query
+            var page = await query
             .Select((user, dept, userpos, userlabor, nation) => new UserAgentViewDto
             {
                 UserId = user.UserId,
@@ -151,7 +147,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            ? nation.NationNameCn
                            : nation.NationNameEn,
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<UserAgentViewDto>.Ok(userAgentPage, totalCount, "");
+            return ResultPaged<UserAgentViewDto>.Ok(page, totalCount, "");
         }
 
         /// <summary>
@@ -198,23 +194,23 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <returns></returns>
         public async Task<Result<List<UserAgentProactiveDto>>> GetUserAgentProactiveList(GetUserAgentProactiveList getList)
         {
-            var userAgentProactiveList = await _db.Queryable<UserAgentEntity>()
-                                                  .With(SqlWith.NoLock)
-                                                  .LeftJoin<UserInfoEntity>((useragent, agentuser) => useragent.AgentUserId == agentuser.UserId)
-                                                  .LeftJoin<UserInfoEntity>((useragent, agentuser, substituteuser) => useragent.SubstituteUserId == substituteuser.UserId)
-                                                  .Where((useragent, agentuser, substituteuser) => useragent.AgentUserId == long.Parse(getList.UserId))
-                                                  .Select((useragent, agentuser, substituteuser) => new UserAgentProactiveDto
-                                                  {
-                                                      AgentUserId = useragent.AgentUserId,
-                                                      SubstituteUserId = substituteuser.UserId,
-                                                      SubstituteUserNo = substituteuser.UserNo,
-                                                      SubstituteUserName = _lang.Locale == "zh-CN"
-                                                                           ? substituteuser.UserNameCn
-                                                                           : substituteuser.UserNameEn,
-                                                      StartTime = useragent.StartTime,
-                                                      EndTime = useragent.EndTime
-                                                  }).ToListAsync();
-            return Result<List<UserAgentProactiveDto>>.Ok(userAgentProactiveList.Adapt<List<UserAgentProactiveDto>>(), "");
+            var list = await _db.Queryable<UserAgentEntity>()
+                                .With(SqlWith.NoLock)
+                                .LeftJoin<UserInfoEntity>((useragent, agentuser) => useragent.AgentUserId == agentuser.UserId)
+                                .LeftJoin<UserInfoEntity>((useragent, agentuser, substituteuser) => useragent.SubstituteUserId == substituteuser.UserId)
+                                .Where((useragent, agentuser, substituteuser) => useragent.AgentUserId == long.Parse(getList.UserId))
+                                 .Select((useragent, agentuser, substituteuser) => new UserAgentProactiveDto
+                                 {
+                                     AgentUserId = useragent.AgentUserId,
+                                     SubstituteUserId = substituteuser.UserId,
+                                     SubstituteUserNo = substituteuser.UserNo,
+                                     SubstituteUserName = _lang.Locale == "zh-CN"
+                                                          ? substituteuser.UserNameCn
+                                                          : substituteuser.UserNameEn,
+                                     StartTime = useragent.StartTime,
+                                     EndTime = useragent.EndTime
+                                 }).ToListAsync();
+            return Result<List<UserAgentProactiveDto>>.Ok(list.Adapt<List<UserAgentProactiveDto>>(), "");
         }
 
         /// <summary>
@@ -224,23 +220,23 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <returns></returns>
         public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentPassiveList(GetUserAgentPassiveList getList)
         {
-            var userAgentList = await _db.Queryable<UserAgentEntity>()
-                                         .With(SqlWith.NoLock)
-                                         .LeftJoin<UserInfoEntity>((useragent, substituteuser) => useragent.SubstituteUserId == substituteuser.UserId)
-                                         .LeftJoin<UserInfoEntity>((useragent, substituteuser, agentuser) => useragent.AgentUserId == agentuser.UserId)
-                                         .Where((useragent, substituteuser, agentuser) => useragent.SubstituteUserId == long.Parse(getList.SubstituteUserId))
-                                         .Select((useragent, substituteuser, agentuser) => new UserAgentPassiveDto
-                                         {
-                                             SubstituteUserId = useragent.SubstituteUserId,
-                                             AgentUserId = agentuser.UserId,
-                                             AgentUserNo = agentuser.UserNo,
-                                             AgentUserName = _lang.Locale == "zh-CN"
-                                                             ? agentuser.UserNameCn
-                                                             : agentuser.UserNameEn,
-                                             StartTime = useragent.StartTime,
-                                             EndTime = useragent.EndTime
-                                         }).ToListAsync();
-            return Result<List<UserAgentPassiveDto>>.Ok(userAgentList.Adapt<List<UserAgentPassiveDto>>(), "");
+            var list = await _db.Queryable<UserAgentEntity>()
+                                .With(SqlWith.NoLock)
+                                .LeftJoin<UserInfoEntity>((useragent, substituteuser) => useragent.SubstituteUserId == substituteuser.UserId)
+                                .LeftJoin<UserInfoEntity>((useragent, substituteuser, agentuser) => useragent.AgentUserId == agentuser.UserId)
+                                .Where((useragent, substituteuser, agentuser) => useragent.SubstituteUserId == long.Parse(getList.SubstituteUserId))
+                                .Select((useragent, substituteuser, agentuser) => new UserAgentPassiveDto
+                                {
+                                    SubstituteUserId = useragent.SubstituteUserId,
+                                    AgentUserId = agentuser.UserId,
+                                    AgentUserNo = agentuser.UserNo,
+                                    AgentUserName = _lang.Locale == "zh-CN"
+                                                    ? agentuser.UserNameCn
+                                                    : agentuser.UserNameEn,
+                                    StartTime = useragent.StartTime,
+                                    EndTime = useragent.EndTime
+                                }).ToListAsync();
+            return Result<List<UserAgentPassiveDto>>.Ok(list.Adapt<List<UserAgentPassiveDto>>(), "");
         }
 
         /// <summary>

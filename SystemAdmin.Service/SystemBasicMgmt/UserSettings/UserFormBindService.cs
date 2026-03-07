@@ -55,8 +55,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var userFormBindTree = await _userFormBindRepository.GetUserFormBindViewTree(long.Parse(getTree.UserId));
-                return Result<List<UserFormBindViewTreeDto>>.Ok(userFormBindTree, "");
+                var treeList = await _userFormBindRepository.GetUserFormBindViewTree(long.Parse(getTree.UserId));
+                return Result<List<UserFormBindViewTreeDto>>.Ok(treeList, "");
             }
             catch (Exception ex)
             {
@@ -75,8 +75,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
             try
             {
                 await _db.BeginTranAsync();
-                var delUserFormCount = await _userFormBindRepository.DeleteUserFormBind(long.Parse(upsert.UserId));
-                var insertUserFormBindEntity = upsert.FormGroupTypeId
+                var delCount = await _userFormBindRepository.DeleteUserFormBind(long.Parse(upsert.UserId));
+                var entity = upsert.FormGroupTypeId
                                               .Select(id => new UserFormBindEntity
                                               {
                                                   UserId = long.Parse(upsert.UserId),
@@ -85,17 +85,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                                                   CreatedDate = DateTime.Now
                                               }).ToList();
 
-                insertUserFormBindEntity.ForEach(userform =>
+                entity.ForEach(userform =>
                 {
                     userform.CreatedBy = _loginuser.UserId;
                     userform.CreatedDate = DateTime.Now;
                     userform.ModifiedBy = _loginuser.UserId;
                     userform.ModifiedDate = DateTime.Now;
                 });
-                var insertUserFormCount = await _userFormBindRepository.InsertUserFormBind(insertUserFormBindEntity);
+                var count = await _userFormBindRepository.InsertUserFormBind(entity);
                 await _db.CommitTranAsync();
 
-                return Result<int>.Ok(insertUserFormCount, _localization.ReturnMsg($"{_this}InsertSuccess"));
+                return Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"));
             }
             catch (Exception ex)
             {
@@ -113,8 +113,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var deptDrop = await _userFormBindRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(deptDrop, "");
+                var drop = await _userFormBindRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {

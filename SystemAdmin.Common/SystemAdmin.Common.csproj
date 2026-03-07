@@ -7,12 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="EmailTemplates\Application\" />
-    <Folder Include="EmailTemplates\Common\" />
+    <Compile Remove="EmailTemplates\**" />
+    <EmbeddedResource Remove="EmailTemplates\**" />
+    <None Remove="EmailTemplates\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="8.4.2" />
+    <PackageReference Include="EPPlus" Version="8.5.0" />
   </ItemGroup>
 
 </Project>

@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001000 (16.00.1000)
- Source Host           : 127.0.0.1:1433
+ Source Server Version : 16001165 (16.00.1165)
+ Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Basic
 
  Target Server Type    : SQL Server
- Target Server Version : 16001000 (16.00.1000)
+ Target Server Version : 16001165 (16.00.1165)
  File Encoding         : 65001
 
- Date: 06/03/2026 17:00:43
+ Date: 08/03/2026 04:54:43
 */
 
 
@@ -281,7 +281,7 @@ GO
 -- ----------------------------
 -- Records of DepartmentInfo
 -- ----------------------------
-INSERT INTO [Basic].[DepartmentInfo] ([DepartmentId], [DepartmentCode], [DepartmentNameCn], [DepartmentNameEn], [ParentId], [DepartmentLevelId], [SortOrder], [Landline], [Email], [Address], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929535196076576768', N'0001', N'董事长室', N'Chairman''s Office', N'0', N'1350917348311171072', N'1', N'02-1234-1000', N'Chairman@eson.tw', N'台北市信義區松仁路100號', N'', N'1903486709602062336', N'2026-02-11 11:57:14.000', N'1903486709602062336', N'2026-02-11 11:57:14.000')
+INSERT INTO [Basic].[DepartmentInfo] ([DepartmentId], [DepartmentCode], [DepartmentNameCn], [DepartmentNameEn], [ParentId], [DepartmentLevelId], [SortOrder], [Landline], [Email], [Address], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929535196076576768', N'0001', N'董事长室', N'Chairman''s Office', N'0', N'1350917348311171072', N'1', N'02-1234-1000', N'Chairman@eson.tw', N'台北市信義區松仁路100號', N'', N'1903486709602062336', N'2026-02-11 11:57:14.000', N'1903486709602062336', N'2026-03-08 02:56:58.517')
 GO
 
 INSERT INTO [Basic].[DepartmentInfo] ([DepartmentId], [DepartmentCode], [DepartmentNameCn], [DepartmentNameEn], [ParentId], [DepartmentLevelId], [SortOrder], [Landline], [Email], [Address], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929535196076576769', N'0002', N'副董事长室', N'Vice Chairman''s Office', N'1929535196076576768', N'1350917348311171072', N'1', N'02-1234-1001', N'vicechairman@company.com', N'台北市信義區松仁路102號', NULL, N'1903486709602062336', N'2026-02-11 11:57:14.000', N'1903486709602062336', N'2026-02-11 11:57:14.000')
@@ -1001,10 +1001,10 @@ GO
 INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009874127502053376', N'1968271760889614336', N'ArchitectureLevel', N'ImplementLevel', N'执行级', N'Implement Level', N'2', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875445490782208', N'1968271760889614336', N'ApproveMode', N'Ss', N'单签', N'Single Approval', N'1', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875445490782208', N'1968271760889614336', N'ApproveMode', N'Single', N'单签', N'Single', N'1', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875596401840128', N'1968271760889614336', N'ApproveMode', N'Cs', N'会签', N'Joint Approval', N'2', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009875596401840128', N'1968271760889614336', N'ApproveMode', N'AndSingle', N'会签', N'And Single', N'2', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
 INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022522679818588160', N'1968271760889614336', N'AppointmentType', N'Primary', N'本', N'Primary', N'1', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
@@ -1016,19 +1016,22 @@ GO
 INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523134879600640', N'1968271760889614336', N'AppointmentType', N'Agent', N'代', N'Agent', N'3', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523379030036480', N'1968271760889614336', N'AppointmentType', N'Auto-Primary', N'自动指派 - 本', N'Auto - Primary', N'5', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523379030036480', N'1968271760889614336', N'AppointmentType', N'AutoPrimary', N'自动指派 - 本', N'Auto - Primary', N'5', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2027616422913511424', N'1968271760889614336', N'AppointmentType', N'Auto-Concurrent', N'自动指派 - 兼', N'Auto - Concurrent', N'6', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2027616422913511424', N'1968271760889614336', N'AppointmentType', N'AutoConcurrent', N'自动指派 - 兼', N'Auto - Concurrent', N'6', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2029030380463591424', N'1968271760889614336', N'AppointmentType', N'Auto-Agent', N'自动指派 - 代', N'Auto - Agent', N'7', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2029030380463591424', N'1968271760889614336', N'AppointmentType', N'AutoAgent', N'自动指派 - 代', N'Auto - Agent', N'7', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523134879600641', N'1968271760889614336', N'AppointmentType', N'Concurrent-Agent', N'兼 - 代', N'Concurrent - Agent', N'4', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523134879600641', N'1968271760889614336', N'AppointmentType', N'ConcurrentAgent', N'兼 - 代', N'Concurren - Agent', N'4', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2029030380463591425', N'1968271760889614336', N'AppointmentType', N'Auto-Concurrent-Agent', N'自动指派 - 兼 - 代', N'Auto - Concurrent - Agent', N'8', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2029030380463591425', N'1968271760889614336', N'AppointmentType', N'AutoConcurrentAgent', N'自动指派 - 兼 - 代', N'Auto - Concurrent - Agent', N'8', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2030349771297918976', N'1968271760889614336', N'ApproveMode', N'OrSingle', N'或签', N'Or Single', N'3', N'1903486709602062336', N'2026-03-08 02:28:02.210', NULL, NULL)
 GO
 
 
@@ -1317,7 +1320,7 @@ GO
 INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929532135392284672', N'1350161679034934501', N'1917998505360756736', N'DepartmentInfo', N'部门信息维护', N'Department Info', N'SecondaryMenu', N'systembasicmgmt/system-basicdata/departmentinfo', N'School', N'2', N'1', N'/api/SystemBasicMgmt/SystemBasicData/DepartmentInfo', N'', N'', N'1903486709602062336', N'2025-06-02 21:34:44.000', N'1903486709602062336', N'2026-01-03 21:07:46.000')
 GO
 
-INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929897094655643648', N'1350161679034934501', N'1917998505360756736', N'DepartmentLevel', N'部门层级维护', N'Dept Level', N'SecondaryMenu', N'systembasicmgmt/system-basicdata/departmentlevel', N'CollectionTag', N'1', N'1', N'/api/SystemBasicMgmt/SystemBasicData/DepartmentLevel', N'', N'', N'1903486709602062336', N'2025-06-03 21:44:57.000', N'1903486709602062336', N'2026-01-03 21:09:18.000')
+INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929897094655643648', N'1350161679034934501', N'1917998505360756736', N'DepartmentLevel', N'部门层级维护', N'Dept Level', N'SecondaryMenu', N'systembasicmgmt/system-basicdata/departmentlevel', N'CollectionTag', N'1', N'1', N'/api/SystemBasicMgmt/SystemBasicData/DepartmentLevel', N'', N'', N'1903486709602062336', N'2025-06-03 21:44:57.000', N'1903486709602062336', N'2026-03-08 02:40:51.143')
 GO
 
 INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1930269640165036032', N'1350161679034934501', N'1917998505360756736', N'UserPositions', N'职级信息维护', N'User Positions', N'SecondaryMenu', N'systembasicmgmt/system-basicdata/userposition', N'GoldMedal', N'5', N'1', N'/api/SystemBasicMgmt/SystemBasicData/UserPosition', N'', NULL, N'1903486709602062336', N'2025-06-04 22:25:19.000', N'1903486709602062336', N'2025-08-09 10:52:23.000')
@@ -2060,8 +2063,8 @@ GO
 CREATE TABLE [Basic].[UserAgent] (
   [SubstituteUserId] bigint  NOT NULL,
   [AgentUserId] bigint  NOT NULL,
-  [StartTime] datetime2(7)  NOT NULL,
-  [EndTime] datetime2(7)  NOT NULL,
+  [StartTime] datetime2(3)  NOT NULL,
+  [EndTime] datetime2(3)  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime2(3) DEFAULT '' NOT NULL,
   [ModifiedBy] bigint  NULL,
@@ -2138,7 +2141,13 @@ GO
 -- ----------------------------
 -- Records of UserAgent
 -- ----------------------------
-INSERT INTO [Basic].[UserAgent] ([SubstituteUserId], [AgentUserId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962089884348977152', N'1962082837364609024', N'2025-10-02 16:00:00.0000000', N'2027-10-03 16:00:00.0000000', N'1903486709602062336', N'2025-10-03 19:42:06.000', N'1903486709602062336', N'2025-10-03 19:42:06.000')
+INSERT INTO [Basic].[UserAgent] ([SubstituteUserId], [AgentUserId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962089884348977152', N'1962082837364609024', N'2026-03-08 00:08:20.967', N'2027-10-03 16:00:00.000', N'1903486709602062336', N'2025-10-03 19:42:06.000', N'1903486709602062336', N'2025-10-03 19:42:06.000')
+GO
+
+INSERT INTO [Basic].[UserAgent] ([SubstituteUserId], [AgentUserId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961846945383321600', N'1969079079705645056', N'2026-03-05 00:00:00.000', N'2026-03-20 00:00:00.000', N'1903486709602062336', N'2026-03-08 00:53:56.303', NULL, NULL)
+GO
+
+INSERT INTO [Basic].[UserAgent] ([SubstituteUserId], [AgentUserId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961651950017712128', N'1961654554483363840', N'2026-03-05 00:00:00.000', N'2026-03-20 00:00:00.000', N'1903486709602062336', N'2026-03-08 04:07:16.360', NULL, NULL)
 GO
 
 
@@ -2518,16 +2527,16 @@ GO
 -- ----------------------------
 -- Records of UserInfo
 -- ----------------------------
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1903486709602062336', N'1929535196076576906', N'1351602631784529920', N'E347473', N'裴小然', N'Xiaoran Pei', N'1', N'2024-07-01 00:00:00.000', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'18815384916', N'E347473', N'IcV2Og14Uyjsy9Wu4fQCnTNU45DYFglm/tA4we6yB8g=', N'iB4+0eMXDe00XNpS+sYWKA==', N'127.0.0.1:9000/systemadmin/20260214124101910_b6ebce64.jpg', N'1', N'0', N'1', N'1', N'0', N'1', N'0', N'180', N'2026-08-05 15:30:29.000', N'', N'1903486709602062336', N'2025-03-23 00:39:31.000', N'1903486709602062336', N'2026-02-14 12:46:17.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1903486709602062336', N'1929535196076576906', N'1351602631784529920', N'E347473', N'裴小然', N'Xiaoran Pei', N'1', N'2024-07-01 00:00:00.000', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'18815384916', N'E347473', N'IcV2Og14Uyjsy9Wu4fQCnTNU45DYFglm/tA4we6yB8g=', N'iB4+0eMXDe00XNpS+sYWKA==', N'127.0.0.1:9000/systemadmin/20260308025402732_0793e3ba.jpg', N'1', N'0', N'1', N'1', N'0', N'1', N'0', N'180', N'2026-08-05 15:30:29.000', N'', N'1903486709602062336', N'2025-03-23 00:39:31.000', N'1903486709602062336', N'2026-03-08 02:54:05.113')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961651950017712128', N'1929535196076576830', N'1351600746193223680', N'E327852', N'黃仁華', N'Paul Huang', N'1', N'2020-08-30 00:00:00.000', N'1972220728019390464', N'1956396264467861504', N'3841510708@qq.com', N'13616266055', N'E327852', N'T9ncvVo1LGia8KNoUeYR8IcuJzDeZomXWmpZpBkYalQ=', N'8aKznfX78xIhh7FjgfmpuQ==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110631504.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2026-03-13 19:07:24.000', N'', N'1903486709602062336', N'2025-08-30 12:47:25.000', N'1903486709602062336', N'2026-01-12 19:07:24.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961651950017712128', N'1929535196076576830', N'1351592278136717312', N'E327852', N'黃仁華', N'Paul Huang', N'1', N'2020-08-30 00:00:00.000', N'1972220728019390464', N'1956396264467861504', N'3841510708@qq.com', N'13616266055', N'E327852', N'T9ncvVo1LGia8KNoUeYR8IcuJzDeZomXWmpZpBkYalQ=', N'8aKznfX78xIhh7FjgfmpuQ==', N'127.0.0.1:9000/systemadmin/20260308020515121_539a11a9.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2026-05-07 03:14:09.793', N'', N'1903486709602062336', N'2025-08-30 12:47:25.000', N'1903486709602062336', N'2026-03-08 03:14:09.793')
 GO
 
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961653729589596160', N'1929535196076576906', N'1351601258426793984', N'E342306', N'于長洋', N'Changyang Yu', N'1', N'2022-08-30 00:00:00.000', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'15767661600', N'E342306', N'CHhX6UgNlcAUQ23sdgA6edpcvMs2WKZ24vTW97fDHzo=', N'5zj8c6aU9G3eRT+5Di9RzA==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110610293.jpg', N'1', N'0', N'1', N'1', N'0', N'0', N'0', N'60', N'2026-03-13 19:06:11.000', N'', N'1903486709602062336', N'2025-08-30 12:54:29.000', N'1903486709602062336', N'2026-01-12 19:06:11.000')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961654554483363840', N'1929535196076576906', N'1351601258426793984', N'E347072', N'丁甲乙', N'Darren Ding', N'1', N'2025-08-30 00:00:00.000', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'', N'E347072', N'+DMa84C3C5YcB5lh80xsiYP4jr4wLCR0Qnw348Ce45I=', N'SNeTdFinEVJLmIdGqmIoRw==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110614238.jpg', N'1', N'0', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-10-29 12:57:46.000', N'', N'1903486709602062336', N'2025-08-30 12:57:46.000', N'1903486709602062336', N'2025-10-03 19:06:15.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961654554483363840', N'1929535196076576906', N'1351601258426793984', N'E347072', N'丁甲乙', N'Darren Ding', N'1', N'2025-08-30 00:00:00.000', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'', N'E347072', N'+DMa84C3C5YcB5lh80xsiYP4jr4wLCR0Qnw348Ce45I=', N'SNeTdFinEVJLmIdGqmIoRw==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110614238.jpg', N'1', N'0', N'1', N'1', N'1', N'0', N'0', N'60', N'2025-10-29 12:57:46.000', N'', N'1903486709602062336', N'2025-08-30 12:57:46.000', N'1903486709602062336', N'2025-10-03 19:06:15.000')
 GO
 
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961654824361660416', N'1929535196076576906', N'1351602631784529920', N'E348184', N'譚冰瑩', N'Ice Tan', N'2', N'2025-08-30 00:00:00.000', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'', N'E348184', N'XykdqsLFn5iOJOz9mAUYSgVwOIquXMZOQjy7D3YGrk4=', N'yulxaWM5s04AbmzH4jqJKA==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110556247.jpg', N'1', N'0', N'1', N'1', N'0', N'0', N'0', N'60', N'2026-03-13 18:54:39.000', N'', N'1903486709602062336', N'2025-08-30 12:58:50.000', N'1903486709602062336', N'2026-01-12 18:54:39.000')
@@ -2536,16 +2545,16 @@ GO
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961655127194603520', N'1929535196076576906', N'1351602771312246784', N'E346899', N'龔喆浩', N'Zhehao Gong', N'1', N'2025-08-30 00:00:00.000', N'1972220728019390464', N'1956396323422998528', N'3841510708@qq.com', N'', N'E346899', N'BQveTlaG6BgCrnM40p6bQEBVQIb2PxSYkMz1MtFBRLc=', N'0In06Dw6orFtSKCj9C+sWg==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110602691.jpg', N'1', N'0', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-10-29 13:00:03.000', N'', N'1903486709602062336', N'2025-08-30 13:00:03.000', N'1903486709602062336', N'2025-10-03 19:06:03.000')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961846945383321600', N'1929535196076576812', N'1351584156689104896', N'E347075', N'徐奭傑', N'Marcus Hsu', N'1', N'2025-08-31 00:00:00.000', N'1972220728019390464', N'1956395974389796864', N'3841510708@qq.com', N'13801996994', N'E347075', N'F3JsyUVIMJkIgSWEgccrbNmBKMeUrKivdI9zeeQj9YE=', N'hMVY3ZCSR4TbR69vMh13vQ==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110643556.jpg', N'1', N'1', N'1', N'1', N'0', N'1', N'0', N'60', N'2025-12-02 21:18:09.000', N'', N'1903486709602062336', N'2025-08-31 01:42:16.000', N'1903486709602062336', N'2025-10-03 21:18:09.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961846945383321600', N'1929535196076576812', N'1351584156689104896', N'E347075', N'徐奭傑', N'Marcus Hsu', N'1', N'2001-08-31 00:00:00.000', N'1972220728019390464', N'1956395974389796864', N'3841510708@qq.com', N'13801996994', N'E347075', N'F3JsyUVIMJkIgSWEgccrbNmBKMeUrKivdI9zeeQj9YE=', N'hMVY3ZCSR4TbR69vMh13vQ==', N'127.0.0.1:9000/systemadmin/20260307235731728_822d41a2.jpg', N'1', N'1', N'1', N'1', N'0', N'1', N'0', N'60', N'2026-05-07 02:18:45.697', N'', N'1903486709602062336', N'2025-08-31 01:42:16.000', N'1903486709602062336', N'2026-03-08 02:18:45.697')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962082837364609024', N'1929535196076576812', N'1351585319710883840', N'E347074', N'姜佑康', N'Bryan Chiang', N'1', N'2025-08-31 00:00:00.000', N'1972220728019390464', N'1956395974389796864', N'3841510708@qq.com', N'', N'E347074', N'2P2De8jBuTi2XGSs4TVLrXdbovCXLR8U1Fsd8n0aYQU=', N'aGpDJ7EWLLydadYvCuw+WA==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003110647994.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-10-30 17:19:37.000', N'', N'1903486709602062336', N'2025-08-31 17:19:37.000', N'1903486709602062336', N'2025-10-03 19:06:49.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962082837364609024', N'1929535196076576812', N'1351585319710883840', N'E347074', N'姜佑康', N'Bryan Chiang', N'1', N'2025-08-31 00:00:00.000', N'1972220728019390464', N'1956395974389796864', N'3841510708@qq.com', N'', N'E347074', N'2P2De8jBuTi2XGSs4TVLrXdbovCXLR8U1Fsd8n0aYQU=', N'aGpDJ7EWLLydadYvCuw+WA==', N'127.0.0.1:9000/systemadmin/20260308021723731_876f3df6.jpg', N'1', N'1', N'1', N'1', N'1', N'0', N'0', N'60', N'2026-05-07 02:18:48.403', N'', N'1903486709602062336', N'2025-08-31 17:19:37.000', N'1903486709602062336', N'2026-03-08 02:18:48.403')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962083859264835584', N'1929535196076576768', N'1351581732096180224', N'E215396', N'蔡嘉祥', N'Tsai JiaHsiang', N'1', N'2025-08-31 00:00:00.000', N'1972220823855042560', N'1962083956962758656', N'3841510708@qq.com', N'', N'E215396', N'TRaGBVYcLJSj5zyjShWoPJHE+A6/VEL8lRMfBwbd+zk=', N'Bw8BeYTUPmy0+0CbLbuGkA==', N'127.0.0.1:9000/systemadmin/20260214181628867_d3732f01.jpg', N'1', N'1', N'1', N'0', N'0', N'0', N'0', N'180', N'2026-08-13 13:01:30.000', N'', N'1903486709602062336', N'2025-08-31 17:23:40.000', N'1903486709602062336', N'2026-02-14 13:01:30.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962083859264835584', N'1929535196076576768', N'1351581732096180224', N'E215396', N'蔡嘉祥', N'Tsai JiaHsiang', N'1', N'2025-08-31 00:00:00.000', N'1972220823855042560', N'1962083956962758656', N'3841510708@qq.com', N'', N'E215396', N'TRaGBVYcLJSj5zyjShWoPJHE+A6/VEL8lRMfBwbd+zk=', N'Bw8BeYTUPmy0+0CbLbuGkA==', N'127.0.0.1:9000/systemadmin/20260214181628867_d3732f01.jpg', N'1', N'1', N'1', N'0', N'0', N'0', N'0', N'180', N'2026-09-04 03:28:13.970', N'', N'1903486709602062336', N'2025-08-31 17:23:40.000', N'1903486709602062336', N'2026-03-08 03:28:13.970')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962089884348977152', N'1929535196076576831', N'1351592033860452352', N'E325994', N'王家豪', N'Sky', N'1', N'2025-08-31 00:00:00.000', N'1972220728019390464', N'1956396031587520512', N'3841510708@qq.com', N'', N'E325994', N'42+s+iA4/rQUJzgDAgJ3RoQmruX1dmlmY2rPr8rbhf8=', N'2WfiI99Eg7bsv0DJ8Ody/g==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003131949837.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-12-02 21:23:34.000', N'', N'1903486709602062336', N'2025-08-31 17:47:37.000', N'1903486709602062336', N'2025-10-03 21:23:34.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962089884348977152', N'1929535196076576831', N'1351592033860452352', N'E325994', N'王家豪', N'Sky', N'1', N'2017-08-31 00:00:00.000', N'1972220728019390464', N'1956396031587520512', N'3841510708@qq.com', N'', N'E325994', N'42+s+iA4/rQUJzgDAgJ3RoQmruX1dmlmY2rPr8rbhf8=', N'2WfiI99Eg7bsv0DJ8Ody/g==', N'127.0.0.1:9000/systemadmin/20260308021652481_40b4f5d7.jpg', N'1', N'1', N'1', N'1', N'0', N'1', N'0', N'60', N'2026-05-07 02:19:22.457', N'', N'1903486709602062336', N'2025-08-31 17:47:37.000', N'1903486709602062336', N'2026-03-08 02:19:22.457')
 GO
 
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962090367855759360', N'1929535196076576907', N'1351600746193223680', N'E249571', N'范亚君', N'Yajun Fan', N'1', N'2025-08-31 00:00:00.000', N'1972220728019390464', N'1956396031587520512', N'3841510708@qq.com', N'', N'E249571', N'Qoa5lnSYf4iCBk/mTPwY7X6zkeyIbwAFI8sBBgXUETI=', N'/SXeGJyvj5omNv0CVM0XZQ==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003131934322.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'60', N'2025-12-02 21:19:35.000', N'', N'1903486709602062336', N'2025-08-31 17:49:32.000', N'1903486709602062336', N'2025-10-03 21:19:35.000')
@@ -2554,7 +2563,7 @@ GO
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962091248886091776', N'1929535196076576876', N'1351601258426793984', N'E347377', N'喬知強', N'Zhiqiang Qiao', N'1', N'2026-08-31 00:00:00.000', N'1972220728019390464', N'1962091425965412352', N'3841510708@qq.com', N'', N'E347377', N'KGcpgw92+jrDFb0EizJO5eyD1o46RMcex9PZp8O+o2w=', N'XhUiCEvbyEFnZsTgiv5Nkw==', N'http://127.0.0.1:9000/systemsadminbucket/20251003/20251003120618339.jpg', N'1', N'1', N'1', N'1', N'0', N'1', N'0', N'60', N'2025-10-30 17:53:02.000', N'', N'1903486709602062336', N'2025-08-31 17:53:02.000', N'1903486709602062336', N'2025-10-03 20:06:23.000')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079079705645056', N'1929535196076576768', N'1351582085961220096', N'ETW00331', N'黃薰鋒', N'Stein Huang', N'1', N'2025-09-20 00:00:00.000', N'1972220823855042560', N'1962084148730531840', N'3841510708@qq.com', N'', N'ETW00331', N'IcV2Og14Uyjsy9Wu4fQCnTNU45DYFglm/tA4we6yB8g=', N'iB4+0eMXDe00XNpS+sYWKA==', N'127.0.0.1:9000/systemadmin/20251227015121374_2dcd5a31.jpg', N'1', N'1', N'1', N'1', N'1', N'1', N'0', N'180', N'2026-08-13 12:57:40.000', N'', N'1903486709602062336', N'2025-09-20 00:40:11.000', N'1903486709602062336', N'2026-02-14 12:57:40.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079079705645056', N'1929535196076576768', N'1351582085961220096', N'ETW00331', N'黃薰鋒', N'Stein Huang', N'1', N'2025-09-20 00:00:00.000', N'1972220823855042560', N'1962084148730531840', N'3841510708@qq.com', N'', N'ETW00331', N'IcV2Og14Uyjsy9Wu4fQCnTNU45DYFglm/tA4we6yB8g=', N'iB4+0eMXDe00XNpS+sYWKA==', N'127.0.0.1:9000/systemadmin/20260308025622334_4c82f1dc.jpg', N'1', N'1', N'1', N'1', N'1', N'1', N'0', N'180', N'2026-09-04 02:56:23.993', N'', N'1903486709602062336', N'2025-09-20 00:40:11.000', N'1903486709602062336', N'2026-03-08 02:56:23.993')
 GO
 
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079427610578944', N'1929535196076576769', N'1351583636813512704', N'ETW00366', N'吳崇源', N'Allen Wu', N'1', N'2025-09-20 00:00:00.000', N'1972220728019390464', N'1962084148730531840', N'3841510708@qq.com', N'', N'ETW00366', N'13HrafN9ZBF01qa0ahgLd7NiwniHr9fwVg4ElIRZmZs=', N'3kRXd8MEO6lgqSi5hREy8w==', N'127.0.0.1:9000/systemadmin/20260214124636753_899809ba.jpg', N'1', N'1', N'0', N'0', N'0', N'0', N'0', N'180', N'2026-08-13 12:46:38.000', N'', N'1903486709602062336', N'2025-09-20 00:41:34.000', N'1903486709602062336', N'2026-02-14 12:46:38.000')
@@ -2563,7 +2572,7 @@ GO
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079663670202368', N'1929535196076576769', N'1351585319710883840', N'E348464', N'鄭洋洋', N'Grace Zheng', N'1', N'2025-09-20 00:00:00.000', N'1972220728019390464', N'1962084148730531840', N'3841510708@qq.com', N'', N'E348464', N'SmKWDtGUZj4W67kJnWnk+Jp4sxjOc6SSzpRiipp7LX4=', N'4CXkDWkIIFnt6K3qse9QpQ==', N'127.0.0.1:9000/systemadmin/20260214124644415_ca6ac675.jpg', N'1', N'1', N'0', N'0', N'0', N'0', N'0', N'180', N'2026-08-13 12:46:45.000', N'', N'1903486709602062336', N'2025-09-20 00:42:30.000', N'1903486709602062336', N'2026-02-14 12:46:45.000')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969081656988012544', N'1929535196076576770', N'1351592574749507584', N'E340159', N'林惠峰', N'Huifeng Lin', N'2', N'2025-09-20 00:00:00.000', N'1972220823855042560', N'1969082012346224640', N'3841510708@qq.com', N'', N'E340159', N'PbHn8pd4VkvpVUWvPtfSldjbQJ04v84n4lwa8CNK3xI=', N'7ZoY7Y81jLSIVnUGfLNFgw==', N'127.0.0.1:9000/systemadmin/20260214124653967_bde09bca.jpg', N'1', N'1', N'0', N'0', N'0', N'0', N'0', N'180', N'2026-08-13 12:57:30.000', N'', N'1903486709602062336', N'2025-09-20 00:50:25.000', N'1903486709602062336', N'2026-02-14 12:57:30.000')
+INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969081656988012544', N'1929535196076576770', N'1351592278136717312', N'E340159', N'林惠峰', N'Huifeng Lin', N'2', N'2025-09-20 00:00:00.000', N'1972220823855042560', N'1969082012346224640', N'3841510708@qq.com', N'', N'E340159', N'PbHn8pd4VkvpVUWvPtfSldjbQJ04v84n4lwa8CNK3xI=', N'7ZoY7Y81jLSIVnUGfLNFgw==', N'127.0.0.1:9000/systemadmin/20260214124653967_bde09bca.jpg', N'1', N'1', N'0', N'0', N'0', N'0', N'0', N'180', N'2026-09-04 02:18:37.177', N'', N'1903486709602062336', N'2025-09-20 00:50:25.000', N'1903486709602062336', N'2026-03-08 02:18:37.177')
 GO
 
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [IsFreeze], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969083667879956480', N'1929535196076576773', N'1351584014896463872', N'ETW00327', N'吳建中', N'Jeffrey Wu', N'1', N'2025-09-20 00:00:00.000', N'1972220728019390464', N'1969082012346224640', N'3841510708@qq.com', N'', N'ETW00327', N'gNZ6W71JjJPkHu+PPxu+F54flDF+kRNyHPAzZqKqy1U=', N'gNUvAY2loNmHRUqHVlNBeg==', N'127.0.0.1:9000/systemadmin/20260214124751880_9ee94a6e.jpg', N'1', N'1', N'1', N'1', N'0', N'0', N'0', N'180', N'2026-08-13 12:47:58.000', N'', N'1903486709602062336', N'2025-09-20 00:58:25.000', N'1903486709602062336', N'2026-02-14 12:47:58.000')
@@ -2763,7 +2772,7 @@ GO
 INSERT INTO [Basic].[UserLabor] ([LaborId], [LaborNameCn], [LaborNameEn], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1956395917238210560', N'信息安全工程师', N'Information Security Engineer', N'', N'1903486709602062336', N'2025-08-16 00:41:49.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[UserLabor] ([LaborId], [LaborNameCn], [LaborNameEn], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1956395974389796864', N'IT项目经理', N'IT Project Manager', N'', N'1903486709602062336', N'2025-08-16 00:42:03.000', N'1903486709602062336', N'2026-02-14 18:17:15.000')
+INSERT INTO [Basic].[UserLabor] ([LaborId], [LaborNameCn], [LaborNameEn], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1956395974389796864', N'IT项目经理', N'IT Project Manager', N'', N'1903486709602062336', N'2025-08-16 00:42:03.000', N'1903486709602062336', N'2026-03-08 03:19:45.190')
 GO
 
 INSERT INTO [Basic].[UserLabor] ([LaborId], [LaborNameCn], [LaborNameEn], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1956396031587520512', N'网络与系统管理员', N'Network & Systems Administrator', N'', N'1903486709602062336', N'2025-08-16 00:42:16.000', NULL, NULL)
@@ -2855,8 +2864,8 @@ GO
 
 CREATE TABLE [Basic].[UserLogOut] (
   [UserId] bigint  NULL,
-  [IP] nvarchar(1000) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [StatusId] nvarchar(20) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [IP] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [LoginType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [LoginDate] datetime2(3)  NOT NULL
 )
 GO
@@ -2874,277 +2883,295 @@ GO
 -- ----------------------------
 -- Records of UserLogOut
 -- ----------------------------
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoginSuccessful', N'2025-12-27 14:30:08.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoginSuccessful', N'2025-12-27 14:30:08.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoginSuccessful', N'2025-12-27 15:42:52.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoginSuccessful', N'2025-12-27 15:42:52.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoginSuccessful', N'2025-12-27 15:11:35.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoginSuccessful', N'2025-12-27 15:11:35.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoggedOut', N'2025-12-27 15:32:39.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoggedOut', N'2025-12-27 15:32:39.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2025-12-30 15:00:51.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2025-12-30 15:00:51.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2025-12-30 16:28:28.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2025-12-30 16:28:28.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 10:20:45.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 10:20:45.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:52.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:52.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:53.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:53.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:54.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:54.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:54.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:54.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:55.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:20:55.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:22:15.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:22:15.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:22:18.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:22:18.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 10:22:29.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 10:22:29.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:28.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:28.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:29.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:29.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:29.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:29.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:30.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:30.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:30.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 10:24:30.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 10:25:33.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 10:25:33.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 13:05:15.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 13:05:15.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:54.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:54.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:57.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:57.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:58.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:58.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:58.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:58.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:59.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 14:52:59.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:47:32.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:47:32.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 16:47:39.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-02 16:47:39.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:42.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:42.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:43.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:43.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:44.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:44.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:44.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:44.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:45.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-01-02 16:49:45.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoginSuccessful', N'2026-01-03 20:41:08.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'198.18.0.1', N'LoginSuccessful', N'2026-01-03 20:41:08.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-05 14:43:05.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-05 14:43:05.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-05 14:43:13.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-05 14:43:13.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-10 13:41:08.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-10 13:41:08.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-10 15:59:12.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-10 15:59:12.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-12 16:40:06.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-01-12 16:40:06.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.144.86.241', N'LoginSuccessful', N'2026-01-12 18:29:52.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.144.86.241', N'LoginSuccessful', N'2026-01-12 18:29:52.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.144.86.241', N'LoginSuccessful', N'2026-01-12 18:54:07.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.144.86.241', N'LoginSuccessful', N'2026-01-12 18:54:07.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-03 16:46:59.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-03 16:46:59.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.57.28.84', N'LoginSuccessful', N'2026-02-05 10:56:10.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.57.28.84', N'LoginSuccessful', N'2026-02-05 10:56:10.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.57.28.84', N'LoginSuccessful', N'2026-02-05 11:05:27.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.57.28.84', N'LoginSuccessful', N'2026-02-05 11:05:27.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-05 11:08:55.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-05 11:08:55.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-05 11:11:06.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-05 11:11:06.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-06 10:35:42.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-06 10:35:42.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-06 10:38:00.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-06 10:38:00.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-06 11:11:24.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-06 11:11:24.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:00.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:00.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:02.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:02.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:03.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:03.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:03.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:03.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:04.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 11:28:04.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-06 15:30:47.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-06 15:30:47.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoggedOut', N'2026-02-06 15:31:15.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoggedOut', N'2026-02-06 15:31:15.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'IncorrectPassword', N'2026-02-06 15:57:12.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'IncorrectPassword', N'2026-02-06 15:57:12.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-06 15:57:21.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-06 15:57:21.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 16:16:17.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-06 16:16:17.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-06 16:16:35.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-06 16:16:35.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-09 15:53:48.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-09 15:53:48.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-09 15:53:56.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-09 15:53:56.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-10 09:04:14.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-10 09:04:14.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-11 09:14:07.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-11 09:14:07.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-11 09:14:17.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-11 09:14:17.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-11 14:19:32.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-11 14:19:32.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-11 14:28:01.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'IncorrectPassword', N'2026-02-11 14:28:01.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-11 14:28:10.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.178', N'LoginSuccessful', N'2026-02-11 14:28:10.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-11 14:29:58.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-11 14:29:58.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'IncorrectPassword', N'2026-02-11 16:49:00.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'IncorrectPassword', N'2026-02-11 16:49:00.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-11 16:49:25.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-11 16:49:25.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'127.0.0.1', N'LoginSuccessful', N'2026-02-14 12:02:40.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'127.0.0.1', N'LoginSuccessful', N'2026-02-14 12:02:40.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'IncorrectPassword', N'2026-02-14 18:03:48.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'IncorrectPassword', N'2026-02-14 18:03:48.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-14 18:03:54.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-14 18:03:54.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-14 18:16:14.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-14 18:16:14.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-18 11:10:21.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-18 11:10:21.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoggedOut', N'2026-02-18 11:15:21.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoggedOut', N'2026-02-18 11:15:21.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-18 11:18:25.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-18 11:18:25.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-27 15:24:26.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-27 15:24:26.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-28 13:16:22.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-28 13:16:22.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.23', N'LoginSuccessful', N'2026-02-28 16:24:03.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.23', N'LoginSuccessful', N'2026-02-28 16:24:03.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1969079079705645056', N'::1', N'LoginSuccessful', N'2026-03-04 11:01:29.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1969079079705645056', N'::1', N'LoginSuccessful', N'2026-03-04 11:01:29.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-04 11:02:45.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-04 11:02:45.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-05 10:31:07.570')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-05 10:31:07.570')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-05 13:19:33.767')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-05 13:19:33.767')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-06 08:40:21.707')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-06 08:40:21.707')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-28 16:27:04.000')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-02-28 16:27:04.000')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-06 11:31:14.390')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-06 11:31:14.390')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-06 13:04:57.020')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-06 13:04:57.020')
 GO
 
-INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [StatusId], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-06 16:27:44.673')
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-06 16:27:44.673')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-07 23:23:27.497')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-08 03:24:58.093')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-08 03:25:51.087')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-08 02:02:55.687')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-08 02:26:37.237')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-08 03:10:55.530')
 GO
 
 
@@ -3244,7 +3271,10 @@ GO
 -- ----------------------------
 -- Records of UserPartTime
 -- ----------------------------
-INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962089884348977152', N'1929535196076576830', N'1351601258426793984', N'2026-03-06 16:33:51.0000000', N'2026-03-31 16:33:54.0000000', N'1903486709602062336', N'2026-03-06 16:34:11.000', NULL, NULL)
+INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962089884348977152', N'1929535196076576830', N'1351601258426793984', N'2026-03-05 16:33:51.0000000', N'2026-03-30 16:33:54.0000000', N'1903486709602062336', N'2026-03-06 16:34:11.000', N'1903486709602062336', N'2026-03-08 01:05:35.483')
+GO
+
+INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961846945383321600', N'1929535196076576830', N'1351601258426793984', N'2026-03-04 09:00:00.0000000', N'2026-03-19 08:00:00.0000000', N'1903486709602062336', N'2026-03-08 00:41:00.290', N'1903486709602062336', N'2026-03-08 04:05:16.740')
 GO
 
 
@@ -3499,7 +3529,7 @@ GO
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1903486709602062336', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-03-04 16:50:11.000', N'1903486709602062336', N'2025-12-27 00:42:31.000')
 GO
 
-INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961651950017712128', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-30 12:47:26.000', N'1903486709602062336', N'2026-01-12 19:07:24.000')
+INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961651950017712128', N'1979881189825187840', NULL, N'1903486709602062336', N'2025-08-30 12:47:26.000', N'1903486709602062336', N'2026-03-08 03:14:09.797')
 GO
 
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961653729589596160', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-30 12:54:29.000', N'1903486709602062336', N'2026-01-12 19:06:11.000')
@@ -3514,16 +3544,16 @@ GO
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961655127194603520', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-30 13:00:03.000', N'1903486709602062336', N'2025-10-03 19:06:03.000')
 GO
 
-INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961846945383321600', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-31 01:42:16.000', N'1903486709602062336', N'2025-10-03 21:18:09.000')
+INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1961846945383321600', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-31 01:42:16.000', N'1903486709602062336', N'2026-03-08 02:18:45.697')
 GO
 
-INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962082837364609024', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-31 17:19:37.000', N'1903486709602062336', N'2025-10-03 19:06:49.000')
+INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962082837364609024', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-31 17:19:37.000', N'1903486709602062336', N'2026-03-08 02:18:48.407')
 GO
 
-INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962083859264835584', N'1979881189825187840', NULL, N'1903486709602062336', N'2025-08-31 17:23:40.000', N'1903486709602062336', N'2026-02-14 13:01:30.000')
+INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962083859264835584', N'1979881189825187840', NULL, N'1903486709602062336', N'2025-08-31 17:23:40.000', N'1903486709602062336', N'2026-03-08 03:28:13.973')
 GO
 
-INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962089884348977152', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-31 17:47:37.000', N'1903486709602062336', N'2025-10-03 21:23:34.000')
+INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962089884348977152', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-31 17:47:37.000', N'1903486709602062336', N'2026-03-08 02:19:22.457')
 GO
 
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962090367855759360', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-31 17:49:32.000', N'1903486709602062336', N'2025-10-03 21:19:35.000')
@@ -3532,7 +3562,7 @@ GO
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1962091248886091776', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-08-31 17:53:02.000', N'1903486709602062336', N'2025-10-03 20:06:23.000')
 GO
 
-INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079079705645056', N'1979881189825187840', NULL, N'1903486709602062336', N'2025-09-20 00:40:11.000', N'1903486709602062336', N'2026-02-14 12:57:40.000')
+INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079079705645056', N'1979881189825187840', NULL, N'1903486709602062336', N'2025-09-20 00:40:11.000', N'1903486709602062336', N'2026-03-08 02:56:23.997')
 GO
 
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079427610578944', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-09-20 00:41:34.000', N'1903486709602062336', N'2026-02-14 12:46:38.000')
@@ -3541,7 +3571,7 @@ GO
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079663670202368', N'1905670034215276544', NULL, N'1903486709602062336', N'2025-09-20 00:42:30.000', N'1903486709602062336', N'2026-02-14 12:46:45.000')
 GO
 
-INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969081656988012544', N'1979881189825187840', NULL, N'1903486709602062336', N'2025-09-20 00:50:25.000', N'1903486709602062336', N'2026-02-14 12:57:30.000')
+INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969081656988012544', N'1979881189825187840', NULL, N'1903486709602062336', N'2025-09-20 00:50:25.000', N'1903486709602062336', N'2026-03-08 02:18:37.177')
 GO
 
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969083667879956480', N'1979881189825187840', NULL, N'1903486709602062336', N'2025-09-20 00:58:25.000', N'1903486709602062336', N'2026-02-14 12:47:58.000')

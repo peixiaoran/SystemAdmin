@@ -123,7 +123,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 导出员工信息Excel")]
-        public async Task<IActionResult> Export(GetUserInfoExcel getUserExcel)
+        public async Task<IActionResult> ExportUserExcel([FromBody] GetUserInfoExcel getUserExcel)
         {
             var bytes = await _userInfoService.GetUserInfoExcel(getUserExcel);
             return File(
