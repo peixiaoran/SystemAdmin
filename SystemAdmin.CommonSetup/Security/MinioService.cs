@@ -24,8 +24,13 @@ namespace SystemAdmin.CommonSetup.Security
 
             var ext = Path.GetExtension(objectName); // .jpg .png .pdf
             var timestamp = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-            var random = Guid.NewGuid().ToString("N")[..8]; // 8位就够
-            var newObjectName = $"{timestamp}_{random}{ext}";
+            var random = Guid.NewGuid().ToString("N")[..8];
+
+            var folder = DateTime.Now.ToString("yyyyMMdd");
+
+            var fileName = $"{timestamp}_{random}{ext}";
+
+            var newObjectName = $"{folder}/{fileName}";
 
             await _client.PutObjectAsync(new PutObjectArgs()
                          .WithBucket(bucket)
