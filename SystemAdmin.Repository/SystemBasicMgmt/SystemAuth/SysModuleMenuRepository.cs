@@ -24,26 +24,26 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         /// <returns></returns>
         public async Task<List<SysModuleInfoDto>> GetModuleList(long loginUserId)
         {
-            var moduleList = await _db.Queryable<SysUserInfoEntity>()
-                                      .With(SqlWith.NoLock)
-                                      .InnerJoin<SysUserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
-                                      .InnerJoin<SysRoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
-                                      .InnerJoin<SysRoleModuleEntity>((user, userrole, role, rolemodule) => role.RoleId == rolemodule.RoleId)
-                                      .InnerJoin<SysModuleInfoEntity>((user, userrole, role, rolemodule, module) => rolemodule.ModuleId == module.ModuleId && module.IsVisible == 1)
-                                      .Where((user, userrole, role, rolemodule, module) => user.UserId == loginUserId)
-                                      .OrderBy((user, userrole, role, rolemodule, module) => module.SortOrder)
-                                      .Select((user, userrole, role, rolemodule, module) => new SysModuleInfoDto
-                                      {
-                                          ModuleId = module.ModuleId,
-                                          ModuleNameCn = module.ModuleNameCn,
-                                          ModuleNameEn = module.ModuleNameEn,
-                                          ModuleIcon = module.ModuleIcon,
-                                          Path = module.Path,
-                                          Remark = _lang.Locale == "zh-CN"
-                                                       ? module.RemarkCh
-                                                       : module.RemarkEn,
-                                      }).ToListAsync();
-            return moduleList;
+            var list = await _db.Queryable<SysUserInfoEntity>()
+                                .With(SqlWith.NoLock)
+                                .InnerJoin<SysUserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
+                                .InnerJoin<SysRoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
+                                .InnerJoin<SysRoleModuleEntity>((user, userrole, role, rolemodule) => role.RoleId == rolemodule.RoleId)
+                                .InnerJoin<SysModuleInfoEntity>((user, userrole, role, rolemodule, module) => rolemodule.ModuleId == module.ModuleId && module.IsVisible == 1)
+                                 .Where((user, userrole, role, rolemodule, module) => user.UserId == loginUserId)
+                                 .OrderBy((user, userrole, role, rolemodule, module) => module.SortOrder)
+                                 .Select((user, userrole, role, rolemodule, module) => new SysModuleInfoDto
+                                 {
+                                     ModuleId = module.ModuleId,
+                                     ModuleNameCn = module.ModuleNameCn,
+                                     ModuleNameEn = module.ModuleNameEn,
+                                     ModuleIcon = module.ModuleIcon,
+                                     Path = module.Path,
+                                     Remark = _lang.Locale == "zh-CN"
+                                              ? module.RemarkCh
+                                              : module.RemarkEn,
+                                 }).ToListAsync();
+            return list;
         }
 
         /// <summary>
@@ -54,26 +54,26 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         /// <returns></returns>
         public async Task<List<SysMenuInfoDto>> GetMenuTreeList(GetSysMenu getSysMenu, long userId)
         {
-            var pmenuTree = await _db.Queryable<SysUserInfoEntity>()
-                                     .With(SqlWith.NoLock)
-                                     .LeftJoin<SysUserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
-                                     .LeftJoin<SysRoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
-                                     .InnerJoin<SysRoleMenuEntity>((user, userrole, role, rolemenu) => role.RoleId == rolemenu.RoleId)
-                                     .InnerJoin<SysMenuInfoEntity>((user, userrole, role, rolemenu, menu) => rolemenu.MenuId == menu.MenuId)
-                                     .Where((user, userrole, role, rolemenu, menu) => user.UserId == userId && menu.ModuleId == long.Parse(getSysMenu.ModuleId) && menu.IsVisible)
-                                     .OrderBy((user, userrole, role, rolemenu, menu) => menu.SortOrder)
-                                     .Select((user, userrole, role, rolemenu, menu) => new SysMenuInfoDto
-                                     {
-                                         MenuId = menu.MenuId,
-                                         ParentMenuId = menu.ParentMenuId,
-                                         MenuCode = menu.MenuCode,
-                                         MenuName = _lang.Locale == "zh-CN"
-                                                    ? menu.MenuNameCn
-                                                    : menu.MenuNameEn,
-                                         Path = menu.Path,
-                                         MenuIcon = menu.MenuIcon
-                                     }).ToTreeAsync(menu => menu.MenuChildList, menu => menu.ParentMenuId, 0);
-            return pmenuTree;
+            var tree = await _db.Queryable<SysUserInfoEntity>()
+                                .With(SqlWith.NoLock)
+                                .LeftJoin<SysUserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
+                                .LeftJoin<SysRoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
+                                .InnerJoin<SysRoleMenuEntity>((user, userrole, role, rolemenu) => role.RoleId == rolemenu.RoleId)
+                                .InnerJoin<SysMenuInfoEntity>((user, userrole, role, rolemenu, menu) => rolemenu.MenuId == menu.MenuId)
+                                 .Where((user, userrole, role, rolemenu, menu) => user.UserId == userId && menu.ModuleId == long.Parse(getSysMenu.ModuleId) && menu.IsVisible==1)
+                                 .OrderBy((user, userrole, role, rolemenu, menu) => menu.SortOrder)
+                                 .Select((user, userrole, role, rolemenu, menu) => new SysMenuInfoDto
+                                 {
+                                     MenuId = menu.MenuId,
+                                     ParentMenuId = menu.ParentMenuId,
+                                     MenuCode = menu.MenuCode,
+                                     MenuName = _lang.Locale == "zh-CN"
+                                                ? menu.MenuNameCn
+                                                : menu.MenuNameEn,
+                                     Path = menu.Path,
+                                     MenuIcon = menu.MenuIcon
+                                 }).ToTreeAsync(menu => menu.MenuChildList, menu => menu.ParentMenuId, 0);
+            return tree;
         }
     }
 }

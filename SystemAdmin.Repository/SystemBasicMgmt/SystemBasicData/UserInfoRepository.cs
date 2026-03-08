@@ -172,37 +172,37 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         public async Task<UserInfoEntityDto> GetUserInfoEntity(long userId)
         {
             var entity = await _db.Queryable<UserInfoEntity>()
-                                      .With(SqlWith.NoLock)
-                                      .InnerJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
-                                      .InnerJoin<RoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
-                                      .Where(user => user.UserId == userId)
-                                      .Select((user, userrole, role) => new UserInfoEntityDto
-                                      {
-                                          UserId = user.UserId,
-                                          UserNo = user.UserNo,
-                                          UserNameCn = user.UserNameCn,
-                                          UserNameEn = user.UserNameEn,
-                                          Gender = user.Gender,
-                                          LoginNo = user.LoginNo,
-                                          DepartmentId = user.DepartmentId,
-                                          LaborId = user.LaborId,
-                                          PositionId = user.PositionId,
-                                          RoleId = role.RoleId,
-                                          HireDate = Convert.ToDateTime(user.HireDate).ToString("yyyy-MM-dd"),
-                                          Nationality = user.Nationality,
-                                          AvatarAddress = user.AvatarAddress,
-                                          Email = user.Email,
-                                          PhoneNumber = user.PhoneNumber,
-                                          IsEmployed = user.IsEmployed,
-                                          IsApproval = user.IsApproval,
-                                          IsRealtimeNotification = user.IsRealtimeNotification,
-                                          IsScheduledNotification = user.IsScheduledNotification,
-                                          IsAgent = user.IsAgent,
-                                          IsPartTime = user.IsPartTime,
-                                          IsFreeze = user.IsFreeze,
-                                          ExpirationDays = user.ExpirationDays,
-                                          ExpirationTime = user.ExpirationTime
-                                      }).FirstAsync();
+                                  .With(SqlWith.NoLock)
+                                  .InnerJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
+                                  .InnerJoin<RoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
+                                  .Where(user => user.UserId == userId)
+                                  .Select((user, userrole, role) => new UserInfoEntityDto
+                                  {
+                                      UserId = user.UserId,
+                                      UserNo = user.UserNo,
+                                      UserNameCn = user.UserNameCn,
+                                      UserNameEn = user.UserNameEn,
+                                      Gender = user.Gender,
+                                      LoginNo = user.LoginNo,
+                                      DepartmentId = user.DepartmentId,
+                                      LaborId = user.LaborId,
+                                      PositionId = user.PositionId,
+                                      RoleId = role.RoleId,
+                                      HireDate = Convert.ToDateTime(user.HireDate).ToString("yyyy-MM-dd"),
+                                      Nationality = user.Nationality,
+                                      AvatarAddress = user.AvatarAddress,
+                                      Email = user.Email,
+                                      PhoneNumber = user.PhoneNumber,
+                                      IsEmployed = user.IsEmployed,
+                                      IsApproval = user.IsApproval,
+                                      IsRealtimeNotification = user.IsRealtimeNotification,
+                                      IsScheduledNotification = user.IsScheduledNotification,
+                                      IsAgent = user.IsAgent,
+                                      IsPartTime = user.IsPartTime,
+                                      IsFreeze = user.IsFreeze,
+                                      ExpirationDays = user.ExpirationDays,
+                                      ExpirationTime = user.ExpirationTime
+                                  }).FirstAsync();
             return entity.Adapt<UserInfoEntityDto>();
         }
 
@@ -243,7 +243,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             // 排序
             query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.SortOrder, user.HireDate });
 
-            var userPage = await query.Select((user, userrole, deptinfo, userposition, nation) =>
+            var page = await query.Select((user, userrole, deptinfo, userposition, nation) =>
                     new UserInfoPageDto
                     {
                         UserId = user.UserId,
@@ -263,7 +263,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                         IsFreeze = user.IsFreeze,
                         Remark = user.Remark
                     }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<UserInfoPageDto>.Ok(userPage, totalCount, "");
+            return ResultPaged<UserInfoPageDto>.Ok(page, totalCount, "");
         }
 
         /// <summary>
@@ -320,8 +320,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             {
                 LaborId = labor.LaborId,
                 LaborName = _lang.Locale == "zh-CN"
-                                      ? labor.LaborNameCn
-                                      : labor.LaborNameEn
+                            ? labor.LaborNameCn
+                            : labor.LaborNameEn
             }).ToListAsync();
         }
 

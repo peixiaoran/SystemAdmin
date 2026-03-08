@@ -111,22 +111,22 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
             // 排序
             query = query.OrderBy((formtype, formgroup) => formtype.SortOrder);
 
-            var formTypePage = await query.Select((formtype, formgroup) => new FormTypeDto
-                                          {
-                                              FormTypeId = formtype.FormTypeId,
-                                              FormGroupId = formtype.FormGroupId,
-                                              FormGroupName = _lang.Locale == "zh-CN"
-                                                              ? formgroup.FormGroupNameCn
-                                                              : formgroup.FormGroupNameEn,
-                                              FormTypeNameCn = formtype.FormTypeNameCn,
-                                              FormTypeNameEn = formtype.FormTypeNameEn,
-                                              Prefix = formtype.Prefix,
-                                              ApprovalPath = formtype.ApprovalPath,
-                                              ViewPath = formtype.ViewPath,
-                                              DescriptionCn = formtype.DescriptionCn,
-                                              DescriptionEn = formtype.DescriptionEn,
-                                          }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<FormTypeDto>.Ok(formTypePage, totalCount, "");
+            var page = await query.Select((formtype, formgroup) => new FormTypeDto
+                                  {
+                                      FormTypeId = formtype.FormTypeId,
+                                      FormGroupId = formtype.FormGroupId,
+                                      FormGroupName = _lang.Locale == "zh-CN"
+                                                      ? formgroup.FormGroupNameCn
+                                                      : formgroup.FormGroupNameEn,
+                                      FormTypeNameCn = formtype.FormTypeNameCn,
+                                      FormTypeNameEn = formtype.FormTypeNameEn,
+                                      Prefix = formtype.Prefix,
+                                      ApprovalPath = formtype.ApprovalPath,
+                                      ViewPath = formtype.ViewPath,
+                                      DescriptionCn = formtype.DescriptionCn,
+                                      DescriptionEn = formtype.DescriptionEn,
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<FormTypeDto>.Ok(page, totalCount, "");
         }
 
         /// <summary>

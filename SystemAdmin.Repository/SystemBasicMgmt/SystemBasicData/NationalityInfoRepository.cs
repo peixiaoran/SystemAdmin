@@ -60,11 +60,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<NationalityInfoDto> GetNationalityEntity(long nationId)
         {
-            var userNationalityEntity = await _db.Queryable<NationalityInfoEntity>()
-                                                 .With(SqlWith.NoLock)
-                                                 .Where(userPos => userPos.NationId == nationId)
-                                                 .FirstAsync();
-            return userNationalityEntity.Adapt<NationalityInfoDto>();
+            var entity = await _db.Queryable<NationalityInfoEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(userPos => userPos.NationId == nationId)
+                                  .FirstAsync();
+            return entity.Adapt<NationalityInfoDto>();
         }
 
         /// <summary>
@@ -73,10 +73,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<List<NationalityInfoDto>> GetNationalityInfoList()
         {
-            var nationalityList = await _db.Queryable<NationalityInfoEntity>()
-                                           .With(SqlWith.NoLock)
-                                           .ToListAsync();
-            return nationalityList.Adapt<List<NationalityInfoDto>>();
+            var list = await _db.Queryable<NationalityInfoEntity>()
+                                .With(SqlWith.NoLock)
+                                .ToListAsync();
+            return list.Adapt<List<NationalityInfoDto>>();
         }
     }
 }

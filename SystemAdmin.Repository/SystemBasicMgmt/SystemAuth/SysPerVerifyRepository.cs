@@ -20,15 +20,15 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         /// <returns></returns>
         public async Task<bool> HasPermission(long loginUserId, string routePath)
         {
-            var hasPermissionList = await _db.Queryable<SysUserInfoEntity>()
-                .With(SqlWith.NoLock)
-                .LeftJoin<SysUserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
-                .LeftJoin<SysRoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
-                .LeftJoin<SysRoleMenuEntity>((user, userrole, role, rolemenu) => role.RoleId == rolemenu.RoleId)
-                .LeftJoin<SysMenuInfoEntity>((user, userrole, role, rolemenu, menu) => rolemenu.MenuId == menu.MenuId)
-                .Where((user, userrole, role, rolemenu, menu) => user.UserId == loginUserId && menu.RoutePath == routePath)
-                .AnyAsync();
-            return hasPermissionList;
+            var list = await _db.Queryable<SysUserInfoEntity>()
+                                .With(SqlWith.NoLock)
+                                .LeftJoin<SysUserRoleEntity>((user, userrole) => user.UserId ==  userrole.UserId)
+                                .LeftJoin<SysRoleInfoEntity>((user, userrole, role) => userrole.RoleId ==     role.RoleId)
+                                .LeftJoin<SysRoleMenuEntity>((user, userrole, role, rolemenu) => role.RoleId == rolemenu.RoleId)
+                                .LeftJoin<SysMenuInfoEntity>((user, userrole, role, rolemenu, menu) => rolemenu.MenuId == menu.MenuId)
+                                .Where((user, userrole, role, rolemenu, menu) => user.UserId == loginUserId && menu.RoutePath == routePath && menu.IsVisible == 1)
+                                .AnyAsync();
+            return list;
         }
     }
 }

@@ -143,16 +143,16 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
             // 排序
             query = query.OrderBy(formgroup => formgroup.SortOrder);
 
-            var formGroupPage = await query.Select(formgroup=> new FormGroupDto
-                                           {
-                                               FormGroupId = formgroup.FormGroupId,
-                                               FormGroupNameCn = formgroup.FormGroupNameCn,
-                                               FormGroupNameEn = formgroup.FormGroupNameEn,
-                                               Description = _lang.Locale == "zh-CN"
-                                                             ? formgroup.DescriptionCn
-                                                             : formgroup.DescriptionEn,
-                                           }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<FormGroupDto>.Ok(formGroupPage.Adapt<List<FormGroupDto>>(), totalCount, "");
+            var page = await query.Select(formgroup=> new FormGroupDto
+                                  {
+                                      FormGroupId = formgroup.FormGroupId,
+                                      FormGroupNameCn = formgroup.FormGroupNameCn,
+                                      FormGroupNameEn = formgroup.FormGroupNameEn,
+                                      Description = _lang.Locale == "zh-CN"
+                                                    ? formgroup.DescriptionCn
+                                                    : formgroup.DescriptionEn,
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<FormGroupDto>.Ok(page.Adapt<List<FormGroupDto>>(), totalCount, "");
         }
     }
 }

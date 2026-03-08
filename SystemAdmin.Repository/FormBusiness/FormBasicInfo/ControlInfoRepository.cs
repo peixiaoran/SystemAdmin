@@ -88,8 +88,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                 query = query.Where(control => control.ControlCode.Contains(getPage.ControlCode));
             }
 
-            var controlInfoPage = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<ControlInfoDto>.Ok(controlInfoPage.Adapt<List<ControlInfoDto>>(), totalCount, "");
+            var page = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<ControlInfoDto>.Ok(page.Adapt<List<ControlInfoDto>>(), totalCount, "");
         }
     }
 }

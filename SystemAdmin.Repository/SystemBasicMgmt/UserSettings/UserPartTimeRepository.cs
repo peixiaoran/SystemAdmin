@@ -277,8 +277,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                               {
                                   LaborId = labor.LaborId,
                                   LaborName = _lang.Locale == "zh-CN"
-                                      ? labor.LaborNameCn
-                                      : labor.LaborNameEn
+                                              ? labor.LaborNameCn
+                                              : labor.LaborNameEn
                               }).ToListAsync();
         }
 

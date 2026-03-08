@@ -57,7 +57,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Entity
         /// <summary>
         /// 是否可见
         /// </summary>
-        public bool IsVisible { get; set; }
+        public int IsVisible { get; set; }
 
         /// <summary>
         /// 对应API路由

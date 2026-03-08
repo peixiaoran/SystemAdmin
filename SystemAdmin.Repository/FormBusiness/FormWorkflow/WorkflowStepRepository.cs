@@ -450,8 +450,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
             {
                 LaborId = labor.LaborId,
                 LaborName = _lang.Locale == "zh-CN"
-                                      ? labor.LaborNameCn
-                                      : labor.LaborNameEn
+                            ? labor.LaborNameCn
+                            : labor.LaborNameEn
             }).ToListAsync();
         }
 
