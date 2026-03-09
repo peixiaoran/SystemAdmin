@@ -36,8 +36,7 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         {
             try
             {
-                await _db.BeginTranAsync();
-                CustomerInfoEntity insertCustomerEntity = new CustomerInfoEntity()
+                var entity = new CustomerInfoEntity()
                 {
                     CustomerId = SnowFlakeSingle.Instance.NextId(),
                     CustomerCode = upsert.CustomerCode,
@@ -47,11 +46,13 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                var insertCustomerCount = await _customerInfoRepository.InsertCustomerInfo(insertCustomerEntity);
+
+                await _db.BeginTranAsync();
+                var count = await _customerInfoRepository.InsertCustomerInfo(entity);
                 await _db.CommitTranAsync();
 
-                return insertCustomerCount >= 1
-                        ? Result<int>.Ok(insertCustomerCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -96,8 +97,7 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         {
             try
             {
-                await _db.BeginTranAsync();
-                CustomerInfoEntity updateCustomerEntity = new CustomerInfoEntity()
+                var entity = new CustomerInfoEntity()
                 {
                     CustomerId = long.Parse(upsert.CustomerId),
                     CustomerCode = upsert.CustomerCode,
@@ -107,11 +107,13 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                var updateCustomerCount = await _customerInfoRepository.UpdateCustomerInfo(updateCustomerEntity);
+
+                await _db.BeginTranAsync();
+                var count = await _customerInfoRepository.UpdateCustomerInfo(entity);
                 await _db.CommitTranAsync();
 
-                return updateCustomerCount >= 1
-                        ? Result<int>.Ok(updateCustomerCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)

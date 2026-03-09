@@ -135,4 +135,22 @@
   <data name="WorkflowStepUpdateSuccess" xml:space="preserve">
     <value>Step modification successful</value>
   </data>
+  <data name="WorkflowStepBranchInsertSuccess" xml:space="preserve">
+    <value>Step flow branch added successfully</value>
+  </data>
+  <data name="WorkflowStepBranchInsertFailed" xml:space="preserve">
+    <value>Step flow branch addition failed</value>
+  </data>
+  <data name="WorkflowStepBranchDeleteSuccess" xml:space="preserve">
+    <value>Step flow branch deletion successful</value>
+  </data>
+  <data name="WorkflowStepBranchDeleteFailed" xml:space="preserve">
+    <value>Step flow branch deletion failed</value>
+  </data>
+  <data name="WorkflowStepBranchUpdateFailed" xml:space="preserve">
+    <value>Step flow branch modification failed</value>
+  </data>
+  <data name="WorkflowStepBranchUpdateSuccess" xml:space="preserve">
+    <value>Step flow branch modification successful</value>
+  </data>
 </root>

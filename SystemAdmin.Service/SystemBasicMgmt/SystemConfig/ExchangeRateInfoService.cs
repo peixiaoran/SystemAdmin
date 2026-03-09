@@ -49,7 +49,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                     }
                     else
                     {
-                        ExchangeRateEntity entity = new ExchangeRateEntity()
+                        var entity = new ExchangeRateEntity()
                         {
                             CurrencyCode = upsert.CurrencyCode,
                             ExchangeCurrencyCode = upsert.ExchangeCurrencyCode,
@@ -118,7 +118,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                 }
                 else
                 {
-                    ExchangeRateEntity entity = new ExchangeRateEntity()
+                    var entity = new ExchangeRateEntity()
                     {
                         CurrencyCode = upsert.CurrencyCode,
                         ExchangeCurrencyCode = upsert.ExchangeCurrencyCode,

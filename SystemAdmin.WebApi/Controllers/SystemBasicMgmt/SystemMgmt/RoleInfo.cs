@@ -62,7 +62,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 查询角色模块绑定列表")]
-        public async Task<Result<List<RoleModuleDto>>> GetRoleModuleList(GetRoleModuleList getList)
+        public async Task<Result<List<RoleModuleDto>>> GetRoleModuleList([FromBody] GetRoleModuleList getList)
         {
             return await _roleService.GetRoleModuleList(getList);
         }
@@ -70,7 +70,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 查询角色菜单绑定树")]
-        public async Task<Result<List<RoleMenuDto>>> GetRoleMenuTree(GetRoleMenuTree getTree)
+        public async Task<Result<List<RoleMenuDto>>> GetRoleMenuTree([FromBody] GetRoleMenuTree getTree)
         {
             return await _roleService.GetRoleMenuTree(getTree);
         }
@@ -78,7 +78,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 修改角色模块绑定")]
-        public async Task<Result<int>> UpdateRoleModuleList(RoleModuleUpsert upsert)
+        public async Task<Result<int>> UpdateRoleModuleList([FromBody] RoleModuleUpsert upsert)
         {
             return await _roleService.UpdateRoleModuleList(upsert);
         }
@@ -86,7 +86,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 角色模块下拉")]
-        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(GetRoleModuleDropDown getDrop)
+        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown([FromBody] GetRoleModuleDropDown getDrop)
         {
             return await _roleService.GetRoleModuleDropDown(getDrop);
         }
@@ -94,7 +94,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 修改角色菜单绑定")]
-        public async Task<Result<int>> UpdateRoleMenuList(RoleMenuUpsert roleMenuUpsert)
+        public async Task<Result<int>> UpdateRoleMenuList([FromBody] RoleMenuUpsert roleMenuUpsert)
         {
             return await _roleService.UpdateRoleMenuList(roleMenuUpsert);
         }

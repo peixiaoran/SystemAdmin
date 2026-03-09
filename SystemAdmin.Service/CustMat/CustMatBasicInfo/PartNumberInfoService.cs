@@ -38,18 +38,18 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
             try
             {
                 await _db.BeginTranAsync();
-                PartNumberInfoEntity insertPartNumberEntity = new PartNumberInfoEntity()
+                var entity = new PartNumberInfoEntity()
                 {
                     PartNumberId = SnowFlakeSingle.Instance.NextId(),
                     PartNumberNo = partNumberInfoUpsert.PartNumberNo,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                var insertPartNumberCount = await _partNumberInfoRepository.InsertPartNumberInfo(insertPartNumberEntity);
+                var count = await _partNumberInfoRepository.InsertPartNumberInfo(entity);
                 await _db.CommitTranAsync();
 
-                return insertPartNumberCount >= 1
-                        ? Result<int>.Ok(insertPartNumberCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -95,7 +95,7 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
             try
             {
                 await _db.BeginTranAsync();
-                PartNumberInfoEntity updatePartNumberEntity = new PartNumberInfoEntity()
+                var entity = new PartNumberInfoEntity()
                 {
                     PartNumberId = long.Parse(partNumberInfoUpsert.PartNumberId),
                     ManufacturerId = partNumberInfoUpsert.ManufacturerId,
@@ -105,11 +105,11 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                var updatePartNumberCount = await _partNumberInfoRepository.UpdatePartNumberInfo(updatePartNumberEntity);
+                var count = await _partNumberInfoRepository.UpdatePartNumberInfo(entity);
                 await _db.CommitTranAsync();
 
-                return updatePartNumberCount >= 1
-                        ? Result<int>.Ok(updatePartNumberCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)

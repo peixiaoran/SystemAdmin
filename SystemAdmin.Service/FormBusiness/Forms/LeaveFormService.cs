@@ -58,7 +58,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 var initFormInfo = await _stepBeforeStart.InitFormInfo(_loginuser.UserId, long.Parse(formTypeId));
                 // 初始化请假表
                 var userInfo = await _leaveFormRepository.GetUserInfo(_loginuser.UserId);
-                LeaveFormEntity initleaveFormEntity = new LeaveFormEntity()
+                var entity = new LeaveFormEntity()
                 {
                     FormId = initFormInfo.FormId,
                     FormNo = initFormInfo.FormNo,
@@ -74,10 +74,10 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                await _leaveFormRepository.InitLeaveForm(initleaveFormEntity);
+                await _leaveFormRepository.InitLeaveForm(entity);
                 await _db.CommitTranAsync();
 
-                var leaveFormDto = initleaveFormEntity.Adapt<LeaveFormDto>();
+                var leaveFormDto = entity.Adapt<LeaveFormDto>();
                 leaveFormDto.ImportanceCode = ImportanceType.Normal.ToEnumString();
                 leaveFormDto.FormTypeId = long.Parse(formTypeId);
                 return Result<LeaveFormDto>.Ok(leaveFormDto);
@@ -109,7 +109,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 await _db.BeginTranAsync();
                 // 保存主表单
                 var saveFormInfo = await _stepBeforeStart.SaveFormInfo(long.Parse(formSave.FormId), formSave.Description, FormStatus.PendingSubmission.ToEnumString(), formSave.ImportanceCode, _loginuser.UserId);
-                LeaveFormEntity saveLeaveFormEntity = new LeaveFormEntity()
+                var entity = new LeaveFormEntity()
                 {
                     FormId = long.Parse(formSave.FormId),
                     FormNo = formSave.FormNo,
@@ -128,11 +128,11 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
                 // 保存请假表单
-                int saveLeaveFormCount = await _leaveFormRepository.SaveLeaveForm(saveLeaveFormEntity);
+                int saveLeaveCount = await _leaveFormRepository.SaveLeaveForm(entity);
                 await _db.CommitTranAsync();
 
-                return saveFormInfo >= 1 && saveLeaveFormCount >= 1
-                        ? Result<int>.Ok(saveLeaveFormCount, _localization.ReturnMsg($"{_publicthis}SaveSuccess"))
+                return saveFormInfo >= 1 && saveLeaveCount >= 1
+                        ? Result<int>.Ok(saveLeaveCount, _localization.ReturnMsg($"{_publicthis}SaveSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_publicthis}SaveFailed"));
             }
             catch (Exception ex)

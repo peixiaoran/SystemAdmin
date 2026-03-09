@@ -44,7 +44,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                 }
                 else
                 {
-                    DictionaryInfoEntity entity = new DictionaryInfoEntity()
+                    var entity = new DictionaryInfoEntity()
                     {
                         DicId = SnowFlakeSingle.Instance.NextId(),
                         ModuleId = long.Parse(upsert.ModuleId),
@@ -108,7 +108,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                DictionaryInfoEntity entity = new DictionaryInfoEntity()
+                var entity = new DictionaryInfoEntity()
                 {
                     DicId = long.Parse(upsert.DicId),
                     ModuleId = long.Parse(upsert.ModuleId),

@@ -31,7 +31,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         [Tags("系统基础管理-系统接口")]
         [EndpointSummary("[系统接口] 解锁账号发送验证码")]
         [AllowAnonymous]
-        public async Task<Result<string>> UnLockSendVcCode([FromQuery] string userNo)
+        public async Task<Result<string>> UnLockSendVcCode([FromForm] string userNo)
         {
             return await _sysUserOperateService.UnLockSendVcCode(userNo);
         }
@@ -49,7 +49,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         [Tags("系统基础管理-系统接口")]
         [EndpointSummary("[系统接口] 密码过期发送验证码")]
         [AllowAnonymous]
-        public async Task<Result<string>> UnExpirationSendVcCode([FromQuery] string userNo)
+        public async Task<Result<string>> UnExpirationSendVcCode([FromForm] string userNo)
         {
             return await _sysUserOperateService.UnExpirationSendVcCode(userNo);
         }

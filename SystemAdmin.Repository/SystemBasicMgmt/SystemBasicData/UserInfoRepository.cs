@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using SqlSugar;
+using System.Data;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
@@ -399,7 +400,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="getUserExcel"></param>
         /// <returns></returns>
-        public async Task<List<UserInfoExcelDto>> GetUserInfoExcel(GetUserInfoExcel getUserExcel)
+        public async Task<DataTable> GetUserInfoExcel(GetUserInfoExcel getUserExcel)
         {
             var query = _db.Queryable<UserInfoEntity>()
                            .With(SqlWith.NoLock)
@@ -431,36 +432,36 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.SortOrder, user.HireDate });
 
             return await query.Select((user, userrole, deptinfo, userposition, nation) =>
-                    new UserInfoExcelDto
-                    {
-                        DepartmentName = _lang.Locale == "zh-CN"
-                                         ? deptinfo.DepartmentNameCn
-                                         : deptinfo.DepartmentNameEn,
-                        UserNo = user.UserNo,
-                        UserNameCn = user.UserNameCn,
-                        UserNameEn = user.UserNameEn,
-                        PositionName = _lang.Locale == "zh-CN"
-                                         ? userposition.PositionNameCn
-                                         : userposition.PositionNameEn,
-                        HireDate = user.HireDate,
-                        GenderName = _lang.Locale == "zh-CN"
-                                         ? (user.Gender == 1 ? "男" : "女")
-                                         : (user.Gender == 1 ? "Male" : "Female"),
-                        NationalityName = _lang.Locale == "zh-CN"
-                                            ? nation.NationNameCn
-                                            : nation.NationNameEn,
-                        Email = user.Email,
-                        PhoneNumber = user.PhoneNumber,
-                        IsEmployedName = _lang.Locale == "zh-CN"
-                                         ? (user.IsEmployed == 1 ? "在职" : "离职")
-                                         : (user.IsEmployed == 1 ? "Yes" : "No"),
-                        IsApprovalName = _lang.Locale == "zh-CN"
-                                         ? (user.IsApproval == 1 ? "需要签核" : "无需签核")
-                                         : (user.IsApproval == 1 ? "Yes" : "No"),
-                        IsFreezeName = _lang.Locale == "zh-CN"
-                                         ? (user.IsFreeze == 1 ? "未冻结" : "已冻结")
-                                         : (user.IsFreeze == 1 ? "No" : "Yes"),
-                    }).ToListAsync();
+                               new UserInfoExcelDto
+                               {
+                                   DepartmentName = _lang.Locale == "zh-CN"
+                                                    ? deptinfo.DepartmentNameCn
+                                                    : deptinfo.DepartmentNameEn,
+                                   UserNo = user.UserNo,
+                                   UserNameCn = user.UserNameCn,
+                                   UserNameEn = user.UserNameEn,
+                                   PositionName = _lang.Locale == "zh-CN"
+                                                    ? userposition.PositionNameCn
+                                                    : userposition.PositionNameEn,
+                                   HireDate = user.HireDate,
+                                   GenderName = _lang.Locale == "zh-CN"
+                                                    ? (user.Gender == 1 ? "男" : "女")
+                                                    : (user.Gender == 1 ? "Male" : "Female"),
+                                   NationalityName = _lang.Locale == "zh-CN"
+                                                       ? nation.NationNameCn
+                                                       : nation.NationNameEn,
+                                   Email = user.Email,
+                                   PhoneNumber = user.PhoneNumber,
+                                   IsEmployedName = _lang.Locale == "zh-CN"
+                                                    ? (user.IsEmployed == 1 ? "在职" : "离职")
+                                                    : (user.IsEmployed == 1 ? "Yes" : "No"),
+                                   IsApprovalName = _lang.Locale == "zh-CN"
+                                                    ? (user.IsApproval == 1 ? "需要签核" : "无需签核")
+                                                    : (user.IsApproval == 1 ? "Yes" : "No"),
+                                   IsFreezeName = _lang.Locale == "zh-CN"
+                                                    ? (user.IsFreeze == 1 ? "未冻结" : "已冻结")
+                                                    : (user.IsFreeze == 1 ? "No" : "Yes"),
+                               }).ToDataTableAsync();
         }
     }
 }

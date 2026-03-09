@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                UserLaborEntity entity = new UserLaborEntity()
+                var entity = new UserLaborEntity()
                 {
                     LaborId = SnowFlakeSingle.Instance.NextId(),
                     LaborNameCn = upsert.LaborNameCn,
@@ -96,7 +96,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                UserLaborEntity entity = new UserLaborEntity()
+                var entity = new UserLaborEntity()
                 {
                     LaborId = long.Parse(upsert.LaborId),
                     LaborNameCn = upsert.LaborNameCn,

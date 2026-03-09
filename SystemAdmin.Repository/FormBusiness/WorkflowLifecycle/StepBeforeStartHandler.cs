@@ -144,13 +144,13 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         {
             return await _db.Queryable<WorkflowStepEntity>()
                             .With(SqlWith.NoLock)
-                            .Where(step => step.FormTypeId == formTypeId && step.IsStartStep == 1)
-                            .Select(step => step.StepId)
+                            .Where(stepinfo => stepinfo.FormTypeId == formTypeId && stepinfo.IsStartStep == 1)
+                            .Select(stepinfo => stepinfo.StepId)
                             .FirstAsync();
         }
 
         /// <summary>
-        /// 查询表单需要签核审批人
+        /// 查询表单审批流程
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
@@ -175,15 +175,15 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             // 查询表单审批开始步骤
             var nowStepId = await _db.Queryable<WorkflowStepEntity>()
                                      .With(SqlWith.NoLock)
-                                     .InnerJoin<FormInfoEntity>((step, form) => step.FormTypeId == form.FormTypeId)
-                                     .Where((step, form) => form.FormId == formId && step.IsStartStep == 1)
-                                     .Select((step, form) => step.StepId)
+                                     .InnerJoin<FormInfoEntity>((stepinfo, form) => stepinfo.FormTypeId == form.FormTypeId)
+                                     .Where((stepinfo, form) => form.FormId == formId && stepinfo.IsStartStep == 1)
+                                     .Select((stepinfo, form) => stepinfo.StepId)
                                      .FirstAsync();
             while (nowStepId > -1)
             {
                 var nowStep = await _db.Queryable<WorkflowStepEntity>()
                                        .With(SqlWith.NoLock)
-                                       .Where(step => step.StepId == nowStepId)
+                                       .Where(stepinfo => stepinfo.StepId == nowStepId)
                                        .FirstAsync();
                 // 组织架构
                 if (nowStep.Assignment == Assignment.Org.ToEnumString())
@@ -245,13 +245,13 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                 }
 
                 // 查找下一个步骤
-                var stepCondition = await _db.Queryable<WorkflowStepConditionEntity>()
+                var stepBranch = await _db.Queryable<WorkflowStepBranchEntity>()
                                              .With(SqlWith.NoLock)
                                              .Where(condition => condition.StepId == nowStep.StepId)
                                              .ToListAsync();
 
                 List<long> conditionIds = new List<long>();
-                foreach (var conItem in stepCondition)
+                foreach (var conItem in stepBranch)
                 {
                     if (conItem.ConditionId == -1)
                     {
@@ -260,7 +260,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                 }
 
                 // 赋值下一个步骤Id
-                nowStepId = stepCondition.Where(condition => conditionIds.Contains(condition.ConditionId) && condition.ExecuteMatched == 1).First().NextStepId;
+                nowStepId = stepBranch.Where(condition => conditionIds.Contains(condition.ConditionId) && condition.ExecuteMatched == 1).First().NextStepId;
             }
             return approveList;
         }
@@ -277,7 +277,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(UserInfoEntity appUserEntity, string approveMode, List<DepartmentInfoEntity> parentDeptList, long deptLevelId, long positionId)
         {
             // 步骤最终审批人列表
-            var finalApprover = new List<StepApproveUser>();
+            var finalApproveUser = new List<StepApproveUser>();
 
             // 申请人职级信息
             var applyPos = await _db.Queryable<UserPositionEntity>().Where(position => position.PositionId == appUserEntity.PositionId).FirstAsync();
@@ -403,7 +403,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             if (candidateList.Count() > 0)
             {
                 // 按照本、兼、代、兼代的顺序筛选最终审批人
-                finalApprover = await GetFinalStepApproveUserList(candidateList, ApproveMode.Single.ToEnumString(), "PirCon");
+                finalApproveUser = await GetFinalStepApproveUserList(candidateList, ApproveMode.Single.ToEnumString(), "PirCon");
             }
 
             // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动指派）
@@ -628,9 +628,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                         itemDeptOrder--;
                     }
                 }
-                finalApprover.AddRange(hightLevelApproveUser);
+                finalApproveUser.AddRange(hightLevelApproveUser);
             }
-            return finalApprover;
+            return finalApproveUser;
         }
 
         /// <summary>

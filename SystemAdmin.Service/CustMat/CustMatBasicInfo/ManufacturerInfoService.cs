@@ -36,8 +36,7 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
         {
             try
             {
-                await _db.BeginTranAsync();
-                ManufacturerInfoEntity insertManufacturerEntity = new ManufacturerInfoEntity()
+                var entity = new ManufacturerInfoEntity()
                 {
                     ManufacturerId = SnowFlakeSingle.Instance.NextId(),
                     ManufacturerCode = upsert.ManufacturerCode,
@@ -47,11 +46,13 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                var insertManufacturerCount = await _manufacturerInfoRepository.InsertManufacturerInfo(insertManufacturerEntity);
+
+                await _db.BeginTranAsync();
+                var count = await _manufacturerInfoRepository.InsertManufacturerInfo(entity);
                 await _db.CommitTranAsync();
 
-                return insertManufacturerCount >= 1
-                        ? Result<int>.Ok(insertManufacturerCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
             }
             catch (Exception ex)
@@ -97,7 +98,7 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
             try
             {
                 await _db.BeginTranAsync();
-                ManufacturerInfoEntity updateManufacturerEntity = new ManufacturerInfoEntity()
+                var entity = new ManufacturerInfoEntity()
                 {
                     ManufacturerId = long.Parse(upsert.ManufacturerId),
                     ManufacturerCode = upsert.ManufacturerCode,
@@ -109,11 +110,11 @@ namespace SystemAdmin.Service.CustMat.CustMatBasicInfo
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 };
-                var updateManufacturerCount = await _manufacturerInfoRepository.UpdateManufacturerInfo(updateManufacturerEntity);
+                var count = await _manufacturerInfoRepository.UpdateManufacturerInfo(entity);
                 await _db.CommitTranAsync();
 
-                return updateManufacturerCount >= 1
-                        ? Result<int>.Ok(updateManufacturerCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)

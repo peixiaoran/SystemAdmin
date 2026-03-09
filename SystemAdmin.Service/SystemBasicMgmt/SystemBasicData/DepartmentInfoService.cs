@@ -43,7 +43,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
                 else
                 {
-                    DepartmentInfoEntity insertDept = new DepartmentInfoEntity()
+                    var entity = new DepartmentInfoEntity()
                     {
                         DepartmentId = SnowFlakeSingle.Instance.NextId(),
                         DepartmentCode = upsert.DepartmentCode,
@@ -61,11 +61,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     };
 
                     await _db.BeginTranAsync();
-                    int insertDeptCount = await _deptInfoRepository.InsertDepartmentInfo(insertDept);
+                    int count = await _deptInfoRepository.InsertDepartmentInfo(entity);
                     await _db.CommitTranAsync();
 
-                    return insertDeptCount >= 1
-                            ? Result<int>.Ok(insertDeptCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                    return count >= 1
+                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                 }
             }
@@ -182,7 +182,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
                 else
                 {
-                    DepartmentInfoEntity updateDept = new DepartmentInfoEntity()
+                    var entity = new DepartmentInfoEntity()
                     {
                         DepartmentId = long.Parse(upsert.DepartmentId),
                         DepartmentCode = upsert.DepartmentCode,
@@ -200,7 +200,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     };
 
                     await _db.BeginTranAsync();
-                    int count = await _deptInfoRepository.UpdateDepartmentInfo(updateDept);
+                    int count = await _deptInfoRepository.UpdateDepartmentInfo(entity);
                     await _db.CommitTranAsync();
 
                     return count >= 1

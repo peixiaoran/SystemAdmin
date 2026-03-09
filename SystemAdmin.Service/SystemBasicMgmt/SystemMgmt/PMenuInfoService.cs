@@ -37,7 +37,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                MenuInfoEntity insertPMenu = new MenuInfoEntity
+                var entity = new MenuInfoEntity
                 {
                     MenuId = SnowFlakeSingle.Instance.NextId(),
                     ParentMenuId = 0,
@@ -57,7 +57,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _pMenuRepository.InsertPMenu(insertPMenu);
+                int count = await _pMenuRepository.InsertPMenu(entity);
                 await _db.CommitTranAsync();
 
                 return Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"));
@@ -111,7 +111,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                MenuInfoEntity entity = new MenuInfoEntity
+                var entity = new MenuInfoEntity
                 {
                     MenuId = long.Parse(upsert.MenuId),
                     ModuleId = long.Parse(upsert.ModuleId),

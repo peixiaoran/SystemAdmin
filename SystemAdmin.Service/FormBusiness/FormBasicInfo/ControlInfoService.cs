@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                ControlInfoEntity entity = new ControlInfoEntity()
+                var entity = new ControlInfoEntity()
                 {
                     ControlCode = upsert.ControlCode,
                     ControlName = upsert.ControlName,

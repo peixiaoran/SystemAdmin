@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using SqlSugar;
+using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -157,7 +158,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 long userId = SnowFlakeSingle.Instance.NextId();
 
                 // 新增员工信息
-                UserInfoEntity insertUser = new UserInfoEntity()
+                var entity = new UserInfoEntity()
                 {
                     UserId = userId,
                     DepartmentId = long.Parse(upsert.DepartmentId),
@@ -188,10 +189,10 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int insertUserCount = await _userInfoRepository.InsertUserInfo(insertUser);
+                int insertUserCount = await _userInfoRepository.InsertUserInfo(entity);
 
                 // 新增员工权限
-                UserRoleEntity insertUserRole = new UserRoleEntity()
+                var insertUserRole = new UserRoleEntity()
                 {
                     UserId = userId,
                     RoleId = long.Parse(upsert.RoleId),
@@ -283,7 +284,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
 
                 // 修改员工信息
-                UserInfoEntity entity = new UserInfoEntity
+                var entity = new UserInfoEntity
                 {
                     UserId = long.Parse(upsert.UserId),
                     UserNo = upsert.UserNo,
@@ -317,7 +318,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 int updateUserCount = await _userInfoRepository.UpdateUserInfo(entity);
 
                 // 修改员工角色
-                UserRoleEntity updateUserRole = new UserRoleEntity()
+                var updateUserRole = new UserRoleEntity()
                 {
                     UserId = long.Parse(upsert.UserId),
                     RoleId = long.Parse(upsert.RoleId),
@@ -466,7 +467,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 导出员工信息Excel
+        /// 导出员工Excel表格
         /// </summary>
         /// <param name="getUserExcel"></param>
         /// <returns></returns>
@@ -474,51 +475,32 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var list = await _userInfoRepository.GetUserInfoExcel(getUserExcel);
+                DataTable dt = await _userInfoRepository.GetUserInfoExcel(getUserExcel);
 
-                // EPPlus License
                 ExcelPackage.License.SetNonCommercialPersonal("Your Name");
 
                 using var package = new ExcelPackage();
+
                 var ws = package.Workbook.Worksheets.Add(_localization.ReturnMsg($"{_thisExcel}UserInfo"));
 
-                // 1. 列头
-                var headers = new[]
+                var headers = new Dictionary<string, string>
                 {
-                    _localization.ReturnMsg($"{_thisExcel}UserNo"),
-                    _localization.ReturnMsg($"{_thisExcel}UserNameCn"),
-                    _localization.ReturnMsg($"{_thisExcel}UserNameEn"),
-                    _localization.ReturnMsg($"{_thisExcel}DepartmentName"),
-                    _localization.ReturnMsg($"{_thisExcel}PositionName"),
-                    _localization.ReturnMsg($"{_thisExcel}HireDate"),
-                    _localization.ReturnMsg($"{_thisExcel}GenderName"),
-                    _localization.ReturnMsg($"{_thisExcel}NationalityName"),
-                    _localization.ReturnMsg($"{_thisExcel}Email"),
-                    _localization.ReturnMsg($"{_thisExcel}PhoneNumber"),
-                    _localization.ReturnMsg($"{_thisExcel}IsEmployedName"),
-                    _localization.ReturnMsg($"{_thisExcel}IsApprovalName"),
-                    _localization.ReturnMsg($"{_thisExcel}IsFreezeName")
+                    { "UserNo", _localization.ReturnMsg($"{_thisExcel}UserNo") },
+                    { "UserNameCn", _localization.ReturnMsg($"{_thisExcel}UserNameCn") },
+                    { "UserNameEn", _localization.ReturnMsg($"{_thisExcel}UserNameEn") },
+                    { "DepartmentName", _localization.ReturnMsg($"{_thisExcel}DepartmentName") },
+                    { "PositionName", _localization.ReturnMsg($"{_thisExcel}PositionName") },
+                    { "HireDate", _localization.ReturnMsg($"{_thisExcel}HireDate") },
+                    { "GenderName", _localization.ReturnMsg($"{_thisExcel}GenderName") },
+                    { "NationalityName", _localization.ReturnMsg($"{_thisExcel}NationalityName") },
+                    { "Email", _localization.ReturnMsg($"{_thisExcel}Email") },
+                    { "PhoneNumber", _localization.ReturnMsg($"{_thisExcel}PhoneNumber") },
+                    { "IsEmployedName", _localization.ReturnMsg($"{_thisExcel}IsEmployedName") },
+                    { "IsApprovalName", _localization.ReturnMsg($"{_thisExcel}IsApprovalName") },
+                    { "IsFreezeName", _localization.ReturnMsg($"{_thisExcel}IsFreezeName") }
                 };
-                for (int i = 0; i < headers.Length; i++)
-                {
-                    ws.Cells[1, i + 1].Value = headers[i];
-                }
 
-                // 2. 填充数据
-                if (list != null && list.Count > 0)
-                {
-                    // 从 A2 开始填充，不生成列头
-                    ws.Cells["A2"].LoadFromCollection(list, false);
-                }
-
-                ExcelStyleHelper.ApplyStandardStyle(
-                    ws,
-                    headers,
-                    list?.Count + 1 ?? 1,
-                    enableFilter: true
-                );
-
-                ws.Cells[ws.Dimension.Address].AutoFitColumns();
+                ExcelStyleHelper.ApplyStandardStyle(ws, dt, headers, true);
                 package.Workbook.CalcMode = ExcelCalcMode.Manual;
 
                 return package.GetAsByteArray();

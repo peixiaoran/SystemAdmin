@@ -61,6 +61,60 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         }
         
         /// <summary>
+        ///   查找类似 步骤流程分支删除失败 的本地化字符串。
+        /// </summary>
+        public static string WorkflowStepBranchDeleteFailed {
+            get {
+                return ResourceManager.GetString("WorkflowStepBranchDeleteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 步骤流程分支删除成功 的本地化字符串。
+        /// </summary>
+        public static string WorkflowStepBranchDeleteSuccess {
+            get {
+                return ResourceManager.GetString("WorkflowStepBranchDeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 步骤流程分支新增失败 的本地化字符串。
+        /// </summary>
+        public static string WorkflowStepBranchInsertFailed {
+            get {
+                return ResourceManager.GetString("WorkflowStepBranchInsertFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 步骤流程分支新增成功 的本地化字符串。
+        /// </summary>
+        public static string WorkflowStepBranchInsertSuccess {
+            get {
+                return ResourceManager.GetString("WorkflowStepBranchInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 步骤流程分支修改失败 的本地化字符串。
+        /// </summary>
+        public static string WorkflowStepBranchUpdateFailed {
+            get {
+                return ResourceManager.GetString("WorkflowStepBranchUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 步骤流程分支修改成功 的本地化字符串。
+        /// </summary>
+        public static string WorkflowStepBranchUpdateSuccess {
+            get {
+                return ResourceManager.GetString("WorkflowStepBranchUpdateSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 步骤删除失败 的本地化字符串。
         /// </summary>
         public static string WorkflowStepDeleteFailed {

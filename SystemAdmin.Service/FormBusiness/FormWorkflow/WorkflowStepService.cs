@@ -45,7 +45,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 int insertUserCount = 0;
                 int insertCustomCount = 0;
 
-                WorkflowStepEntity stepEntity = new WorkflowStepEntity
+                var stepEntity = new WorkflowStepEntity
                 {
                     StepId = stepId,
                     FormTypeId = long.Parse(upsert.FormTypeId),
@@ -79,7 +79,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     // 根据不同的步骤选人方式，新增对应的步骤选人方式
                     if (upsert.Assignment.MatchEnum(Assignment.Org))
                     {
-                        WorkflowStepOrgEntity orgEntity = new WorkflowStepOrgEntity()
+                        var orgEntity = new WorkflowStepOrgEntity()
                         {
                             StepOrgId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
@@ -92,7 +92,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     }
                     else if (upsert.Assignment.MatchEnum(Assignment.DeptUser))
                     {
-                        WorkflowStepDeptUserEntity stepDeptUserEntity = new WorkflowStepDeptUserEntity()
+                        var stepDeptUserEntity = new WorkflowStepDeptUserEntity()
                         {
                             StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
@@ -105,7 +105,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     }
                     else if (upsert.Assignment.MatchEnum(Assignment.User))
                     {
-                        WorkflowStepUserEntity userEntity = new WorkflowStepUserEntity()
+                        var userEntity = new WorkflowStepUserEntity()
                         {
                             StepUserId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
@@ -117,7 +117,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     }
                     else if (upsert.Assignment.MatchEnum(Assignment.Custom))
                     {
-                        WorkflowStepCustomEntity customEntity = new WorkflowStepCustomEntity()
+                        var customEntity = new WorkflowStepCustomEntity()
                         {
                             StepCustomId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
@@ -130,7 +130,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     }
                     await _db.CommitTranAsync();
 
-                    return insertStepCount >= 1 && (insertOrgCount >= 1 || insertDeptUserCount >= 1 || insertUserCount >= 1 || insertCustomCount >= 1)    ? Result<int>.Ok(insertStepCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                    return insertStepCount >= 1 && (insertOrgCount >= 1 || insertDeptUserCount >= 1 || insertUserCount >= 1 || insertCustomCount >= 1)    
+                            ? Result<int>.Ok(insertStepCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                 }
             }
@@ -157,10 +158,10 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 int delDeptUserCount = await _workflowStepRepository.DeleteWorkflowStepDeptUser(long.Parse(stepId));
                 int delUserCount = await _workflowStepRepository.DeleteWorkflowStepUser(long.Parse(stepId));
                 int delCustomCount = await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(stepId));
-                int delConditionCount = await _workflowStepRepository.DeleteWorkflowStepCondition(long.Parse(stepId));
-                int updateStepConditionCount = await _workflowStepRepository.UpdateWorkflowStepCondition(long.Parse(stepId));
+                int delConditionCount = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(stepId));
+                int updateStepBranchCount = await _workflowStepRepository.UpdateWorkflowStepBranch(long.Parse(stepId));
 
-                return delStepCount >= 1 && (delOrgCount >= 1 || delDeptUserCount >= 1 || delUserCount >= 1 || delCustomCount >= 1 || delConditionCount >= 1 || updateStepConditionCount >= 1)
+                return delStepCount >= 1 && (delOrgCount >= 1 || delDeptUserCount >= 1 || delUserCount >= 1 || delCustomCount >= 1 || delConditionCount >= 1 || updateStepBranchCount >= 1)
                         ? Result<int>.Ok(delStepCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
@@ -187,7 +188,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 int updateStepUserCount = 0;
                 int updateStepCustomCount = 0;
 
-                WorkflowStepEntity stepEntity = new WorkflowStepEntity
+                var stepEntity = new WorkflowStepEntity
                 {
                     StepId = long.Parse(upsert.StepId),
                     FormTypeId = long.Parse(upsert.FormTypeId),
@@ -222,7 +223,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 // 根据不同的步骤选人方式，删除其他选人方式数据，再新增步骤选人方式
                 if (upsert.Assignment.MatchEnum(Assignment.Org))
                 {
-                    WorkflowStepOrgEntity stepOrgEntity = new WorkflowStepOrgEntity()
+                    var stepOrgEntity = new WorkflowStepOrgEntity()
                     {
                         StepOrgId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
@@ -235,7 +236,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 }
                 else if (upsert.Assignment.MatchEnum(Assignment.DeptUser))
                 {
-                    WorkflowStepDeptUserEntity stepDeptUserEntity = new WorkflowStepDeptUserEntity()
+                    var stepDeptUserEntity = new WorkflowStepDeptUserEntity()
                     {
                         StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
@@ -248,7 +249,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 }
                 else if (upsert.Assignment.MatchEnum(Assignment.User))
                 {
-                    WorkflowStepUserEntity stepUserEntity = new WorkflowStepUserEntity()
+                    var stepUserEntity = new WorkflowStepUserEntity()
                     {
                         StepUserId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
@@ -260,7 +261,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 }
                 else if (upsert.Assignment.MatchEnum(Assignment.Custom))
                 {
-                    WorkflowStepCustomEntity stepCustomEntity = new WorkflowStepCustomEntity()
+                    var stepCustomEntity = new WorkflowStepCustomEntity()
                     {
                         StepCustomId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
@@ -286,7 +287,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询步骤及条件分支分页
+        /// 查询步骤及流程分支分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
@@ -306,7 +307,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <summary>
         /// 查询步骤实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<Result<WorkflowStepEntityDto>> GetWorkflowStepEntity(string stepId)
         {
@@ -329,8 +330,80 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
+        /// 新增步骤流程分支
+        /// </summary>
+        /// <param name="upsert"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> InsertWorkflowStepBranch(WorkflowStepBranchUpsert upsert)
+        {
+            try
+            {
+                var entity = new WorkflowStepBranchEntity
+                {
+                    StepId = long.Parse(upsert.StepId),
+                    ConditionId = long.Parse(upsert.ConditionId),
+                    ExecuteMatched = upsert.ExecuteMatched,
+                    NextStepId = long.Parse(upsert.NextStepId),
+                    CreatedBy = _loginuser.UserId,
+                    CreatedDate = DateTime.Now
+                };
+                var count = await _workflowStepRepository.InsertWorkflowStepBranch(entity);
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertStepBranchSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertStepBranchFailed"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<int>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 删除步骤流程分支
+        /// </summary>
+        /// <param name="upsert"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> DeleteWorkflowStepBranch(WorkflowStepBranchUpsert upsert)
+        {
+            try
+            {
+                var count = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(upsert.StepId), long.Parse(upsert.ConditionId));
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}StepBranchDeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}StepBranchDeleteFailed"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<int>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 查询步骤流程分支实体
+        /// </summary>
+        /// <param name="stepId"></param>
+        /// <param name="conditionId"></param>
+        /// <returns></returns>
+        public async Task<Result<WorkflowStepBranchDto>> GetWorkflowStepBranchEntity(string stepId, string conditionId)
+        {
+            try
+            {
+                var entity = await _workflowStepRepository.GetWorkflowStepBranchEntity(long.Parse(stepId), long.Parse(conditionId));
+                return Result<WorkflowStepBranchDto>.Ok(entity);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<WorkflowStepBranchDto>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 条件下拉框
         /// </summary>
+        /// <param name="formTypeId"></param>
         /// <returns></returns>
         public async Task<Result<List<WorkflowConditionDropDto>>> GetConditionDropDown(string formTypeId)
         {
@@ -367,6 +440,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <summary>
         /// 表单类别下拉
         /// </summary>
+        /// <param name="formGroupId"></param>
         /// <returns></returns>
         public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(string formGroupId)
         {
@@ -457,6 +531,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <summary>
         /// 查询员工信息分页
         /// </summary>
+        /// <param name="getPage"></param>
         /// <returns></returns>
         public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
         {

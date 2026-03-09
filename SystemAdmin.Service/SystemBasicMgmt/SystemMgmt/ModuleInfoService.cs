@@ -35,7 +35,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                ModuleInfoEntity entity = new ModuleInfoEntity()
+                var entity = new ModuleInfoEntity()
                 {
                     ModuleId = SnowFlakeSingle.Instance.NextId(),
                     ModuleNameCn = upsert.ModuleNameCn,
@@ -110,7 +110,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                ModuleInfoEntity entity = new ModuleInfoEntity()
+                var entity = new ModuleInfoEntity()
                 {
                     ModuleId = long.Parse(upsert.ModuleId),
                     ModuleNameCn = upsert.ModuleNameCn,

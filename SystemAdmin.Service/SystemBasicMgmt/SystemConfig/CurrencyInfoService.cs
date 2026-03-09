@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                CurrencyInfoEntity insertCurrencyEntity = new CurrencyInfoEntity()
+                var entity = new CurrencyInfoEntity()
                 {
                     CurrencyId = SnowFlakeSingle.Instance.NextId(),
                     CurrencyCode = upsert.CurrencyCode,
@@ -48,7 +48,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _currencyInfoRepository.InsertCurrencyInfo(insertCurrencyEntity);
+                var count = await _currencyInfoRepository.InsertCurrencyInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -97,7 +97,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                CurrencyInfoEntity entity = new CurrencyInfoEntity()
+                var entity = new CurrencyInfoEntity()
                 {
                     CurrencyId = long.Parse(upsert.CurrencyId),
                     CurrencyCode = upsert.CurrencyCode,

@@ -36,8 +36,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                await _db.BeginTranAsync();
-                FormTypeEntity entity = new FormTypeEntity()
+                var entity = new FormTypeEntity()
                 {
                     FormTypeId = SnowFlakeSingle.Instance.NextId(),
                     FormGroupId = long.Parse(upsert.FormGroupId),
@@ -52,6 +51,8 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
+
+                await _db.BeginTranAsync();
                 int count = await _formTypeRepository.InsertFormTypeInfo(entity);
                 await _db.CommitTranAsync();
 
@@ -104,8 +105,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                await _db.BeginTranAsync();
-                FormTypeEntity updateFormType = new FormTypeEntity()
+                var entity = new FormTypeEntity()
                 {
                     FormTypeId = long.Parse(upsert.FormTypeId),
                     FormGroupId = long.Parse(upsert.FormGroupId),
@@ -120,7 +120,9 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                 };
-                int count = await _formTypeRepository.UpdateFormTypeInfo(updateFormType);
+
+                await _db.BeginTranAsync();
+                int count = await _formTypeRepository.UpdateFormTypeInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1

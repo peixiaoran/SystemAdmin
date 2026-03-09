@@ -113,7 +113,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 else
                 {
                     // 重新配置代理人
-                    UserAgentEntity insertUserAgent = new UserAgentEntity
+                    var insertUserAgent = new UserAgentEntity
                     {
                         SubstituteUserId = long.Parse(upsert.SubstituteUserId),
                         AgentUserId = long.Parse(upsert.AgentUserId),

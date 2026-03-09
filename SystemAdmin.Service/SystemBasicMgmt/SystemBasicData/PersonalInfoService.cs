@@ -133,7 +133,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     updatePassWord = user.PassWord;
                 }
 
-                UserInfoEntity entity = new UserInfoEntity
+                var entity = new UserInfoEntity
                 {
                     UserId = upsert.UserId,
                     PhoneNumber = upsert.PhoneNumber,

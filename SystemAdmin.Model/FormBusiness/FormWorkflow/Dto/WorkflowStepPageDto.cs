@@ -30,8 +30,8 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// 步骤条件分支集合
+        /// 步骤流程分支集合
         /// </summary>
-        public List<WorkflowStepConditionDto> StepConditionList { get; set; } = new List<WorkflowStepConditionDto>();
+        public List<WorkflowStepBranchDto> StepBranchList { get; set; } = new List<WorkflowStepBranchDto>();
     }
 }

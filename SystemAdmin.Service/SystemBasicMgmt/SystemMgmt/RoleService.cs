@@ -36,8 +36,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                await _db.BeginTranAsync();
-                RoleInfoEntity entity = new RoleInfoEntity
+                var entity = new RoleInfoEntity
                 {
                     RoleId = SnowFlakeSingle.Instance.NextId(),
                     RoleCode = upsert.RoleCode,
@@ -48,6 +47,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     CreatedDate = DateTime.Now,
                     Remark = upsert.Remark
                 };
+
+                await _db.BeginTranAsync();
                 int count = await _roleRepository.InsertRole(entity);
                 await _db.CommitTranAsync();
 
@@ -113,7 +114,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                RoleInfoEntity entity = new RoleInfoEntity
+                var entity = new RoleInfoEntity
                 {
                     RoleId = long.Parse(upsert.RoleId),
                     RoleCode = upsert.RoleCode,

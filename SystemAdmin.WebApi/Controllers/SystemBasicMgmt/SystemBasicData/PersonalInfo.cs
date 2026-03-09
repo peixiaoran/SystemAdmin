@@ -38,7 +38,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[个人信息] 修改个人信息")]
-        public async Task<Result<int>> UpdatePersonalInfo(PersonalInfoUpsert upsert)
+        public async Task<Result<int>> UpdatePersonalInfo([FromBody] PersonalInfoUpsert upsert)
         {
             return await _personalInfoService.UpdatePersonalInfo(upsert);
         }

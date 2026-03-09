@@ -1,5 +1,6 @@
 ﻿using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System.Data;
 using System.Drawing;
 
 namespace SystemAdmin.Common.Excel
@@ -7,29 +8,56 @@ namespace SystemAdmin.Common.Excel
     public class ExcelStyleHelper
     {
         /// <summary>
-        /// Excel表格导出标准样式
+        /// Excel表格数据填充-标准
         /// </summary>
         /// <param name="ws"></param>
+        /// <param name="dt"></param>
         /// <param name="headers"></param>
-        /// <param name="rowCount"></param>
         /// <param name="enableFilter"></param>
-        public static void ApplyStandardStyle(ExcelWorksheet ws, string[] headers, int rowCount, bool enableFilter = true)
+        public static void ApplyStandardStyle(ExcelWorksheet ws, DataTable dt, Dictionary<string, string> headers, bool enableFilter = true)
         {
-            if (ws == null || headers == null || headers.Length == 0)
+            if (ws == null || dt == null || headers == null || headers.Count == 0)
                 return;
 
-            int colCount = headers.Length;
+            int colIndex = 1;
 
-            // 1. 表头
-            for (int i = 0; i < colCount; i++)
+            // 1. 写列头
+            foreach (var header in headers)
             {
-                ws.Cells[1, i + 1].Value = headers[i];
+                ws.Cells[1, colIndex].Value = header.Value;
+                colIndex++;
             }
 
+            // 2. 写数据
+            int rowIndex = 2;
+
+            foreach (DataRow row in dt.Rows)
+            {
+                colIndex = 1;
+
+                foreach (var header in headers)
+                {
+                    if (dt.Columns.Contains(header.Key))
+                    {
+                        ws.Cells[rowIndex, colIndex].Value = row[header.Key];
+                    }
+
+                    colIndex++;
+                }
+
+                rowIndex++;
+            }
+
+            int colCount = headers.Count;
+            int rowCount = dt.Rows.Count + 1;
+
+            // 3. 表头样式
             var headerRange = ws.Cells[1, 1, 1, colCount];
+
             headerRange.Style.Font.Name = "微软雅黑";
             headerRange.Style.Font.Bold = true;
             headerRange.Style.Font.Color.SetColor(Color.Black);
+
             headerRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
             headerRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
@@ -38,16 +66,17 @@ namespace SystemAdmin.Common.Excel
 
             ws.Row(1).Height = 25;
 
-            // 2. 数据区样式
+            // 4. 数据样式
             if (rowCount > 1)
             {
                 var dataRange = ws.Cells[2, 1, rowCount, colCount];
+
                 dataRange.Style.Font.Name = "微软雅黑";
                 dataRange.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                 dataRange.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
             }
 
-            // 3. 边框
+            // 5. 边框
             var allRange = ws.Cells[1, 1, rowCount, colCount];
             var border = allRange.Style.Border;
 
@@ -56,15 +85,16 @@ namespace SystemAdmin.Common.Excel
             border.Left.Style =
             border.Right.Style = ExcelBorderStyle.Thin;
 
-            // 4. 视图 & 筛选
+            // 6. 冻结
             ws.View.FreezePanes(2, 1);
 
+            // 7. 筛选
             if (enableFilter)
             {
                 headerRange.AutoFilter = true;
             }
 
-            // 5. 列宽
+            // 8. 自动列宽
             if (ws.Dimension != null)
             {
                 ws.Cells[ws.Dimension.Address].AutoFitColumns();

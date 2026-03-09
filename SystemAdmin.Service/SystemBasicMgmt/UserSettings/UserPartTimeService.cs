@@ -82,9 +82,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 }
                 else
                 {
-                    await _db.BeginTranAsync();
-
-                    UserPartTimeEntity entity = new UserPartTimeEntity()
+                    var entity = new UserPartTimeEntity()
                     {
                         UserId = long.Parse(upsert.UserId),
                         PartTimeDeptId = long.Parse(upsert.PartTimeDeptId),
@@ -94,6 +92,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
+
+                    await _db.BeginTranAsync();
                     var insertUserPartTimeCount = await _userPartTimeRepository.InsertUserPartTime(entity);
                     await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsert.UserId), 1);
                     await _db.CommitTranAsync();
@@ -179,7 +179,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 }
                 else
                 {
-                    UserPartTimeEntity entity = new UserPartTimeEntity()
+                    var entity = new UserPartTimeEntity()
                     {
                         UserId = long.Parse(upsertdel.UserId),
                         PartTimeDeptId = long.Parse(upsertdel.PartTimeDeptId),
@@ -191,10 +191,10 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     };
 
                     await _db.BeginTranAsync();
-                    var updateUserPartTimeCount = await _userPartTimeRepository.UpdateUserPartTime(upsertdel, entity);
+                    var updateUserPartCount = await _userPartTimeRepository.UpdateUserPartTime(upsertdel, entity);
                     // 判断老员工是否还有兼任，如果没有就修改兼任状态为0
-                    var oldUserPartTimeIsExist = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(upsertdel.Old_UserId));
-                    if (!oldUserPartTimeIsExist)
+                    var oldUserPartIsExist = await _userPartTimeRepository.GetUserPartTimeIsExist(long.Parse(upsertdel.Old_UserId));
+                    if (!oldUserPartIsExist)
                     {
                         await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsertdel.Old_UserId), 0);
                     }
@@ -202,8 +202,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     await _userPartTimeRepository.UpdateUserPartTime(long.Parse(upsertdel.UserId), 1);
                     await _db.CommitTranAsync();
 
-                    return updateUserPartTimeCount >= 1
-                            ? Result<int>.Ok(updateUserPartTimeCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                    return updateUserPartCount >= 1
+                            ? Result<int>.Ok(updateUserPartCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
                 }
             }

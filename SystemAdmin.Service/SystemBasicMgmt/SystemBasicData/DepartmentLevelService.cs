@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                DepartmentLevelEntity insertDeptLevel = new DepartmentLevelEntity()
+                var entity = new DepartmentLevelEntity()
                 {
                     DepartmentLevelId = SnowFlakeSingle.Instance.NextId(),
                     DepartmentLevelCode = upsert.DepartmentLevelCode,
@@ -49,7 +49,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _deptLevelRepository.InsertDepartmentLevel(insertDeptLevel);
+                int count = await _deptLevelRepository.InsertDepartmentLevel(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -98,7 +98,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                DepartmentLevelEntity entity = new DepartmentLevelEntity()
+                var entity = new DepartmentLevelEntity()
                 {
                     DepartmentLevelId = long.Parse(upsert.DepartmentLevelId),
                     DepartmentLevelCode = upsert.DepartmentLevelCode,

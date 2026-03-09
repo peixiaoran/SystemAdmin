@@ -4,9 +4,9 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 步骤条件分支Dto
+    /// 步骤流程分支Dto
     /// </summary>
-    public class WorkflowStepConditionDto
+    public class WorkflowStepBranchDto
     {
         /// <summary>
         /// 步骤Id
