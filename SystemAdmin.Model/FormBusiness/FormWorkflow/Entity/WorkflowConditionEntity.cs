@@ -3,23 +3,28 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 流程审批条件实体类
+    /// 条件实体类
     /// </summary>
     [SugarTable("[Form].[WorkflowCondition]")]
     public class WorkflowConditionEntity
     {
         /// <summary>
-        /// 审批条件Id
+        /// 条件Id
         /// </summary>
         public long ConditionId { get; set; }
 
         /// <summary>
-        /// 流程条件名称（中文）
+        /// 所属表单Id
+        /// </summary>
+        public long FormTypeId { get; set; }
+
+        /// <summary>
+        /// 条件名称（中文）
         /// </summary>
         public string ConditionNameCn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 流程条件名称（英文）
+        /// 条件名称（英文）
         /// </summary>
         public string ConditionNameEn { get; set; } = string.Empty;
 

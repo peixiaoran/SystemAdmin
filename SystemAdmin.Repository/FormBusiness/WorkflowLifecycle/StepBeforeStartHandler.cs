@@ -1,4 +1,5 @@
-﻿using SqlSugar;
+﻿using Org.BouncyCastle.Ocsp;
+using SqlSugar;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
@@ -89,32 +90,32 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
 
             var nowTime = DateTime.Now;
             var ym = nowTime.ToString("yyMM");
-            int seq = 0;
+            int Seq = 0;
             // 查当月记录
-            var stat = await _db.Queryable<FormCountingEntity>()
-                                .Where(formmonth => formmonth.FormTypeId == formTypeInfo.FormTypeId && formmonth.YM == ym)
-                                .FirstAsync();
-            if (stat == null)
+            var newSeq = await _db.Queryable<FormCountingEntity>()
+                                  .Where(formmonth => formmonth.FormTypeId == formTypeInfo.FormTypeId && formmonth.YM == ym)
+                                  .FirstAsync();
+            if (newSeq == null)
             {
-                seq = 1;
+                Seq = 1;
                 await _db.Insertable(new FormCountingEntity
                 {
                     FormTypeId = formTypeInfo.FormTypeId,
                     YM = ym,
-                    Total = seq,
+                    Total = Seq,
                     CreatedBy = userId,
                     CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
                 }).ExecuteCommandAsync();
             }
             else
             {
-                seq = stat.Total + 1;
+                Seq = newSeq.Total + 1;
                 await _db.Updateable<FormCountingEntity>()
-                         .SetColumns(formmonth => formmonth.Total == seq)
-                         .Where(formmonth => formmonth.FormTypeId == formTypeInfo.FormTypeId && formmonth.YM == ym)
+                         .SetColumns(formcount => formcount.Total == Seq)
+                         .Where(formcount => formcount.FormTypeId == formTypeInfo.FormTypeId && formcount.YM == ym)
                          .ExecuteCommandAsync();
             }
-            return $"{formTypeInfo.Prefix}-{ym}{seq.ToString("D" + 4)}";
+            return $"{formTypeInfo.Prefix}-{ym}{Seq.ToString("D" + 4)}";
         }
 
         /// <summary>
@@ -279,13 +280,13 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             var finalApprover = new List<StepApproveUser>();
 
             // 申请人职级信息
-            var appPosSortOrder = await _db.Queryable<UserPositionEntity>().Where(position => position.PositionId == appUserEntity.PositionId).FirstAsync();
+            var applyPos = await _db.Queryable<UserPositionEntity>().Where(position => position.PositionId == appUserEntity.PositionId).FirstAsync();
 
             // 申请人所有上级部门Ids
             var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
 
             // 查询符合步骤条件的签核人，带有注本、兼、代的标识并按照入职时间正序排序
-            var appCanUserSql = @"SELECT
+            var candidateUserSql = @"SELECT
                                             t.UserId,
                                             t.UserName,
                                             t.AppointmentType,
@@ -332,6 +333,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                             LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
                                             WHERE
                                                 users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
                                                 AND users.IsApproval = 1
                                                 AND dept.DepartmentLevelId = @pdeptLevelId
                                                 AND users.PositionId = @pposId
@@ -377,13 +379,14 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                             LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
                                             WHERE
                                                 users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
                                                 AND users.IsApproval = 1
                                                 AND dept.DepartmentLevelId = @pdeptLevelId
                                                 AND part.PartTimePositionId = @pposId
                                                 AND position.SortOrder < @pappPosSortOrder
                                         ) t ORDER BY t.HireDate ASC;";
 
-            var appCanUserPar = new List<SugarParameter>
+            var candidateUserPar = new List<SugarParameter>
             {
                 new SugarParameter("@plocale", _lang.Locale),
                 new SugarParameter("@pprimary", AppointmentType.Primary.ToEnumString()),
@@ -392,15 +395,15 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                 new SugarParameter("@pconcurrentagent", AppointmentType.ConcurrentAgent.ToEnumString()),
                 new SugarParameter("@pdeptLevelId", deptLevelId),
                 new SugarParameter("@pposId", positionId),
-                new SugarParameter("@pappPosSortOrder", appPosSortOrder.SortOrder),
+                new SugarParameter("@pappPosSortOrder", applyPos.SortOrder),
             };
 
             // 查询符合条件审批人候选人，注本、兼、代、兼代的标识并按照入职时间正序排序
-            var approveCanUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(appCanUserSql, appCanUserPar);
-            if (approveCanUser.Count() > 0)
+            var candidateList = await _db.Ado.SqlQueryAsync<StepApproveUser>(candidateUserSql, candidateUserPar);
+            if (candidateList.Count() > 0)
             {
                 // 按照本、兼、代、兼代的顺序筛选最终审批人
-                finalApprover = await GetFinalStepApproveUserList(approveCanUser, ApproveMode.Single.ToEnumString(), "PirCon");
+                finalApprover = await GetFinalStepApproveUserList(candidateList, ApproveMode.Single.ToEnumString(), "PirCon");
             }
 
             // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动指派）
@@ -432,7 +435,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                         var deptInSql = string.Join(", ", parentDeptIds);
 
                         // 查询高阶审批人候选人，注本、兼、代、兼代的标识并按照职级倒序、入职时间正序排序
-                        var highAppCanUserSql = $@"SELECT
+                        var highCandidateUserSql = $@"SELECT
                                                             t.UserId,
                                                             t.UserName,
                                                             t.AppointmentType,
@@ -506,6 +509,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                                 ON agent.AgentUserId = agentuser.UserId
                                                             WHERE 
                                                               users.IsEmployed = 1
+                                                              AND users.IsFreeze = 0
                                                               AND users.IsApproval = 1
                                                               AND dept.DepartmentId IN ({deptInSql})
                                                               AND deptlevel.SortOrder = @psortOrder
@@ -578,6 +582,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                             LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
                                                             WHERE 
                                                               users.IsEmployed = 1
+                                                              AND users.IsFreeze = 0
                                                               AND users.IsApproval = 1
                                                               AND dept.DepartmentId IN ({deptInSql})
                                                               AND deptlevel.SortOrder = @psortOrder
@@ -585,7 +590,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                               AND position.SortOrder < @pappPosSortOrder
                                                         ) t ORDER BY SortOrder DESC,t.HireDate ASC;";
 
-                        var highAppCanUserPar = new List<SugarParameter>
+                        var highCandidateUserPar = new List<SugarParameter>
                         {
                             new SugarParameter("@plocale", _lang.Locale),
                             new SugarParameter("@pautoprimary", AppointmentType.AutoPrimary.ToEnumString()),
@@ -594,15 +599,15 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                             new SugarParameter("@pautoconcurrentagent", AppointmentType.AutoConcurrentAgent.ToEnumString()),
                             new SugarParameter("@psortOrder", itemDeptOrder),
                             new SugarParameter("@pposOrder", itemPosOrder),
-                            new SugarParameter("@pappPosSortOrder", appPosSortOrder.SortOrder),
+                            new SugarParameter("@pappPosSortOrder", applyPos.SortOrder),
                         };
                         for (int i = 0; i < parentDeptIds.Count; i++)
                         {
-                            highAppCanUserPar.Add(new SugarParameter($"@dept{i}", parentDeptIds[i]));
+                            highCandidateUserPar.Add(new SugarParameter($"@dept{i}", parentDeptIds[i]));
                         }
 
                         // 查询符合条件候选审批人
-                        var highLevelUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(highAppCanUserSql, highAppCanUserPar);
+                        var highLevelUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(highCandidateUserSql, highCandidateUserPar);
                         if (highLevelUser.Count > 0)
                         {
                             // 按照本、兼、代、兼代的顺序筛选最终审批人

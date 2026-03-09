@@ -244,25 +244,25 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.SortOrder, user.HireDate });
 
             var page = await query.Select((user, userrole, deptinfo, userposition, nation) =>
-                    new UserInfoPageDto
-                    {
-                        UserId = user.UserId,
-                        DepartmentId = user.DepartmentId,
-                        DepartmentName = _lang.Locale == "zh-CN"
-                                         ? deptinfo.DepartmentNameCn
-                                         : deptinfo.DepartmentNameEn,
-                        UserNo = user.UserNo,
-                        UserNameCn = user.UserNameCn,
-                        UserNameEn = user.UserNameEn,
-                        PositionName = _lang.Locale == "zh-CN"
-                                         ? userposition.PositionNameCn
-                                         : userposition.PositionNameEn, 
-                        Gender = user.Gender,
-                        IsEmployed = user.IsEmployed,
-                        IsApproval = user.IsApproval,
-                        IsFreeze = user.IsFreeze,
-                        Remark = user.Remark
-                    }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+                                   new UserInfoPageDto
+                                   {
+                                       UserId = user.UserId,
+                                       DepartmentId = user.DepartmentId,
+                                       DepartmentName = _lang.Locale == "zh-CN"
+                                                        ? deptinfo.DepartmentNameCn
+                                                        : deptinfo.DepartmentNameEn,
+                                       UserNo = user.UserNo,
+                                       UserNameCn = user.UserNameCn,
+                                       UserNameEn = user.UserNameEn,
+                                       PositionName = _lang.Locale == "zh-CN"
+                                                        ? userposition.PositionNameCn
+                                                        : userposition.PositionNameEn, 
+                                       Gender = user.Gender,
+                                       IsEmployed = user.IsEmployed,
+                                       IsApproval = user.IsApproval,
+                                       IsFreeze = user.IsFreeze,
+                                       Remark = user.Remark
+                                   }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserInfoPageDto>.Ok(page, totalCount, "");
         }
 

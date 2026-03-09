@@ -22,7 +22,7 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Messages {
+    public class Messages {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         ///   返回此类使用的缓存的 ResourceManager 实例。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SystemAdmin.Localization.FormBusiness.FormWorkflow.Messages", typeof(Messages).Assembly);
@@ -51,7 +51,7 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         ///   使用此强类型资源类的所有资源查找执行重写。
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,54 +61,54 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         }
         
         /// <summary>
-        ///   查找类似 删除审批步骤失败 的本地化字符串。
+        ///   查找类似 步骤删除失败 的本地化字符串。
         /// </summary>
-        internal static string WorkflowStepDeleteFailed {
+        public static string WorkflowStepDeleteFailed {
             get {
                 return ResourceManager.GetString("WorkflowStepDeleteFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 删除审批步骤成功 的本地化字符串。
+        ///   查找类似 步骤删除成功 的本地化字符串。
         /// </summary>
-        internal static string WorkflowStepDeleteSuccess {
+        public static string WorkflowStepDeleteSuccess {
             get {
                 return ResourceManager.GetString("WorkflowStepDeleteSuccess", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 新增审批步骤失败 的本地化字符串。
+        ///   查找类似 步骤新增失败 的本地化字符串。
         /// </summary>
-        internal static string WorkflowStepInsertFailed {
+        public static string WorkflowStepInsertFailed {
             get {
                 return ResourceManager.GetString("WorkflowStepInsertFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 新增审批步骤成功 的本地化字符串。
+        ///   查找类似 步骤新增成功 的本地化字符串。
         /// </summary>
-        internal static string WorkflowStepInsertSuccess {
+        public static string WorkflowStepInsertSuccess {
             get {
                 return ResourceManager.GetString("WorkflowStepInsertSuccess", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 修改审批步骤失败 的本地化字符串。
+        ///   查找类似 步骤修改失败 的本地化字符串。
         /// </summary>
-        internal static string WorkflowStepUpdateFailed {
+        public static string WorkflowStepUpdateFailed {
             get {
                 return ResourceManager.GetString("WorkflowStepUpdateFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 修改审批步骤成功 的本地化字符串。
+        ///   查找类似 步骤修改成功 的本地化字符串。
         /// </summary>
-        internal static string WorkflowStepUpdateSuccess {
+        public static string WorkflowStepUpdateSuccess {
             get {
                 return ResourceManager.GetString("WorkflowStepUpdateSuccess", resourceCulture);
             }

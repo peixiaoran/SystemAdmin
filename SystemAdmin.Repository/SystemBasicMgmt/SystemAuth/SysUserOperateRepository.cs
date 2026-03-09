@@ -63,21 +63,21 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         /// <summary>
         /// 记录员工登录日志
         /// </summary>
-        /// <param name="userLoginLogEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> AddUserLoginLogInfo(UserLogOutEntity userLoginLogEntity)
+        public async Task<int> AddUserLoginLogInfo(UserLogOutEntity entity)
         {
-            return await _db.Insertable(userLoginLogEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
         /// 新增员工密码错误记录
         /// </summary>
-        /// <param name="userLockEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> AddUserLock(UserLockEntity userLockEntity)
+        public async Task<int> AddUserLock(UserLockEntity entity)
         {
-            return await _db.Insertable(userLockEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -109,21 +109,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         /// <summary>
         /// 记录员工登出日志
         /// </summary>
-        /// <param name="userLoginLogEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> AddUserLogOutInfo(UserLogOutEntity userLoginLogEntity)
+        public async Task<int> AddUserLogOutInfo(UserLogOutEntity entity)
         {
-            return await _db.Insertable(userLoginLogEntity).ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 记录员工登出日志
-        /// </summary>
-        /// <param name="userLoginLogEntity"></param>
-        /// <returns></returns>
-        public async Task<int> AddUserLogOutInfoList(List<UserLogOutEntity> userLoginLogEntity)
-        {
-            return await _db.Insertable(userLoginLogEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -148,7 +138,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         {
             return await _db.Queryable<UserInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .Where(user => user.UserNo == userNo && user.IsEmployed == 1)
+                            .Where(user => user.UserNo == userNo && user.IsEmployed == 1 && user.IsFreeze == 0)
                             .FirstAsync();
         }
 

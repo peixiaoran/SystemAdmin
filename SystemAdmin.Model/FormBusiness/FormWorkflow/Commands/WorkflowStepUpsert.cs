@@ -36,12 +36,12 @@
         public string ArchitectureLevel { get; set; } = string.Empty;
 
         /// <summary>
-        /// 审批人选取方式（依组织架构、指定部门员工级别、指定员工、自定义）
+        /// 步骤选人方式（依组织架构、指定部门员工级别、指定员工、自定义）
         /// </summary>
         public string Assignment { get; set; } = string.Empty;
 
         /// <summary>
-        /// 签核方式（单签、会签）
+        /// 签核方式（单签、会签、或签）
         /// </summary>
         public string ApproveMode { get; set; } = string.Empty;
 

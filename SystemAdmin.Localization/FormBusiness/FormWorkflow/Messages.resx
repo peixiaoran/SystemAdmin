@@ -118,21 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WorkflowStepDeleteFailed" xml:space="preserve">
-    <value>删除审批步骤失败</value>
+    <value>步骤删除失败</value>
   </data>
   <data name="WorkflowStepDeleteSuccess" xml:space="preserve">
-    <value>删除审批步骤成功</value>
+    <value>步骤删除成功</value>
   </data>
   <data name="WorkflowStepInsertFailed" xml:space="preserve">
-    <value>新增审批步骤失败</value>
+    <value>步骤新增失败</value>
   </data>
   <data name="WorkflowStepInsertSuccess" xml:space="preserve">
-    <value>新增审批步骤成功</value>
+    <value>步骤新增成功</value>
   </data>
   <data name="WorkflowStepUpdateFailed" xml:space="preserve">
-    <value>修改审批步骤失败</value>
+    <value>步骤修改失败</value>
   </data>
   <data name="WorkflowStepUpdateSuccess" xml:space="preserve">
-    <value>修改审批步骤成功</value>
+    <value>步骤修改成功</value>
   </data>
 </root>

@@ -3,7 +3,7 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 流程审批配置表
+    /// 步骤条件分支表
     /// </summary>
     [SugarTable("[Form].[WorkflowStepCondition]")]
     public class WorkflowStepConditionEntity
@@ -24,7 +24,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public int ExecuteMatched { get; set; }
 
         /// <summary>
-        /// 下一审批步骤Id
+        /// 下一步骤Id
         /// </summary>
         public long NextStepId { get; set; }
 

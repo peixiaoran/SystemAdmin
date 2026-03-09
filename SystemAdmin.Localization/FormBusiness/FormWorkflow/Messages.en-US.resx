@@ -118,21 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="WorkflowStepDeleteFailed" xml:space="preserve">
-    <value>Failed to delete workflow step</value>
+    <value>Step deletion failed</value>
   </data>
   <data name="WorkflowStepDeleteSuccess" xml:space="preserve">
-    <value>Workflow step deleted successfully</value>
+    <value>Step deletion successful</value>
   </data>
   <data name="WorkflowStepInsertFailed" xml:space="preserve">
-    <value>Failed to create workflow step</value>
+    <value>Step addition failed</value>
   </data>
   <data name="WorkflowStepInsertSuccess" xml:space="preserve">
-    <value>Workflow step created successfully</value>
+    <value>Step added successfully</value>
   </data>
   <data name="WorkflowStepUpdateFailed" xml:space="preserve">
-    <value>Failed to update workflow step</value>
+    <value>Step modification failed</value>
   </data>
   <data name="WorkflowStepUpdateSuccess" xml:space="preserve">
-    <value>Workflow step updated successfully</value>
+    <value>Step modification successful</value>
   </data>
 </root>

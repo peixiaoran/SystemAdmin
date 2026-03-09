@@ -3,13 +3,13 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 流程审批步骤自定义来源表
+    /// 步骤自定义来源表
     /// </summary>
     [SugarTable("[Form].[WorkflowStepCustom]")]
     public class WorkflowStepCustomEntity
     {
         /// <summary>
-        /// 审批步骤自定义Id
+        /// 步骤自定义Id
         /// </summary>
         [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
         public long StepCustomId { get; set; }

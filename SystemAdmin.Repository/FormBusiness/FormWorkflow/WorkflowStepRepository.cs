@@ -24,7 +24,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增审批步骤信息
+        /// 新增步骤信息
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -34,7 +34,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增审批步骤组织架构来源
+        /// 新增步骤组织架构来源
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -44,7 +44,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        ///  新增审批步骤指定部门员工级别来源
+        ///  新增步骤指定部门员工级别来源
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -54,7 +54,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增审批步骤指定员工来源
+        /// 新增步骤指定员工来源
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -64,7 +64,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增审批步骤自定义来源
+        /// 新增步骤自定义来源
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -74,7 +74,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除审批步骤信息
+        /// 删除步骤信息
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -86,7 +86,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除审批步骤组织架构来源
+        /// 删除步骤组织架构来源
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -98,7 +98,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除审批步骤指定部门员工级别来源
+        /// 删除步骤指定部门员工级别来源
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -110,7 +110,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除审批步骤指定员工来源
+        /// 删除步骤指定员工来源
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -122,7 +122,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除审批步骤自定义来源
+        /// 删除步骤自定义来源
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -134,7 +134,32 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改审批步骤信息
+        /// 删除步骤条件分支
+        /// </summary>
+        /// <param name="stepId"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteWorkflowStepCondition(long stepId)
+        {
+            return await _db.Deleteable<WorkflowStepConditionEntity>()
+                            .Where(stepcondition => stepcondition.StepId == stepId)
+                            .ExecuteCommandAsync();
+        }
+
+        /// <summary>
+        /// 删除步骤条件分支
+        /// </summary>
+        /// <param name="stepId"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateWorkflowStepCondition(long stepId)
+        {
+            return await _db.Updateable<WorkflowStepConditionEntity>()
+                            .SetColumns(stepcondition => stepcondition.NextStepId == -1)
+                            .Where(stepcondition => stepcondition.NextStepId == stepId)
+                            .ExecuteCommandAsync();
+        }
+
+        /// <summary>
+        /// 修改步骤信息
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -152,7 +177,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改审批步骤组织架构来源
+        /// 修改步骤组织架构来源
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -169,7 +194,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改审批步骤指定部门员工级别来源
+        /// 修改步骤指定部门员工级别来源
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -186,7 +211,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改审批步骤指定员工来源
+        /// 修改步骤指定员工来源
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -203,7 +228,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改审批步骤自定义来源
+        /// 修改步骤自定义来源
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -220,102 +245,140 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询审批步骤分页
+        /// 查询步骤及条件分支分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
         public async Task<ResultPaged<WorkflowStepPageDto>> GetWorkflowStepPage(GetWorkflowStepPage getPage)
         {
             RefAsync<int> totalCount = 0;
-            var workflowStepPage = await _db.Queryable<WorkflowStepEntity>()
-                                            .With(SqlWith.NoLock)
-                                            .InnerJoin<DictionaryInfoEntity>((stepinfo, dic) => dic.DicType == " ApproverAssignment" && stepinfo.Assignment == dic.DicCode)
-                                            .Where((stepinfo, dic) => stepinfo.FormTypeId == long.Parse(getPage.FormTypeId))
-                                            .OrderBy((stepinfo, dic) => stepinfo.CreatedDate)
-                                            .Select((stepinfo, dic) => new WorkflowStepPageDto()
-                                            {
-                                                StepId = stepinfo.StepId,
-                                                StepName = _lang.Locale == "zh-CN"
-                                                           ? stepinfo.StepNameCn
-                                                           : stepinfo.StepNameEn,
-                                                Assignment = int.Parse(stepinfo.Assignment),
-                                                AssignmentName = _lang.Locale == "zh-CN"
-                                                           ? dic.DicNameCn
-                                                           : dic.DicNameEn,
-                                                Description = stepinfo.Description,
-                                            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<WorkflowStepPageDto>.Ok(workflowStepPage.Adapt<List<WorkflowStepPageDto>>(), totalCount);
+            var stepPage = await _db.Queryable<WorkflowStepEntity>()
+                                    .With(SqlWith.NoLock)
+                                    .InnerJoin<DictionaryInfoEntity>((stepinfo, dic) => dic.DicType == "StepAssignment" && stepinfo.Assignment == dic.DicCode)
+                                    .Where((stepinfo, dic) => stepinfo.FormTypeId == long.Parse(getPage.FormTypeId))
+                                    .OrderBy((stepinfo, dic) => stepinfo.CreatedDate)
+                                    .Select((stepinfo, dic) => new WorkflowStepPageDto()
+                                    {
+                                        StepId = stepinfo.StepId,
+                                        StepName = _lang.Locale == "zh-CN"
+                                                   ? stepinfo.StepNameCn
+                                                   : stepinfo.StepNameEn,
+                                        AssignmentName = _lang.Locale == "zh-CN"
+                                                   ? dic.DicNameCn
+                                                   : dic.DicNameEn,
+                                        Description = stepinfo.Description,
+                                    }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+
+            // 循环查询步骤条件分支信息
+            foreach (var stepItem in stepPage)
+            {
+                var stepConList = await _db.Queryable<WorkflowStepConditionEntity>()
+                                           .With(SqlWith.NoLock)
+                                           .LeftJoin<WorkflowConditionEntity>((stepCondition, condition) => stepCondition.ConditionId == condition.ConditionId)
+                                           .LeftJoin<WorkflowStepEntity>((stepCondition, condition, nextStep) => stepCondition.NextStepId == nextStep.StepId)
+                                           .Where((stepCondition, condition, nextStep) => stepCondition.StepId == stepItem.StepId)
+                                           .Select((stepCondition, condition, nextStep) => new WorkflowStepConditionDto()
+                                           {
+                                               StepId = stepItem.StepId,
+                                               ConditionId = condition.ConditionId,
+                                               ConditionName = _lang.Locale == "zh-CN"
+                                                               ? condition.ConditionNameCn
+                                                               : condition.ConditionNameEn,
+                                               ExecuteMatched = stepCondition.ExecuteMatched,
+                                               NextStepId = stepCondition.NextStepId,
+                                               NextStepName = _lang.Locale == "zh-CN"
+                                                               ? nextStep.StepNameCn
+                                                               : nextStep.StepNameEn
+                                           }).ToListAsync();
+                stepItem.StepConditionList = stepConList;
+            }
+            return ResultPaged<WorkflowStepPageDto>.Ok(stepPage.Adapt<List<WorkflowStepPageDto>>(), totalCount);
         }
 
         /// <summary>
-        /// 查询审批步骤实体
+        /// 查询步骤实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<WorkflowStepEntityDto> GetWorkflowStepEntity(long stepId)
         {
             var entity = await _db.Queryable<WorkflowStepEntity>()
-                                              .With(SqlWith.NoLock)
-                                              .Where(step => step.FormTypeId == stepId)
-                                              .OrderBy(step => step.CreatedDate)
-                                              .ToListAsync();
+                                  .With(SqlWith.NoLock)
+                                  .Where(step => step.FormTypeId == stepId)
+                                  .OrderBy(step => step.CreatedDate)
+                                  .FirstAsync();
             return entity.Adapt<WorkflowStepEntityDto>();
         }
 
         /// <summary>
-        /// 查询签核步骤组织架构来源实体
+        /// 查询步骤组织架构来源实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<WorkflowStepOrgEntity> GetWorkflowStepOrgEntity(long stepId)
         {
-            var stepOrgEntity = await _db.Queryable<WorkflowStepOrgEntity>()
-                                         .With(SqlWith.NoLock)
-                                         .Where(steporg => steporg.StepId == stepId)
-                                         .ToListAsync();
-            return stepOrgEntity.Adapt<WorkflowStepOrgEntity>();
+            return await _db.Queryable<WorkflowStepOrgEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(steporg => steporg.StepId == stepId)
+                            .FirstAsync();
         }
 
         /// <summary>
-        /// 查询签核步骤指定部门员工级别来源实体
+        /// 查询步骤指定部门员工级别来源实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<WorkflowStepDeptUserEntity> GetWorkflowStepDeptUserEntity(long stepId)
         {
-            var stepDeptUserEntity = await _db.Queryable<WorkflowStepDeptUserEntity>()
-                                              .With(SqlWith.NoLock)   
-                                              .Where(stepdeptcri => stepdeptcri.StepId == stepId)
-                                              .ToListAsync();
-            return stepDeptUserEntity.Adapt<WorkflowStepDeptUserEntity>();
+            return await _db.Queryable<WorkflowStepDeptUserEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(stepdeptuser => stepdeptuser.StepId == stepId)
+                            .FirstAsync();
         }
 
         /// <summary>
-        /// 查询签核步骤指定员工来源表实体
+        /// 查询步骤指定员工来源表实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<WorkflowStepUserEntity> GetWorkflowStepUserEntity(long stepId)
         {
-            var stepUserEntity = await _db.Queryable<WorkflowStepUserEntity>()
-                                          .With(SqlWith.NoLock)
-                                          .Where(stepuser => stepuser.StepId == stepId)
-                                          .ToListAsync();
-            return stepUserEntity.Adapt<WorkflowStepUserEntity>();
+            return await _db.Queryable<WorkflowStepUserEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(stepuser => stepuser.StepId == stepId)
+                            .FirstAsync();
         }
 
         /// <summary>
-        /// 查询签核步骤指定员工来源表实体
+        /// 查询步骤指定员工来源表实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
         public async Task<WorkflowStepCustomEntity> GetWorkflowStepCustomEntity(long stepId)
         {
-            var stepCustomEntity = await _db.Queryable<WorkflowStepCustomEntity>()
-                                            .With(SqlWith.NoLock)
-                                            .Where(stepappcustom => stepappcustom.StepId == stepId)
-                                            .ToListAsync();
-            return stepCustomEntity.Adapt<WorkflowStepCustomEntity>();
+            return await _db.Queryable<WorkflowStepCustomEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(stepappcustom => stepappcustom.StepId == stepId)
+                            .FirstAsync();
+        }
+
+        /// <summary>
+        /// 条件下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<WorkflowConditionDropDto>> GetConditionDropDown(long formTypeId)
+        {
+            return await _db.Queryable<WorkflowConditionEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(condition => condition.CreatedDate)
+                            .Where(condition => condition.FormTypeId == formTypeId)
+                            .Select(condition => new WorkflowConditionDropDto
+                            {
+                                ConditionId = condition.ConditionId,
+                                ConditionName = _lang.Locale == "zh-CN"
+                                                ? condition.ConditionNameCn
+                                                : condition.ConditionNameEn,
+                            }).ToListAsync();
         }
 
         /// <summary>
@@ -357,7 +420,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 审批人选取方式下拉
+        /// 步骤选人方式下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<AssignmentDropDto>> GetAssignmentDropDown()
@@ -431,32 +494,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 职业下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<UserLaborDropDto>> GetLaborDropDown()
-        {
-            var query = _db.Queryable<UserLaborEntity>().With(SqlWith.NoLock);
-            if (_lang.Locale == "zh-CN")
-            {
-                query = query.OrderBy(labor => labor.LaborNameCn);
-            }
-            else
-            {
-                query = query.OrderBy(labor => labor.LaborNameEn);
-            }
-
-            return await query.Select(labor => new UserLaborDropDto
-            {
-                LaborId = labor.LaborId,
-                LaborName = _lang.Locale == "zh-CN"
-                            ? labor.LaborNameCn
-                            : labor.LaborNameEn
-            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 查询选取员工分页
+        /// 查询员工分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
