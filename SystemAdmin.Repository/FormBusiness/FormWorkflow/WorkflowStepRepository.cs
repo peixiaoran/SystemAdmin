@@ -24,7 +24,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增步骤信息
+        /// 新增步骤
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -34,7 +34,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增步骤组织架构来源
+        /// 新增步骤-组织架构
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -44,7 +44,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        ///  新增步骤指定部门员工级别来源
+        ///  新增步骤-指定部门员工级别
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -54,7 +54,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增步骤指定员工来源
+        /// 新增步骤-指定员工
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -64,7 +64,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增步骤自定义来源
+        /// 新增步骤-自定义逻辑
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -74,7 +74,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除步骤信息
+        /// 删除步骤
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -86,7 +86,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除步骤组织架构来源
+        /// 删除步骤-组织架构
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -98,7 +98,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除步骤指定部门员工级别来源
+        /// 删除步骤-指定部门员工级别
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -110,7 +110,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除步骤指定员工来源
+        /// 删除步骤-指定员工
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -122,7 +122,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除步骤自定义来源
+        /// 删除步骤-自定义逻辑
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -146,7 +146,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除步骤条件分支
+        /// 修改下一步骤为此步骤 -1
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -159,7 +159,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改步骤信息
+        /// 修改步骤
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -173,74 +173,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                 step.CreatedBy,
                                 step.CreatedDate,
                             }).Where(step => step.StepId == upsert.StepId)
-                            .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 修改步骤组织架构来源
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepOrg(WorkflowStepOrgEntity entity)
-        {
-            return await _db.Updateable(entity)
-                            .IgnoreColumns(step => new
-                            {
-                                step.StepId,
-                                step.CreatedBy,
-                                step.CreatedDate,
-                            }).Where(step => step.StepId == entity.StepId)
-                            .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 修改步骤指定部门员工级别来源
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepDeptUser(WorkflowStepDeptUserEntity entity)
-        {
-            return await _db.Updateable(entity)
-                            .IgnoreColumns(step => new
-                            {
-                                step.StepId,
-                                step.CreatedBy,
-                                step.CreatedDate,
-                            }).Where(step => step.StepId == entity.StepId)
-                            .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 修改步骤指定员工来源
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepUser(WorkflowStepUserEntity entity)
-        {
-            return await _db.Updateable(entity)
-                            .IgnoreColumns(step => new
-                            {
-                                step.StepId,
-                                step.CreatedBy,
-                                step.CreatedDate,
-                            }).Where(step => step.StepId == entity.StepId)
-                            .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 修改步骤自定义来源
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepCustom(WorkflowStepCustomEntity entity)
-        {
-            return await _db.Updateable(entity)
-                            .IgnoreColumns(step => new
-                            {
-                                step.StepId,
-                                step.CreatedBy,
-                                step.CreatedDate,
-                            }).Where(step => step.StepId == entity.StepId)
                             .ExecuteCommandAsync();
         }
 
@@ -311,7 +243,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询步骤组织架构来源实体
+        /// 查询步骤-组织架构实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -324,7 +256,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询步骤指定部门员工级别来源实体
+        /// 查询步骤-指定部门员工级别实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -337,7 +269,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询步骤指定员工来源表实体
+        /// 查询步骤-指定员工实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -350,7 +282,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询步骤指定员工来源表实体
+        /// 查询步骤-指定员工实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>

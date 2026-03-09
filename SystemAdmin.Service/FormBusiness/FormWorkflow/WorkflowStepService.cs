@@ -31,7 +31,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增步骤信息
+        /// 新增步骤
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -143,7 +143,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除步骤信息
+        /// 删除步骤
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
@@ -151,7 +151,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                // 删除所有步骤的流程配置
+                // 删除所有步骤的配置
                 int delStepCount = await _workflowStepRepository.DeleteWorkflowStep(long.Parse(stepId));
                 int delOrgCount = await _workflowStepRepository.DeleteWorkflowStepOrg(long.Parse(stepId));
                 int delDeptUserCount = await _workflowStepRepository.DeleteWorkflowStepDeptUser(long.Parse(stepId));
@@ -173,7 +173,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改步骤信息
+        /// 修改步骤
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
