@@ -18,11 +18,11 @@
         /// <summary>
         /// 部门Ids
         /// </summary>
-        public string DeptIds { get; set; } = string.Empty;
+        public long DeptId { get; set; }
 
         /// <summary>
         /// 职级Ids
         /// </summary>
-        public string PositionIds { get; set; } = string.Empty;
+        public long PositionId { get; set; }
     }
 }

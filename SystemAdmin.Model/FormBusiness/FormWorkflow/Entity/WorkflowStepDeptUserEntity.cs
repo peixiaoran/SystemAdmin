@@ -20,14 +20,14 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long StepId { get; set; }
 
         /// <summary>
-        /// 部门Ids
+        /// 部门Id
         /// </summary>
-        public string DeptIds { get; set; } = string.Empty;
+        public long DeptId { get; set; }
 
         /// <summary>
-        /// 职级Ids
+        /// 职级Id
         /// </summary>
-        public string PositionIds { get; set; } = string.Empty;
+        public long PositionId { get; set; }
 
         /// <summary>
         /// 创建人

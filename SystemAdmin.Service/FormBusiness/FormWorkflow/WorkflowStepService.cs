@@ -96,8 +96,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         {
                             StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
-                            DeptIds = upsert.workflowStepDeptUserUpsert.DeptIds,
-                            PositionIds = upsert.workflowStepDeptUserUpsert.PositionIds,
+                            DeptId = upsert.workflowStepDeptUserUpsert.DeptId,
+                            PositionId = upsert.workflowStepDeptUserUpsert.PositionId,
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
@@ -240,8 +240,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
-                        DeptIds = upsert.workflowStepDeptUserUpsert.DeptIds,
-                        PositionIds = upsert.workflowStepDeptUserUpsert.PositionIds,
+                        DeptId = upsert.workflowStepDeptUserUpsert.DeptId,
+                        PositionId = upsert.workflowStepDeptUserUpsert.PositionId,
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
