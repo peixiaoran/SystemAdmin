@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 09/03/2026 17:00:59
+ Date: 11/03/2026 15:06:14
 */
 
 
@@ -1346,8 +1346,8 @@ GO
 CREATE TABLE [Form].[WorkflowStepDeptUser] (
   [StepDeptUserId] bigint  NOT NULL,
   [StepId] bigint  NOT NULL,
-  [DeptIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [PositionIds] nvarchar(max) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [DeptId] bigint  NOT NULL,
+  [PositionId] bigint  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime2(3)  NOT NULL
 )
@@ -1371,17 +1371,17 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'部门Ids',
+'MS_Description', N'部门Id',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStepDeptUser',
-'COLUMN', N'DeptIds'
+'COLUMN', N'DeptId'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'员工职级Ids',
+'MS_Description', N'员工职级Id',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStepDeptUser',
-'COLUMN', N'PositionIds'
+'COLUMN', N'PositionId'
 GO
 
 EXEC sp_addextendedproperty

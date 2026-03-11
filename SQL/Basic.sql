@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 09/03/2026 17:00:45
+ Date: 11/03/2026 15:06:01
 */
 
 
@@ -3190,6 +3190,9 @@ INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALU
 GO
 
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-09 16:08:44.910')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'10.112.142.23', N'LoginSuccessful', N'2026-03-10 15:06:34.180')
 GO
 
 
