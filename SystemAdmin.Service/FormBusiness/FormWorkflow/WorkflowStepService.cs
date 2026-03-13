@@ -83,8 +83,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         {
                             StepOrgId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
-                            DeptLeaveId = long.Parse(upsert.workflowStepOrgUpsert.DeptLeaveId),
-                            PositionId = long.Parse(upsert.workflowStepOrgUpsert.PositionId),
+                            DeptLeaveId = long.Parse(upsert.stepOrgUpsert.DeptLeaveId),
+                            PositionId = long.Parse(upsert.stepOrgUpsert.PositionId),
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
@@ -96,8 +96,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         {
                             StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
-                            DeptId = upsert.workflowStepDeptUserUpsert.DeptId,
-                            PositionId = upsert.workflowStepDeptUserUpsert.PositionId,
+                            DepartmentId = long.Parse(upsert.stepDeptUserUpsert.DepartmentId),
+                            PositionId = long.Parse(upsert.stepDeptUserUpsert.PositionId),
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
@@ -109,7 +109,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         {
                             StepUserId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
-                            UserIds = upsert.workflowStepUserUpsert.UserIds,
+                            UserIds = upsert.stepUserUpsert.UserId,
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
@@ -121,8 +121,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         {
                             StepCustomId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
-                            HandlerKey = upsert.workflowStepCustomUpsert.HandlerKey,
-                            LogicalExplanation = upsert.workflowStepCustomUpsert.LogicalExplanation,
+                            HandlerKey = upsert.stepCustomUpsert.HandlerKey,
+                            LogicalExplanation = upsert.stepCustomUpsert.LogicalExplanation,
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
@@ -183,10 +183,10 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             try
             {
                 int updateStepCount = 0;
-                int updateStepOrgCount = 0;
-                int updateStepDeptUserCount = 0;
-                int updateStepUserCount = 0;
-                int updateStepCustomCount = 0;
+                int insertStepOrgCount = 0;
+                int insertStepDeptUserCount = 0;
+                int insertStepUserCount = 0;
+                int insertStepCustomCount = 0;
 
                 var stepEntity = new WorkflowStepEntity
                 {
@@ -227,12 +227,12 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         StepOrgId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
-                        DeptLeaveId = long.Parse(upsert.workflowStepOrgUpsert.DeptLeaveId),
-                        PositionId = long.Parse(upsert.workflowStepOrgUpsert.PositionId),
+                        DeptLeaveId = long.Parse(upsert.stepOrgUpsert.DeptLeaveId),
+                        PositionId = long.Parse(upsert.stepOrgUpsert.PositionId),
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
-                    updateStepDeptUserCount = await _workflowStepRepository.InsertWorkflowStepOrg(stepOrgEntity);
+                    insertStepOrgCount = await _workflowStepRepository.InsertWorkflowStepOrg(stepOrgEntity);
                 }
                 else if (upsert.Assignment.MatchEnum(Assignment.DeptUser))
                 {
@@ -240,12 +240,12 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
-                        DeptId = upsert.workflowStepDeptUserUpsert.DeptId,
-                        PositionId = upsert.workflowStepDeptUserUpsert.PositionId,
+                        DepartmentId = long.Parse(upsert.stepDeptUserUpsert.DepartmentId),
+                        PositionId = long.Parse(upsert.stepDeptUserUpsert.PositionId),
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
-                    updateStepDeptUserCount = await _workflowStepRepository.InsertWorkflowStepDeptUser(stepDeptUserEntity);
+                    insertStepDeptUserCount = await _workflowStepRepository.InsertWorkflowStepDeptUser(stepDeptUserEntity);
                 }
                 else if (upsert.Assignment.MatchEnum(Assignment.User))
                 {
@@ -253,11 +253,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         StepUserId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
-                        UserIds = upsert.workflowStepUserUpsert.UserIds,
+                        UserIds = upsert.stepUserUpsert.UserId,
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
-                    updateStepUserCount = await _workflowStepRepository.InsertWorkflowStepUser(stepUserEntity);
+                    insertStepUserCount = await _workflowStepRepository.InsertWorkflowStepUser(stepUserEntity);
                 }
                 else if (upsert.Assignment.MatchEnum(Assignment.Custom))
                 {
@@ -265,18 +265,18 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         StepCustomId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
-                        HandlerKey = upsert.workflowStepCustomUpsert.HandlerKey,
-                        LogicalExplanation = upsert.workflowStepCustomUpsert.LogicalExplanation,
+                        HandlerKey = upsert.stepCustomUpsert.HandlerKey,
+                        LogicalExplanation = upsert.stepCustomUpsert.LogicalExplanation,
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
-                    updateStepCustomCount = await _workflowStepRepository.InsertWorkflowStepCustom(stepCustomEntity);
+                    insertStepCustomCount = await _workflowStepRepository.InsertWorkflowStepCustom(stepCustomEntity);
                 }
                 await _db.CommitTranAsync();
 
-                return updateStepCount >= 1 && (updateStepOrgCount >= 1 || updateStepDeptUserCount >= 1 || updateStepUserCount >= 1 || updateStepCustomCount >= 1)
-                        ? Result<int>.Ok(updateStepCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
+                return updateStepCount >= 1 && (insertStepOrgCount >= 1 || insertStepDeptUserCount >= 1 || insertStepUserCount >= 1 || insertStepCustomCount >= 1)
+                        ? Result<int>.Ok(updateStepCount, _localization.ReturnMsg($"{_this}insertSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}insertFailed"));
             }
             catch (Exception ex)
             {
@@ -347,13 +347,17 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
+                await _db.BeginTranAsync();
                 var count = await _workflowStepRepository.InsertWorkflowStepBranch(entity);
+                await _db.CommitTranAsync();
+
                 return count >= 1
-                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertStepBranchSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertStepBranchFailed"));
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}BranchInsertSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}BranchInsertFailed"));
             }
             catch (Exception ex)
             {
+                await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
             }
@@ -362,19 +366,59 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <summary>
         /// 删除步骤流程分支
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="stepId"></param>
+        /// <param name="conditionId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteWorkflowStepBranch(WorkflowStepBranchUpsert upsert)
+        public async Task<Result<int>> DeleteWorkflowStepBranch(string stepId, string conditionId)
         {
             try
             {
-                var count = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(upsert.StepId), long.Parse(upsert.ConditionId));
+                await _db.BeginTranAsync();
+                var count = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(stepId), long.Parse(conditionId));
+                await _db.CommitTranAsync();
+
                 return count >= 1
-                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}StepBranchDeleteSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}StepBranchDeleteFailed"));
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}BranchDeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}BranchDeleteFailed"));
             }
             catch (Exception ex)
             {
+                await _db.RollbackTranAsync();
+                _logger.LogError(ex, ex.Message);
+                return Result<int>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 修改步骤流程分支
+        /// </summary>
+        /// <param name="upsert"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> UpdateWorkflowStepBranch(WorkflowStepBranchUpsert upsert)
+        {
+            try
+            {
+                await _db.BeginTranAsync();
+                var delCount = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(upsert.StepId), long.Parse(upsert.ConditionId));
+                var entity = new WorkflowStepBranchEntity
+                {
+                    StepId = long.Parse(upsert.StepId),
+                    ConditionId = long.Parse(upsert.ConditionId),
+                    ExecuteMatched = upsert.ExecuteMatched,
+                    NextStepId = long.Parse(upsert.NextStepId),
+                    CreatedBy = _loginuser.UserId,
+                    CreatedDate = DateTime.Now
+                };
+                var insertCount = await _workflowStepRepository.InsertWorkflowStepBranch(entity);
+                await _db.CommitTranAsync();
+
+                return delCount >=1 && insertCount >= 1
+                        ? Result<int>.Ok(insertCount, _localization.ReturnMsg($"{_this}BranchUpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}BranchUpdateFailed"));
+            }
+            catch (Exception ex)
+            {
+                await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
             }

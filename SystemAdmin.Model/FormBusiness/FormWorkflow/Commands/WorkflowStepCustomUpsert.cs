@@ -1,20 +1,10 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 流程审批步骤自定义来源新增/修改类
+    /// 流程步骤自定义来源新增/修改类
     /// </summary>
     public class WorkflowStepCustomUpsert
     {
-        /// <summary>
-        /// 审批步骤自定义Id
-        /// </summary>
-        public string StepCustomId { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 步骤Id
-        /// </summary>
-        public string StepId { get; set; } = string.Empty;
-
         /// <summary>
         /// 代码标记
         /// </summary>

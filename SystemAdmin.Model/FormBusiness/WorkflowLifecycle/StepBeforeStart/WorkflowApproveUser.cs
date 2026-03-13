@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle
+namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle.StepBeforeStart
 {
     /// <summary>
     /// 流程审批人员Dto
@@ -22,6 +22,6 @@ namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle
         /// <summary>
         /// 审批步骤签核人员列表
         /// </summary>
-        public List<StepApproveUser> stepApproveUsers { get; set; } = new List<StepApproveUser>();
+        public List<StepApproveUser> stepApproveUser { get; set; } = new List<StepApproveUser>();
     }
 }

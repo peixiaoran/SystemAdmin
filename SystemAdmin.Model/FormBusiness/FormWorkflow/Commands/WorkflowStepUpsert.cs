@@ -61,23 +61,23 @@
         public string Description { get; set; } = string.Empty;
 
         /// <summary>
-        /// 审批步骤组织架构新增/修改类
+        /// 步骤组织架构新增/修改类
         /// </summary>
-        public WorkflowStepOrgUpsert workflowStepOrgUpsert { get; set; } = new WorkflowStepOrgUpsert();
+        public WorkflowStepOrgUpsert stepOrgUpsert { get; set; } = new WorkflowStepOrgUpsert();
 
         /// <summary>
-        /// 审批步骤指定部门员工级别新增/修改类
+        /// 步骤指定部门员工级别新增/修改类
         /// </summary>
-        public WorkflowStepDeptUserUpsert workflowStepDeptUserUpsert { get; set; } = new WorkflowStepDeptUserUpsert();
+        public WorkflowStepDeptUserUpsert stepDeptUserUpsert { get; set; } = new WorkflowStepDeptUserUpsert();
 
         /// <summary>
-        /// 审批步骤指定员工新增/修改类
+        /// 步骤指定员工新增/修改类
         /// </summary>
-        public WorkflowStepUserUpsert workflowStepUserUpsert { get; set; } = new WorkflowStepUserUpsert();
+        public WorkflowStepUserUpsert stepUserUpsert { get; set; } = new WorkflowStepUserUpsert();
 
         /// <summary>
-        /// 审批步骤自定义来源新增/修改类
+        /// 步骤自定义新增/修改类
         /// </summary>
-        public WorkflowStepCustomUpsert workflowStepCustomUpsert { get; set; } = new WorkflowStepCustomUpsert();
+        public WorkflowStepCustomUpsert stepCustomUpsert { get; set; } = new WorkflowStepCustomUpsert();
     }
 }
