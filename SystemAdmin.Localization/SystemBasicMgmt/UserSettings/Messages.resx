@@ -150,7 +150,7 @@
   <data name="UserPartTimeUpdateFailed" xml:space="preserve">
     <value>员工兼任修改失败</value>
   </data>
-  <data name="UserFormBindInsertSuccess" xml:space="preserve">
+  <data name="UserFormInsertSuccess" xml:space="preserve">
     <value>表单配置成功</value>
   </data>
   <data name="UserAgentSameEmployee" xml:space="preserve">

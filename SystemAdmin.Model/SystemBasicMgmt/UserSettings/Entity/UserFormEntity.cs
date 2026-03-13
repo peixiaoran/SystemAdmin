@@ -5,8 +5,8 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity
     /// <summary>
     /// 员工表单绑定实体表
     /// </summary>
-    [SugarTable("[Basic].[UserFormBind]")]
-    public class UserFormBindEntity
+    [SugarTable("[Basic].[UserForm]")]
+    public class UserFormEntity
     {
         /// <summary>
         /// 员工Id

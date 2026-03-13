@@ -23,11 +23,12 @@ namespace SystemAdmin.CommonSetup.Security
         }
 
         /// <summary>
-        /// 发送邮件（异步）。
-        /// 业务层只需要构建 EmailMessage 对象并调用本方法即可完成发送。
+        /// 发送邮件
         /// </summary>
-        /// <param name="message">邮件内容对象</param>
-        /// <param name="cancellationToken">取消标记，可用于超时或请求中止</param>
+        /// <param name="message"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task SendAsync(EmailMessage message, CancellationToken cancellationToken = default)
         {
             // 基础校验：必须至少有一个收件人
@@ -72,11 +73,10 @@ namespace SystemAdmin.CommonSetup.Security
         }
 
         /// <summary>
-        /// 根据 EmailMessage 构建 MimeMessage 对象，
-        /// 其中包括发件人、收件人、抄送、密送、主题、正文和附件等信息。
+        /// 根据 EmailMessage 构建 MimeMessage 对象
         /// </summary>
-        /// <param name="message">业务层邮件对象</param>
-        /// <returns>MimeMessage 实例</returns>
+        /// <param name="message"></param>
+        /// <returns></returns>
         private MimeMessage BuildMimeMessage(EmailMessage message)
         {
             var mimeMessage = new MimeMessage();
@@ -147,11 +147,9 @@ namespace SystemAdmin.CommonSetup.Security
         }
 
         /// <summary>
-        /// 根据配置决定使用的加密方式：
-        /// - UseSsl 为 true 时使用 SslOnConnect
-        /// - UseStartTls 为 true 时使用 StartTls
-        /// - 否则使用 Auto（由 MailKit 自行判断）
+        /// 根据配置决定使用的加密方式
         /// </summary>
+        /// <returns></returns>
         private SecureSocketOptions GetSecureSocketOptions()
         {
             if (_options.UseSsl)

@@ -9,20 +9,15 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
     public class WorkflowStepUserEntity
     {
         /// <summary>
-        /// 步骤指定员工Id
-        /// </summary>
-        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
-        public long StepUserId { get; set; }
-
-        /// <summary>
         /// 步骤Id
         /// </summary>
+        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
         public long StepId { get; set; }
 
         /// <summary>
         /// 员工Ids
         /// </summary>
-        public string UserIds { get; set; } = string.Empty;
+        public long UserId { get; set; }
 
         /// <summary>
         /// 创建人

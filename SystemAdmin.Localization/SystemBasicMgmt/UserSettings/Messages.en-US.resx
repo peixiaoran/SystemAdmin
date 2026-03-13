@@ -150,7 +150,7 @@
   <data name="UserPartTimeUpdateFailed" xml:space="preserve">
     <value>Failed to update part-time assignment</value>
   </data>
-  <data name="UserFormBindInsertSuccess" xml:space="preserve">
+  <data name="UserFormInsertSuccess" xml:space="preserve">
     <value>Form binding configured successfully</value>
   </data>
   <data name="UserAgentSameEmployee" xml:space="preserve">

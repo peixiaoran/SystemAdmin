@@ -96,9 +96,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<int> DeleteUserFormBind(long userId)
+        public async Task<int> DeleteUserForm(long userId)
         {
-            return await _db.Deleteable<UserFormBindEntity>()
+            return await _db.Deleteable<UserFormEntity>()
                             .Where(formbind => formbind.UserId == userId)
                             .ExecuteCommandAsync();
         }
@@ -459,8 +459,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                     ? (user.IsApproval == 1 ? "需要签核" : "无需签核")
                                                     : (user.IsApproval == 1 ? "Yes" : "No"),
                                    IsFreezeName = _lang.Locale == "zh-CN"
-                                                    ? (user.IsFreeze == 1 ? "未冻结" : "已冻结")
-                                                    : (user.IsFreeze == 1 ? "No" : "Yes"),
+                                                    ? (user.IsFreeze == 1 ? "已冻结" : "未冻结")
+                                                    : (user.IsFreeze == 1 ? "Yes" : "No"),
                                }).ToDataTableAsync();
         }
     }

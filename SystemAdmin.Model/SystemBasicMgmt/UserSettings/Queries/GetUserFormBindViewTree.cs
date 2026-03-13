@@ -3,7 +3,7 @@
     /// <summary>
     /// 查询员工绑定表单请求参数
     /// </summary>
-    public class GetUserFormBindViewTree
+    public class GetUserFormViewTree
     {
         /// <summary>
         /// 员工Id

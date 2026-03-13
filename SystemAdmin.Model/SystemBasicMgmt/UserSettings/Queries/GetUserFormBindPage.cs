@@ -5,7 +5,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Queries
     /// <summary>
     /// 查询员工分页请求参数
     /// </summary>
-    public class GetUserFormBindPage : PageModel
+    public class GetUserFormPage : PageModel
     {
         /// <summary>
         /// 部门Id

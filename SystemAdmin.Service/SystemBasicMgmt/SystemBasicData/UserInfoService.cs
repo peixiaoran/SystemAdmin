@@ -233,7 +233,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 // 删除员工兼任
                 int delUserPartTimeCount = await _userInfoRepository.DeleteUserPartTime(long.Parse(upsert.UserId));
                 // 删除员工表单绑定
-                int delUserFormBindCount = await _userInfoRepository.DeleteUserFormBind(long.Parse(upsert.UserId));
+                int delUserFormCount = await _userInfoRepository.DeleteUserForm(long.Parse(upsert.UserId));
                 // 删除员工账号锁定记录
                 int delUserLockCount = await _userInfoRepository.DeleteUserLock(long.Parse(upsert.UserId));
                 await _db.CommitTranAsync();

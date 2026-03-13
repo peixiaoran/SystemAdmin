@@ -13,7 +13,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         }
 
         /// <summary>
-        /// 验证员工是否有权限访问接口
+        /// 验证是否有权限访问接口
         /// </summary>
         /// <param name="loginUserId"></param>
         /// <param name="routePath"></param>

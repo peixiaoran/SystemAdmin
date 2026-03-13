@@ -60,7 +60,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <returns></returns>
         public async Task<int> DeleteUserFormTypeBind(long formGroupId)
         {
-            return await _db.Deleteable<UserFormBindEntity>()
+            return await _db.Deleteable<UserFormEntity>()
                             .Where(userform => userform.FormGroupTypeId == formGroupId)
                             .ExecuteCommandAsync();
         }
@@ -85,7 +85,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <returns></returns>
         public async Task<int> DeleteUserFromType(List<long> formTypeIds)
         {
-            return await _db.Deleteable<UserFormBindEntity>()
+            return await _db.Deleteable<UserFormEntity>()
                             .Where(formtype => formTypeIds.Contains(formtype.FormGroupTypeId))
                             .ExecuteCommandAsync();
         }

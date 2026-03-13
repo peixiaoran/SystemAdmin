@@ -48,7 +48,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <returns></returns>
         public async Task<int> DeleteUserFormTypeBind(long formTypeId)
         {
-            return await _db.Deleteable<UserFormBindEntity>()
+            return await _db.Deleteable<UserFormEntity>()
                             .Where(userform => userform.FormGroupTypeId == formTypeId)
                             .ExecuteCommandAsync();
         }

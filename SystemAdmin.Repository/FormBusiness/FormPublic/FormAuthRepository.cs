@@ -27,7 +27,7 @@ namespace SystemAdmin.Repository.FormBusiness.Enum
         {
             if (op.HasFlag(FormOp.Apply))
             {
-                return await _db.Queryable<UserFormBindEntity>()
+                return await _db.Queryable<UserFormEntity>()
                                 .With(SqlWith.NoLock)
                                 .Where(userform => userform.UserId == userId && userform.FormGroupTypeId == formTypeId)
                                 .AnyAsync();

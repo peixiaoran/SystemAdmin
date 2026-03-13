@@ -9,14 +9,9 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
     public class WorkflowStepCustomEntity
     {
         /// <summary>
-        /// 步骤自定义Id
-        /// </summary>
-        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
-        public long StepCustomId { get; set; }
-
-        /// <summary>
         /// 步骤Id
         /// </summary>
+        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
         public long StepId { get; set; }
 
         /// <summary>

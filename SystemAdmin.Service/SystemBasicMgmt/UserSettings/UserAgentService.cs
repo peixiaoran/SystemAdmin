@@ -156,6 +156,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 // 删除员工代理配置
                 var delSubAgentCount = await _userAgentRepository.DeleteUserAgent(long.Parse(upsertdel.SubstituteUserId), long.Parse(upsertdel.AgentUserId));
                 var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(upsertdel.AgentUserId), 0);
+                await _db.CommitTranAsync();
 
                 return delSubAgentCount >= 1 && updateUserAgentCount >= 1
                             ? Result<int>.Ok(delSubAgentCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))

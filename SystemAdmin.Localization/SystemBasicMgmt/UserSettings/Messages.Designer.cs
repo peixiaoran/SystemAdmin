@@ -144,9 +144,9 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         /// <summary>
         ///   查找类似 表单配置成功 的本地化字符串。
         /// </summary>
-        internal static string UserFormBindInsertSuccess {
+        internal static string UserFormInsertSuccess {
             get {
-                return ResourceManager.GetString("UserFormBindInsertSuccess", resourceCulture);
+                return ResourceManager.GetString("UserFormInsertSuccess", resourceCulture);
             }
         }
         

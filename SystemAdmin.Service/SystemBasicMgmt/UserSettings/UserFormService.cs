@@ -10,16 +10,16 @@ using SystemAdmin.Repository.SystemBasicMgmt.UserSettings;
 
 namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
 {
-    public class UserFormBindService
+    public class UserFormService
     {
         private readonly CurrentUser _loginuser;
-        private readonly ILogger<UserFormBindService> _logger;
+        private readonly ILogger<UserFormService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly UserFormBindRepository _userFormBindRepository;
+        private readonly UserFormRepository _userFormBindRepository;
         private readonly LocalizationService _localization;
-        private readonly string _this = "SystemBasicMgmt.UserSettings.UserFormBind";
+        private readonly string _this = "SystemBasicMgmt.UserSettings.UserForm";
 
-        public UserFormBindService(CurrentUser loginuser, ILogger<UserFormBindService> logger, SqlSugarScope db, UserFormBindRepository userFormBindRepository, LocalizationService localization)
+        public UserFormService(CurrentUser loginuser, ILogger<UserFormService> logger, SqlSugarScope db, UserFormRepository userFormBindRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
@@ -33,7 +33,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<UserFormBindDto>> GetUserInfoPage(GetUserFormBindPage getPage)
+        public async Task<ResultPaged<UserFormDto>> GetUserInfoPage(GetUserFormPage getPage)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<UserFormBindDto>.Failure(500, ex.Message.ToString());
+                return ResultPaged<UserFormDto>.Failure(500, ex.Message.ToString());
             }
         }
 
@@ -51,17 +51,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// </summary>
         /// <param name="getTree"></param>
         /// <returns></returns>
-        public async Task<Result<List<UserFormBindViewTreeDto>>> GetUserFormBindViewTree(GetUserFormBindViewTree getTree)
+        public async Task<Result<List<UserFormViewTreeDto>>> GetUserFormViewTree(GetUserFormViewTree getTree)
         {
             try
             {
-                var treeList = await _userFormBindRepository.GetUserFormBindViewTree(long.Parse(getTree.UserId));
-                return Result<List<UserFormBindViewTreeDto>>.Ok(treeList, "");
+                var treeList = await _userFormBindRepository.GetUserFormViewTree(long.Parse(getTree.UserId));
+                return Result<List<UserFormViewTreeDto>>.Ok(treeList, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<UserFormBindViewTreeDto>>.Failure(500, ex.Message.ToString());
+                return Result<List<UserFormViewTreeDto>>.Failure(500, ex.Message.ToString());
             }
         }
 
@@ -70,14 +70,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateUserFormBind(UserFormBindUpsert upsert)
+        public async Task<Result<int>> UpdateUserForm(UserFormUpsert upsert)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var delCount = await _userFormBindRepository.DeleteUserFormBind(long.Parse(upsert.UserId));
+                var delCount = await _userFormBindRepository.DeleteUserForm(long.Parse(upsert.UserId));
                 var entity = upsert.FormGroupTypeId
-                                              .Select(id => new UserFormBindEntity
+                                              .Select(id => new UserFormEntity
                                               {
                                                   UserId = long.Parse(upsert.UserId),
                                                   FormGroupTypeId = long.Parse(id),
@@ -92,7 +92,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     userform.ModifiedBy = _loginuser.UserId;
                     userform.ModifiedDate = DateTime.Now;
                 });
-                var count = await _userFormBindRepository.InsertUserFormBind(entity);
+                var count = await _userFormBindRepository.InsertUserForm(entity);
                 await _db.CommitTranAsync();
 
                 return Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"));

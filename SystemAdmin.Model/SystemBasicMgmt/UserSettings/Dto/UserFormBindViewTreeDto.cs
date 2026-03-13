@@ -6,7 +6,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
     /// <summary>
     /// 员工表单绑定表单Dto
     /// </summary>
-    public class UserFormBindViewTreeDto
+    public class UserFormViewTreeDto
     {
         /// <summary>
         /// 所属组别Id
@@ -43,6 +43,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         /// <summary>
         /// 表单类型子集合
         /// </summary>
-        public List<UserFormBindViewTreeDto> FormTypeChildren { get; set; } = new List<UserFormBindViewTreeDto>();
+        public List<UserFormViewTreeDto> FormTypeChildren { get; set; } = new List<UserFormViewTreeDto>();
     }
 }

@@ -88,10 +88,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             }
 
             // 排序
-            query = query.OrderBy(userlabor => userlabor.LaborNameCn);
+            query = query.OrderByDescending(userlabor => userlabor.CreatedDate);
 
-            var userLaborPage = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<UserLaborDto>.Ok(userLaborPage.Adapt<List<UserLaborDto>>(), totalCount, "");
+            var page = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<UserLaborDto>.Ok(page.Adapt<List<UserLaborDto>>(), totalCount, "");
         }
     }
 }

@@ -81,7 +81,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         var orgEntity = new WorkflowStepOrgEntity()
                         {
-                            StepOrgId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
                             DeptLeaveId = long.Parse(upsert.stepOrgUpsert.DeptLeaveId),
                             PositionId = long.Parse(upsert.stepOrgUpsert.PositionId),
@@ -94,7 +93,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         var stepDeptUserEntity = new WorkflowStepDeptUserEntity()
                         {
-                            StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
                             DepartmentId = long.Parse(upsert.stepDeptUserUpsert.DepartmentId),
                             PositionId = long.Parse(upsert.stepDeptUserUpsert.PositionId),
@@ -107,9 +105,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         var userEntity = new WorkflowStepUserEntity()
                         {
-                            StepUserId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
-                            UserIds = upsert.stepUserUpsert.UserId,
+                            UserId = long.Parse(upsert.stepUserUpsert.UserId),
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
@@ -119,7 +116,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     {
                         var customEntity = new WorkflowStepCustomEntity()
                         {
-                            StepCustomId = SnowFlakeSingle.Instance.NextId(),
                             StepId = stepId,
                             HandlerKey = upsert.stepCustomUpsert.HandlerKey,
                             LogicalExplanation = upsert.stepCustomUpsert.LogicalExplanation,
@@ -225,7 +221,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 {
                     var stepOrgEntity = new WorkflowStepOrgEntity()
                     {
-                        StepOrgId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
                         DeptLeaveId = long.Parse(upsert.stepOrgUpsert.DeptLeaveId),
                         PositionId = long.Parse(upsert.stepOrgUpsert.PositionId),
@@ -238,7 +233,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 {
                     var stepDeptUserEntity = new WorkflowStepDeptUserEntity()
                     {
-                        StepDeptUserId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
                         DepartmentId = long.Parse(upsert.stepDeptUserUpsert.DepartmentId),
                         PositionId = long.Parse(upsert.stepDeptUserUpsert.PositionId),
@@ -251,9 +245,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 {
                     var stepUserEntity = new WorkflowStepUserEntity()
                     {
-                        StepUserId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
-                        UserIds = upsert.stepUserUpsert.UserId,
+                        UserId = long.Parse(upsert.stepUserUpsert.UserId),
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
@@ -263,7 +256,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 {
                     var stepCustomEntity = new WorkflowStepCustomEntity()
                     {
-                        StepCustomId = SnowFlakeSingle.Instance.NextId(),
                         StepId = long.Parse(upsert.StepId),
                         HandlerKey = upsert.stepCustomUpsert.HandlerKey,
                         LogicalExplanation = upsert.stepCustomUpsert.LogicalExplanation,

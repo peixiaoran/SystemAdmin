@@ -26,7 +26,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         public async Task<ResultPaged<ApplyFormInfoDto>> GetApplyFormPage(getPage getPage, long userId)
         {
             RefAsync<int> totalCount = 0;
-            var applyFormPage = await _db.Queryable<UserFormBindEntity>()
+            var applyFormPage = await _db.Queryable<UserFormEntity>()
                                          .With(SqlWith.NoLock)
                                          .InnerJoin<FormTypeEntity>((userform, formtype) => userform.FormGroupTypeId == formtype.FormTypeId)
                                          .Where((userform, formtype) => userform.UserId == userId && formtype.FormGroupId == long.Parse(getPage.FormGroupId))

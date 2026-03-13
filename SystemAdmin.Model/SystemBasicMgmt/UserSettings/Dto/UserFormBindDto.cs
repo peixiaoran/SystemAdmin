@@ -6,7 +6,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
     /// <summary>
     /// 员工分页Dto
     /// </summary>
-    public class UserFormBindDto
+    public class UserFormDto
     {
         /// <summary>
         /// 员工Id

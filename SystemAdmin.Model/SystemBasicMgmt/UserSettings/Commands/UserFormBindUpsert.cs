@@ -3,7 +3,7 @@
     /// <summary>
     /// 员工绑定表单新增/修改类
     /// </summary>
-    public class UserFormBindUpsert
+    public class UserFormUpsert
     {
         /// <summary>
         /// 员工Id

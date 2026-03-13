@@ -161,18 +161,18 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             List<WorkflowApproveUser> approveList = new List<WorkflowApproveUser>();
 
             // 查询表单申请人信息
-            var appUserInfo = await _db.Queryable<FormInfoEntity>()
-                                       .With(SqlWith.NoLock)
-                                       .InnerJoin<UserInfoEntity>((form, user) => form.CreatedBy == user.UserId)
-                                       .Where((form, user) => form.FormId == formId)
-                                       .Select((form, user) => new UserInfoEntity()
-                                       {
-                                           UserId = user.UserId,
-                                           DepartmentId = user.DepartmentId,
-                                           PositionId = user.PositionId,
-                                           UserNameCn = user.UserNameCn,
-                                           UserNameEn = user.UserNameEn,
-                                       }).FirstAsync();
+            var applyUserInfo = await _db.Queryable<FormInfoEntity>()
+                                         .With(SqlWith.NoLock)
+                                         .InnerJoin<UserInfoEntity>((form, user) => form.CreatedBy == user.UserId)
+                                         .Where((form, user) => form.FormId == formId)
+                                         .Select((form, user) => new UserInfoEntity()
+                                         {
+                                             UserId = user.UserId,
+                                             DepartmentId = user.DepartmentId,
+                                             PositionId = user.PositionId,
+                                             UserNameCn = user.UserNameCn,
+                                             UserNameEn = user.UserNameEn,
+                                         }).FirstAsync();
 
             // 查询表单审批开始步骤
             var nowStepId = await _db.Queryable<WorkflowStepEntity>()
@@ -194,7 +194,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     WorkflowApproveUser approveItem = new WorkflowApproveUser();
 
                     // 查询签核类型（本、兼、代、自动指派）
-                    var appTypePrimary = await _db.Queryable<DictionaryInfoEntity>()
+                    var applyTypePrimary = await _db.Queryable<DictionaryInfoEntity>()
                                                   .With(SqlWith.NoLock)
                                                   .Where(app => app.DicType == "AppointmentType" && app.DicCode == AppointmentType.Primary.ToEnumString())
                                                   .FirstAsync();
@@ -202,14 +202,14 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     List<StepApproveUser> stepApproveUser = new List<StepApproveUser>();
                     stepApproveUser.Add(new StepApproveUser
                     {
-                        UserId = appUserInfo.UserId,
+                        UserId = applyUserInfo.UserId,
                         UserName = _lang.Locale == "zh-CN"
-                                   ? appUserInfo.UserNameCn
-                                   : appUserInfo.UserNameEn,
-                        AppointmentType = appTypePrimary.DicCode,
+                                   ? applyUserInfo.UserNameCn
+                                   : applyUserInfo.UserNameEn,
+                        AppointmentType = applyTypePrimary.DicCode,
                         AppointmentTypeName = _lang.Locale == "zh-CN"
-                                   ? appTypePrimary.DicNameCn
-                                   : appTypePrimary.DicNameEn
+                                   ? applyTypePrimary.DicNameCn
+                                   : applyTypePrimary.DicNameEn
                     });
 
                     approveItem.StepId = nowStep.StepId;
@@ -226,7 +226,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     // 申请人所有上级部门
                     var parentDeptList = await _db.Queryable<DepartmentInfoEntity>()
                                                   .With(SqlWith.NoLock)
-                                                  .ToParentListAsync(dept => dept.ParentId, appUserInfo.DepartmentId);
+                                                  .ToParentListAsync(dept => dept.ParentId, applyUserInfo.DepartmentId);
 
                     // 步骤要求（部门级别、职级）
                     var stepOrg = await _db.Queryable<WorkflowStepOrgEntity>()
@@ -234,7 +234,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                            .Where(org => org.StepId == nowStep.StepId)
                                            .FirstAsync();
                     // 查询此步骤的审批人
-                    var orgApproveUser = await GetStepApproveUserByOrg(appUserInfo, nowStep.ApproveMode, parentDeptList, stepOrg.DeptLeaveId, stepOrg.PositionId);
+                    var orgApproveUser = await GetStepApproveUserByOrg(applyUserInfo.UserId, nowStep.ApproveMode, stepOrg.DeptLeaveId, stepOrg.PositionId);
 
                     WorkflowApproveUser approveItem = new WorkflowApproveUser();
                     approveItem.StepId = nowStep.StepId;
@@ -254,12 +254,29 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                 .Where(org => org.StepId == nowStep.StepId)
                                                 .FirstAsync();
 
-                    // 部门级别所有上级部门
-                    var parentDeptList = await _db.Queryable<DepartmentInfoEntity>()
-                                                  .With(SqlWith.NoLock)
-                                                  .ToParentListAsync(dept => dept.ParentId, stepDeptUser.DepartmentId);
                     // 查询此步骤的审批人
-                    var orgApproveUser = await GetStepApproveUserByDeptUser(nowStep.ApproveMode, parentDeptList, stepDeptUser.DepartmentId, stepDeptUser.PositionId);
+                    var orgApproveUser = await GetStepApproveUserByDeptUser(nowStep.ApproveMode, stepDeptUser.DepartmentId, stepDeptUser.PositionId);
+
+                    WorkflowApproveUser approveItem = new WorkflowApproveUser();
+                    approveItem.StepId = nowStep.StepId;
+                    approveItem.StepName = _lang.Locale == "zh-CN"
+                                           ? nowStep.StepNameCn
+                                           : nowStep.StepNameEn;
+                    approveItem.stepApproveUser = orgApproveUser;
+                    approveList.Add(approveItem);
+                }
+
+                // 依照指定员工
+                else if (nowStep.Assignment == Assignment.User.ToEnumString())
+                {
+                    // 步骤要求（部门级别、职级）
+                    var stepDeptUser = await _db.Queryable<WorkflowStepUserEntity>()
+                                                .With(SqlWith.NoLock)
+                                                .Where(stepuser => stepuser.StepId == nowStep.StepId)
+                                                .FirstAsync();
+
+                    // 查询此步骤的审批人
+                    var orgApproveUser = await GetStepApproveUserByUser(nowStep.ApproveMode, stepDeptUser.UserId);
 
                     WorkflowApproveUser approveItem = new WorkflowApproveUser();
                     approveItem.StepId = nowStep.StepId;
@@ -295,22 +312,21 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         /// <summary>
         /// 查询步骤依照组织架构审批人
         /// </summary>
-        /// <param name="appUserEntity"></param>
+        /// <param name="applyUserId"></param>
         /// <param name="approveMode"></param>
-        /// <param name="parentDeptList"></param>
         /// <param name="deptLevelId"></param>
         /// <param name="positionId"></param>
         /// <returns></returns>
-        public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(UserInfoEntity appUserEntity, string approveMode, List<DepartmentInfoEntity> parentDeptList, long deptLevelId, long positionId)
+        public async Task<List<StepApproveUser>> GetStepApproveUserByOrg(long applyUserId, string approveMode, long deptLevelId, long positionId)
         {
             // 步骤最终审批人列表
             var finalApproveUser = new List<StepApproveUser>();
 
-            // 申请人职级信息
-            var applyPositon = await _db.Queryable<UserPositionEntity>().Where(position => position.PositionId == appUserEntity.PositionId).FirstAsync();
+            // 申请人信息
+            var applyUser = await _db.Queryable<UserInfoEntity>().Where(user => user.UserId == applyUserId).FirstAsync();
 
-            // 申请人所有上级部门Ids
-            var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
+            // 申请人职级信息
+            var applyPositon = await _db.Queryable<UserPositionEntity>().Where(position => position.PositionId == applyUser.PositionId).FirstAsync();
 
             #region 查询符合步骤条件的签核人，带有注本、兼、代的标识并按照入职时间正序排序
             var candidateUserSql = @"SELECT
@@ -364,7 +380,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                 AND users.IsApproval = 1
                                                 AND dept.DepartmentLevelId = @pdeptLevelId
                                                 AND users.PositionId = @pposId
-                                                AND position.SortOrder < @pappPosSortOrder
+                                                AND position.SortOrder < @pappUserPosOrder
 
                                             UNION ALL
 
@@ -410,7 +426,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                 AND users.IsApproval = 1
                                                 AND dept.DepartmentLevelId = @pdeptLevelId
                                                 AND part.PartTimePositionId = @pposId
-                                                AND position.SortOrder < @pappPosSortOrder
+                                                AND position.SortOrder < @pappUserPosOrder
                                         ) t ORDER BY t.HireDate ASC;";
             #endregion
 
@@ -423,7 +439,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                 new SugarParameter("@pconcurrentagent", AppointmentType.ConcurrentAgent.ToEnumString()),
                 new SugarParameter("@pdeptLevelId", deptLevelId),
                 new SugarParameter("@pposId", positionId),
-                new SugarParameter("@pappPosSortOrder", applyPositon.SortOrder),
+                new SugarParameter("@pappUserPosOrder", applyPositon.SortOrder),
             };
 
             // 查询符合条件审批人候选人，注本、兼、代、兼代的标识并按照入职时间正序排序
@@ -431,34 +447,40 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             if (candidateList.Count() > 0)
             {
                 // 按照本、兼、代、兼代的顺序筛选最终审批人
-                finalApproveUser = await GetFinalStepApproveUserList(candidateList, ApproveMode.Single.ToEnumString(), "PirCon");
+                finalApproveUser = await GetFinalStepApproveUserList(candidateList, approveMode, "PirCon");
             }
 
             // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动指派）
             else
             {
+                // 查询指定部门所有上级部门Ids
+                var parentDeptList = await _db.Queryable<DepartmentInfoEntity>()
+                                              .With(SqlWith.NoLock)
+                                              .ToParentListAsync(dept => dept.ParentId, applyUser.DepartmentId);
+                var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
+
                 var deptLevelMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
                                                  .With(SqlWith.NoLock)
                                                  .MaxAsync(deptlevel => deptlevel.SortOrder);
                 var posMaxOrder = await _db.Queryable<UserPositionEntity>()
                                            .With(SqlWith.NoLock)
                                            .MaxAsync(position => position.SortOrder);
-                var stepDeptMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
-                                                .With(SqlWith.NoLock)
-                                                .Where(dept => dept.DepartmentLevelId == deptLevelId)
-                                                .MaxAsync(position => position.SortOrder);
-                var stepPosMaxOrder = await _db.Queryable<UserPositionEntity>()
-                                               .With(SqlWith.NoLock)
-                                               .Where(position => position.PositionId == positionId)
-                                               .MaxAsync(position => position.SortOrder);
+                var stepDeptStartOrder = await _db.Queryable<DepartmentLevelEntity>()
+                                                  .With(SqlWith.NoLock)
+                                                  .Where(dept => dept.DepartmentLevelId == deptLevelId)
+                                                  .MaxAsync(position => position.SortOrder);
+                var stepPosStartOrder = await _db.Queryable<UserPositionEntity>()
+                                                 .With(SqlWith.NoLock)
+                                                 .Where(position => position.PositionId == positionId)
+                                                 .MaxAsync(position => position.SortOrder);
 
                 List<StepApproveUser> hightLevelApproveUser = new List<StepApproveUser>();
 
                 // 依次按照部门级别递减
-                for (int itemDeptOrder = stepDeptMaxOrder; itemDeptOrder > 0 && itemDeptOrder <= deptLevelMaxOrder;)
+                for (int itemDeptLevelOrder = stepDeptStartOrder; itemDeptLevelOrder > 0 && itemDeptLevelOrder <= deptLevelMaxOrder;)
                 {
                     // 依次按照职级递减
-                    for (int itemPosOrder = stepPosMaxOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
+                    for (int itemPosOrder = stepPosStartOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
                     {
                         var deptInSql = string.Join(", ", parentDeptIds);
 
@@ -540,9 +562,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                               AND users.IsFreeze = 0
                                                               AND users.IsApproval = 1
                                                               AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @psortOrder
+                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
                                                               AND position.SortOrder = @pposOrder
-                                                              AND position.SortOrder < @pappPosSortOrder
+                                                              AND position.SortOrder < @pappUserPosOrder
 
                                                             UNION ALL
 
@@ -613,9 +635,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                               AND users.IsFreeze = 0
                                                               AND users.IsApproval = 1
                                                               AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @psortOrder
+                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
                                                               AND position.SortOrder = @pposOrder
-                                                              AND position.SortOrder < @pappPosSortOrder
+                                                              AND position.SortOrder < @pappUserPosOrder
                                                         ) t ORDER BY SortOrder DESC,t.HireDate ASC;";
                         #endregion
 
@@ -626,9 +648,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                             new SugarParameter("@pautoagent", AppointmentType.AutoAgent.ToEnumString()),
                             new SugarParameter("@pautoconcurrent", AppointmentType.AutoConcurrent.ToEnumString()),
                             new SugarParameter("@pautoconcurrentagent", AppointmentType.AutoConcurrentAgent.ToEnumString()),
-                            new SugarParameter("@psortOrder", itemDeptOrder),
+                            new SugarParameter("@pdeptlevelOrder", itemDeptLevelOrder),
                             new SugarParameter("@pposOrder", itemPosOrder),
-                            new SugarParameter("@pappPosSortOrder", applyPositon.SortOrder),
+                            new SugarParameter("@pappUserPosOrder", applyPositon.SortOrder),
                         };
                         for (int i = 0; i < parentDeptIds.Count; i++)
                         {
@@ -640,7 +662,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                         if (highLevelUser.Count > 0)
                         {
                             // 按照本、兼、代、兼代的顺序筛选最终审批人
-                            hightLevelApproveUser = await GetFinalStepApproveUserList(highLevelUser, ApproveMode.Single.ToEnumString(), "Auto");
+                            hightLevelApproveUser = await GetFinalStepApproveUserList(highLevelUser, approveMode, "Auto");
                             itemPosOrder = -1;
                         }
                         else
@@ -650,11 +672,11 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     }
                     if (hightLevelApproveUser.Count > 0)
                     {
-                        itemDeptOrder = -1;
+                        itemDeptLevelOrder = -1;
                     }
                     else
                     {
-                        itemDeptOrder--;
+                        itemDeptLevelOrder--;
                     }
                 }
                 finalApproveUser.AddRange(hightLevelApproveUser);
@@ -670,13 +692,10 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         /// <param name="deptId"></param>
         /// <param name="positionId"></param>
         /// <returns></returns>
-        public async Task<List<StepApproveUser>> GetStepApproveUserByDeptUser(string approveMode, List<DepartmentInfoEntity> parentDeptList, long deptId, long positionId)
+        public async Task<List<StepApproveUser>> GetStepApproveUserByDeptUser(string approveMode, long deptId, long positionId)
         {
             // 步骤最终审批人列表
             var finalApproveUser = new List<StepApproveUser>();
-
-            // 申请人所有上级部门Ids
-            var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
 
             // 指定部门信息
             var deptInfo = await _db.Queryable<DepartmentInfoEntity>().Where(dept => dept.DepartmentId == deptId).FirstAsync();
@@ -797,34 +816,40 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
             if (candidateList.Count() > 0)
             {
                 // 按照本、兼、代、兼代的顺序筛选最终审批人
-                finalApproveUser = await GetFinalStepApproveUserList(candidateList, ApproveMode.Single.ToEnumString(), "PirCon");
+                finalApproveUser = await GetFinalStepApproveUserList(candidateList, approveMode, "PirCon");
             }
 
             // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动指派）
             else
             {
+                // 查询指定部门所有上级部门Ids
+                var parentDeptList = await _db.Queryable<DepartmentInfoEntity>()
+                                              .With(SqlWith.NoLock)
+                                              .ToParentListAsync(dept => dept.ParentId, deptId);
+                var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
+
                 var deptLevelMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
                                                  .With(SqlWith.NoLock)
                                                  .MaxAsync(deptlevel => deptlevel.SortOrder);
                 var posMaxOrder = await _db.Queryable<UserPositionEntity>()
                                            .With(SqlWith.NoLock)
                                            .MaxAsync(position => position.SortOrder);
-                var stepDeptMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
-                                                .With(SqlWith.NoLock)
-                                                .Where(dept => dept.DepartmentLevelId == deptInfo.DepartmentLevelId)
-                                                .MaxAsync(position => position.SortOrder);
-                var stepPosMaxOrder = await _db.Queryable<UserPositionEntity>()
-                                               .With(SqlWith.NoLock)
-                                               .Where(position => position.PositionId == positionId)
-                                               .MaxAsync(position => position.SortOrder);
+                var stepDeptStartOrder = await _db.Queryable<DepartmentLevelEntity>()
+                                                  .With(SqlWith.NoLock)
+                                                  .Where(dept => dept.DepartmentLevelId == deptInfo.DepartmentLevelId)
+                                                  .MaxAsync(position => position.SortOrder);
+                var stepPosStartOrder = await _db.Queryable<UserPositionEntity>()
+                                                 .With(SqlWith.NoLock)
+                                                 .Where(position => position.PositionId == positionId)
+                                                 .MaxAsync(position => position.SortOrder);
 
                 List<StepApproveUser> hightLevelApproveUser = new List<StepApproveUser>();
 
                 // 依次按照部门级别递减
-                for (int itemDeptOrder = stepDeptMaxOrder; itemDeptOrder > 0 && itemDeptOrder <= deptLevelMaxOrder;)
+                for (int itemDeptLevelOrder = stepDeptStartOrder; itemDeptLevelOrder > 0 && itemDeptLevelOrder <= deptLevelMaxOrder;)
                 {
                     // 依次按照职级递减
-                    for (int itemPosOrder = stepPosMaxOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
+                    for (int itemPosOrder = stepPosStartOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
                     {
                         var deptInSql = string.Join(", ", parentDeptIds);
 
@@ -906,7 +931,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                               AND users.IsFreeze = 0
                                                               AND users.IsApproval = 1
                                                               AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @psortOrder
+                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
                                                               AND position.SortOrder = @pposOrder
 
                                                             UNION ALL
@@ -978,7 +1003,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                                                               AND users.IsFreeze = 0
                                                               AND users.IsApproval = 1
                                                               AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @psortOrder
+                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
                                                               AND position.SortOrder = @pposOrder
                                                         ) t ORDER BY SortOrder DESC,t.HireDate ASC;";
                         #endregion
@@ -990,7 +1015,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                             new SugarParameter("@pautoagent", AppointmentType.AutoAgent.ToEnumString()),
                             new SugarParameter("@pautoconcurrent", AppointmentType.AutoConcurrent.ToEnumString()),
                             new SugarParameter("@pautoconcurrentagent", AppointmentType.AutoConcurrentAgent.ToEnumString()),
-                            new SugarParameter("@psortOrder", itemDeptOrder),
+                            new SugarParameter("@pdeptlevelOrder", itemDeptLevelOrder),
                             new SugarParameter("@pposOrder", itemPosOrder),
                         };
                         for (int i = 0; i < parentDeptIds.Count; i++)
@@ -1003,7 +1028,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                         if (highLevelUser.Count > 0)
                         {
                             // 按照本、兼、代、兼代的顺序筛选最终审批人
-                            hightLevelApproveUser = await GetFinalStepApproveUserList(highLevelUser, ApproveMode.Single.ToEnumString(), "Auto");
+                            hightLevelApproveUser = await GetFinalStepApproveUserList(highLevelUser, approveMode, "Auto");
                             itemPosOrder = -1;
                         }
                         else
@@ -1013,11 +1038,382 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
                     }
                     if (hightLevelApproveUser.Count > 0)
                     {
-                        itemDeptOrder = -1;
+                        itemDeptLevelOrder = -1;
                     }
                     else
                     {
-                        itemDeptOrder--;
+                        itemDeptLevelOrder--;
+                    }
+                }
+                finalApproveUser.AddRange(hightLevelApproveUser);
+            }
+            return finalApproveUser;
+        }
+
+        /// <summary>
+        /// 查询步骤依照组织架构审批人
+        /// </summary>
+        /// <param name="stepUser"></param>
+        /// <param name="approveMode"></param>
+        /// <returns></returns>
+        public async Task<List<StepApproveUser>> GetStepApproveUserByUser(string approveMode,long stepUserId)
+        {
+            // 步骤最终审批人列表
+            var finalApproveUser = new List<StepApproveUser>();
+
+            // 申请人信息
+            var stepUser = await _db.Queryable<UserInfoEntity>().Where(user => user.UserId == stepUserId).FirstAsync();
+
+            #region 查询符合步骤条件的签核人，带有注本、兼、代的标识并按照入职时间正序排序
+            var candidateUserSql = @"SELECT
+                                            t.UserId,
+                                            t.UserName,
+                                            t.AppointmentType,
+                                            t.AppointmentTypeName,
+                                            t.AgentUserId,
+                                            t.AgentUserName
+                                        FROM
+                                        (
+                                            SELECT
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN
+                                                        (SELECT TOP 1 DicCode
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
+                                                    ELSE
+                                                        (SELECT TOP 1 DicCode
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
+                                                END AS AppointmentType,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN
+                                                        (SELECT TOP 1 
+                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
+                                                    ELSE
+                                                        (SELECT TOP 1 
+                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
+                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
+                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
+                                                AND agent.StartTime <= GETDATE()
+                                                AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
+                                                AND users.IsApproval = 1
+                                                AND users.UserId = @puserId
+
+                                            UNION ALL
+
+                                            SELECT
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN
+                                                        (SELECT TOP 1 DicCode
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
+                                                    ELSE
+                                                        (SELECT TOP 1 DicCode
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
+                                                END AS AppointmentType,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN
+                                                        (SELECT TOP 1 
+                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
+                                                    ELSE
+                                                        (SELECT TOP 1 
+                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
+                                                         FROM Basic.DictionaryInfo
+                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
+                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
+                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
+                                                AND agent.StartTime <= GETDATE()
+                                                AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
+                                                AND users.IsApproval = 1
+                                                AND part.UserId = @puserId
+                                        ) t ORDER BY t.HireDate ASC;";
+            #endregion
+
+            var candidateUserPar = new List<SugarParameter>
+            {
+                new SugarParameter("@plocale", _lang.Locale),
+                new SugarParameter("@pprimary", AppointmentType.Primary.ToEnumString()),
+                new SugarParameter("@pagent", AppointmentType.Agent.ToEnumString()),
+                new SugarParameter("@pconcurrent", AppointmentType.Concurrent.ToEnumString()),
+                new SugarParameter("@pconcurrentagent", AppointmentType.ConcurrentAgent.ToEnumString()),
+                new SugarParameter("@puserId", stepUser.UserId),
+            };
+
+            // 查询符合条件审批人候选人，注本、兼、代、兼代的标识并按照入职时间正序排序
+            var candidateList = await _db.Ado.SqlQueryAsync<StepApproveUser>(candidateUserSql, candidateUserPar);
+            if (candidateList.Count() > 0)
+            {
+                // 按照本、兼、代、兼代的顺序筛选最终审批人
+                finalApproveUser = await GetFinalStepApproveUserList(candidateList, approveMode, "PirCon");
+            }
+
+            // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动指派）
+            else
+            {
+                // 申请人所有上级部门Ids
+                var parentDeptList = await _db.Queryable<DepartmentInfoEntity>()
+                                              .With(SqlWith.NoLock)
+                                              .ToParentListAsync(dept => dept.ParentId, stepUser.DepartmentId);
+                var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
+
+
+                // 指定员工部门级别信息
+                var stepUserDeptLevel = await _db.Queryable<DepartmentInfoEntity>().Where(dept => dept.DepartmentId == stepUser.DepartmentId).FirstAsync();
+                // 指定员工职级信息
+                var stepUserPositon = await _db.Queryable<UserPositionEntity>().Where(position => position.PositionId == stepUser.PositionId).FirstAsync();
+
+
+                var deptLevelMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
+                                                 .With(SqlWith.NoLock)
+                                                 .MaxAsync(deptlevel => deptlevel.SortOrder);
+                var posMaxOrder = await _db.Queryable<UserPositionEntity>()
+                                           .With(SqlWith.NoLock)
+                                           .MaxAsync(position => position.SortOrder);
+                var stepDeptStartOrder = await _db.Queryable<DepartmentLevelEntity>()
+                                                .With(SqlWith.NoLock)
+                                                .Where(dept => dept.DepartmentLevelId == stepUserDeptLevel.DepartmentLevelId)
+                                                .MaxAsync(position => position.SortOrder);
+                var stepPosStartOrder = await _db.Queryable<UserPositionEntity>()
+                                               .With(SqlWith.NoLock)
+                                               .Where(position => position.PositionId == stepUser.PositionId)
+                                               .MaxAsync(position => position.SortOrder);
+
+                List<StepApproveUser> hightLevelApproveUser = new List<StepApproveUser>();
+
+                // 依次按照部门级别递减
+                for (int itemDeptLevelOrder = stepDeptStartOrder; itemDeptLevelOrder > 0 && itemDeptLevelOrder <= deptLevelMaxOrder;)
+                {
+                    // 依次按照职级递减
+                    for (int itemPosOrder = stepPosStartOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
+                    {
+                        var deptInSql = string.Join(", ", parentDeptIds);
+
+                        #region 查询高阶审批人候选人，注本、兼、代、兼代的标识并按照职级倒序、入职时间正序排序
+                        var highCandidateUserSql = $@"SELECT
+                                                            t.UserId,
+                                                            t.UserName,
+                                                            t.AppointmentType,
+                                                            t.AppointmentTypeName,
+                                                            t.AgentUserId,
+                                                            t.AgentUserName
+                                                        FROM
+                                                        (
+                                                            SELECT
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN
+                                                                        (
+                                                                            SELECT TOP 1 DicCode
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoprimary
+                                                                        )
+                                                                    ELSE
+                                                                        (
+                                                                            SELECT TOP 1 DicCode
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoagent
+                                                                        )
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN
+                                                                        (
+                                                                            SELECT TOP 1
+                                                                                CASE
+                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                                    ELSE DicNameEn
+                                                                                END
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoprimary
+                                                                        )
+                                                                    ELSE
+                                                                        (
+                                                                            SELECT TOP 1
+                                                                                CASE
+                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                                    ELSE DicNameEn
+                                                                                END
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoagent
+                                                                        )
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
+                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser
+                                                                ON agent.AgentUserId = agentuser.UserId
+                                                            WHERE 
+                                                              users.IsEmployed = 1
+                                                              AND users.IsFreeze = 0
+                                                              AND users.IsApproval = 1
+                                                              AND dept.DepartmentId IN ({deptInSql})
+                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
+                                                              AND position.SortOrder = @pposOrder
+                                                              AND position.SortOrder < @pstepUserPosOrder
+
+                                                            UNION ALL
+
+                                                            SELECT
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN
+                                                                        (
+                                                                            SELECT TOP 1 DicCode
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoconcurrent
+                                                                        )
+                                                                    ELSE
+                                                                        (
+                                                                            SELECT TOP 1 DicCode
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoconcurrentagent
+                                                                        )
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN
+                                                                        (
+                                                                            SELECT TOP 1
+                                                                                CASE
+                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                                    ELSE DicNameEn
+                                                                                END
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoconcurrent
+                                                                        )
+                                                                    ELSE
+                                                                        (
+                                                                            SELECT TOP 1
+                                                                                CASE
+                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                                    ELSE DicNameEn
+                                                                                END
+                                                                            FROM Basic.DictionaryInfo
+                                                                            WHERE DicType = 'AppointmentType'
+                                                                              AND DicCode = @pautoconcurrentagent
+                                                                        )
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
+                                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
+                                                            WHERE 
+                                                              users.IsEmployed = 1
+                                                              AND users.IsFreeze = 0
+                                                              AND users.IsApproval = 1
+                                                              AND dept.DepartmentId IN ({deptInSql})
+                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
+                                                              AND position.SortOrder = @pposOrder
+                                                              AND position.SortOrder < @pstepUserPosOrder
+                                                        ) t ORDER BY SortOrder DESC,t.HireDate ASC;";
+                        #endregion
+
+                        var highCandidateUserPar = new List<SugarParameter>
+                        {
+                            new SugarParameter("@plocale", _lang.Locale),
+                            new SugarParameter("@pautoprimary", AppointmentType.AutoPrimary.ToEnumString()),
+                            new SugarParameter("@pautoagent", AppointmentType.AutoAgent.ToEnumString()),
+                            new SugarParameter("@pautoconcurrent", AppointmentType.AutoConcurrent.ToEnumString()),
+                            new SugarParameter("@pautoconcurrentagent", AppointmentType.AutoConcurrentAgent.ToEnumString()),
+                            new SugarParameter("@pdeptlevelOrder", itemDeptLevelOrder),
+                            new SugarParameter("@pposOrder", itemPosOrder),
+                            new SugarParameter("@pstepUserPosOrder", stepUserPositon.SortOrder),
+                        };
+                        for (int i = 0; i < parentDeptIds.Count; i++)
+                        {
+                            highCandidateUserPar.Add(new SugarParameter($"@dept{i}", parentDeptIds[i]));
+                        }
+
+                        // 查询符合条件候选审批人
+                        var highLevelUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(highCandidateUserSql, highCandidateUserPar);
+                        if (highLevelUser.Count > 0)
+                        {
+                            // 按照本、兼、代、兼代的顺序筛选最终审批人
+                            hightLevelApproveUser = await GetFinalStepApproveUserList(highLevelUser, approveMode, "Auto");
+                            itemPosOrder = -1;
+                        }
+                        else
+                        {
+                            itemPosOrder--;
+                        }
+                    }
+                    if (hightLevelApproveUser.Count > 0)
+                    {
+                        itemDeptLevelOrder = -1;
+                    }
+                    else
+                    {
+                        itemDeptLevelOrder--;
                     }
                 }
                 finalApproveUser.AddRange(hightLevelApproveUser);

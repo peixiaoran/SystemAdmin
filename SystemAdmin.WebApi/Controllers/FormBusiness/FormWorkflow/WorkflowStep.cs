@@ -76,13 +76,15 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
             return await _workflowStepService.InsertWorkflowStepBranch(upsert);
         }
 
+        [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单流程步骤] 删除步骤流程分支")]
-        public async Task<Result<int>> DeleteWorkflowStepBranch([FromForm] string stepId, string conditionId)
+        public async Task<Result<int>> DeleteWorkflowStepBranch([FromForm] string stepId, [FromForm] string conditionId)
         {
             return await _workflowStepService.DeleteWorkflowStepBranch(stepId, conditionId);
         }
 
+        [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单流程步骤] 修改步骤流程分支")]
         public async Task<Result<int>> UpdateWorkflowStepBranch([FromBody] WorkflowStepBranchUpsert upsert)

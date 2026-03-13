@@ -9,14 +9,9 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
     public class WorkflowStepOrgEntity
     {
         /// <summary>
-        /// 步骤组织架构Id
-        /// </summary>
-        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
-        public long StepOrgId { get; set; }
-
-        /// <summary>
         /// 步骤Id
         /// </summary>
+        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
         public long StepId { get; set; }
 
         /// <summary>
