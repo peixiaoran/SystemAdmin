@@ -51,10 +51,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                     user.UserNameCn.Contains(getPage.UserName) ||
                     user.UserNameEn.Contains(getPage.UserName));
             }
-            // 部门 Id（仅在工号与姓名为空时）
-            if (!string.IsNullOrEmpty(getPage.DepartmentId)
-                && string.IsNullOrEmpty(getPage.UserNo)
-                && string.IsNullOrEmpty(getPage.UserName))
+            // 部门Id
+            if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.DepartmentId == long.Parse(getPage.DepartmentId));

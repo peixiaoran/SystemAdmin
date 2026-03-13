@@ -22,7 +22,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// <summary>
         /// 部门Id
         /// </summary>
-        public long DeptId { get; set; }
+        public long DepartmentId { get; set; }
 
         /// <summary>
         /// 职级Id

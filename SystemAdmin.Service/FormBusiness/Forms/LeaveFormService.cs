@@ -7,7 +7,7 @@ using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
-using SystemAdmin.Model.FormBusiness.WorkflowLifecycle;
+using SystemAdmin.Model.FormBusiness.WorkflowLifecycle.StepBeforeStart;
 using SystemAdmin.Repository.FormBusiness.Enum;
 using SystemAdmin.Repository.FormBusiness.Forms;
 using SystemAdmin.Repository.FormBusiness.WorkflowLifecycle;
@@ -21,13 +21,13 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly ILogger<ControlInfoService> _logger;
         private readonly SqlSugarScope _db;
         private readonly FormAuthRepository _formAuthRepository;
-        private readonly StepBeforeStartHandler _stepBeforeStart;
+        private readonly StepBeforeStart _stepBeforeStart;
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
         //private readonly string _this = "FormBusiness.Forms.LeaveForm";
         private readonly string _publicthis = "FormBusiness.Forms.";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formAuthRepository, StepBeforeStartHandler stepBeforeStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormAuthRepository formAuthRepository, StepBeforeStart stepBeforeStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;

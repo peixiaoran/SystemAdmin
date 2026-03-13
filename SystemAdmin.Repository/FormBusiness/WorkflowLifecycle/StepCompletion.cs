@@ -3,7 +3,7 @@
     /// <summary>
     /// 审批步骤完成处理器
     /// </summary>
-    public class StepCompletionHandler
+    public class StepCompletion
     {
 
     }

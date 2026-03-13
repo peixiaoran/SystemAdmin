@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SystemAdmin.Model.FormBusiness.FormOperate.Queries;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Commands;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Dto;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Queries;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
-using SystemAdmin.Repository.FormBusiness.FormWorkflow;
 using SystemAdmin.Service.FormBusiness.FormWorkflow;
 using SystemAdmin.WebApi.Attributes;
 
@@ -76,6 +74,20 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         public async Task<Result<int>> InsertWorkflowStepBranch([FromBody] WorkflowStepBranchUpsert upsert)
         {
             return await _workflowStepService.InsertWorkflowStepBranch(upsert);
+        }
+
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 删除步骤流程分支")]
+        public async Task<Result<int>> DeleteWorkflowStepBranch([FromForm] string stepId, string conditionId)
+        {
+            return await _workflowStepService.DeleteWorkflowStepBranch(stepId, conditionId);
+        }
+
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 修改步骤流程分支")]
+        public async Task<Result<int>> UpdateWorkflowStepBranch([FromBody] WorkflowStepBranchUpsert upsert)
+        {
+            return await _workflowStepService.UpdateWorkflowStepBranch(upsert);
         }
 
         [HttpPost]

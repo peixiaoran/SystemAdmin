@@ -26,11 +26,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 新增步骤
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowStep(WorkflowStepEntity upsert)
+        public async Task<int> InsertWorkflowStep(WorkflowStepEntity entity)
         {
-            return await _db.Insertable(upsert).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         public async Task<ResultPaged<WorkflowStepPageDto>> GetWorkflowStepPage(GetWorkflowStepPage getPage)
         {
             RefAsync<int> totalCount = 0;
-            var stepPage = await _db.Queryable<WorkflowStepEntity>()
+            var page = await _db.Queryable<WorkflowStepEntity>()
                                     .With(SqlWith.NoLock)
                                     .InnerJoin<DictionaryInfoEntity>((stepinfo, dic) => dic.DicType == "StepAssignment" && stepinfo.Assignment == dic.DicCode)
                                     .Where((stepinfo, dic) => stepinfo.FormTypeId == long.Parse(getPage.FormTypeId))
@@ -202,7 +202,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                     }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
 
             // 循环查询步骤流程分支信息
-            foreach (var stepItem in stepPage)
+            foreach (var stepItem in page)
             {
                 var stepConList = await _db.Queryable<WorkflowStepBranchEntity>()
                                            .With(SqlWith.NoLock)
@@ -224,7 +224,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                            }).ToListAsync();
                 stepItem.StepBranchList = stepConList;
             }
-            return ResultPaged<WorkflowStepPageDto>.Ok(stepPage.Adapt<List<WorkflowStepPageDto>>(), totalCount);
+            return ResultPaged<WorkflowStepPageDto>.Ok(page.Adapt<List<WorkflowStepPageDto>>(), totalCount);
         }
 
         /// <summary>
@@ -297,11 +297,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 新增步骤流程分支
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowStepBranch(WorkflowStepBranchEntity upsert)
+        public async Task<int> InsertWorkflowStepBranch(WorkflowStepBranchEntity entity)
         {
-            return await _db.Insertable(upsert).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -327,7 +327,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         {
             var entity = await _db.Queryable<WorkflowStepBranchEntity>()
                                   .With(SqlWith.NoLock)
-                                  .Where(stepconition => stepconition.StepId == stepId && stepconition.ConditionId == conditionId)
+                                  .Where(condition => condition.StepId == stepId && condition.ConditionId == conditionId)
                                   .FirstAsync();
             return entity.Adapt<WorkflowStepBranchDto>();
         }
@@ -493,10 +493,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                     user.UserNameCn.Contains(getPage.UserName) ||
                     user.UserNameEn.Contains(getPage.UserName));
             }
-            // 部门Id（仅在工号与姓名都为空时）
-            if (!string.IsNullOrEmpty(getPage.DepartmentId)
-                && string.IsNullOrEmpty(getPage.UserNo)
-                && string.IsNullOrEmpty(getPage.UserName))
+            // 部门Id
+            if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
             {
                 query = query.Where((user, dept, userpos, userlabor, nation) =>
                     user.DepartmentId == long.Parse(getPage.DepartmentId));
@@ -505,30 +503,30 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
             // 排序
             query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
 
-            var userPage = await query
-            .Select((user, dept, userpos, userlabor, nation) => new UserAgentDto
-            {
-                UserId = user.UserId,
-                UserNo = user.UserNo,
-                UserName = _lang.Locale == "zh-CN"
-                           ? user.UserNameCn
-                           : user.UserNameEn,
-                DepartmentName = _lang.Locale == "zh-CN"
-                           ? dept.DepartmentNameCn
-                           : dept.DepartmentNameEn,
-                PositionName = _lang.Locale == "zh-CN"
-                           ? userpos.PositionNameCn
-                           : userpos.PositionNameEn,
-                LaborName = _lang.Locale == "zh-CN"
-                           ? userlabor.LaborNameCn
-                           : userlabor.LaborNameEn,
-                NationalityName = _lang.Locale == "zh-CN"
-                           ? nation.NationNameCn
-                           : nation.NationNameEn,
-                IsAgent = user.IsAgent,
-                IsApproval = user.IsApproval,
-            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<UserInfoDto>.Ok(userPage.Adapt<List<UserInfoDto>>(), totalCount, "");
+            var page = await query
+                                 .Select((user, dept, userpos, userlabor, nation) => new UserAgentDto
+                                 {
+                                     UserId = user.UserId,
+                                     UserNo = user.UserNo,
+                                     UserName = _lang.Locale == "zh-CN"
+                                                ? user.UserNameCn
+                                                : user.UserNameEn,
+                                     DepartmentName = _lang.Locale == "zh-CN"
+                                                ? dept.DepartmentNameCn
+                                                : dept.DepartmentNameEn,
+                                     PositionName = _lang.Locale == "zh-CN"
+                                                ? userpos.PositionNameCn
+                                                : userpos.PositionNameEn,
+                                     LaborName = _lang.Locale == "zh-CN"
+                                                ? userlabor.LaborNameCn
+                                                : userlabor.LaborNameEn,
+                                     NationalityName = _lang.Locale == "zh-CN"
+                                                ? nation.NationNameCn
+                                                : nation.NationNameEn,
+                                     IsAgent = user.IsAgent,
+                                     IsApproval = user.IsApproval,
+                                 }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<UserInfoDto>.Ok(page.Adapt<List<UserInfoDto>>(), totalCount, "");
         }
     }
 }

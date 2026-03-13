@@ -37,15 +37,5 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// 创建日期
         /// </summary>
         public DateTime? CreatedDate { get; set; }
-
-        /// <summary>
-        /// 修改人
-        /// </summary>
-        public long? ModifiedBy { get; set; }
-
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        public DateTime? ModifiedDate { get; set; }
     }
 }
