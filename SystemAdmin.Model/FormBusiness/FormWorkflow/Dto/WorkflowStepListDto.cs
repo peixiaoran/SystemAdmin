@@ -6,7 +6,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
     /// <summary>
     /// 流程审批步骤Dto
     /// </summary>
-    public class WorkflowStepPageDto
+    public class WorkflowStepListDto
     {
         /// <summary>
         /// 步骤Id
@@ -20,7 +20,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public string StepName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 步骤选人方式名称
+        /// 步骤指派规则
+        /// </summary>
+        public string Assignment { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 步骤指派规则名称
         /// </summary>
         public string AssignmentName { get; set; } = string.Empty;
 

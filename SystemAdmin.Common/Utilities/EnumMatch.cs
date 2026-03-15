@@ -118,7 +118,7 @@
 
         /// <summary>
         /// Flags 枚举：是否包含指定的单个标志位
-        /// 示例： "Org,User".HasFlagValue(StepAssignmentOp.Org)
+        /// 示例： "Org,User".HasFlagValue(AssignmentOp.Org)
         /// </summary>
         public static bool HasFlagValue<TEnum>(this string? value, TEnum flag)
             where TEnum : struct, Enum

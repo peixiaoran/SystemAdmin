@@ -51,13 +51,12 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     FormTypeId = long.Parse(upsert.FormTypeId),
                     StepNameCn = upsert.StepNameCn,
                     StepNameEn = upsert.StepNameEn,
-                    Assignment = upsert.Assignment,
                     IsStartStep = upsert.IsStartStep,
+                    Assignment = upsert.Assignment,
                     ArchitectureLevel = upsert.ArchitectureLevel,
                     ApproveMode = upsert.ApproveMode,
                     IsReminderEnabled = upsert.IsReminderEnabled,
                     ReminderIntervalMinutes = upsert.ReminderIntervalMinutes,
-                    Description = upsert.Description,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
@@ -72,11 +71,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                             ? Result<int>.Ok(insertStepCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
                 }
-                // 不是起始步骤，则新增审批步骤信息及对应的步骤选人方式
+                // 不是起始步骤，则新增审批步骤信息及对应的步骤指派规则
                 else
                 {
                     int insertStepCount = await _workflowStepRepository.InsertWorkflowStep(stepEntity);
-                    // 根据不同的步骤选人方式，新增对应的步骤选人方式
+                    // 根据不同的步骤指派规则，新增对应的步骤指派规则
                     if (upsert.Assignment.MatchEnum(Assignment.Org))
                     {
                         var orgEntity = new WorkflowStepOrgEntity()
@@ -106,6 +105,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         var userEntity = new WorkflowStepUserEntity()
                         {
                             StepId = stepId,
+                            DepartmentId = long.Parse(upsert.stepUserUpsert.DepartmentId),
                             UserId = long.Parse(upsert.stepUserUpsert.UserId),
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
@@ -191,12 +191,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     StepNameCn = upsert.StepNameCn,
                     StepNameEn = upsert.StepNameEn,
                     IsStartStep = upsert.IsStartStep,
-                    ArchitectureLevel = upsert.ArchitectureLevel,
                     Assignment = upsert.Assignment,
+                    ArchitectureLevel = upsert.ArchitectureLevel,
                     ApproveMode = upsert.ApproveMode,
                     IsReminderEnabled = upsert.IsReminderEnabled,
                     ReminderIntervalMinutes = upsert.ReminderIntervalMinutes,
-                    Description = upsert.Description,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
@@ -216,7 +215,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                             : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
                 }
 
-                // 根据不同的步骤选人方式，删除其他选人方式数据，再新增步骤选人方式
+                // 根据不同的步骤指派规则，删除其他选人方式数据，再新增步骤指派规则
                 if (upsert.Assignment.MatchEnum(Assignment.Org))
                 {
                     var stepOrgEntity = new WorkflowStepOrgEntity()
@@ -246,6 +245,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     var stepUserEntity = new WorkflowStepUserEntity()
                     {
                         StepId = long.Parse(upsert.StepId),
+                        DepartmentId = long.Parse(upsert.stepUserUpsert.DepartmentId),
                         UserId = long.Parse(upsert.stepUserUpsert.UserId),
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
@@ -279,20 +279,20 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询步骤及流程分支分页
+        /// 查询步骤及流程分支列表
         /// </summary>
-        /// <param name="getPage"></param>
+        /// <param name="getList"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<WorkflowStepPageDto>> GetWorkflowStepPage(GetWorkflowStepPage getPage)
+        public async Task<ResultPaged<WorkflowStepListDto>> GetWorkflowStepList(GetWorkflowStepList getList)
         {
             try
             {
-                return await _workflowStepRepository.GetWorkflowStepPage(getPage);
+                return await _workflowStepRepository.GetWorkflowStepList(getList);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<WorkflowStepPageDto>.Failure(500, ex.Message);
+                return ResultPaged<WorkflowStepListDto>.Failure(500, ex.Message);
             }
         }
 
@@ -305,12 +305,22 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var entity = await _workflowStepRepository.GetWorkflowStepEntity(long.Parse(stepId));
+                var entity = new WorkflowStepEntityDto();
+                var entityHead = await _workflowStepRepository.GetWorkflowStepEntity(long.Parse(stepId));
+                entity.StepId = entityHead.StepId;
+                entity.StepNameCn = entityHead.StepNameCn;
+                entity.StepNameEn = entityHead.StepNameEn;
+                entity.IsStartStep = entityHead.IsStartStep;
+                entity.ArchitectureLevel = entityHead.ArchitectureLevel;
+                entity.Assignment = entityHead.Assignment;
+                entity.ApproveMode = entityHead.ApproveMode;
+                entity.IsReminderEnabled = entityHead.IsReminderEnabled;
+                entity.ReminderIntervalMinutes = entityHead.ReminderIntervalMinutes;
 
-                entity.workflowStepOrgEntity = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(stepId));
-                entity.workflowStepDeptUserEntity = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(stepId));
-                entity.workflowStepUserEntity = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(stepId));
-                entity.workflowStepApproverCustomEntity = await _workflowStepRepository.GetWorkflowStepCustomEntity(long.Parse(stepId));
+                entity.workflowStepOrgEntity = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(stepId)) ?? new WorkflowStepOrgEntity(); ;
+                entity.workflowStepDeptUserEntity = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(stepId)) ?? new WorkflowStepDeptUserEntity();
+                entity.workflowStepUserEntity = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(stepId)) ?? new WorkflowStepUserEntity();
+                entity.workflowStepApproverCustomEntity = await _workflowStepRepository.GetWorkflowStepCustomEntity(long.Parse(stepId)) ?? new WorkflowStepCustomEntity();
 
                 return Result<WorkflowStepEntityDto>.Ok(entity);
             }
@@ -437,25 +447,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 条件下拉框
-        /// </summary>
-        /// <param name="formTypeId"></param>
-        /// <returns></returns>
-        public async Task<Result<List<WorkflowConditionDropDto>>> GetConditionDropDown(string formTypeId)
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetConditionDropDown(long.Parse(formTypeId));
-                return Result<List<WorkflowConditionDropDto>>.Ok(drop);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<WorkflowConditionDropDto>>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
@@ -493,7 +484,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 步骤选人方式下拉
+        /// 步骤指派规则下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<AssignmentDropDto>>> GetAssignmentDropDown()
@@ -511,20 +502,38 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 部门树下拉
+        /// 步骤签核级别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<ArchiLevelDropDto>>> GetArchiLevelDropDown()
         {
             try
             {
-                var drop = await _workflowStepRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(drop, "");
+                var drop = await _workflowStepRepository.GetArchiLevelDropDown();
+                return Result<List<ArchiLevelDropDto>>.Ok(drop);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
+                return Result<List<ArchiLevelDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 步骤签核方式下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<ApproveModeDropDto>>> GetApproveModeDropDown()
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetApproveModeDropDown();
+                return Result<List<ApproveModeDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<ApproveModeDropDto>>.Failure(500, ex.Message);
             }
         }
 
@@ -565,6 +574,24 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
+        /// 部门树下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
         /// 查询员工信息分页
         /// </summary>
         /// <param name="getPage"></param>
@@ -580,6 +607,25 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             {
                 _logger.LogError(ex, ex.Message);
                 return ResultPaged<UserInfoDto>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 条件下拉框
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<WorkflowConditionDropDto>>> GetConditionDropDown(string formTypeId)
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetConditionDropDown(long.Parse(formTypeId));
+                return Result<List<WorkflowConditionDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<WorkflowConditionDropDto>>.Failure(500, ex.Message);
             }
         }
     }

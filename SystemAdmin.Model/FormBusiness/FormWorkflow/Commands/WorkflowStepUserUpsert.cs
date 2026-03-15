@@ -6,6 +6,11 @@
     public class WorkflowStepUserUpsert
     {
         /// <summary>
+        /// 部门Id
+        /// </summary>
+        public string DepartmentId { get; set; } = string.Empty;
+
+        /// <summary>
         /// 员工Id
         /// </summary>
         public string UserId { get; set; } = string.Empty;

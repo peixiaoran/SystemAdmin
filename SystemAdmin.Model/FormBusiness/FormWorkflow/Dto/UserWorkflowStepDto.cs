@@ -3,7 +3,10 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
-    public class UserInfoDto
+    /// <summary>
+    /// 员工Dto
+    /// </summary>
+    public class UserWorkflowStepDto
     {
         /// <summary>
         /// 员工Id
@@ -46,5 +49,11 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// </summary>
         [JsonConverter(typeof(IntToStringConverter))]
         public int IsApproval { get; set; }
+
+        /// <summary>
+        /// 是否代理
+        /// </summary>
+        [JsonConverter(typeof(IntToStringConverter))]
+        public int IsAgent { get; set; }
     }
 }

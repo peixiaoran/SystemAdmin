@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Common.Enums.FormBusiness
 {
     /// <summary>
-    /// 步骤选人方式枚举
+    /// 步骤指派规则枚举
     /// </summary>
     public enum Assignment
     {

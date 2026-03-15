@@ -15,7 +15,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long StepId { get; set; }
 
         /// <summary>
-        /// 员工Ids
+        /// 部门Id
+        /// </summary>
+        public long DepartmentId { get; set; }
+
+        /// <summary>
+        /// 员工Id
         /// </summary>
         public long UserId { get; set; }
 

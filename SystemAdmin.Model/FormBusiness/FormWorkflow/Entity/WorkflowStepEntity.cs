@@ -35,14 +35,14 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public int IsStartStep { get; set; }
 
         /// <summary>
+        /// 步骤指派规则（依组织架构、指定部门员工级别、指定员工、自定义）
+        /// </summary>
+        public string Assignment { get; set; } = string.Empty;
+
+        /// <summary>
         /// 架构级别（组织架构、执行级）
         /// </summary>
         public string ArchitectureLevel { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 步骤选人方式（依组织架构、指定部门员工级别、指定员工、自定义）
-        /// </summary>
-        public string Assignment { get; set; } = string.Empty;
 
         /// <summary>
         /// 签核方式（单签、会签、或签）
@@ -58,11 +58,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// 催签间隔分钟
         /// </summary>
         public int ReminderIntervalMinutes { get; set; }
-
-        /// <summary>
-        /// 步骤描述
-        /// </summary>
-        public string Description { get; set; } = string.Empty;
 
         /// <summary>
         /// 创建人

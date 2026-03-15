@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 17001000 (17.00.1000)
+ Source Server Version : 17001105 (17.00.1105)
  Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 17001000 (17.00.1000)
+ Target Server Version : 17001105 (17.00.1105)
  File Encoding         : 65001
 
- Date: 14/03/2026 00:18:35
+ Date: 15/03/2026 21:11:57
 */
 
 
@@ -1146,7 +1146,7 @@ GO
 INSERT INTO [Form].[WorkflowStep] ([StepId], [FormTypeId], [StepNameCn], [StepNameEn], [IsStartStep], [ArchitectureLevel], [Assignment], [ApproveMode], [IsReminderEnabled], [ReminderIntervalMinutes], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009890853346217984', N'1987217256446300160', N'发起人', N'Applicant', N'1', N'OrgLevel', N'Org', N'Single', N'0', N'1', N'', N'1903486709602062336', N'2026-01-10 15:31:41.000', NULL, NULL)
 GO
 
-INSERT INTO [Form].[WorkflowStep] ([StepId], [FormTypeId], [StepNameCn], [StepNameEn], [IsStartStep], [ArchitectureLevel], [Assignment], [ApproveMode], [IsReminderEnabled], [ReminderIntervalMinutes], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009892923604340736', N'1987217256446300160', N'执 - 组长', N'Operational- Team leader', N'0', N'OrgLevel', N'Org', N'Single', N'1', N'1', N'', N'1903486709602062336', N'2026-01-10 15:39:49.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowStep] ([StepId], [FormTypeId], [StepNameCn], [StepNameEn], [IsStartStep], [ArchitectureLevel], [Assignment], [ApproveMode], [IsReminderEnabled], [ReminderIntervalMinutes], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009892923604340736', N'1987217256446300160', N'执 - 组长', N'Operational - Team leader', N'0', N'OrgLevel', N'Org', N'Single', N'1', N'1', N'', N'1903486709602062336', N'2026-01-10 15:39:49.000', NULL, NULL)
 GO
 
 INSERT INTO [Form].[WorkflowStep] ([StepId], [FormTypeId], [StepNameCn], [StepNameEn], [IsStartStep], [ArchitectureLevel], [Assignment], [ApproveMode], [IsReminderEnabled], [ReminderIntervalMinutes], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2009897830268932096', N'1987217256446300160', N'科 - 科长', N'Section - Section Chief', N'0', N'OrgLevel', N'Org', N'Single', N'1', N'1', N'', N'1903486709602062336', N'2026-01-10 15:59:19.000', NULL, NULL)
@@ -1240,7 +1240,7 @@ GO
 -- ----------------------------
 -- Records of WorkflowStepBranch
 -- ----------------------------
-INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2009890853346217984', N'-1', N'1', N'2009892923604340736', N'1903486709602062336', N'2026-01-10 16:02:15.000')
+INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2009890853346217984', N'-1', N'0', N'2009892923604340736', N'1903486709602062336', N'2026-01-10 16:02:15.000')
 GO
 
 INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2009892923604340736', N'-1', N'1', N'2009897830268932096', N'1903486709602062336', N'2026-01-10 16:02:40.000')
@@ -1262,6 +1262,9 @@ INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatche
 GO
 
 INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2032353104544010242', N'-1', N'1', N'-1', N'1903486709602062336', N'2026-03-13 23:07:07.000')
+GO
+
+INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2009890853346217984', N'-1', N'1', N'2009892923604340736', N'1903486709602062336', N'2026-01-10 16:02:15.000')
 GO
 
 
@@ -1487,6 +1490,7 @@ GO
 
 CREATE TABLE [Form].[WorkflowStepUser] (
   [StepId] bigint  NOT NULL,
+  [DepartmentId] bigint  NOT NULL,
   [UserId] bigint  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime2(3)  NOT NULL
@@ -1504,7 +1508,14 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'员工Ids',
+'MS_Description', N'部门Id',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowStepUser',
+'COLUMN', N'DepartmentId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工Id',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowStepUser',
 'COLUMN', N'UserId'
@@ -1534,7 +1545,7 @@ GO
 -- ----------------------------
 -- Records of WorkflowStepUser
 -- ----------------------------
-INSERT INTO [Form].[WorkflowStepUser] ([StepId], [UserId], [CreatedBy], [CreatedDate]) VALUES (N'2032353104544010242', N'1962089884348977152', N'1903486709602062336', N'2026-03-13 23:06:30.000')
+INSERT INTO [Form].[WorkflowStepUser] ([StepId], [DepartmentId], [UserId], [CreatedBy], [CreatedDate]) VALUES (N'2032353104544010242', N'1929535196076576830', N'1962089884348977152', N'1903486709602062336', N'2026-03-15 19:43:50.000')
 GO
 
 

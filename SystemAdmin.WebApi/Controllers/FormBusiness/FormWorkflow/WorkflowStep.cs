@@ -46,10 +46,10 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 查询步骤及流程分支分页")]
-        public async Task<ResultPaged<WorkflowStepPageDto>> GetWorkflowStepPage([FromBody] GetWorkflowStepPage getPage)
+        [EndpointSummary("[表单流程步骤] 查询步骤及流程分支列表")]
+        public async Task<ResultPaged<WorkflowStepListDto>> GetWorkflowStepList([FromBody] GetWorkflowStepList getList)
         {
-            return await _workflowStepService.GetWorkflowStepPage(getPage);
+            return await _workflowStepService.GetWorkflowStepList(getList);
         }
 
         [HttpPost]
@@ -110,15 +110,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 条件下拉")]
-        public async Task<Result<List<WorkflowConditionDropDto>>> GetConditionDropDown([FromForm] string formTypeId)
-        {
-            return await _workflowStepService.GetConditionDropDown(formTypeId);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 步骤选人方式下拉")]
+        [EndpointSummary("[表单流程步骤] 步骤指派规则下拉")]
         public async Task<Result<List<AssignmentDropDto>>> GetAssignmentDropDown()
         {
             return await _workflowStepService.GetAssignmentDropDown();
@@ -126,10 +118,18 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 部门树下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        [EndpointSummary("[表单流程步骤] 步骤签核级别下拉")]
+        public async Task<Result<List<ArchiLevelDropDto>>> GetArchiLevelDropDown()
         {
-            return await _workflowStepService.GetDepartmentDropDown();
+            return await _workflowStepService.GetArchiLevelDropDown();
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 步骤签核方式下拉")]
+        public async Task<Result<List<ApproveModeDropDto>>> GetApproveModeDropDown()
+        {
+            return await _workflowStepService.GetApproveModeDropDown();
         }
 
         [HttpPost]
@@ -150,10 +150,26 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 部门树下拉")]
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            return await _workflowStepService.GetDepartmentDropDown();
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单流程步骤] 查询员工信息分页")]
         public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
         {
             return await _workflowStepService.GetUserInfoPage(getPage);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 条件下拉")]
+        public async Task<Result<List<WorkflowConditionDropDto>>> GetConditionDropDown([FromForm] string formTypeId)
+        {
+            return await _workflowStepService.GetConditionDropDown(formTypeId);
         }
     }
 }
