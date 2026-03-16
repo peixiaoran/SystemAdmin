@@ -4,75 +4,42 @@ using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.FormBusiness.FormAudit.Entity;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
+using SystemAdmin.Model.FormBusiness.FormLifecycle.FormBeforeStart;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
-using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
-using SystemAdmin.Model.FormBusiness.WorkflowLifecycle.StepBeforeStart;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity;
 
-namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
+namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
 {
     /// <summary>
-    /// 审批步骤
+    /// 表单开始前处理类
     /// </summary>
-    public class StepBeforeStart
+    public class FormBeforeStart
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
-        //private readonly string _this = "FormBusiness.WorkflowLifecycle.StepBeforeStart";
+        //private readonly string _this = "FormBusiness.FormLifecycle.FormBeforeStart";
 
-        public StepBeforeStart(SqlSugarScope db, Language lang)
+        public FormBeforeStart(SqlSugarScope db, Language lang)
         {
             _db = db;
             _lang = lang;
         }
 
         /// <summary>
-        /// 初始化表单
+        /// 验证员工是否有权限申请表单
         /// </summary>
-        public async Task<FormInfoEntity> InitFormInfo(long userId, long formTypeId)
-        {
-            // 获取表单编号
-            long startStepId = await GetWorkFlowIsStartStepId(formTypeId);
-            var formNo = await GenerateFormNo(userId, formTypeId);
-            FormInfoEntity insertForm = new FormInfoEntity()
-            {
-                FormId = SnowFlakeSingle.Instance.NextId(),
-                FormNo = formNo,
-                FormTypeId = formTypeId,
-                Description = "",
-                ImportanceCode = ImportanceType.Normal.ToEnumString(),
-                FormStatus = FormStatus.PendingSubmission.ToEnumString(),
-                NowConditionId = null,
-                NowStepId = startStepId,
-                CreatedBy = userId,
-                CreatedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-            };
-            await _db.Insertable(insertForm).ExecuteCommandAsync();
-            return insertForm;
-        }
-
-        /// <summary>
-        /// 保存表单信息
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <param name="description"></param>
-        /// <param name="importanceCode"></param>
-        /// <param name="modifiedUserId"></param>
+        /// <param name="userId"></param>
+        /// <param name="formTypeId"></param>
         /// <returns></returns>
-        public async Task<int> SaveFormInfo(long formId, string description, string formStatus, string importanceCode, long modifiedUserId)
+        public async Task<bool> HasUserApplyFormType(long userId, long formTypeId)
         {
-            return await _db.Updateable<FormInfoEntity>()
-                            .SetColumns(forminfo => new FormInfoEntity
-                            {
-                                Description = description,
-                                ImportanceCode = importanceCode,
-                                FormStatus = formStatus,
-                                ModifiedBy = modifiedUserId,
-                                ModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                            }).Where(forminfo => forminfo.FormId == formId)
-                            .ExecuteCommandAsync();
+            return await _db.Queryable<UserFormEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(userform => userform.UserId == userId && userform.FormGroupTypeId == formTypeId)
+                            .AnyAsync();
         }
 
         /// <summary>
@@ -83,59 +50,90 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         /// <returns></returns>
         public async Task<string> GenerateFormNo(long userId, long formTypeId)
         {
-            var formType = await _db.Queryable<FormTypeEntity>().FirstAsync(x => x.FormTypeId == formTypeId);
+            var formType = await _db.Queryable<FormTypeEntity>().FirstAsync(formtype => formtype.FormTypeId == formTypeId);
 
             var now = DateTime.Now;
             var ym = now.ToString("yyMM");
 
             var seq = 1;
 
-            var counting = await _db.Queryable<FormCountingEntity>()
-                .FirstAsync(x => x.FormTypeId == formTypeId && x.YM == ym);
+            var counting = await _db.Queryable<FormCountingEntity>().FirstAsync(formcounting => formcounting.FormTypeId == formTypeId && formcounting.YM == ym);
 
             if (counting == null)
             {
-                await _db.Insertable(new FormCountingEntity
+                var entity = new FormCountingEntity
                 {
                     FormTypeId = formTypeId,
                     YM = ym,
                     Total = seq,
                     CreatedBy = userId,
                     CreatedDate = now.ToString("yyyy-MM-dd HH:mm:ss")
-                }).ExecuteCommandAsync();
+                };
+                await _db.Insertable(entity).ExecuteCommandAsync();
             }
             else
             {
                 seq = counting.Total + 1;
 
                 await _db.Updateable<FormCountingEntity>()
-                    .SetColumns(x => new FormCountingEntity
-                    {
-                        Total = seq
-                    })
-                    .Where(x => x.FormTypeId == formTypeId && x.YM == ym)
-                    .ExecuteCommandAsync();
+                         .SetColumns(formcounting => new FormCountingEntity
+                         {
+                             Total = seq
+                         }).Where(formcounting => formcounting.FormTypeId == formTypeId && formcounting.YM == ym)
+                         .ExecuteCommandAsync();
             }
 
             return $"{formType.Prefix}-{ym}{seq:D4}";
         }
 
         /// <summary>
-        /// 重要程度下拉
+        /// 初始化表单
+        /// </summary>
+        public async Task<FormInfoEntity> InitFormInfo(long userId, long formTypeId)
+        {
+            // 获取表单编号
+            long startStepId = await GetWorkFlowIsStartStepId(formTypeId);
+            var formNo = await GenerateFormNo(userId, formTypeId);
+            var insertForm = new FormInfoEntity()
+            {
+                FormId = SnowFlakeSingle.Instance.NextId(),
+                FormNo = formNo,
+                FormTypeId = formTypeId,
+                FormStatus = FormStatus.PendingSubmission.ToEnumString(),
+                LastConditionId = null,
+                LastStepId = null,
+                NowStepId = startStepId,
+                CreatedBy = userId,
+                CreatedDate = DateTime.Now,
+            };
+            await _db.Insertable(insertForm).ExecuteCommandAsync();
+            return insertForm;
+        }
+
+        /// <summary>
+        /// 保存表单信息
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <param name="modifiedUserId"></param>
+        /// <returns></returns>
+        public async Task<int> SaveFormInfo(long formId, long modifiedUserId)
+        {
+            return await _db.Updateable<FormInfoEntity>()
+                            .SetColumns(forminfo => new FormInfoEntity
+                            {
+                                ModifiedBy = modifiedUserId,
+                                ModifiedDate = DateTime.Now,
+                            }).Where(forminfo => forminfo.FormId == formId)
+                            .ExecuteCommandAsync();
+        }
+
+        /// <summary>
+        /// 添加表单待签核人
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ImportanceDropDto>> GetImportanceDropDown()
+        public async Task<int> AddPendingApprover(PendingApproversEntity entity)
         {
-            return await _db.Queryable<DictionaryInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(dic => dic.DicType == "ImportanceType")
-                            .Select(dic => new ImportanceDropDto()
-                            {
-                                ImportanceCode = dic.DicCode,
-                                ImportanceName = _lang.Locale == "zh-CN"
-                                                 ? dic.DicNameCn
-                                                 : dic.DicNameEn,
-                            }).ToListAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -310,7 +308,7 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         }
 
         /// <summary>
-        /// 查询步骤依照组织架构审批人
+        /// 查询步骤依照组织架构
         /// </summary>
         /// <param name="applyUserId"></param>
         /// <param name="approveMode"></param>
@@ -685,10 +683,9 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         }
 
         /// <summary>
-        /// 查询步骤依照指定部门、职级审批人
+        /// 查询步骤依照指定部门、职级
         /// </summary>
         /// <param name="approveMode"></param>
-        /// <param name="parentDeptList"></param>
         /// <param name="deptId"></param>
         /// <param name="positionId"></param>
         /// <returns></returns>
@@ -1051,12 +1048,12 @@ namespace SystemAdmin.Repository.FormBusiness.WorkflowLifecycle
         }
 
         /// <summary>
-        /// 查询步骤依照组织架构审批人
+        /// 查询步骤依照指定员工
         /// </summary>
-        /// <param name="stepUser"></param>
         /// <param name="approveMode"></param>
+        /// <param name="stepUserId"></param>
         /// <returns></returns>
-        public async Task<List<StepApproveUser>> GetStepApproveUserByUser(string approveMode,long stepUserId)
+        public async Task<List<StepApproveUser>> GetStepApproveUserByUser(string approveMode, long stepUserId)
         {
             // 步骤最终审批人列表
             var finalApproveUser = new List<StepApproveUser>();

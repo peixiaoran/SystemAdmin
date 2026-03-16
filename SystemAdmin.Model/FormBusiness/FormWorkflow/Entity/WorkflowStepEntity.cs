@@ -40,11 +40,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public string Assignment { get; set; } = string.Empty;
 
         /// <summary>
-        /// 架构级别（组织架构、执行级）
-        /// </summary>
-        public string ArchitectureLevel { get; set; } = string.Empty;
-
-        /// <summary>
         /// 签核方式（单签、会签、或签）
         /// </summary>
         public string ApproveMode { get; set; } = string.Empty;

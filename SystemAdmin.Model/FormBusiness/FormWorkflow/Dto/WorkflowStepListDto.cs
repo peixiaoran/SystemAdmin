@@ -30,11 +30,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public string AssignmentName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 步骤描述
-        /// </summary>
-        public string Description { get; set; } = string.Empty;
-
-        /// <summary>
         /// 步骤流程分支集合
         /// </summary>
         public List<WorkflowStepBranchDto> StepBranchList { get; set; } = new List<WorkflowStepBranchDto>();

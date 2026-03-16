@@ -1,5 +1,4 @@
-﻿
-using MapsterMapper;
+﻿using MapsterMapper;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
@@ -76,6 +75,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                             .IgnoreColumns(dept => new
                             {
                                 dept.DepartmentId,
+                                dept.DepartmentCode,
                                 dept.CreatedBy,
                                 dept.CreatedDate,
                             }).Where(dept => dept.DepartmentId == entity.DepartmentId)
@@ -223,24 +223,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<bool> GetDepartCodeIsExist(string deptCode)
         {
-            var query = _db.Queryable<DepartmentInfoEntity>()
-                           .With(SqlWith.NoLock)
-                           .Where(dept => dept.DepartmentCode == deptCode);
-            return await query.AnyAsync();
-        }
-
-        /// <summary>
-        /// 查询部门编码是否存在（修改）
-        /// </summary>
-        /// <param name="deptId"></param>
-        /// <param name="newDeptCode"></param>
-        /// <returns></returns>
-        public async Task<bool> GetDepartCodeIsExist(long deptId, string newDeptCode)
-        {
-            var query = _db.Queryable<DepartmentInfoEntity>()
-                           .With(SqlWith.NoLock)
-                           .Where(dept => dept.DepartmentId != deptId && dept.DepartmentCode == newDeptCode);
-            return await query.AnyAsync();
+            return await _db.Queryable<DepartmentInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(dept => dept.DepartmentCode == deptCode)
+                            .AnyAsync();
         }
     }
 }

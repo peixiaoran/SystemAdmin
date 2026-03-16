@@ -3,7 +3,7 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 步骤指定员工来源表
+    /// 步骤指定员工表
     /// </summary>
     [SugarTable("[Form].[WorkflowStepUser]")]
     public class WorkflowStepUserEntity

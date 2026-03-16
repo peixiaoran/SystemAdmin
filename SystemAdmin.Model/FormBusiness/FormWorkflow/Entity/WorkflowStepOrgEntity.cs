@@ -3,7 +3,7 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 步骤组织架构来源表
+    /// 步骤组织架构表
     /// </summary>
     [SugarTable("[Form].[WorkflowStepOrg]")]
     public class WorkflowStepOrgEntity

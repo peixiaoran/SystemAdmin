@@ -45,10 +45,10 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
                                 leave.CreatedDate,
                             }).Where(leave => leave.FormId == entity.FormId)
                             .ExecuteCommandAsync();
-        } 
+        }
 
         /// <summary>
-        /// 查询请假表单详情
+        /// 查询请假表单明细
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
@@ -56,31 +56,33 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         {
             return await _db.Queryable<FormInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .InnerJoin<LeaveFormEntity>((forminfo, leaveinfo) => forminfo.FormId == leaveinfo.FormId)
-                            .InnerJoin<DictionaryInfoEntity>((forminfo, leaveinfo, dicinfo) => dicinfo.DicType == "FormStatus" && forminfo.FormStatus == dicinfo.DicCode)
-                            .Where((forminfo, leaveinfo, dicinfo) => forminfo.FormId == formId)
-                            .Select((forminfo, leaveinfo, dicinfo) => new LeaveFormDto()
+                            .InnerJoin<LeaveFormEntity>((form, leave) => form.FormId == leave.FormId)
+                            .InnerJoin<UserInfoEntity>((form, leave, user) => leave.ApplicantUserId == user.UserId)
+                            .InnerJoin<DepartmentInfoEntity>((form, leave, user, dept) => user.DepartmentId == dept.DepartmentId)
+                            .InnerJoin<DictionaryInfoEntity>((form, leave, user, dept, dic) => dic.DicType == "FormStatus" && form.FormStatus == dic.DicCode)
+                            .Where((form, leave, user, dept, dic) => form.FormId == formId)
+                            .Select((form, leave, user, dept, dic) => new LeaveFormDto()
                             {
-                                FormTypeId = forminfo.FormTypeId,
-                                Description = forminfo.Description,
-                                ImportanceCode = forminfo.ImportanceCode,
-                                FormStatus = forminfo.FormStatus,
+                                FormTypeId = form.FormTypeId,
+                                FormStatus = form.FormStatus,
                                 FormStatusName = _lang.Locale == "zh-CN"
-                                                 ? dicinfo.DicNameCn
-                                                 : dicinfo.DicNameEn,
-                                FormId = forminfo.FormId,
-                                FormNo = forminfo.FormNo,
-                                ApplicantTime = leaveinfo.ApplicantTime,
-                                ApplicantUserNo = leaveinfo.ApplicantUserNo,
-                                ApplicantUserName = leaveinfo.ApplicantUserName,
-                                ApplicantDeptId = leaveinfo.ApplicantDeptId,
-                                ApplicantDeptName = leaveinfo.ApplicantDeptName,
-                                LeaveTypeCode = leaveinfo.LeaveTypeCode,
-                                LeaveReason = leaveinfo.LeaveReason,
-                                LeaveStartTime = leaveinfo.LeaveStartTime,
-                                LeaveEndTime = leaveinfo.LeaveEndTime,
-                                LeaveHours = leaveinfo.LeaveHours,
-                                LeaveHandoverUserName = leaveinfo.LeaveHandoverUserName,
+                                                 ? dic.DicNameCn
+                                                 : dic.DicNameEn,
+                                FormId = form.FormId,
+                                FormNo = form.FormNo,
+                                ApplicantUserNo = user.UserNo,
+                                ApplicantUserName = _lang.Locale == "zh-CN"
+                                                 ? user.UserNameCn
+                                                 : user.UserNameEn,
+                                ApplicantDeptName = _lang.Locale == "zh_CN"
+                                                 ? dept.DepartmentNameCn
+                                                 : dept.DepartmentNameEn,
+                                LeaveTypeCode = leave.LeaveTypeCode,
+                                LeaveReason = leave.LeaveReason,
+                                LeaveStartTime = leave.LeaveStartTime,
+                                LeaveEndTime = leave.LeaveEndTime,
+                                LeaveHours = leave.LeaveHours,
+                                AgentUserNo = leave.AgentUserNo,
                             }).FirstAsync();
         }
 
@@ -94,7 +96,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
             return await _db.Queryable<UserInfoEntity>()
                             .With(SqlWith.NoLock)
                             .InnerJoin<DepartmentInfoEntity>((userinfo, deptinfo) => userinfo.DepartmentId == deptinfo.DepartmentId)
-                            .InnerJoin<UserPositionEntity>((userinfo, deptinfo, position) => userinfo.PositionId ==position.PositionId)
+                            .InnerJoin<UserPositionEntity>((userinfo, deptinfo, position) => userinfo.PositionId == position.PositionId)
                             .Select((userinfo, deptinfo, position) => new UserBasicInfoDto()
                             {
                                 UserId = userinfo.UserId,

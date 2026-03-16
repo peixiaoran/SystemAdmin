@@ -47,7 +47,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单流程步骤] 查询步骤及流程分支列表")]
-        public async Task<ResultPaged<WorkflowStepListDto>> GetWorkflowStepList([FromBody] GetWorkflowStepList getList)
+        public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList([FromBody] GetWorkflowStepList getList)
         {
             return await _workflowStepService.GetWorkflowStepList(getList);
         }
@@ -55,7 +55,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单流程步骤] 查询步骤实体")]
-        public async Task<Result<WorkflowStepEntityDto>> GetWorkflowStepEntity([FromForm] string stepId)
+        public async Task<Result<WorkflowStepDto>> GetWorkflowStepEntity([FromForm] string stepId)
         {
             return await _workflowStepService.GetWorkflowStepEntity(stepId);
         }
@@ -114,14 +114,6 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         public async Task<Result<List<AssignmentDropDto>>> GetAssignmentDropDown()
         {
             return await _workflowStepService.GetAssignmentDropDown();
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 步骤签核级别下拉")]
-        public async Task<Result<List<ArchiLevelDropDto>>> GetArchiLevelDropDown()
-        {
-            return await _workflowStepService.GetArchiLevelDropDown();
         }
 
         [HttpPost]

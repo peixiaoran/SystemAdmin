@@ -20,29 +20,9 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
         public string FormNo { get; set; } = string.Empty;
 
         /// <summary>
-        /// 申请时间
+        /// 申请人Id
         /// </summary>
-        public string ApplicantTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 申请人工号
-        /// </summary>
-        public string ApplicantUserNo { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 申请人姓名
-        /// </summary>
-        public string ApplicantUserName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 申请人部门Id
-        /// </summary>
-        public long ApplicantDeptId { get; set; }
-
-        /// <summary>
-        /// 申请人部门名称
-        /// </summary>
-        public string ApplicantDeptName { get; set; } = string.Empty;
+        public long ApplicantUserId { get; set; }
 
         /// <summary>
         /// 假别类型Id
@@ -57,22 +37,22 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
         /// <summary>
         /// 开始时间
         /// </summary>
-        public string? LeaveStartTime { get; set; }
+        public DateTime LeaveStartTime { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public string? LeaveEndTime { get; set; }
+        public DateTime LeaveEndTime { get; set; }
 
         /// <summary>
-        /// 请假小时（系统计算）
+        /// 请假小时
         /// </summary>
         public decimal LeaveHours { get; set; }
 
         /// <summary>
-        /// 交接人Id
+        /// 代理人工号
         /// </summary>
-        public string LeaveHandoverUserName { get; set; } = string.Empty;
+        public string AgentUserNo { get; set; } = string.Empty;
 
         /// <summary>
         /// 创建人
@@ -82,7 +62,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
         /// <summary>
         /// 创建日期
         /// </summary>
-        public string CreatedDate { get; set; } = string.Empty;
+        public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// 修改人
@@ -92,6 +72,6 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
         /// <summary>
         /// 修改时间
         /// </summary>
-        public string? ModifiedDate { get; set; }
+        public DateTime ModifiedDate { get; set; }
     }
 }

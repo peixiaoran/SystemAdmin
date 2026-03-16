@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.FormBusiness.WorkflowLifecycle.StepBeforeStart
+namespace SystemAdmin.Model.FormBusiness.FormLifecycle.FormBeforeStart
 {
     public class StepApproveUser
     {

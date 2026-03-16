@@ -39,7 +39,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(upsert.DepartmentCode);
                 if (codeExist)
                 {
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeptCodeExist"));
+                    return Result<int>.Failure(410, _localization.ReturnMsg($"{_this}DeptCodeExist"));
                 }
                 else
                 {
@@ -88,14 +88,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             {
                 await _db.BeginTranAsync();
                 int count = await DeleteDepartmentWithChildrenAsync(long.Parse(upsert.DepartmentId));
-                if (count == 0)
-                {
-                    await _db.RollbackTranAsync();
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DepartmentHasUsers"));
-                }
                 await _db.CommitTranAsync();
 
-                return Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"));
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                        : Result<int>.Failure(410, _localization.ReturnMsg($"{_this}DepartmentHasUsers"));
             }
             catch (Exception ex)
             {
@@ -117,9 +114,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             var deptList = await _deptInfoRepository.GetDepartmentInfoList();
 
             // 构建部门树字典，Parent -> List<Dept>
-            var deptChildrenMap = deptList
-                .GroupBy(dept => dept.ParentId)
-                .ToDictionary(g => g.Key, g => g.ToList());
+            var deptChildrenMap = deptList.GroupBy(dept => dept.ParentId).ToDictionary(g => g.Key, g => g.ToList());
 
             // 判断部门及子部门是否可以删除
             bool CanDelete(long deptId)
@@ -175,38 +170,30 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                bool isExist = await _deptInfoRepository.GetDepartCodeIsExist(long.Parse(upsert.DepartmentId), upsert.DepartmentCode);
-                if (isExist)
+                var entity = new DepartmentInfoEntity()
                 {
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeptCodeExist"));
-                }
-                else
-                {
-                    var entity = new DepartmentInfoEntity()
-                    {
-                        DepartmentId = long.Parse(upsert.DepartmentId),
-                        DepartmentCode = upsert.DepartmentCode,
-                        DepartmentNameCn = upsert.DepartmentNameCn,
-                        DepartmentNameEn = upsert.DepartmentNameEn,
-                        ParentId = long.Parse(upsert.ParentId),
-                        DepartmentLevelId = long.Parse(upsert.DepartmentLevelId),
-                        SortOrder = upsert.SortOrder,
-                        Landline = upsert.Landline,
-                        Email = upsert.Email,
-                        Address = upsert.Address,
-                        Description = upsert.Description,
-                        ModifiedBy = _loginuser.UserId,
-                        ModifiedDate = DateTime.Now,
-                    };
+                    DepartmentId = long.Parse(upsert.DepartmentId),
+                    DepartmentCode = upsert.DepartmentCode,
+                    DepartmentNameCn = upsert.DepartmentNameCn,
+                    DepartmentNameEn = upsert.DepartmentNameEn,
+                    ParentId = long.Parse(upsert.ParentId),
+                    DepartmentLevelId = long.Parse(upsert.DepartmentLevelId),
+                    SortOrder = upsert.SortOrder,
+                    Landline = upsert.Landline,
+                    Email = upsert.Email,
+                    Address = upsert.Address,
+                    Description = upsert.Description,
+                    ModifiedBy = _loginuser.UserId,
+                    ModifiedDate = DateTime.Now,
+                };
 
-                    await _db.BeginTranAsync();
-                    int count = await _deptInfoRepository.UpdateDepartmentInfo(entity);
-                    await _db.CommitTranAsync();
+                await _db.BeginTranAsync();
+                int count = await _deptInfoRepository.UpdateDepartmentInfo(entity);
+                await _db.CommitTranAsync();
 
-                    return count >= 1
-                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
-                }
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {

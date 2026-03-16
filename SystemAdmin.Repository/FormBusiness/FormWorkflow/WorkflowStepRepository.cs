@@ -1,4 +1,5 @@
 ﻿using Mapster;
+using Minio.DataModel.Notification;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
@@ -161,18 +162,18 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 修改步骤
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateWorkflowStep(WorkflowStepEntity upsert)
+        public async Task<int> UpdateWorkflowStep(WorkflowStepEntity entity)
         {
-            return await _db.Updateable(upsert)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(stepinfo => new
                             {
                                 stepinfo.StepId,
                                 stepinfo.FormTypeId,
                                 stepinfo.CreatedBy,
                                 stepinfo.CreatedDate,
-                            }).Where(stepinfo => stepinfo.StepId == upsert.StepId)
+                            }).Where(stepinfo => stepinfo.StepId == entity.StepId)
                             .ExecuteCommandAsync();
         }
 
@@ -181,13 +182,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<WorkflowStepListDto>> GetWorkflowStepList(GetWorkflowStepList getPage)
+        public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList(GetWorkflowStepList getList)
         {
-            RefAsync<int> totalCount = 0;
             var page = await _db.Queryable<WorkflowStepEntity>()
                                     .With(SqlWith.NoLock)
                                     .InnerJoin<DictionaryInfoEntity>((stepinfo, dic) => dic.DicType == "Assignment" && stepinfo.Assignment == dic.DicCode)
-                                    .Where((stepinfo, dic) => stepinfo.FormTypeId == long.Parse(getPage.FormTypeId))
+                                    .Where((stepinfo, dic) => stepinfo.FormTypeId == long.Parse(getList.FormTypeId))
                                     .OrderBy((stepinfo, dic) => stepinfo.CreatedDate)
                                     .Select((stepinfo, dic) => new WorkflowStepListDto()
                                     {
@@ -224,7 +224,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                            }).ToListAsync();
                 stepItem.StepBranchList = stepConList;
             }
-            return ResultPaged<WorkflowStepListDto>.Ok(page.Adapt<List<WorkflowStepListDto>>(), totalCount);
+            return Result<List<WorkflowStepListDto>>.Ok(page.Adapt<List<WorkflowStepListDto>>());
         }
 
         /// <summary>
@@ -232,13 +232,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepEntity> GetWorkflowStepEntity(long stepId)
+        public async Task<WorkflowStepDto> GetWorkflowStepEntity(long stepId)
         {
-            return await _db.Queryable<WorkflowStepEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(stepinfo => stepinfo.StepId == stepId)
-                            .OrderBy(stepinfo => stepinfo.CreatedDate)
-                            .FirstAsync();
+            var entity = await _db.Queryable<WorkflowStepEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(stepinfo => stepinfo.StepId == stepId)
+                                  .OrderBy(stepinfo => stepinfo.CreatedDate)
+                                  .FirstAsync();
+            return entity.Adapt<WorkflowStepDto>();
         }
 
         /// <summary>
@@ -246,12 +247,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepOrgEntity> GetWorkflowStepOrgEntity(long stepId)
+        public async Task<WorkflowStepOrgDto> GetWorkflowStepOrgEntity(long stepId)
         {
-            return await _db.Queryable<WorkflowStepOrgEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(steporg => steporg.StepId == stepId)
-                            .FirstAsync();
+            var entity = await _db.Queryable<WorkflowStepOrgEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(steporg => steporg.StepId == stepId)
+                                  .FirstAsync();
+            return entity.Adapt<WorkflowStepOrgDto>();
         }
 
         /// <summary>
@@ -259,12 +261,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepDeptUserEntity> GetWorkflowStepDeptUserEntity(long stepId)
+        public async Task<WorkflowStepDeptUserDto> GetWorkflowStepDeptUserEntity(long stepId)
         {
-            return await _db.Queryable<WorkflowStepDeptUserEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(stepdeptuser => stepdeptuser.StepId == stepId)
-                            .FirstAsync();
+            var entity = await _db.Queryable<WorkflowStepDeptUserEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(stepdeptuser => stepdeptuser.StepId == stepId)
+                                  .FirstAsync();
+            return entity.Adapt<WorkflowStepDeptUserDto>();
         }
 
         /// <summary>
@@ -272,25 +275,27 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepUserEntity> GetWorkflowStepUserEntity(long stepId)
+        public async Task<WorkflowStepUserDto> GetWorkflowStepUserEntity(long stepId)
         {
-            return await _db.Queryable<WorkflowStepUserEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(stepuser => stepuser.StepId == stepId)
-                            .FirstAsync();
+            var entity = await _db.Queryable<WorkflowStepUserEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(stepuser => stepuser.StepId == stepId)
+                                  .FirstAsync();
+            return entity.Adapt<WorkflowStepUserDto>();
         }
 
         /// <summary>
-        /// 查询步骤-指定员工实体
+        /// 查询步骤-自定义实体
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepCustomEntity> GetWorkflowStepCustomEntity(long stepId)
+        public async Task<WorkflowStepCustomDto> GetWorkflowStepCustomEntity(long stepId)
         {
-            return await _db.Queryable<WorkflowStepCustomEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(stepappcustom => stepappcustom.StepId == stepId)
-                            .FirstAsync();
+            var entity = await _db.Queryable<WorkflowStepCustomEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(stepcustom => stepcustom.StepId == stepId)
+                                  .FirstAsync();
+            return entity.Adapt<WorkflowStepCustomDto>();
         }
 
         /// <summary>
@@ -384,25 +389,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                 AssignmentName = _lang.Locale == "zh-CN"
                                                  ? dic.DicNameCn
                                                  : dic.DicNameEn,
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 步骤签核级别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<ArchiLevelDropDto>> GetArchiLevelDropDown()
-        {
-            return await _db.Queryable<DictionaryInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderByDescending(dic => dic.CreatedDate)
-                            .Where(dic => dic.DicType == "ArchitectureLevel")
-                            .Select(dic => new ArchiLevelDropDto
-                            {
-                                ArchiLevelCode = dic.DicCode,
-                                ArchiLevelName = _lang.Locale == "zh-CN"
-                                                ? dic.DicNameCn
-                                                : dic.DicNameEn,
                             }).ToListAsync();
         }
 

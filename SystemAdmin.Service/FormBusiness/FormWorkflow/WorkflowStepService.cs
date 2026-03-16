@@ -53,7 +53,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     StepNameEn = upsert.StepNameEn,
                     IsStartStep = upsert.IsStartStep,
                     Assignment = upsert.Assignment,
-                    ArchitectureLevel = upsert.ArchitectureLevel,
                     ApproveMode = upsert.ApproveMode,
                     IsReminderEnabled = upsert.IsReminderEnabled,
                     ReminderIntervalMinutes = upsert.ReminderIntervalMinutes,
@@ -192,7 +191,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     StepNameEn = upsert.StepNameEn,
                     IsStartStep = upsert.IsStartStep,
                     Assignment = upsert.Assignment,
-                    ArchitectureLevel = upsert.ArchitectureLevel,
                     ApproveMode = upsert.ApproveMode,
                     IsReminderEnabled = upsert.IsReminderEnabled,
                     ReminderIntervalMinutes = upsert.ReminderIntervalMinutes,
@@ -267,8 +265,8 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 await _db.CommitTranAsync();
 
                 return updateStepCount >= 1 && (insertStepOrgCount >= 1 || insertStepDeptUserCount >= 1 || insertStepUserCount >= 1 || insertStepCustomCount >= 1)
-                        ? Result<int>.Ok(updateStepCount, _localization.ReturnMsg($"{_this}insertSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}insertFailed"));
+                        ? Result<int>.Ok(updateStepCount, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {
@@ -283,7 +281,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="getList"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<WorkflowStepListDto>> GetWorkflowStepList(GetWorkflowStepList getList)
+        public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList(GetWorkflowStepList getList)
         {
             try
             {
@@ -292,7 +290,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<WorkflowStepListDto>.Failure(500, ex.Message);
+                return Result<List<WorkflowStepListDto>>.Failure(500, ex.Message);
             }
         }
 
@@ -301,33 +299,31 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<Result<WorkflowStepEntityDto>> GetWorkflowStepEntity(string stepId)
+        public async Task<Result<WorkflowStepDto>> GetWorkflowStepEntity(string stepId)
         {
             try
             {
-                var entity = new WorkflowStepEntityDto();
-                var entityHead = await _workflowStepRepository.GetWorkflowStepEntity(long.Parse(stepId));
-                entity.StepId = entityHead.StepId;
-                entity.StepNameCn = entityHead.StepNameCn;
-                entity.StepNameEn = entityHead.StepNameEn;
-                entity.IsStartStep = entityHead.IsStartStep;
-                entity.ArchitectureLevel = entityHead.ArchitectureLevel;
-                entity.Assignment = entityHead.Assignment;
-                entity.ApproveMode = entityHead.ApproveMode;
-                entity.IsReminderEnabled = entityHead.IsReminderEnabled;
-                entity.ReminderIntervalMinutes = entityHead.ReminderIntervalMinutes;
+                var entity = await _workflowStepRepository.GetWorkflowStepEntity(long.Parse(stepId));
+                //entity.StepId = entityHead.StepId;
+                //entity.StepNameCn = entityHead.StepNameCn;
+                //entity.StepNameEn = entityHead.StepNameEn;
+                //entity.IsStartStep = entityHead.IsStartStep;
+                //entity.Assignment = entityHead.Assignment;
+                //entity.ApproveMode = entityHead.ApproveMode;
+                //entity.IsReminderEnabled = entityHead.IsReminderEnabled;
+                //entity.ReminderIntervalMinutes = entityHead.ReminderIntervalMinutes;
 
-                entity.workflowStepOrgEntity = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(stepId)) ?? new WorkflowStepOrgEntity(); ;
-                entity.workflowStepDeptUserEntity = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(stepId)) ?? new WorkflowStepDeptUserEntity();
-                entity.workflowStepUserEntity = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(stepId)) ?? new WorkflowStepUserEntity();
-                entity.workflowStepApproverCustomEntity = await _workflowStepRepository.GetWorkflowStepCustomEntity(long.Parse(stepId)) ?? new WorkflowStepCustomEntity();
+                entity.workflowStepOrgDto = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(stepId)) ?? new WorkflowStepOrgDto(); ;
+                entity.workflowStepDeptUserDto = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(stepId)) ?? new WorkflowStepDeptUserDto();
+                entity.workflowStepUserDto = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(stepId)) ?? new WorkflowStepUserDto();
+                entity.workflowStepCustomDto = await _workflowStepRepository.GetWorkflowStepCustomEntity(long.Parse(stepId)) ?? new WorkflowStepCustomDto();
 
-                return Result<WorkflowStepEntityDto>.Ok(entity);
+                return Result<WorkflowStepDto>.Ok(entity);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<WorkflowStepEntityDto>.Failure(500, ex.Message);
+                return Result<WorkflowStepDto>.Failure(500, ex.Message);
             }
         }
 
@@ -498,24 +494,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<List<AssignmentDropDto>>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 步骤签核级别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<ArchiLevelDropDto>>> GetArchiLevelDropDown()
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetArchiLevelDropDown();
-                return Result<List<ArchiLevelDropDto>>.Ok(drop);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<ArchiLevelDropDto>>.Failure(500, ex.Message);
             }
         }
 

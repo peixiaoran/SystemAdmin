@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Queries;
 using SystemAdmin.Service.SystemBasicMgmt.SystemAuth;
 
 namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
@@ -31,9 +30,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         [Tags("系统基础管理-系统接口")]
         [EndpointSummary("[系统接口] 查询菜单树")]
         [AllowAnonymous]
-        public async Task<Result<List<SysMenuInfoDto>>> GetMenuTreeList([FromBody] GetSysMenu getSysMenu)
+        public async Task<Result<List<SysMenuInfoDto>>> GetMenuTreeList([FromForm] string moduleId)
         {
-            return await _sysModuleMenuService.GetMenuTreeList(getSysMenu);
+            return await _sysModuleMenuService.GetMenuTreeList(moduleId);
         }
     }
 }

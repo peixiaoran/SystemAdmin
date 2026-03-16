@@ -27,7 +27,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Messages.resx</DependentUpon>
     </Compile>
-    <Compile Update="FormBusiness\WorkflowLifecycle\Messages.Designer.cs">
+    <Compile Update="FormBusiness\FormLifecycle\Messages.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Messages.resx</DependentUpon>
@@ -81,7 +81,7 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="FormBusiness\WorkflowLifecycle\Messages.resx">
+    <EmbeddedResource Update="FormBusiness\FormLifecycle\Messages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Messages.Designer.cs</LastGenOutput>
     </EmbeddedResource>

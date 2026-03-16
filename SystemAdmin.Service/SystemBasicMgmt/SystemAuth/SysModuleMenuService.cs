@@ -40,13 +40,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         /// <summary>
         /// 查询菜单树
         /// </summary>
-        /// <param name="getSysMenu"></param>
+        /// <param name="moduleId"></param>
         /// <returns></returns>
-        public async Task<Result<List<SysMenuInfoDto>>> GetMenuTreeList(GetSysMenu getSysMenu)
+        public async Task<Result<List<SysMenuInfoDto>>> GetMenuTreeList(string moduleId)
         {
             try
             {
-                List<SysMenuInfoDto> menuTree = await _sysModuleMenuRepository.GetMenuTreeList(getSysMenu, _loginuser.UserId);
+                List<SysMenuInfoDto> menuTree = await _sysModuleMenuRepository.GetMenuTreeList(long.Parse(moduleId), _loginuser.UserId);
                 return Result<List<SysMenuInfoDto>>.Ok(menuTree, "");
             }
             catch (Exception ex)

@@ -144,9 +144,6 @@
   <data name="DeptInfoDeleteSuccess" xml:space="preserve">
     <value>部门信息删除成功</value>
   </data>
-  <data name="DeptInfoDeleteFailed" xml:space="preserve">
-    <value>部门信息删除失败</value>
-  </data>
   <data name="DeptInfoUpdateSuccess" xml:space="preserve">
     <value>部门信息修改成功</value>
   </data>

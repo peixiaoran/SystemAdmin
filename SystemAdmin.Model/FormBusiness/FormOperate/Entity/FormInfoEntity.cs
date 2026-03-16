@@ -25,27 +25,22 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         public string FormNo { get; set; } = string.Empty;
 
         /// <summary>
-        /// 表单简短描述
-        /// </summary>
-        public string Description { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 重要程度
-        /// </summary>
-        public string ImportanceCode { get; set; } = string.Empty;
-
-        /// <summary>
         /// 表单状态
         /// </summary>
         public string FormStatus { get; set; } = string.Empty;
 
         /// <summary>
-        /// 当前步骤Id
+        /// 上一步骤Id
         /// </summary>
-        public long? NowConditionId { get; set; }
+        public long? LastStepId { get; set; }
 
         /// <summary>
-        /// 当前条件Id
+        /// 上一条件Id
+        /// </summary>
+        public long? LastConditionId { get; set; }
+
+        /// <summary>
+        /// 当前步骤Id
         /// </summary>
         public long NowStepId { get; set; }
 
@@ -57,7 +52,7 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         /// <summary>
         /// 创建日期
         /// </summary>
-        public string CreatedDate { get; set; } = string.Empty;
+        public DateTime? CreatedDate { get; set; }
 
         /// <summary>
         /// 修改人
@@ -67,6 +62,6 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         /// <summary>
         /// 修改时间
         /// </summary>
-        public string? ModifiedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
     }
 }

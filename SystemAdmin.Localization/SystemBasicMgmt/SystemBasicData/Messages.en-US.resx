@@ -144,9 +144,6 @@
   <data name="DeptInfoDeleteSuccess" xml:space="preserve">
     <value>Department deleted successfully</value>
   </data>
-  <data name="DeptInfoDeleteFailed" xml:space="preserve">
-    <value>Failed to delete department</value>
-  </data>
   <data name="DeptInfoUpdateSuccess" xml:space="preserve">
     <value>Department updated successfully</value>
   </data>

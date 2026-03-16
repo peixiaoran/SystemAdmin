@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SystemAdmin.Localization.FormBusiness.WorkflowLifecycle {
+namespace SystemAdmin.Localization.FormBusiness.FormLifecycle {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SystemAdmin.Localization.FormBusiness.WorkflowLifecycle {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SystemAdmin.Localization.FormBusiness.WorkflowLifecycle.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SystemAdmin.Localization.FormBusiness.FormLifecycle.Messages", typeof(Messages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

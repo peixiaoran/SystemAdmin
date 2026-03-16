@@ -61,15 +61,6 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 部门信息删除失败 的本地化字符串。
-        /// </summary>
-        internal static string DeptInfoDeleteFailed {
-            get {
-                return ResourceManager.GetString("DeptInfoDeleteFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 部门信息删除成功 的本地化字符串。
         /// </summary>
         internal static string DeptInfoDeleteSuccess {
