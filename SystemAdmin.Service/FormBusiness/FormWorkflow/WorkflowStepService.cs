@@ -48,6 +48,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 var stepEntity = new WorkflowStepEntity
                 {
                     StepId = stepId,
+                    FormGroupId = long.Parse(upsert.FormGroupId),
                     FormTypeId = long.Parse(upsert.FormTypeId),
                     StepNameCn = upsert.StepNameCn,
                     StepNameEn = upsert.StepNameEn,
@@ -186,6 +187,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 var stepEntity = new WorkflowStepEntity
                 {
                     StepId = long.Parse(upsert.StepId),
+                    FormGroupId = long.Parse(upsert.FormGroupId),
                     FormTypeId = long.Parse(upsert.FormTypeId),
                     StepNameCn = upsert.StepNameCn,
                     StepNameEn = upsert.StepNameEn,

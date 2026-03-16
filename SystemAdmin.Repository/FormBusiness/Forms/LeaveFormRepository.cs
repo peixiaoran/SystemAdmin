@@ -48,7 +48,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 查询请假表单明细
+        /// 查询请假单明细
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
@@ -74,7 +74,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
                                 ApplicantUserName = _lang.Locale == "zh-CN"
                                                  ? user.UserNameCn
                                                  : user.UserNameEn,
-                                ApplicantDeptName = _lang.Locale == "zh_CN"
+                                ApplicantDeptName = _lang.Locale == "zh-CN"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                 LeaveTypeCode = leave.LeaveTypeCode,

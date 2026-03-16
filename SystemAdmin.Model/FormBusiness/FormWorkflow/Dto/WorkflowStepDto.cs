@@ -15,6 +15,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public long StepId { get; set; }
 
         /// <summary>
+        /// 表单组别Id
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long FormGroupId { get; set; }
+
+        /// <summary>
         /// 表单类别Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]

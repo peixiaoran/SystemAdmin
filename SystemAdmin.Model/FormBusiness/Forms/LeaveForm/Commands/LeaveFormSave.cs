@@ -11,11 +11,6 @@
         public string FormTypeId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 表单简短描述
-        /// </summary>
-        public string Description { get; set; } = string.Empty;
-
-        /// <summary>
         /// 请假单Id
         /// </summary>
         public string FormId { get; set; } = string.Empty;
@@ -24,11 +19,6 @@
         /// 请假单号
         /// </summary>
         public string FormNo { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 申请人工号
-        /// </summary>
-        public long ApplicantUserId { get; set; }
 
         /// <summary>
         /// 假别编码

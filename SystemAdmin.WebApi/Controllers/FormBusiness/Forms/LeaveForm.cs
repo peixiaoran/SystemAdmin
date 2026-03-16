@@ -20,9 +20,17 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
         [EndpointSummary("[请假单] 初始化请假单")]
-        public async Task<Result<LeaveFormDto>> InitLeaveForm([FromForm] string formTypeId)
+        public async Task<Result<string>> InitLeaveForm([FromForm] string formTypeId)
         {
             return await _leaveFormService.InitLeaveForm(formTypeId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单作业模块")]
+        [EndpointSummary("[请假单] 查询请假单明细")]
+        public async Task<Result<LeaveFormDto>> GetLeaveForm([FromForm] string formId)
+        {
+            return await _leaveFormService.GetLeaveForm(formId);
         }
 
         [HttpPost]
@@ -31,14 +39,6 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         public async Task<Result<int>> SaveLeaveForm([FromBody] LeaveFormSave formSave)
         {
             return await _leaveFormService.SaveLeaveForm(formSave);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[请假单] 查询请假单详情")]
-        public async Task<Result<LeaveFormDto>> GetLeaveForm([FromForm] string formId)
-        {
-            return await _leaveFormService.GetLeaveForm(formId);
         }
 
         [HttpPost]

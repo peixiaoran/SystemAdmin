@@ -51,14 +51,14 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// </summary>
         /// <param name="formTypeId"></param>
         /// <returns></returns>
-        public async Task<Result<LeaveFormDto>> InitLeaveForm(string formTypeId)
+        public async Task<Result<string>> InitLeaveForm(string formTypeId)
         {
             try
             {
                 bool isApply = await _formBeforeStart.HasUserApplyFormType(_loginuser.UserId, long.Parse(formTypeId));
                 if (!isApply)
                 {
-                    return Result<LeaveFormDto>.Failure(403, "");
+                    return Result<string>.Failure(403, "");
                 }
 
                 await _db.BeginTranAsync();
@@ -78,23 +78,42 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     FormId = initForm.FormId,
                     FormNo = initForm.FormNo,
                     ApplicantUserId = _loginuser.UserId,
+                    
                     LeaveTypeCode = "",
+                    LeaveStartTime = null,
+                    LeaveEndTime = null,
                     LeaveReason = "",
                     LeaveHours = 0,
                     AgentUserNo = "",
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
-                await _leaveFormRepository.InitLeaveForm(entity);
+                int initLeaveCount = await _leaveFormRepository.InitLeaveForm(entity);
                 await _db.CommitTranAsync();
-
-                var leaveFormDto = entity.Adapt<LeaveFormDto>();
-                leaveFormDto.FormTypeId = long.Parse(formTypeId);
-                return Result<LeaveFormDto>.Ok(leaveFormDto);
+                return Result<string>.Ok(initForm.FormId.ToString(), "");
             }
             catch (Exception ex)
             {
                 await _db.RollbackTranAsync();
+                _logger.LogError(ex, ex.Message);
+                return Result<string>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 查询请假单明细
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public async Task<Result<LeaveFormDto>> GetLeaveForm(string formId)
+        {
+            try
+            {
+                var leaveForm = await _leaveFormRepository.GetLeaveForm(long.Parse(formId));
+                return Result<LeaveFormDto>.Ok(leaveForm);
+            }
+            catch (Exception ex)
+            {
                 _logger.LogError(ex, ex.Message);
                 return Result<LeaveFormDto>.Failure(500, ex.Message);
             }
@@ -145,25 +164,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 查询请假表单详情
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        public async Task<Result<LeaveFormDto>> GetLeaveForm(string formId)
-        {
-            try
-            {
-                var leaveForm = await _leaveFormRepository.GetLeaveForm(long.Parse(formId));
-                return Result<LeaveFormDto>.Ok(leaveForm);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<LeaveFormDto>.Failure(500, ex.Message);
             }
         }
 
