@@ -70,21 +70,21 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 删除模块
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="moduleId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteModule(ModuleInfoUpsert upsert)
+        public async Task<Result<int>> DeleteModule(string moduleId)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除模块
-                var delModuleCount = await _moduleRepository.DeleteModule(long.Parse(upsert.ModuleId));
+                var delModuleCount = await _moduleRepository.DeleteModule(long.Parse(moduleId));
                 // 删除角色模块
-                var delRoleModuleCount = await _moduleRepository.DeleteRoleModule(long.Parse(upsert.ModuleId));
+                var delRoleModuleCount = await _moduleRepository.DeleteRoleModule(long.Parse(moduleId));
                 // 获取删除菜单Ids
-                var delMenuIds = await _moduleRepository.GetModuleMenusIds(long.Parse(upsert.ModuleId));
+                var delMenuIds = await _moduleRepository.GetModuleMenusIds(long.Parse(moduleId));
                 // 删除模块下的菜单
-                var delMenuCount = await _moduleRepository.DeleteMenu(long.Parse(upsert.ModuleId));
+                var delMenuCount = await _moduleRepository.DeleteMenu(long.Parse(moduleId));
                 // 删除角色菜单绑定
                 var delRoleMenuCount = await _moduleRepository.DeleteRoleMenuId(delMenuIds);
                 await _db.CommitTranAsync();
@@ -144,13 +144,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询模块实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="moduleId"></param>
         /// <returns></returns>
-        public async Task<Result<ModuleInfoDto>> GetModuleEntity(GetModuleInfoEntity getEntity)
+        public async Task<Result<ModuleInfoDto>> GetModuleEntity(string moduleId)
         {
             try
             {
-                ModuleInfoDto entity = await _moduleRepository.GetModuleEntity(long.Parse(getEntity.ModuleId));
+                ModuleInfoDto entity = await _moduleRepository.GetModuleEntity(long.Parse(moduleId));
                 return Result<ModuleInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)

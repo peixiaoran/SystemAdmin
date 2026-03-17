@@ -30,9 +30,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormBasicInfo
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单类别] 删除表单类别")]
-        public async Task<Result<int>> DeleteFormTypeInfo([FromBody] FormTypeUpsert upsert)
+        public async Task<Result<int>> DeleteFormTypeInfo([FromForm] string fromTypeId)
         {
-            return await _formTypeService.DeleteFormTypeInfo(upsert);
+            return await _formTypeService.DeleteFormTypeInfo(fromTypeId);
         }
 
         [HttpPost]
@@ -46,9 +46,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormBasicInfo
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单类别] 查询表单类别实体")]
-        public async Task<Result<FormTypeDto>> GetFormTypeEntity([FromBody] GetFormTypeEntity getEntity)
+        public async Task<Result<FormTypeDto>> GetFormTypeEntity([FromForm] string fromTypeId)
         {
-            return await _formTypeService.GetFormTypeEntity(getEntity);
+            return await _formTypeService.GetFormTypeEntity(fromTypeId);
         }
 
         [HttpPost]

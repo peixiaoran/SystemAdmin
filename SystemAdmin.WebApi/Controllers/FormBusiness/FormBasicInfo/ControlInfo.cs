@@ -30,9 +30,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormBasicInfo
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[控件信息] 删除控件信息")]
-        public async Task<Result<int>> DeleteControlInfo([FromBody] ControlInfoUpsert upsert)
+        public async Task<Result<int>> DeleteControlInfo([FromForm] string controlCode)
         {
-            return await _controlInfoService.DeleteControlInfo(upsert);
+            return await _controlInfoService.DeleteControlInfo(controlCode);
         }
 
         [HttpPost]

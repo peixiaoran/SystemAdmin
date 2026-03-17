@@ -80,14 +80,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 删除部门信息
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="deptId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteDepartmentInfo(DepartmentInfoUpsert upsert)
+        public async Task<Result<int>> DeleteDepartmentInfo(string deptId)
         {
             try
             {
                 await _db.BeginTranAsync();
-                int count = await DeleteDepartmentWithChildrenAsync(long.Parse(upsert.DepartmentId));
+                int count = await DeleteDepartmentWithChildrenAsync(long.Parse(deptId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -208,11 +208,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<DepartmentInfoDto>> GetDepartmentInfoEntity(GetDepartmentInfoEntity getEntity)
+        public async Task<Result<DepartmentInfoDto>> GetDepartmentInfoEntity(string deptId)
         {
             try
             {
-                var entity = await _deptInfoRepository.GetDepartmentInfoEntity(long.Parse(getEntity.DepartmentId));
+                var entity = await _deptInfoRepository.GetDepartmentInfoEntity(long.Parse(deptId));
                 return Result<DepartmentInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)

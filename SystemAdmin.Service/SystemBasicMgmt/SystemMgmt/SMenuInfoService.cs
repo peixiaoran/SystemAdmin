@@ -76,17 +76,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 删除二级菜单
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="menuId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteSMenu(MenuInfoUpsert upsert)
+        public async Task<Result<int>> DeleteSMenu(string menuId)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除二级菜单
-                var delSMenuCount = await _sMenuRepository.DeleteSMenu(long.Parse(upsert.MenuId));
+                var delSMenuCount = await _sMenuRepository.DeleteSMenu(long.Parse(menuId));
                 // 删除角色二级菜单
-                var delRoleSMenuCount = await _sMenuRepository.DeleteRoleSMenu(long.Parse(upsert.MenuId));
+                var delRoleSMenuCount = await _sMenuRepository.DeleteRoleSMenu(long.Parse(menuId));
 
                 await _db.CommitTranAsync();
 
@@ -149,13 +149,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询菜单实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="menuId"></param>
         /// <returns></returns>
-        public async Task<Result<MenuInfoDto>> GetSMenuEntity(GetMenuInfoEntity getEntity)
+        public async Task<Result<MenuInfoDto>> GetSMenuEntity(string menuId)
         {
             try
             {
-                var entity = await _sMenuRepository.GetSMenuEntity(long.Parse(getEntity.MenuId));
+                var entity = await _sMenuRepository.GetSMenuEntity(long.Parse(menuId));
                 return Result<MenuInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)

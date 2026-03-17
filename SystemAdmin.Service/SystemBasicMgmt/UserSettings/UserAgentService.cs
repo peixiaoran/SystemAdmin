@@ -146,16 +146,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 删除员工代理关系
         /// </summary>
-        /// <param name="upsertdel"></param>
+        /// <param name="agentUserId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteUserAgent(UserAgentDel upsertdel)
+        public async Task<Result<int>> DeleteUserAgent(string agentUserId)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除员工代理配置
-                var delSubAgentCount = await _userAgentRepository.DeleteUserAgent(long.Parse(upsertdel.SubstituteUserId), long.Parse(upsertdel.AgentUserId));
-                var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(upsertdel.AgentUserId), 0);
+                var delSubAgentCount = await _userAgentRepository.DeleteUserAgent(long.Parse(agentUserId));
+                var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(agentUserId), 0);
                 await _db.CommitTranAsync();
 
                 return delSubAgentCount >= 1 && updateUserAgentCount >= 1
@@ -191,13 +191,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询此员工被哪个员工代理列表
         /// </summary>
-        /// <param name="getList"></param>
+        /// <param name="substituteUserId"></param>
         /// <returns></returns>
-        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentPassiveList(GetUserAgentPassiveList getList)
+        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentPassiveList(string substituteUserId)
         {
             try
             {
-                return await _userAgentRepository.GetUserAgentPassiveList(getList);
+                return await _userAgentRepository.GetUserAgentPassiveList(long.Parse(substituteUserId));
             }
             catch (Exception ex)
             {

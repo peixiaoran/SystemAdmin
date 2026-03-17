@@ -69,12 +69,12 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteDepartmentLevel(DepartmentLevelUpsert upsert)
+        public async Task<Result<int>> DeleteDepartmentLevel(string deptlevelId)
         {
             try
             {
                 await _db.BeginTranAsync();
-                int count = await _deptLevelRepository.DeleteDepartmentLevel(long.Parse(upsert.DepartmentLevelId));
+                int count = await _deptLevelRepository.DeleteDepartmentLevel(long.Parse(deptlevelId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -129,13 +129,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询部门级别实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="deptlevelId"></param>
         /// <returns></returns>
-        public async Task<Result<DepartmentLevelDto>> GetDepartmentLevelEntity(GetDepartmentLevelEntity getEntity)
+        public async Task<Result<DepartmentLevelDto>> GetDepartmentLevelEntity(string deptlevelId)
         {
             try
             {
-                var entity = await _deptLevelRepository.GetDepartmentLevelEntity(long.Parse(getEntity.DepartmentLevelId));
+                var entity = await _deptLevelRepository.GetDepartmentLevelEntity(long.Parse(deptlevelId));
                 return Result<DepartmentLevelDto>.Ok(entity, "");
             }
             catch (Exception ex)

@@ -20,15 +20,15 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[职业] 查询职级实体")]
-        public async Task<Result<UserPositionDto>> GetUserPositionEntity([FromBody] GetUserPositionEntity getEntity)
+        [EndpointSummary("[职级信息] 查询职级实体")]
+        public async Task<Result<UserPositionDto>> GetUserPositionEntity([FromForm] string positionId)
         {
-            return await _userPositionService.GetUserPositionEntity(getEntity);
+            return await _userPositionService.GetUserPositionEntity(positionId);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[职业] 查询职级列表")]
+        [EndpointSummary("[职级信息] 查询职级列表")]
         public async Task<Result<List<UserPositionDto>>> GetUserPositionList()
         {
             return await _userPositionService.GetUserPositionList();

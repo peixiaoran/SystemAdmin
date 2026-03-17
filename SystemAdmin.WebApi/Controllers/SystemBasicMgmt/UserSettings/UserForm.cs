@@ -31,9 +31,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工表单绑定] 查询员工表单绑定树")]
-        public async Task<Result<List<UserFormViewTreeDto>>> GetUserFormViewTree([FromBody] GetUserFormViewTree getTree)
+        public async Task<Result<List<UserFormViewTreeDto>>> GetUserFormViewTree([FromForm] string userId)
         {
-            return await _userFormBindService.GetUserFormViewTree(getTree);
+            return await _userFormBindService.GetUserFormViewTree(userId);
         }
 
         [HttpPost]

@@ -67,21 +67,21 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 删除表单组别
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="formGroupId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteFormGroupInfo(FormGroupUpsert upsert)
+        public async Task<Result<int>> DeleteFormGroupInfo(string formGroupId)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除表单组别
-                int delFormGroupCount = await _formGroupRepository.DeleteFormGroupInfo(long.Parse(upsert.FormGroupId));
+                int delFormGroupCount = await _formGroupRepository.DeleteFormGroupInfo(long.Parse(formGroupId));
                 // 删除员工表单组别绑定
-                int delUserGroupBindCount = await _formGroupRepository.DeleteUserFormTypeBind(long.Parse(upsert.FormGroupId));
+                int delUserGroupBindCount = await _formGroupRepository.DeleteUserFormTypeBind(long.Parse(formGroupId));
                 // 删除表单组别下的表单类别
-                int delFormTypeCount = await _formGroupRepository.DeleteFormTypeInfo(long.Parse(upsert.FormGroupId));
+                int delFormTypeCount = await _formGroupRepository.DeleteFormTypeInfo(long.Parse(formGroupId));
                 // 获取被删除表单组别下的表单类别Id
-                var delformTypeList = await _formGroupRepository.GetFormTypeIds(long.Parse(upsert.FormGroupId));
+                var delformTypeList = await _formGroupRepository.GetFormTypeIds(long.Parse(formGroupId));
                 // 删除员工组别下的员工表单类别绑定
                 int delFormTypeBindCount = await _formGroupRepository.DeleteUserFromType(delformTypeList);
                 await _db.CommitTranAsync();
@@ -138,13 +138,13 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 查询表单组别实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="formGroupId"></param>
         /// <returns></returns>
-        public async Task<Result<FormGroupDto>> GetFormGroupEntity(GetFormGroupEntity getEntity)
+        public async Task<Result<FormGroupDto>> GetFormGroupEntity(string formGroupId)
         {
             try
             {
-                var entity = await _formGroupRepository.GetFormGroupEntity(long.Parse(getEntity.FormGroupId));
+                var entity = await _formGroupRepository.GetFormGroupEntity(long.Parse(formGroupId));
                 return Result<FormGroupDto>.Ok(entity, "");
             }
             catch (Exception ex)

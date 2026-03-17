@@ -47,9 +47,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工代理] 删除员工代理人")]
-        public async Task<Result<int>> DeleteUserAgent(UserAgentDel upsertdel)
+        public async Task<Result<int>> DeleteUserAgent([FromForm] string agentUserId)
         {
-            return await _userAgentService.DeleteUserAgent(upsertdel);
+            return await _userAgentService.DeleteUserAgent(agentUserId);
         }
 
         [HttpPost]
@@ -63,9 +63,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工代理] 查询员工被哪些人代理")]
-        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentList([FromBody] GetUserAgentPassiveList getList)
+        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentList([FromForm] string substituteUserId)
         {
-            return await _userAgentService.GetUserAgentPassiveList(getList);
+            return await _userAgentService.GetUserAgentPassiveList(substituteUserId);
         }
 
         [HttpPost]

@@ -63,14 +63,14 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 删除控件
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="controlId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteControlInfo(ControlInfoUpsert upsert)
+        public async Task<Result<int>> DeleteControlInfo(string controlCode)
         {
             try
             {
                 await _db.BeginTranAsync();
-                int count = await _controlInfoRepository.DeleteControlInfo(upsert.ControlCode);
+                int count = await _controlInfoRepository.DeleteControlInfo(controlCode);
                 await _db.CommitTranAsync();
 
                 return count >= 1

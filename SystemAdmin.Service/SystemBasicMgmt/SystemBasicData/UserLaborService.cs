@@ -65,14 +65,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 删除职业
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="laborId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteUserLabor(UserLaborUpsert upsert)
+        public async Task<Result<int>> DeleteUserLabor(string laborId)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var count = await _userLaborRepository.DeleteUserLabor(long.Parse(upsert.LaborId));
+                var count = await _userLaborRepository.DeleteUserLabor(long.Parse(laborId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -125,13 +125,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询职业实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="laborId"></param>
         /// <returns></returns>
-        public async Task<Result<UserLaborDto>> GetUserLaborEntity(GetUserLaborEntity getEntity)
+        public async Task<Result<UserLaborDto>> GetUserLaborEntity(string laborId)
         {
             try
             {
-                var entity = await _userLaborRepository.GetUserLaborEntity(long.Parse(getEntity.LaborId));
+                var entity = await _userLaborRepository.GetUserLaborEntity(long.Parse(laborId));
                 return Result<UserLaborDto>.Ok(entity, "");
             }
             catch (Exception ex)

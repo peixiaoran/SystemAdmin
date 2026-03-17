@@ -73,21 +73,21 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 删除一级菜单
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="menuId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeletePMenu(MenuInfoUpsert upsert)
+        public async Task<Result<int>> DeletePMenu(string menuId)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除一级菜单
-                var delPMenuCount = await _pMenuRepository.DeletePMenu(long.Parse(upsert.MenuId));
+                var delPMenuCount = await _pMenuRepository.DeletePMenu(long.Parse(menuId));
                 // 删除角色一级菜单
-                var delRolePMenuCount = await _pMenuRepository.DeleteRolePMenu(long.Parse(upsert.MenuId));
+                var delRolePMenuCount = await _pMenuRepository.DeleteRolePMenu(long.Parse(menuId));
                 // 查询二级菜单Ids
-                var sMenuIds = await _pMenuRepository.GetSMenuIds(long.Parse(upsert.MenuId));
+                var sMenuIds = await _pMenuRepository.GetSMenuIds(long.Parse(menuId));
                 // 删除二级菜单
-                var delSMenuCount = await _pMenuRepository.DeleteSMenu(long.Parse(upsert.MenuId));
+                var delSMenuCount = await _pMenuRepository.DeleteSMenu(long.Parse(menuId));
                 // 删除角色二级菜单
                 var delRoleSMenuCount = await _pMenuRepository.DeleteRoleSMenu(sMenuIds);
                 await _db.CommitTranAsync();
@@ -147,13 +147,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询菜单实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="menuId"></param>
         /// <returns></returns>
-        public async Task<Result<MenuInfoDto>> GetPMenuEntity(GetMenuInfoEntity getEntity)
+        public async Task<Result<MenuInfoDto>> GetPMenuEntity(string menuId)
         {
             try
             {
-                var entity = await _pMenuRepository.GetPMenuEntity(long.Parse(getEntity.MenuId));
+                var entity = await _pMenuRepository.GetPMenuEntity(long.Parse(menuId));
                 return Result<MenuInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)

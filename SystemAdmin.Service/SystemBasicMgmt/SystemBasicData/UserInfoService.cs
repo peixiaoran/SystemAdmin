@@ -217,25 +217,25 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 删除员工
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteUserInfo(UserInfoUpsert upsert)
+        public async Task<Result<int>> DeleteUserInfo(string userId)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除员工信息
-                int delUserCount = await _userInfoRepository.DeleteUserInfo(long.Parse(upsert.UserId));
+                int delUserCount = await _userInfoRepository.DeleteUserInfo(long.Parse(userId));
                 // 删除员工权限
-                int delUserRoleCount = await _userInfoRepository.DeleteUserRoleInfo(long.Parse(upsert.UserId));
+                int delUserRoleCount = await _userInfoRepository.DeleteUserRoleInfo(long.Parse(userId));
                 // 删除员工代理
-                int delUserAgentCount = await _userInfoRepository.DeleteUserAgent(long.Parse(upsert.UserId));
+                int delUserAgentCount = await _userInfoRepository.DeleteUserAgent(long.Parse(userId));
                 // 删除员工兼任
-                int delUserPartTimeCount = await _userInfoRepository.DeleteUserPartTime(long.Parse(upsert.UserId));
+                int delUserPartTimeCount = await _userInfoRepository.DeleteUserPartTime(long.Parse(userId));
                 // 删除员工表单绑定
-                int delUserFormCount = await _userInfoRepository.DeleteUserForm(long.Parse(upsert.UserId));
+                int delUserFormCount = await _userInfoRepository.DeleteUserForm(long.Parse(userId));
                 // 删除员工账号锁定记录
-                int delUserLockCount = await _userInfoRepository.DeleteUserLock(long.Parse(upsert.UserId));
+                int delUserLockCount = await _userInfoRepository.DeleteUserLock(long.Parse(userId));
                 await _db.CommitTranAsync();
 
                 return delUserCount >= 1 && delUserRoleCount >= 1
@@ -343,13 +343,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询员工实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<Result<UserInfoEntityDto>> GetUserInfoEntity(GetUserInfoEntity getEntity)
+        public async Task<Result<UserInfoEntityDto>> GetUserInfoEntity(string userId)
         {
             try
             {
-                var entity = await _userInfoRepository.GetUserInfoEntity(long.Parse(getEntity.UserId));
+                var entity = await _userInfoRepository.GetUserInfoEntity(long.Parse(userId));
                 return Result<UserInfoEntityDto>.Ok(entity, "");
             }
             catch (Exception ex)

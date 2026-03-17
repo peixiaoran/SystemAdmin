@@ -51,9 +51,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 删除员工信息")]
-        public async Task<Result<int>> DeleteUserInfo([FromBody] UserInfoUpsert upsert)
+        public async Task<Result<int>> DeleteUserInfo([FromForm] string userId)
         {
-            return await _userInfoService.DeleteUserInfo(upsert);
+            return await _userInfoService.DeleteUserInfo(userId);
         }
 
         [HttpPost]
@@ -67,9 +67,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 查询员工实体")]
-        public async Task<Result<UserInfoEntityDto>> GetUserInfoEntity([FromBody] GetUserInfoEntity getEntity)
+        public async Task<Result<UserInfoEntityDto>> GetUserInfoEntity([FromForm] string userId)
         {
-            return await _userInfoService.GetUserInfoEntity(getEntity);
+            return await _userInfoService.GetUserInfoEntity(userId);
         }
 
         [HttpPost]

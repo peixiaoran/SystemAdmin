@@ -163,13 +163,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 删除员工代理人
         /// </summary>
-        /// <param name="substituteUserId"></param>
         /// <param name="agentUserId"></param>
         /// <returns></returns>
-        public async Task<int> DeleteUserAgent(long substituteUserId, long agentUserId)
+        public async Task<int> DeleteUserAgent(long agentUserId)
         {
             return await _db.Deleteable<UserAgentEntity>()
-                            .Where(useragent => useragent.SubstituteUserId == substituteUserId && useragent.AgentUserId == agentUserId)
+                            .Where(useragent => useragent.AgentUserId == agentUserId)
                             .ExecuteCommandAsync();
         }
 
@@ -216,15 +215,15 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询此员工被哪些人代理列表
         /// </summary>
-        /// <param name="getList"></param>
+        /// <param name="substituteUserId"></param>
         /// <returns></returns>
-        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentPassiveList(GetUserAgentPassiveList getList)
+        public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentPassiveList(long substituteUserId)
         {
             var list = await _db.Queryable<UserAgentEntity>()
                                 .With(SqlWith.NoLock)
                                 .LeftJoin<UserInfoEntity>((useragent, substituteuser) => useragent.SubstituteUserId == substituteuser.UserId)
                                 .LeftJoin<UserInfoEntity>((useragent, substituteuser, agentuser) => useragent.AgentUserId == agentuser.UserId)
-                                .Where((useragent, substituteuser, agentuser) => useragent.SubstituteUserId == long.Parse(getList.SubstituteUserId))
+                                .Where((useragent, substituteuser, agentuser) => useragent.SubstituteUserId == substituteUserId)
                                 .Select((useragent, substituteuser, agentuser) => new UserAgentPassiveDto
                                 {
                                     SubstituteUserId = useragent.SubstituteUserId,

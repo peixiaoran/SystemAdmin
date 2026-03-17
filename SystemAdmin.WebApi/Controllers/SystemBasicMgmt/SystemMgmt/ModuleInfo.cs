@@ -29,9 +29,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[模块信息] 删除模块")]
-        public async Task<Result<int>> DeleteModule([FromBody] ModuleInfoUpsert upsert)
+        public async Task<Result<int>> DeleteModule([FromForm] string moduleId)
         {
-            return await _sysMenuService.DeleteModule(upsert);
+            return await _sysMenuService.DeleteModule(moduleId);
         }
 
         [HttpPost]
@@ -45,9 +45,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[模块信息] 查询模块实体")]
-        public async Task<Result<ModuleInfoDto>> GetModuleEntity([FromBody] GetModuleInfoEntity getEntity)
+        public async Task<Result<ModuleInfoDto>> GetModuleEntity([FromForm] string moduleId)
         {
-            return await _sysMenuService.GetModuleEntity(getEntity);
+            return await _sysMenuService.GetModuleEntity(moduleId);
         }
 
         [HttpPost]

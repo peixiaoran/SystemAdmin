@@ -71,17 +71,17 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 删除表单类别
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="fromTypeId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteFormTypeInfo(FormTypeUpsert upsert)
+        public async Task<Result<int>> DeleteFormTypeInfo(string fromTypeId)
         {
             try
             {
                 await _db.BeginTranAsync();
                 // 删除表单类别
-                int delFormTypeCount = await _formTypeRepository.DeleteFormTypeInfo(long.Parse(upsert.FormTypeId));
+                int delFormTypeCount = await _formTypeRepository.DeleteFormTypeInfo(long.Parse(fromTypeId));
                 // 删除员工表单绑定
-                int delUserTypeBindCount = await _formTypeRepository.DeleteUserFormTypeBind(long.Parse(upsert.FormTypeId));
+                int delUserTypeBindCount = await _formTypeRepository.DeleteUserFormTypeBind(long.Parse(fromTypeId));
                 await _db.CommitTranAsync();
 
                 return delFormTypeCount >= 1
@@ -140,13 +140,13 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// <summary>
         /// 查询表单类别实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="fromTypeId"></param>
         /// <returns></returns>
-        public async Task<Result<FormTypeDto>> GetFormTypeEntity(GetFormTypeEntity getEntity)
+        public async Task<Result<FormTypeDto>> GetFormTypeEntity(string fromTypeId)
         {
             try
             {
-                var entity = await _formTypeRepository.GetFormTypeEntity(long.Parse(getEntity.FormTypeId));
+                var entity = await _formTypeRepository.GetFormTypeEntity(long.Parse(fromTypeId));
                 return Result<FormTypeDto>.Ok(entity, "");
             }
             catch (Exception ex)

@@ -49,13 +49,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// <summary>
         /// 查询员工绑定表单树
         /// </summary>
-        /// <param name="getTree"></param>
+        /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<Result<List<UserFormViewTreeDto>>> GetUserFormViewTree(GetUserFormViewTree getTree)
+        public async Task<Result<List<UserFormViewTreeDto>>> GetUserFormViewTree(string userId)
         {
             try
             {
-                var treeList = await _userFormBindRepository.GetUserFormViewTree(long.Parse(getTree.UserId));
+                var treeList = await _userFormBindRepository.GetUserFormViewTree(long.Parse(userId));
                 return Result<List<UserFormViewTreeDto>>.Ok(treeList, "");
             }
             catch (Exception ex)

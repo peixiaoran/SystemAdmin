@@ -30,9 +30,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[国籍信息] 删除国籍信息")]
-        public async Task<Result<int>> DeleteNationalityInfo([FromBody] NationalityInfoUpsert upsert)
+        public async Task<Result<int>> DeleteNationalityInfo([FromForm] string nationId)
         {
-            return await _nationalityService.DeleteNationalityInfo(upsert);
+            return await _nationalityService.DeleteNationalityInfo(nationId);
         }
 
         [HttpPost]
@@ -46,9 +46,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[国籍信息] 查询国籍实体")]
-        public async Task<Result<NationalityInfoDto>> GetNationalityEntity([FromBody] GetNationalityInfoEntity getEntity)
+        public async Task<Result<NationalityInfoDto>> GetNationalityEntity([FromForm] string nationId)
         {
-            return await _nationalityService.GetNationalityEntity(getEntity);
+            return await _nationalityService.GetNationalityEntity(nationId);
         }
 
         [HttpPost]

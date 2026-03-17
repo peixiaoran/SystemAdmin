@@ -30,9 +30,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 删除角色")]
-        public async Task<Result<int>> DeleteRole([FromBody] RoleInfoUpsert upsert)
+        public async Task<Result<int>> DeleteRole([FromForm] string roleId)
         {
-            return await _roleService.DeleteRole(upsert);
+            return await _roleService.DeleteRole(roleId);
         }
 
         [HttpPost]
@@ -46,9 +46,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 查询角色实体")]
-        public async Task<Result<RoleInfoDto>> GetRoleEntity([FromBody] GetRoleInfoEntity getEntity)
+        public async Task<Result<RoleInfoDto>> GetRoleEntity([FromForm] string roleId)
         {
-            return await _roleService.GetRoleEntity(getEntity);
+            return await _roleService.GetRoleEntity(roleId);
         }
 
         [HttpPost]

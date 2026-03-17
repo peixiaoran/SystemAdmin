@@ -29,9 +29,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 删除二级菜单")]
-        public async Task<Result<int>> DeleteSMenu([FromBody] MenuInfoUpsert upsert)
+        public async Task<Result<int>> DeleteSMenu([FromForm] string menuId)
         {
-            return await _sMenuInfoService.DeleteSMenu(upsert);
+            return await _sMenuInfoService.DeleteSMenu(menuId);
         }
 
         [HttpPost]
@@ -45,9 +45,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 查询二级菜单实体")]
-        public async Task<Result<MenuInfoDto>> GetSMenuEntity([FromBody] GetMenuInfoEntity getEntity)
+        public async Task<Result<MenuInfoDto>> GetSMenuEntity([FromForm] string menuId)
         {
-            return await _sMenuInfoService.GetSMenuEntity(getEntity);
+            return await _sMenuInfoService.GetSMenuEntity(menuId);
         }
 
         [HttpPost]

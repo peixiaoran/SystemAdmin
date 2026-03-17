@@ -30,9 +30,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[部门级别] 删除部门级别信息")]
-        public async Task<Result<int>> DeleteDepartmentLevel([FromBody] DepartmentLevelUpsert upsert)
+        public async Task<Result<int>> DeleteDepartmentLevel([FromForm] string deptlevelId)
         {
-            return await _deptLevelService.DeleteDepartmentLevel(upsert);
+            return await _deptLevelService.DeleteDepartmentLevel(deptlevelId);
         }
 
         [HttpPost]
@@ -46,9 +46,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[部门级别] 查询部门级别实体")]
-        public async Task<Result<DepartmentLevelDto>> GetDepartmentLevelEntity([FromBody] GetDepartmentLevelEntity getEntity)
+        public async Task<Result<DepartmentLevelDto>> GetDepartmentLevelEntity([FromForm] string deptlevelId)
         {
-            return await _deptLevelService.GetDepartmentLevelEntity(getEntity);
+            return await _deptLevelService.GetDepartmentLevelEntity(deptlevelId);
         }
 
         [HttpPost]

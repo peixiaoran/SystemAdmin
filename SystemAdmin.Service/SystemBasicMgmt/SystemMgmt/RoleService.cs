@@ -67,24 +67,24 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 删除角色
         /// </summary>
-        /// <param name="upsert"></param>
+        /// <param name="roleId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteRole(RoleInfoUpsert upsert)
+        public async Task<Result<int>> DeleteRole(string roleId)
         {
             try
             {
                 // 查询角色是否被使用
-                bool isRoleUsed = await _roleRepository.GetUserRoleIsExist(long.Parse(upsert.RoleId));
+                bool isRoleUsed = await _roleRepository.GetUserRoleIsExist(long.Parse(roleId));
                 if (!isRoleUsed)
                 {
 
                     await _db.BeginTranAsync();
                     // 删除角色
-                    int delRoleCount = await _roleRepository.DeleteRole(long.Parse(upsert.RoleId));
+                    int delRoleCount = await _roleRepository.DeleteRole(long.Parse(roleId));
                     // 删除角色模块绑定
-                    int delRoleModuleCount = await _roleRepository.DeleleRoleModule(long.Parse(upsert.RoleId));
+                    int delRoleModuleCount = await _roleRepository.DeleleRoleModule(long.Parse(roleId));
                     // 删除角色菜单绑定
-                    int delRoleMenuCount = await _roleRepository.DeleteRoleMenu(long.Parse(upsert.RoleId));
+                    int delRoleMenuCount = await _roleRepository.DeleteRoleMenu(long.Parse(roleId));
                    
                     await _db.CommitTranAsync();
                     return delRoleCount >= 1
@@ -145,13 +145,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 查询角色实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="roleId"></param>
         /// <returns></returns>
-        public async Task<Result<RoleInfoDto>> GetRoleEntity(GetRoleInfoEntity getEntity)
+        public async Task<Result<RoleInfoDto>> GetRoleEntity(string roleId)
         {
             try
             {
-                var entity = await _roleRepository.GetRoleEntity(long.Parse(getEntity.RoleId));
+                var entity = await _roleRepository.GetRoleEntity(long.Parse(roleId));
                 return Result<RoleInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)

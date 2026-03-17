@@ -21,7 +21,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[职业] 新增职业信息")]
+        [EndpointSummary("[职业信息] 新增职业信息")]
         public async Task<Result<int>> InsertUserLabor([FromBody] UserLaborUpsert upsert)
         {
             return await _userLaborService.InsertUserLabor(upsert);
@@ -29,15 +29,15 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[职业] 删除职业信息")]
-        public async Task<Result<int>> DeleteUserLabor([FromBody] UserLaborUpsert upsert)
+        [EndpointSummary("[职业信息] 删除职业信息")]
+        public async Task<Result<int>> DeleteUserLabor([FromForm] string laborId)
         {
-            return await _userLaborService.DeleteUserLabor(upsert);
+            return await _userLaborService.DeleteUserLabor(laborId);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[职业] 修改职业信息")]
+        [EndpointSummary("[职业信息] 修改职业信息")]
         public async Task<Result<int>> UpdateUserLabor([FromBody] UserLaborUpsert upsert)
         {
             return await _userLaborService.UpdateUserLabor(upsert);
@@ -45,15 +45,15 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[职业] 查询职业实体")]
-        public async Task<Result<UserLaborDto>> GetUserLaborEntity([FromBody] GetUserLaborEntity getEntity)
+        [EndpointSummary("[职业信息] 查询职业实体")]
+        public async Task<Result<UserLaborDto>> GetUserLaborEntity([FromForm] string laborId)
         {
-            return await _userLaborService.GetUserLaborEntity(getEntity);
+            return await _userLaborService.GetUserLaborEntity(laborId);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[职业] 查询职业分页")]
+        [EndpointSummary("[职业信息] 查询职业分页")]
         public async Task<ResultPaged<UserLaborDto>> GetUserLaborPage([FromBody] GetUserLaborPage getPage)
         {
             return await _userLaborService.GetUserLaborPage(getPage);

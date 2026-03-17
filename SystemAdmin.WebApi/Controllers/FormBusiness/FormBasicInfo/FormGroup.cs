@@ -30,9 +30,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormBasicInfo
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单组别] 删除表单组别")]
-        public async Task<Result<int>> DeleteFormGroupInfo([FromBody] FormGroupUpsert upsert)
+        public async Task<Result<int>> DeleteFormGroupInfo([FromForm] string formGroupId)
         {
-            return await _formGroupService.DeleteFormGroupInfo(upsert);
+            return await _formGroupService.DeleteFormGroupInfo(formGroupId);
         }
 
         [HttpPost]
@@ -46,9 +46,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormBasicInfo
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单组别] 查询表单组别实体")]
-        public async Task<Result<FormGroupDto>> GetFormGroupEntity([FromBody] GetFormGroupEntity getEntity)
+        public async Task<Result<FormGroupDto>> GetFormGroupEntity([FromForm] string formGroupId)
         {
-            return await _formGroupService.GetFormGroupEntity(getEntity);
+            return await _formGroupService.GetFormGroupEntity(formGroupId);
         }
 
         [HttpPost]

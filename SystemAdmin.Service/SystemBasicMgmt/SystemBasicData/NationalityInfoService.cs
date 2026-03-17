@@ -67,12 +67,12 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteNationalityInfo(NationalityInfoUpsert upsert)
+        public async Task<Result<int>> DeleteNationalityInfo(string nationId)
         {
             try
             {
                 await _db.BeginTranAsync();
-                int count = await _nationRepository.DeleteNationalityInfo(long.Parse(upsert.NationId));
+                int count = await _nationRepository.DeleteNationalityInfo(long.Parse(nationId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -128,11 +128,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="getEntity"></param>
         /// <returns></returns>
-        public async Task<Result<NationalityInfoDto>> GetNationalityEntity(GetNationalityInfoEntity getEntity)
+        public async Task<Result<NationalityInfoDto>> GetNationalityEntity(string nationId)
         {
             try
             {
-                var entity = await _nationRepository.GetNationalityEntity(long.Parse(getEntity.NationId));
+                var entity = await _nationRepository.GetNationalityEntity(long.Parse(nationId));
                 return Result<NationalityInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
