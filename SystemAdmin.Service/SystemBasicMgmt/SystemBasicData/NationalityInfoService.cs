@@ -4,7 +4,6 @@ using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Commands;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
 using SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData;
 
 namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData

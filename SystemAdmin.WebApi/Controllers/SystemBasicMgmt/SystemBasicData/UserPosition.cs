@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
 using SystemAdmin.Service.SystemBasicMgmt.SystemBasicData;
 using SystemAdmin.WebApi.Attributes;
 
