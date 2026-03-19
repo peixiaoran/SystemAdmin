@@ -131,7 +131,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
         /// 添加表单待签核人
         /// </summary>
         /// <returns></returns>
-        public async Task<int> AddPendingApprover(PendingApproversEntity entity)
+        public async Task<int> AddPendingApprover(PendingApprovalEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }

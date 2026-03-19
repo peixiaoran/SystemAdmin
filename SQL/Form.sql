@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 17001105 (17.00.1105)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 17001105 (17.00.1105)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 17/03/2026 12:37:12
+ Date: 19/03/2026 17:00:59
 */
 
 
@@ -769,144 +769,53 @@ GO
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for PendingApprovers
+-- Table structure for PendingApproval
 -- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[PendingApprovers]') AND type IN ('U'))
-	DROP TABLE [Form].[PendingApprovers]
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[PendingApproval]') AND type IN ('U'))
+	DROP TABLE [Form].[PendingApproval]
 GO
 
-CREATE TABLE [Form].[PendingApprovers] (
+CREATE TABLE [Form].[PendingApproval] (
   [FormId] bigint  NOT NULL,
-  [ApproveUserId] bigint  NOT NULL
+  [AppointmentType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
+  [ApproveUserId] bigint  NULL
 )
 GO
 
-ALTER TABLE [Form].[PendingApprovers] SET (LOCK_ESCALATION = TABLE)
+ALTER TABLE [Form].[PendingApproval] SET (LOCK_ESCALATION = TABLE)
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'表单Id',
 'SCHEMA', N'Form',
-'TABLE', N'PendingApprovers',
+'TABLE', N'PendingApproval',
 'COLUMN', N'FormId'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'待签核人员Id',
+'MS_Description', N'签核身份',
 'SCHEMA', N'Form',
-'TABLE', N'PendingApprovers',
+'TABLE', N'PendingApproval',
+'COLUMN', N'AppointmentType'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'待签核员工Id',
+'SCHEMA', N'Form',
+'TABLE', N'PendingApproval',
 'COLUMN', N'ApproveUserId'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'表单待签核人员表',
 'SCHEMA', N'Form',
-'TABLE', N'PendingApprovers'
+'TABLE', N'PendingApproval'
 GO
 
 
 -- ----------------------------
--- Records of PendingApprovers
+-- Records of PendingApproval
 -- ----------------------------
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033503641360535552', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033505601593675776', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033519022510837760', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033521488098889728', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033522280956563456', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033522362170871808', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033523149387206656', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033523966437625856', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033524003980840960', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033524075707633664', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033525339258490880', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033525347428995072', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033525431206023168', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033525883238748160', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033526104509255680', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033526291713626112', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033526387448614912', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033526416871657472', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033526969471209472', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033526980493840384', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033527031626600448', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033527167937286144', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033527233028689920', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033527501619335168', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033527564928159744', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033527836081524736', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033528275028021248', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033531551991599104', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033543941017702400', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033543976455376896', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033544051088822272', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033544160627265536', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApprovers] ([FormId], [ApproveUserId]) VALUES (N'2033544563032985600', N'1903486709602062336')
-GO
-
 
 -- ----------------------------
 -- Table structure for WorkflowCondition

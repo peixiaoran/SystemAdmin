@@ -1,5 +1,4 @@
-﻿using Mapster;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SqlSugar;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
@@ -66,9 +65,10 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 var initForm = await _formBeforeStart.InitFormInfo(_loginuser.UserId, long.Parse(formTypeId));
 
                 // 添加表单待签核人
-                var pendingApp = new PendingApproversEntity
+                var pendingApp = new PendingApprovalEntity
                 {
                     FormId = initForm.FormId,
+                    AppointmentType = AppointmentType.Primary.ToEnumString(),
                     ApproveUserId = _loginuser.UserId
                 };
                 var pendingAppCount = await _formBeforeStart.AddPendingApprover(pendingApp);
@@ -78,7 +78,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     FormId = initForm.FormId,
                     FormNo = initForm.FormNo,
                     ApplicantUserId = _loginuser.UserId,
-                    
                     LeaveTypeCode = "",
                     LeaveStartTime = null,
                     LeaveEndTime = null,

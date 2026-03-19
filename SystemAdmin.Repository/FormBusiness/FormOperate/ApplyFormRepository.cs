@@ -22,27 +22,28 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// 查询申请表单分页
         /// </summary>
         /// <param name="getPage"></param>
+        /// <param name="loginUserId"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<ApplyFormInfoDto>> GetApplyFormPage(getPage getPage, long userId)
+        public async Task<ResultPaged<ApplyFormInfoDto>> GetApplyFormPage(getPage getPage, long loginUserId)
         {
             RefAsync<int> totalCount = 0;
-            var applyFormPage = await _db.Queryable<UserFormEntity>()
-                                         .With(SqlWith.NoLock)
-                                         .InnerJoin<FormTypeEntity>((userform, formtype) => userform.FormGroupTypeId == formtype.FormTypeId)
-                                         .Where((userform, formtype) => userform.UserId == userId && formtype.FormGroupId == long.Parse(getPage.FormGroupId))
-                                         .OrderBy((userform, formtype) => formtype.SortOrder)
-                                         .Select((userform, formtype) => new ApplyFormInfoDto()
-                                         {
-                                             FormTypeId = formtype.FormTypeId,
-                                             FormTypeName = _lang.Locale == "zh-CN"
-                                                            ? formtype.FormTypeNameCn
-                                                            : formtype.FormTypeNameEn,
-                                             ApprovalPath = formtype.ApprovalPath,
-                                             Description = _lang.Locale == "zh-CN"
-                                                            ? formtype.DescriptionCn
-                                                            : formtype.DescriptionEn,
-                                         }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<ApplyFormInfoDto>.Ok(applyFormPage, totalCount);
+            var page = await _db.Queryable<UserFormEntity>()
+                                .With(SqlWith.NoLock)
+                                .InnerJoin<FormTypeEntity>((userform, formtype) => userform.FormGroupTypeId == formtype.FormTypeId)
+                                .Where((userform, formtype) => userform.UserId == loginUserId && formtype.FormGroupId == long.Parse(getPage.FormGroupId))
+                                .OrderBy((userform, formtype) => formtype.SortOrder)
+                                .Select((userform, formtype) => new ApplyFormInfoDto()
+                                {
+                                    FormTypeId = formtype.FormTypeId,
+                                    FormTypeName = _lang.Locale == "zh-CN"
+                                                   ? formtype.FormTypeNameCn
+                                                   : formtype.FormTypeNameEn,
+                                    ApprovalPath = formtype.ApprovalPath,
+                                    Description = _lang.Locale == "zh-CN"
+                                                   ? formtype.DescriptionCn
+                                                   : formtype.DescriptionEn,
+                                }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<ApplyFormInfoDto>.Ok(page, totalCount);
         }
 
         /// <summary>

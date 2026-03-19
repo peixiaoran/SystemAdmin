@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SystemAdmin.Common.Enums.FormBusiness
+﻿namespace SystemAdmin.Common.Enums.FormBusiness
 {
+    /// <summary>
+    /// 签核身份
+    /// </summary>
     public enum AppointmentType
     {
         /// <summary>

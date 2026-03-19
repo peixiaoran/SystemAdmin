@@ -1,6 +1,4 @@
-﻿
-
-using Scalar.AspNetCore;
+﻿using Scalar.AspNetCore;
 using SystemAdmin.CommonSetup.DependencyInjection;
 using SystemAdmin.Hosting.DependencyInjection;
 using SystemAdmin.WebApi.DependencyInjection;
@@ -60,35 +58,7 @@ builder.WebHost.ConfigureKestrel((context, options) =>
 
 var app = builder.Build();
 
-app.MapScalarApiReference("/systemadmin", options =>
-{
-    options.Theme = ScalarTheme.Kepler;
-    options.Layout = ScalarLayout.Modern;
-    options.Title = "SystemAdmin";
-    options.EnabledTargets = new[] { ScalarTarget.CSharp, ScalarTarget.Http };
-
-    options.ShowSidebar = true;
-    options.ShowOperationId = true;
-    options.HideClientButton = true;
-    options.HideModels = true;
-    options.HideDarkModeToggle = false;
-    options.HideTestRequestButton = false;
-    options.HideSearch = false;
-
-    options.ExpandAllModelSections = true;
-    options.ExpandAllResponses = true;
-
-    options.DefaultOpenAllTags = false;
-
-    options.PersistentAuthentication = false;
-    options.Telemetry = true;
-
-    options.WithDocumentDownloadType(DocumentDownloadType.Both);
-    options.WithFavicon("favicon.svg");
-
-    options.OperationTitleSource = OperationTitleSource.Summary;
-    options.DarkMode = false;
-});
+app.MapScalarApiReference("/systemadmin");
 app.MapOpenApi();
 app.UseHttpsRedirection();
 
