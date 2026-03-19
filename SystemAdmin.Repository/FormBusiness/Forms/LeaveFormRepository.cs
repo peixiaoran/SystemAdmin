@@ -48,6 +48,16 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         }
 
         /// <summary>
+        /// 新增附件
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<int> InsertFile(LeaveFileEntity entity)
+        {
+            return await _db.Insertable(entity).ExecuteCommandAsync();
+        }
+
+        /// <summary>
         /// 查询请假单明细
         /// </summary>
         /// <param name="formId"></param>

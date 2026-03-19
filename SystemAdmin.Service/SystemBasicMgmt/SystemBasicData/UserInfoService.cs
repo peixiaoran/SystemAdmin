@@ -21,20 +21,20 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
     public class UserInfoService
     {
         private readonly CurrentUser _loginuser;
-        private readonly MinioService _minioService;
         private readonly ILogger<UserInfoService> _logger;
         private readonly SqlSugarScope _db;
+        private readonly MinioService _minioService;
         private readonly UserInfoRepository _userInfoRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.UserInfo";
         private readonly string _thisExcel = "SystemBasicMgmt.SystemBasicData.UserExcel_";
 
-        public UserInfoService(CurrentUser loginuser, MinioService minioService, ILogger<UserInfoService> logger, SqlSugarScope db, UserInfoRepository userInfoRepository, LocalizationService localization)
+        public UserInfoService(CurrentUser loginuser, ILogger<UserInfoService> logger, SqlSugarScope db, MinioService minioService, UserInfoRepository userInfoRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
-            _minioService = minioService;
             _logger = logger;
             _db = db;
+            _minioService = minioService;
             _userInfoRepository = userInfoRepository;
             _localization = localization;
         }

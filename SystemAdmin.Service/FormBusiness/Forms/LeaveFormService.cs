@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using SqlSugar;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
@@ -20,17 +21,19 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly ILogger<ControlInfoService> _logger;
         private readonly SqlSugarScope _db;
         private readonly FormBeforeStart _formBeforeStart;
+        private readonly MinioService _minioService;
         private readonly LeaveFormRepository _leaveFormRepository;
         private readonly LocalizationService _localization;
         //private readonly string _this = "FormBusiness.Forms.LeaveForm";
         private readonly string _publicthis = "FormBusiness.Forms.";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, FormBeforeStart formBeforeStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, MinioService minioService, FormBeforeStart formBeforeStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
             _formBeforeStart = formBeforeStart;
+            _minioService = minioService;
             _leaveFormRepository = leaveFormRepository;
             _localization = localization;
         }
@@ -163,6 +166,65 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 上传附件
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <param name="files"></param>
+        /// <returns></returns>
+        public async Task<Result<List<string>>> UploadFile(string formId, List<IFormFile> files)
+        {
+            try
+            {
+                // 1. 判空
+                if (files == null || files.Count == 0)
+                {
+                    return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
+                }
+
+                // 2. 限制最多 5 个文件
+                const int maxFileCount = 5;
+                if (files.Count > maxFileCount)
+                {
+                    return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileCountLimit", maxFileCount.ToString()));
+                }
+
+                // 4. 限制文件类型
+                var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp" };
+
+                var avatarUrls = new List<string>();
+
+                foreach (var file in files)
+                {
+                    if (file == null || file.Length == 0)
+                    {
+                        return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
+                    }
+
+                    using var stream = file.OpenReadStream();
+                    var avatarUrl = await _minioService.UploadAsync(file.FileName, stream, file.ContentType);
+
+                    var fileItem = new LeaveFileEntity()
+                    {
+                        FormId = long.Parse( formId),
+                        FileName = file.FileName,
+                        FilePath = avatarUrl.ToString(),
+                        CreatedBy = _loginuser.UserId,
+                        CreatedDate = DateTime.Now,
+                    };
+                    var uploadCount = await _leaveFormRepository.InsertFile(fileItem);
+                    avatarUrls.Add(avatarUrl);
+                }
+
+                return Result<List<string>>.Ok(avatarUrls, _localization.ReturnMsg($"{_publicthis}UploadSuccess"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<string>>.Failure(500, _localization.ReturnMsg($"{_publicthis}UploadFailed"));
             }
         }
 

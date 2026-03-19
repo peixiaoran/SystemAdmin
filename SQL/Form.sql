@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001000 (16.00.1000)
- Source Host           : 127.0.0.1:1433
+ Source Server Version : 17001105 (17.00.1105)
+ Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001000 (16.00.1000)
+ Target Server Version : 17001105 (17.00.1105)
  File Encoding         : 65001
 
- Date: 19/03/2026 17:00:59
+ Date: 19/03/2026 22:57:38
 */
 
 
@@ -244,6 +244,9 @@ GO
 -- ----------------------------
 -- Records of FormCounting
 -- ----------------------------
+INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2603  ', N'5', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2026-03-19 19:49:01.000', NULL, NULL)
+GO
+
 
 -- ----------------------------
 -- Table structure for FormGroup
@@ -498,6 +501,21 @@ GO
 -- ----------------------------
 -- Records of FormInfo
 -- ----------------------------
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034598010989711360', N'1987217256446300160', N'LVR-26030001', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 19:49:01.480', NULL, NULL)
+GO
+
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034613948455718912', N'1987217256446300160', N'LVR-26030002', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 20:52:21.270', NULL, NULL)
+GO
+
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034626547993939968', N'1987217256446300160', N'LVR-26030003', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 21:42:25.233', NULL, NULL)
+GO
+
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034627408128249856', N'1987217256446300160', N'LVR-26030004', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 21:45:50.303', NULL, NULL)
+GO
+
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034628286256123904', N'1987217256446300160', N'LVR-26030005', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 21:49:19.667', NULL, NULL)
+GO
+
 
 -- ----------------------------
 -- Table structure for FormType
@@ -640,6 +658,80 @@ GO
 
 
 -- ----------------------------
+-- Table structure for LeaveFile
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[LeaveFile]') AND type IN ('U'))
+	DROP TABLE [Form].[LeaveFile]
+GO
+
+CREATE TABLE [Form].[LeaveFile] (
+  [FormId] bigint  NOT NULL,
+  [FileName] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [FilePath] nvarchar(100) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime2(3)  NULL
+)
+GO
+
+ALTER TABLE [Form].[LeaveFile] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单Id',
+'SCHEMA', N'Form',
+'TABLE', N'LeaveFile',
+'COLUMN', N'FormId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'文件名',
+'SCHEMA', N'Form',
+'TABLE', N'LeaveFile',
+'COLUMN', N'FileName'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'LeaveFile',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'LeaveFile',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'LeaveFile',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'LeaveFile',
+'COLUMN', N'ModifiedDate'
+GO
+
+
+-- ----------------------------
+-- Records of LeaveFile
+-- ----------------------------
+INSERT INTO [Form].[LeaveFile] ([FormId], [FileName], [FilePath], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034628286256123904', N'217735420260115094308932 (1).docx', N'/systemadmin/20260319/20260319215523971_c31ca083.docx', N'1903486709602062336', N'2026-03-19 21:55:24.167', NULL, N'1900-01-01 00:00:00.000')
+GO
+
+INSERT INTO [Form].[LeaveFile] ([FormId], [FileName], [FilePath], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034628286256123904', N'217735420260115094308932 (1).docx', N'/systemadmin/20260319/20260319215622534_bb67437a.docx', N'1903486709602062336', N'2026-03-19 21:56:22.550', NULL, N'1900-01-01 00:00:00.000')
+GO
+
+
+-- ----------------------------
 -- Table structure for LeaveForm
 -- ----------------------------
 IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[LeaveForm]') AND type IN ('U'))
@@ -767,6 +859,21 @@ GO
 -- ----------------------------
 -- Records of LeaveForm
 -- ----------------------------
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034598010989711360', N'LVR-26030001', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 19:49:01.493', NULL, N'1900-01-01 00:00:00.000')
+GO
+
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034613948455718912', N'LVR-26030002', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 20:52:21.287', NULL, N'1900-01-01 00:00:00.000')
+GO
+
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034626547993939968', N'LVR-26030003', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 21:42:25.247', NULL, N'1900-01-01 00:00:00.000')
+GO
+
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034627408128249856', N'LVR-26030004', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 21:45:50.303', NULL, N'1900-01-01 00:00:00.000')
+GO
+
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034628286256123904', N'LVR-26030005', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 21:49:19.680', NULL, N'1900-01-01 00:00:00.000')
+GO
+
 
 -- ----------------------------
 -- Table structure for PendingApproval
@@ -816,6 +923,21 @@ GO
 -- ----------------------------
 -- Records of PendingApproval
 -- ----------------------------
+INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034598010989711360', N'Primary', N'1903486709602062336')
+GO
+
+INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034613948455718912', N'Primary', N'1903486709602062336')
+GO
+
+INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034626547993939968', N'Primary', N'1903486709602062336')
+GO
+
+INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034627408128249856', N'Primary', N'1903486709602062336')
+GO
+
+INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034628286256123904', N'Primary', N'1903486709602062336')
+GO
+
 
 -- ----------------------------
 -- Table structure for WorkflowCondition

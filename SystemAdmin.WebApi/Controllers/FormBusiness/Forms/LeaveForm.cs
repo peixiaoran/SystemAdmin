@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SystemAdmin.Model.FormBusiness.FormLifecycle.FormBeforeStart;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
-using SystemAdmin.Model.FormBusiness.FormLifecycle.FormBeforeStart;
 using SystemAdmin.Service.FormBusiness.Forms;
+using SystemAdmin.Service.SystemBasicMgmt.SystemBasicData;
 
 namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 {
@@ -47,6 +48,14 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDropDown()
         {
             return await _leaveFormService.GetLeaveTypeDropDown();
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单作业模块")]
+        [EndpointSummary("[请假单] 上传附件")]
+        public async Task<Result<List<string>>> UploadAFile([FromForm] string formId, List<IFormFile> fileList)
+        {
+            return await _leaveFormService.UploadFile(formId, fileList);
         }
 
         [HttpPost]

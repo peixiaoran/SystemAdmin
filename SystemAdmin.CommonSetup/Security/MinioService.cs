@@ -39,7 +39,7 @@ namespace SystemAdmin.CommonSetup.Security
                          .WithObjectSize(data.Length)
                          .WithContentType(contentType));
 
-            return $"{_settings.Endpoint}/{bucket}/{newObjectName}";
+            return $"/{bucket}/{newObjectName}";
         }
 
         #endregion
