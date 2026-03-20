@@ -1,12 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
+namespace SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto
 {
     /// <summary>
     /// 请假表文件表Dto
     /// </summary>
-    public class LeaveFileDto
+    public class FormFileDto
     {
         /// <summary>
         /// 表单Id
@@ -23,5 +23,10 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
         /// 文件相对路径
         /// </summary>
         public string FilePath { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 文件大小（kb）
+        /// </summary>
+        public int FileSize { get; set; }
     }
 }

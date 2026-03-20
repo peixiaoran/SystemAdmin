@@ -4,6 +4,7 @@ using SqlSugar;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Security;
+using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormLifecycle.FormBeforeStart;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
@@ -57,8 +58,8 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                bool isApply = await _formBeforeStart.HasUserApplyFormType(_loginuser.UserId, long.Parse(formTypeId));
-                if (!isApply)
+                // 判断员工是否有权限申请该表单类型
+                if (!await _formBeforeStart.HasUserApplyFormType(_loginuser.UserId, long.Parse(formTypeId)))
                 {
                     return Result<string>.Failure(403, "");
                 }
@@ -99,25 +100,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<string>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 查询请假单明细
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        public async Task<Result<LeaveFormDto>> GetLeaveForm(string formId)
-        {
-            try
-            {
-                var leaveForm = await _leaveFormRepository.GetLeaveForm(long.Parse(formId));
-                return Result<LeaveFormDto>.Ok(leaveForm);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<LeaveFormDto>.Failure(500, ex.Message);
             }
         }
 
@@ -170,6 +152,32 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         }
 
         /// <summary>
+        /// 查询请假单明细
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public async Task<Result<LeaveFormDto>> GetLeaveForm(string formId)
+        {
+            try
+            {
+                // 判断是否有权限申请该表单类型
+                bool isCanView = await _formBeforeStart.HasUserViewFormType(long.Parse(formId), _loginuser.UserId);
+                if (!isCanView)
+                {
+                    return Result<LeaveFormDto>.Failure(403, _localization.ReturnMsg($"{_publicthis}NotPermissionView"));
+                }
+                var leaveForm = await _leaveFormRepository.GetLeaveForm(long.Parse(formId));
+                leaveForm.FileList = await _leaveFormRepository.GetLeaveFileList(long.Parse(formId));
+                return Result<LeaveFormDto>.Ok(leaveForm);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<LeaveFormDto>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 上传附件
         /// </summary>
         /// <param name="formId"></param>
@@ -185,36 +193,42 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
                 }
 
-                // 2. 限制最多 5 个文件
-                const int maxFileCount = 5;
-                if (files.Count > maxFileCount)
-                {
-                    return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileCountLimit", maxFileCount.ToString()));
-                }
-
-                // 4. 限制文件类型
-                var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp" };
+                // 2. 限制单个文件最大 25MB
+                const long maxFileSize = 25 * 1024 * 1024; // 25MB
 
                 var avatarUrls = new List<string>();
 
                 foreach (var file in files)
                 {
+                    // 判空
                     if (file == null || file.Length == 0)
                     {
                         return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
                     }
 
+                    // 文件大小限制
+                    if (file.Length > maxFileSize)
+                    {
+                        return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileSizeLimit"));
+                    }
+
                     using var stream = file.OpenReadStream();
+
                     var avatarUrl = await _minioService.UploadAsync(file.FileName, stream, file.ContentType);
 
-                    var fileItem = new LeaveFileEntity()
+                    // 转 KB（int）
+                    int fileSizeKb = (int)(file.Length / 1024);
+
+                    var fileItem = new FormFileEntity()
                     {
-                        FormId = long.Parse( formId),
+                        FormId = long.Parse(formId),
                         FileName = file.FileName,
                         FilePath = avatarUrl.ToString(),
+                        FileSize = fileSizeKb,
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now,
                     };
+
                     var uploadCount = await _leaveFormRepository.InsertFile(fileItem);
                     avatarUrls.Add(avatarUrl);
                 }

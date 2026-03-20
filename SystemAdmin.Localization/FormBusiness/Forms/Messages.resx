@@ -124,6 +124,21 @@
     <value>表单保存成功</value>
   </data>
   <data name="NotPermissionApply" xml:space="preserve">
-    <value>您暂无权限申请此表单</value>
+    <value>暂无权限申请此表单</value>
+  </data>
+  <data name="FileNotNull" xml:space="preserve">
+    <value>上传文件不能为空</value>
+  </data>
+  <data name="FileSizeLimit" xml:space="preserve">
+    <value>上传文件最大限制为25MB！</value>
+  </data>
+  <data name="UploadSuccess" xml:space="preserve">
+    <value>文件上传成功</value>
+  </data>
+  <data name="UploadFailed" xml:space="preserve">
+    <value>文件上传失败</value>
+  </data>
+  <data name="NotPermissionView" xml:space="preserve">
+    <value>暂无权限查看此表单</value>
   </data>
 </root>

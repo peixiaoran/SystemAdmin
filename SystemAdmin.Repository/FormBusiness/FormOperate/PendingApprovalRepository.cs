@@ -2,9 +2,6 @@
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
-using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
-using SystemAdmin.Model.FormBusiness.FormOperate.Queries;
-using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.FormOperate

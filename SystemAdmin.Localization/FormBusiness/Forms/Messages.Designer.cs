@@ -61,11 +61,38 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 您暂无权限申请此表单 的本地化字符串。
+        ///   查找类似 上传文件不能为空 的本地化字符串。
+        /// </summary>
+        internal static string FileNotNull {
+            get {
+                return ResourceManager.GetString("FileNotNull", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 上传文件最大限制为25MB！ 的本地化字符串。
+        /// </summary>
+        internal static string FileSizeLimit {
+            get {
+                return ResourceManager.GetString("FileSizeLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 暂无权限申请此表单 的本地化字符串。
         /// </summary>
         internal static string NotPermissionApply {
             get {
                 return ResourceManager.GetString("NotPermissionApply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 暂无权限查看此表单 的本地化字符串。
+        /// </summary>
+        internal static string NotPermissionView {
+            get {
+                return ResourceManager.GetString("NotPermissionView", resourceCulture);
             }
         }
         
@@ -84,6 +111,24 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         internal static string SaveSuccess {
             get {
                 return ResourceManager.GetString("SaveSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 文件上传失败 的本地化字符串。
+        /// </summary>
+        internal static string UploadFailed {
+            get {
+                return ResourceManager.GetString("UploadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 文件上传成功 的本地化字符串。
+        /// </summary>
+        internal static string UploadSuccess {
+            get {
+                return ResourceManager.GetString("UploadSuccess", resourceCulture);
             }
         }
     }

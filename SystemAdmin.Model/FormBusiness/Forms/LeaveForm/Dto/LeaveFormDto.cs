@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
 namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
@@ -79,5 +80,10 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
         /// 代理人工号
         /// </summary>
         public string AgentUserNo { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 附件列表
+        /// </summary>
+        public List<FormFileDto> FileList { get; set; } = new List<FormFileDto>();
     }
 }

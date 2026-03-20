@@ -1,15 +1,12 @@
 ﻿using SqlSugar;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
+namespace SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity
 {
     /// <summary>
     /// 请假表文件表
     /// </summary>
-    [SugarTable("[Form].[LeaveFile]")]
-    public class LeaveFileEntity
+    [SugarTable("[Form].[FormFile]")]
+    public class FormFileEntity
     {
         /// <summary>
         /// 表单Id
@@ -25,6 +22,11 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
         /// 文件相对路径
         /// </summary>
         public string FilePath { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 文件大小（kb）
+        /// </summary>
+        public int FileSize { get; set; }
 
         /// <summary>
         /// 创建人

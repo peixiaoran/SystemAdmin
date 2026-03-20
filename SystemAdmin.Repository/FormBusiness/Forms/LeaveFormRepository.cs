@@ -1,8 +1,12 @@
-﻿using SqlSugar;
+﻿using Mapster;
+using SqlSugar;
 using SystemAdmin.CommonSetup.Options;
+using SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto;
+using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
@@ -17,6 +21,23 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         {
             _db = db;
             _lang = lang;
+        }
+
+        /// <summary>
+        /// 请假类别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<LeaveTypeDropDto>> GetLeaveTypeDropDown()
+        {
+            return await _db.Queryable<DictionaryInfoEntity>()
+                            .Where(dic => dic.DicType == "LeaveType")
+                            .Select(dic => new LeaveTypeDropDto()
+                            {
+                                LeaveTypeCode = dic.DicCode,
+                                LeaveTypeName = _lang.Locale == "zh-CN"
+                                                ? dic.DicNameCn
+                                                : dic.DicNameEn,
+                            }).ToListAsync();
         }
 
         /// <summary>
@@ -45,16 +66,6 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
                                 leave.CreatedDate,
                             }).Where(leave => leave.FormId == entity.FormId)
                             .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 新增附件
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> InsertFile(LeaveFileEntity entity)
-        {
-            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -97,50 +108,28 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 查询员工基本信息
+        /// 查询请假单明细
         /// </summary>
-        /// <param name="userId"></param>
+        /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<UserBasicInfoDto> GetUserInfo(long userId)
+        public async Task<List<FormFileDto>> GetLeaveFileList(long formId)
         {
-            return await _db.Queryable<UserInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .InnerJoin<DepartmentInfoEntity>((userinfo, deptinfo) => userinfo.DepartmentId == deptinfo.DepartmentId)
-                            .InnerJoin<UserPositionEntity>((userinfo, deptinfo, position) => userinfo.PositionId == position.PositionId)
-                            .Select((userinfo, deptinfo, position) => new UserBasicInfoDto()
-                            {
-                                UserId = userinfo.UserId,
-                                UserNo = userinfo.UserNo,
-                                UserName = _lang.Locale == "zh-CN"
-                                           ? userinfo.UserNameCn
-                                           : userinfo.UserNameEn,
-                                DetpId = deptinfo.DepartmentId,
-                                DetpName = _lang.Locale == "zh-CN"
-                                           ? deptinfo.DepartmentNameCn
-                                           : deptinfo.DepartmentNameEn,
-                                PositionNo = position.PositionNo,
-                                PositionName = _lang.Locale == "zh-CN"
-                                           ? position.PositionNameCn
-                                           : position.PositionNameEn,
-                                PhoneNumber = userinfo.PhoneNumber
-                            }).FirstAsync();
+            var fileList = await _db.Queryable<FormFileEntity>()
+                                    .With(SqlWith.NoLock)
+                                    .Where(formfile => formfile.FormId == formId)
+                                    .ToListAsync();
+
+            return fileList.Adapt<List<FormFileDto>>();
         }
 
         /// <summary>
-        /// 请假类别下拉
+        /// 新增附件
         /// </summary>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<List<LeaveTypeDropDto>> GetLeaveTypeDropDown()
+        public async Task<int> InsertFile(FormFileEntity entity)
         {
-            return await _db.Queryable<DictionaryInfoEntity>()
-                            .Where(dic => dic.DicType == "LeaveType")
-                            .Select(dic => new LeaveTypeDropDto()
-                            {
-                                LeaveTypeCode = dic.DicCode,
-                                LeaveTypeName = _lang.Locale == "zh-CN"
-                                                ? dic.DicNameCn
-                                                : dic.DicNameEn,
-                            }).ToListAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
     }
 }

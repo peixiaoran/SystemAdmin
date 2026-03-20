@@ -20,18 +20,18 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[请假单] 初始化请假单")]
-        public async Task<Result<string>> InitLeaveForm([FromForm] string formTypeId)
+        [EndpointSummary("[请假单] 请假类别下拉")]
+        public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDropDown()
         {
-            return await _leaveFormService.InitLeaveForm(formTypeId);
+            return await _leaveFormService.GetLeaveTypeDropDown();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[请假单] 查询请假单明细")]
-        public async Task<Result<LeaveFormDto>> GetLeaveForm([FromForm] string formId)
+        [EndpointSummary("[请假单] 初始化请假单")]
+        public async Task<Result<string>> InitLeaveForm([FromForm] string formTypeId)
         {
-            return await _leaveFormService.GetLeaveForm(formId);
+            return await _leaveFormService.InitLeaveForm(formTypeId);
         }
 
         [HttpPost]
@@ -44,18 +44,18 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[请假单] 请假类别下拉")]
-        public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDropDown()
+        [EndpointSummary("[请假单] 查询请假单明细")]
+        public async Task<Result<LeaveFormDto>> GetLeaveForm([FromForm] string formId)
         {
-            return await _leaveFormService.GetLeaveTypeDropDown();
+            return await _leaveFormService.GetLeaveForm(formId);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
         [EndpointSummary("[请假单] 上传附件")]
-        public async Task<Result<List<string>>> UploadAFile([FromForm] string formId, List<IFormFile> fileList)
+        public async Task<Result<List<string>>> UploadFile([FromForm] string formId, List<IFormFile> files)
         {
-            return await _leaveFormService.UploadFile(formId, fileList);
+            return await _leaveFormService.UploadFile(formId, files);
         }
 
         [HttpPost]

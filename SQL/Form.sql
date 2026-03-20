@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 17001105 (17.00.1105)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 17001105 (17.00.1105)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 19/03/2026 22:57:38
+ Date: 20/03/2026 17:11:38
 */
 
 
@@ -247,6 +247,89 @@ GO
 INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2603  ', N'5', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2026-03-19 19:49:01.000', NULL, NULL)
 GO
 
+
+-- ----------------------------
+-- Table structure for FormFile
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormFile]') AND type IN ('U'))
+	DROP TABLE [Form].[FormFile]
+GO
+
+CREATE TABLE [Form].[FormFile] (
+  [FormId] bigint  NOT NULL,
+  [FileName] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [FilePath] nvarchar(100) COLLATE Chinese_PRC_CI_AS  NOT NULL,
+  [FileSize] int  NOT NULL,
+  [CreatedBy] bigint  NULL,
+  [CreatedDate] datetime2(3)  NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime2(3)  NULL
+)
+GO
+
+ALTER TABLE [Form].[FormFile] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormFile',
+'COLUMN', N'FormId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'文件名',
+'SCHEMA', N'Form',
+'TABLE', N'FormFile',
+'COLUMN', N'FileName'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'文件相对路径',
+'SCHEMA', N'Form',
+'TABLE', N'FormFile',
+'COLUMN', N'FilePath'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'文件大小（kb）',
+'SCHEMA', N'Form',
+'TABLE', N'FormFile',
+'COLUMN', N'FileSize'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'FormFile',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormFile',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'FormFile',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormFile',
+'COLUMN', N'ModifiedDate'
+GO
+
+
+-- ----------------------------
+-- Records of FormFile
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for FormGroup
@@ -654,80 +737,6 @@ GO
 -- Records of FormType
 -- ----------------------------
 INSERT INTO [Form].[FormType] ([FormTypeId], [FormGroupId], [FormTypeNameCn], [FormTypeNameEn], [Prefix], [ApprovalPath], [ViewPath], [SortOrder], [DescriptionCn], [DescriptionEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'1987215338470772736', N'请假单', N'Leave Request Form', N'LVR', N'formbusiness/forms/leaveform/leaveform_r', N'formbusiness/forms/leaveform/leaveform_v', N'1', N'请假单用于员工因个人事由、病假、事假、年假等原因需要离开工作岗位时，向所属部门及管理层提出请假申请、审批与备案的业务单据。该单据记录请假类型、请假时间、时长、事由以及审批流程，用于确保人员安排合理、流程合规与人事数据准确。', N'A Leave Request Form is used when an employee needs to be absent from work due to personal reasons, sickness, annual leave, or other approved leave types. The form is submitted to the employee’s department and management for approval and record-keeping. It captures the leave type, leave period, duration, reason, and approval workflow, ensuring proper staffing, compliance, and accurate HR records.', N'1903486709602062336', N'2025-11-09 01:54:49.000', N'1903486709602062336', N'2025-11-09 02:16:46.000')
-GO
-
-
--- ----------------------------
--- Table structure for LeaveFile
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[LeaveFile]') AND type IN ('U'))
-	DROP TABLE [Form].[LeaveFile]
-GO
-
-CREATE TABLE [Form].[LeaveFile] (
-  [FormId] bigint  NOT NULL,
-  [FileName] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NOT NULL,
-  [FilePath] nvarchar(100) COLLATE Chinese_PRC_CI_AS  NOT NULL,
-  [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime2(3)  NOT NULL,
-  [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime2(3)  NULL
-)
-GO
-
-ALTER TABLE [Form].[LeaveFile] SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单Id',
-'SCHEMA', N'Form',
-'TABLE', N'LeaveFile',
-'COLUMN', N'FormId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'文件名',
-'SCHEMA', N'Form',
-'TABLE', N'LeaveFile',
-'COLUMN', N'FileName'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建人',
-'SCHEMA', N'Form',
-'TABLE', N'LeaveFile',
-'COLUMN', N'CreatedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'Form',
-'TABLE', N'LeaveFile',
-'COLUMN', N'CreatedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改人',
-'SCHEMA', N'Form',
-'TABLE', N'LeaveFile',
-'COLUMN', N'ModifiedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改时间',
-'SCHEMA', N'Form',
-'TABLE', N'LeaveFile',
-'COLUMN', N'ModifiedDate'
-GO
-
-
--- ----------------------------
--- Records of LeaveFile
--- ----------------------------
-INSERT INTO [Form].[LeaveFile] ([FormId], [FileName], [FilePath], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034628286256123904', N'217735420260115094308932 (1).docx', N'/systemadmin/20260319/20260319215523971_c31ca083.docx', N'1903486709602062336', N'2026-03-19 21:55:24.167', NULL, N'1900-01-01 00:00:00.000')
-GO
-
-INSERT INTO [Form].[LeaveFile] ([FormId], [FileName], [FilePath], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034628286256123904', N'217735420260115094308932 (1).docx', N'/systemadmin/20260319/20260319215622534_bb67437a.docx', N'1903486709602062336', N'2026-03-19 21:56:22.550', NULL, N'1900-01-01 00:00:00.000')
 GO
 
 
