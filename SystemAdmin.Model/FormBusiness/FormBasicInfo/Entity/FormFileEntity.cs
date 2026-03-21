@@ -9,6 +9,11 @@ namespace SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity
     public class FormFileEntity
     {
         /// <summary>
+        /// 附件Id
+        /// </summary>
+        public long FileId { get; set; }
+
+        /// <summary>
         /// 表单Id
         /// </summary>
         public long FormId { get; set; }
@@ -37,15 +42,5 @@ namespace SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity
         /// 创建日期
         /// </summary>
         public DateTime CreatedDate { get; set; }
-
-        /// <summary>
-        /// 修改人
-        /// </summary>
-        public long? ModifiedBy { get; set; }
-
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        public DateTime ModifiedDate { get; set; }
     }
 }

@@ -117,28 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SaveFailed" xml:space="preserve">
-    <value>表单保存失败</value>
+  <data name="PendingSubAppNotVoided" xml:space="preserve">
+    <value>表单不是待送审阶段，不可作废</value>
   </data>
-  <data name="SaveSuccess" xml:space="preserve">
-    <value>表单保存成功</value>
+  <data name="PendingSubAppVoidedFailed" xml:space="preserve">
+    <value>作废失败</value>
   </data>
-  <data name="FileNotNull" xml:space="preserve">
-    <value>附件不能为空</value>
-  </data>
-  <data name="FileSizeLimit" xml:space="preserve">
-    <value>附件最大限制为25MB！</value>
-  </data>
-  <data name="UploadFailed" xml:space="preserve">
-    <value>附件上传失败</value>
-  </data>
-  <data name="FileIdNotNull" xml:space="preserve">
-    <value>请选择附件进行删除</value>
-  </data>
-  <data name="DeleteFileFailed" xml:space="preserve">
-    <value>附件删除失败</value>
-  </data>
-  <data name="NotVoided" xml:space="preserve">
-    <value>此表单不是待送审阶段，不可作废</value>
+  <data name="PendingSubAppVoidedSuccess" xml:space="preserve">
+    <value>作废成功</value>
   </data>
 </root>

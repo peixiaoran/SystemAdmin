@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SystemAdmin.Localization.FormBusiness.Forms {
+namespace SystemAdmin.Localization.FormBusiness.FormOperate {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SystemAdmin.Localization.FormBusiness.Forms.Messages", typeof(Messages).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SystemAdmin.Localization.FormBusiness.FormOperate.Messages", typeof(Messages).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,74 +61,29 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 附件删除失败 的本地化字符串。
-        /// </summary>
-        internal static string DeleteFileFailed {
-            get {
-                return ResourceManager.GetString("DeleteFileFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 请选择附件进行删除 的本地化字符串。
-        /// </summary>
-        internal static string FileIdNotNull {
-            get {
-                return ResourceManager.GetString("FileIdNotNull", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 附件不能为空 的本地化字符串。
-        /// </summary>
-        internal static string FileNotNull {
-            get {
-                return ResourceManager.GetString("FileNotNull", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 附件最大限制为25MB！ 的本地化字符串。
-        /// </summary>
-        internal static string FileSizeLimit {
-            get {
-                return ResourceManager.GetString("FileSizeLimit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 表单不是待送审阶段，不可作废 的本地化字符串。
         /// </summary>
-        internal static string NotVoided {
+        internal static string PendingSubAppNotVoided {
             get {
-                return ResourceManager.GetString("NotVoided", resourceCulture);
+                return ResourceManager.GetString("PendingSubAppNotVoided", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 表单保存失败 的本地化字符串。
+        ///   查找类似 作废失败 的本地化字符串。
         /// </summary>
-        internal static string SaveFailed {
+        internal static string PendingSubAppVoidedFailed {
             get {
-                return ResourceManager.GetString("SaveFailed", resourceCulture);
+                return ResourceManager.GetString("PendingSubAppVoidedFailed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   查找类似 表单保存成功 的本地化字符串。
+        ///   查找类似 作废成功 的本地化字符串。
         /// </summary>
-        internal static string SaveSuccess {
+        internal static string PendingSubAppVoidedSuccess {
             get {
-                return ResourceManager.GetString("SaveSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 附件上传失败 的本地化字符串。
-        /// </summary>
-        internal static string UploadFailed {
-            get {
-                return ResourceManager.GetString("UploadFailed", resourceCulture);
+                return ResourceManager.GetString("PendingSubAppVoidedSuccess", resourceCulture);
             }
         }
     }

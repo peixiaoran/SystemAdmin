@@ -28,6 +28,6 @@
         /// <summary>
         /// 作废
         /// </summary>
-        Cancelled = 5,
+        Voided = 5,
     }
 }

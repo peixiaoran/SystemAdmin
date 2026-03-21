@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Security;
+using SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormLifecycle.FormBeforeStart;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
@@ -58,12 +60,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                // 判断员工是否有权限申请该表单类型
-                if (!await _formBeforeStart.HasUserApplyFormType(_loginuser.UserId, long.Parse(formTypeId)))
-                {
-                    return Result<string>.Failure(403, "");
-                }
-
                 await _db.BeginTranAsync();
                 // 初始化表单
                 var initForm = await _formBeforeStart.InitFormInfo(_loginuser.UserId, long.Parse(formTypeId));
@@ -93,6 +89,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 };
                 int initLeaveCount = await _leaveFormRepository.InitLeaveForm(entity);
                 await _db.CommitTranAsync();
+
                 return Result<string>.Ok(initForm.FormId.ToString(), "");
             }
             catch (Exception ex)
@@ -112,13 +109,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                // 判断是否有权限申请该表单类型
-                bool isCanApply = await _formBeforeStart.HasUserApplyFormType(_loginuser.UserId, long.Parse(formSave.FormTypeId));
-                if (!isCanApply)
-                {
-                    return Result<int>.Failure(403, _localization.ReturnMsg($"{_publicthis}NotPermissionApply"));
-                }
-
                 await _db.BeginTranAsync();
                 var saveForm = await _formBeforeStart.SaveFormInfo(long.Parse(formSave.FormId), _loginuser.UserId);
                 var entity = new LeaveFormEntity()
@@ -160,12 +150,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                // 判断是否有权限申请该表单类型
-                bool isCanView = await _formBeforeStart.HasUserViewFormType(long.Parse(formId), _loginuser.UserId);
-                if (!isCanView)
-                {
-                    return Result<LeaveFormDto>.Failure(403, _localization.ReturnMsg($"{_publicthis}NotPermissionView"));
-                }
                 var leaveForm = await _leaveFormRepository.GetLeaveForm(long.Parse(formId));
                 leaveForm.FileList = await _leaveFormRepository.GetLeaveFileList(long.Parse(formId));
                 return Result<LeaveFormDto>.Ok(leaveForm);
@@ -183,44 +167,40 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// <param name="formId"></param>
         /// <param name="files"></param>
         /// <returns></returns>
-        public async Task<Result<List<string>>> UploadFile(string formId, List<IFormFile> files)
+        public async Task<Result<List<FormFileDto>>> UploadFile(string formId, List<IFormFile> files)
         {
             try
             {
-                // 1. 判空
                 if (files == null || files.Count == 0)
                 {
-                    return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
+                    return Result<List<FormFileDto>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
                 }
 
-                // 2. 限制单个文件最大 25MB
-                const long maxFileSize = 25 * 1024 * 1024; // 25MB
+                const long maxFileSize = 25 * 1024 * 1024;
 
-                var avatarUrls = new List<string>();
+                var formFileList = new List<FormFileDto>();
 
                 foreach (var file in files)
                 {
-                    // 判空
                     if (file == null || file.Length == 0)
                     {
-                        return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
+                        return Result<List<FormFileDto>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
                     }
 
-                    // 文件大小限制
                     if (file.Length > maxFileSize)
                     {
-                        return Result<List<string>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileSizeLimit"));
+                        return Result<List<FormFileDto>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileSizeLimit"));
                     }
 
                     using var stream = file.OpenReadStream();
 
                     var avatarUrl = await _minioService.UploadAsync(file.FileName, stream, file.ContentType);
 
-                    // 转 KB（int）
                     int fileSizeKb = (int)(file.Length / 1024);
 
                     var fileItem = new FormFileEntity()
                     {
+                        FileId = SnowFlakeSingle.Instance.NextId(),
                         FormId = long.Parse(formId),
                         FileName = file.FileName,
                         FilePath = avatarUrl.ToString(),
@@ -229,16 +209,44 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                         CreatedDate = DateTime.Now,
                     };
 
+                    var fileItemDto = fileItem.Adapt<FormFileDto>();
+
                     var uploadCount = await _leaveFormRepository.InsertFile(fileItem);
-                    avatarUrls.Add(avatarUrl);
+                    formFileList.Add(fileItemDto);
                 }
 
-                return Result<List<string>>.Ok(avatarUrls, _localization.ReturnMsg($"{_publicthis}UploadSuccess"));
+                return Result<List<FormFileDto>>.Ok(formFileList, _localization.ReturnMsg($"{_publicthis}UploadSuccess"));
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<string>>.Failure(500, _localization.ReturnMsg($"{_publicthis}UploadFailed"));
+                return Result<List<FormFileDto>>.Failure(500, _localization.ReturnMsg($"{_publicthis}UploadFailed"));
+            }
+        }
+
+        /// <summary>
+        /// 删除附件
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> DeleteFile(string fileId, string filePath)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(fileId))
+                {
+                    return Result<int>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileIdNotNull"));
+                }
+
+                var count = await _leaveFormRepository.DeleteFormFile(long.Parse(fileId));
+                await _minioService.DeleteAsync(filePath);
+                return Result<int>.Ok(count, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<int>.Failure(500, _localization.ReturnMsg($"{_publicthis}DeleteFileFailed"));
             }
         }
 

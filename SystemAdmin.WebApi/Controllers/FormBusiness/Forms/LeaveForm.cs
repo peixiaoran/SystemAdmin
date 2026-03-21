@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto;
 using SystemAdmin.Model.FormBusiness.FormLifecycle.FormBeforeStart;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Service.FormBusiness.Forms;
-using SystemAdmin.Service.SystemBasicMgmt.SystemBasicData;
 
 namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 {
@@ -19,7 +19,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         }
 
         [HttpPost]
-        [Tags("表单业务管理-表单作业模块")]
+        [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 请假类别下拉")]
         public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDropDown()
         {
@@ -27,7 +27,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         }
 
         [HttpPost]
-        [Tags("表单业务管理-表单作业模块")]
+        [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 初始化请假单")]
         public async Task<Result<string>> InitLeaveForm([FromForm] string formTypeId)
         {
@@ -35,7 +35,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         }
 
         [HttpPost]
-        [Tags("表单业务管理-表单作业模块")]
+        [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 保存请假单")]
         public async Task<Result<int>> SaveLeaveForm([FromBody] LeaveFormSave formSave)
         {
@@ -43,7 +43,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         }
 
         [HttpPost]
-        [Tags("表单业务管理-表单作业模块")]
+        [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 查询请假单明细")]
         public async Task<Result<LeaveFormDto>> GetLeaveForm([FromForm] string formId)
         {
@@ -51,15 +51,23 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         }
 
         [HttpPost]
-        [Tags("表单业务管理-表单作业模块")]
+        [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 上传附件")]
-        public async Task<Result<List<string>>> UploadFile([FromForm] string formId, List<IFormFile> files)
+        public async Task<Result<List<FormFileDto>>> UploadFile([FromForm] string formId, List<IFormFile> files)
         {
             return await _leaveFormService.UploadFile(formId, files);
         }
 
         [HttpPost]
-        [Tags("表单业务管理-表单作业模块")]
+        [Tags("表单业务管理-表单Forms")]
+        [EndpointSummary("[请假单] 删除附件")]
+        public async Task<Result<int>> DeleteFile([FromForm] string fileId, [FromForm] string filePath)
+        {
+            return await _leaveFormService.DeleteFile(fileId, filePath);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 查询表单审批流程")]
         public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser([FromForm] string fromId)
         {

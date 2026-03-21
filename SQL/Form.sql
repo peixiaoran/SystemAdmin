@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001000 (16.00.1000)
- Source Host           : 127.0.0.1:1433
+ Source Server Version : 17001105 (17.00.1105)
+ Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001000 (16.00.1000)
+ Target Server Version : 17001105 (17.00.1105)
  File Encoding         : 65001
 
- Date: 20/03/2026 17:11:38
+ Date: 22/03/2026 05:12:41
 */
 
 
@@ -244,7 +244,7 @@ GO
 -- ----------------------------
 -- Records of FormCounting
 -- ----------------------------
-INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2603  ', N'5', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2026-03-19 19:49:01.000', NULL, NULL)
+INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2603  ', N'2', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2026-03-22 04:31:02.000', NULL, NULL)
 GO
 
 
@@ -256,18 +256,24 @@ IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[F
 GO
 
 CREATE TABLE [Form].[FormFile] (
+  [FileId] bigint  NOT NULL,
   [FormId] bigint  NOT NULL,
   [FileName] nvarchar(50) COLLATE Chinese_PRC_CI_AS  NOT NULL,
   [FilePath] nvarchar(100) COLLATE Chinese_PRC_CI_AS  NOT NULL,
   [FileSize] int  NOT NULL,
   [CreatedBy] bigint  NULL,
-  [CreatedDate] datetime2(3)  NULL,
-  [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime2(3)  NULL
+  [CreatedDate] datetime2(3)  NULL
 )
 GO
 
 ALTER TABLE [Form].[FormFile] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'附件Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormFile',
+'COLUMN', N'FileId'
 GO
 
 EXEC sp_addextendedproperty
@@ -312,24 +318,34 @@ EXEC sp_addextendedproperty
 'COLUMN', N'CreatedDate'
 GO
 
-EXEC sp_addextendedproperty
-'MS_Description', N'修改人',
-'SCHEMA', N'Form',
-'TABLE', N'FormFile',
-'COLUMN', N'ModifiedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改时间',
-'SCHEMA', N'Form',
-'TABLE', N'FormFile',
-'COLUMN', N'ModifiedDate'
-GO
-
 
 -- ----------------------------
 -- Records of FormFile
 -- ----------------------------
+INSERT INTO [Form].[FormFile] ([FileId], [FormId], [FileName], [FilePath], [FileSize], [CreatedBy], [CreatedDate]) VALUES (N'2035202614592933888', N'2035198908409450496', N'新建 Microsoft Excel 工作表.xlsx', N'/20260321/20260321115130210_5bb1825d.xlsx', N'6', N'1903486709602062336', N'2026-03-21 11:51:30.213')
+GO
+
+INSERT INTO [Form].[FormFile] ([FileId], [FormId], [FileName], [FilePath], [FileSize], [CreatedBy], [CreatedDate]) VALUES (N'2035204154561007616', N'2035203421577023488', N'217735420260115094308932 (1).docx', N'/20260321/20260321115737351_e21f2351.docx', N'375', N'1903486709602062336', N'2026-03-21 11:57:37.370')
+GO
+
+INSERT INTO [Form].[FormFile] ([FileId], [FormId], [FileName], [FilePath], [FileSize], [CreatedBy], [CreatedDate]) VALUES (N'2035204154590367744', N'2035203421577023488', N'新建 Microsoft Excel 工作表.xlsx', N'/20260321/20260321115737372_3e8bf46b.xlsx', N'6', N'1903486709602062336', N'2026-03-21 11:57:37.377')
+GO
+
+INSERT INTO [Form].[FormFile] ([FileId], [FormId], [FileName], [FilePath], [FileSize], [CreatedBy], [CreatedDate]) VALUES (N'2035215659046146048', N'2035212726183268352', N'FOUpdate20260311114210.xls', N'/20260321/20260321124320219_b74999c3.xls', N'181', N'1903486709602062336', N'2026-03-21 12:43:20.253')
+GO
+
+INSERT INTO [Form].[FormFile] ([FileId], [FormId], [FileName], [FilePath], [FileSize], [CreatedBy], [CreatedDate]) VALUES (N'2035215660669341696', N'2035212726183268352', N'PO FAS-PC0015  updated.pdf', N'/20260321/20260321124320634_9d5577ae.pdf', N'80', N'1903486709602062336', N'2026-03-21 12:43:20.640')
+GO
+
+INSERT INTO [Form].[FormFile] ([FileId], [FormId], [FileName], [FilePath], [FileSize], [CreatedBy], [CreatedDate]) VALUES (N'2035215660702896128', N'2035212726183268352', N'说明.docx', N'/20260321/20260321124320642_073ccff2.docx', N'375', N'1903486709602062336', N'2026-03-21 12:43:20.647')
+GO
+
+INSERT INTO [Form].[FormFile] ([FileId], [FormId], [FileName], [FilePath], [FileSize], [CreatedBy], [CreatedDate]) VALUES (N'2035456066451542016', N'2035455708547387392', N'PO FAS-PC0015  updated.pdf', N'/20260322/20260322043837840_10e97abc.pdf', N'80', N'1903486709602062336', N'2026-03-22 04:38:37.843')
+GO
+
+INSERT INTO [Form].[FormFile] ([FileId], [FormId], [FileName], [FilePath], [FileSize], [CreatedBy], [CreatedDate]) VALUES (N'2035456066489290752', N'2035455708547387392', N'说明.docx', N'/20260322/20260322043837846_49b596b8.docx', N'375', N'1903486709602062336', N'2026-03-22 04:38:37.853')
+GO
+
 
 -- ----------------------------
 -- Table structure for FormGroup
@@ -584,19 +600,10 @@ GO
 -- ----------------------------
 -- Records of FormInfo
 -- ----------------------------
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034598010989711360', N'1987217256446300160', N'LVR-26030001', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 19:49:01.480', NULL, NULL)
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2035454156742987776', N'1987217256446300160', N'LVR-26030001', N'Voided', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-22 04:31:02.537', N'1903486709602062336', N'2026-03-22 04:31:11.460')
 GO
 
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034613948455718912', N'1987217256446300160', N'LVR-26030002', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 20:52:21.270', NULL, NULL)
-GO
-
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034626547993939968', N'1987217256446300160', N'LVR-26030003', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 21:42:25.233', NULL, NULL)
-GO
-
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034627408128249856', N'1987217256446300160', N'LVR-26030004', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 21:45:50.303', NULL, NULL)
-GO
-
-INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034628286256123904', N'1987217256446300160', N'LVR-26030005', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-19 21:49:19.667', NULL, NULL)
+INSERT INTO [Form].[FormInfo] ([FormId], [FormTypeId], [FormNo], [FormStatus], [LastStepId], [LastConditionId], [NowStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2035455708547387392', N'1987217256446300160', N'LVR-26030002', N'PendingSubmission', NULL, NULL, N'2009890853346217984', N'1903486709602062336', N'2026-03-22 04:37:12.513', N'1903486709602062336', N'2026-03-22 05:10:50.620')
 GO
 
 
@@ -736,7 +743,7 @@ GO
 -- ----------------------------
 -- Records of FormType
 -- ----------------------------
-INSERT INTO [Form].[FormType] ([FormTypeId], [FormGroupId], [FormTypeNameCn], [FormTypeNameEn], [Prefix], [ApprovalPath], [ViewPath], [SortOrder], [DescriptionCn], [DescriptionEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'1987215338470772736', N'请假单', N'Leave Request Form', N'LVR', N'formbusiness/forms/leaveform/leaveform_r', N'formbusiness/forms/leaveform/leaveform_v', N'1', N'请假单用于员工因个人事由、病假、事假、年假等原因需要离开工作岗位时，向所属部门及管理层提出请假申请、审批与备案的业务单据。该单据记录请假类型、请假时间、时长、事由以及审批流程，用于确保人员安排合理、流程合规与人事数据准确。', N'A Leave Request Form is used when an employee needs to be absent from work due to personal reasons, sickness, annual leave, or other approved leave types. The form is submitted to the employee’s department and management for approval and record-keeping. It captures the leave type, leave period, duration, reason, and approval workflow, ensuring proper staffing, compliance, and accurate HR records.', N'1903486709602062336', N'2025-11-09 01:54:49.000', N'1903486709602062336', N'2025-11-09 02:16:46.000')
+INSERT INTO [Form].[FormType] ([FormTypeId], [FormGroupId], [FormTypeNameCn], [FormTypeNameEn], [Prefix], [ApprovalPath], [ViewPath], [SortOrder], [DescriptionCn], [DescriptionEn], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'1987215338470772736', N'请假单', N'Leave Request Form', N'LVR', N'formbusiness/forms/leaveform/leaveform_r', N'formbusiness/forms/leaveform/leaveform_r', N'1', N'请假单用于员工因个人事由、病假、事假、年假等原因需要离开工作岗位时，向所属部门及管理层提出请假申请、审批与备案的业务单据。该单据记录请假类型、请假时间、时长、事由以及审批流程，用于确保人员安排合理、流程合规与人事数据准确。', N'A Leave Request Form is used when an employee needs to be absent from work due to personal reasons, sickness, annual leave, or other approved leave types. The form is submitted to the employee’s department and management for approval and record-keeping. It captures the leave type, leave period, duration, reason, and approval workflow, ensuring proper staffing, compliance, and accurate HR records.', N'1903486709602062336', N'2025-11-09 01:54:49.000', N'1903486709602062336', N'2025-11-09 02:16:46.000')
 GO
 
 
@@ -868,19 +875,10 @@ GO
 -- ----------------------------
 -- Records of LeaveForm
 -- ----------------------------
-INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034598010989711360', N'LVR-26030001', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 19:49:01.493', NULL, N'1900-01-01 00:00:00.000')
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2035454156742987776', N'LVR-26030001', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-22 04:31:02.540', NULL, N'1900-01-01 00:00:00.000')
 GO
 
-INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034613948455718912', N'LVR-26030002', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 20:52:21.287', NULL, N'1900-01-01 00:00:00.000')
-GO
-
-INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034626547993939968', N'LVR-26030003', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 21:42:25.247', NULL, N'1900-01-01 00:00:00.000')
-GO
-
-INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034627408128249856', N'LVR-26030004', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 21:45:50.303', NULL, N'1900-01-01 00:00:00.000')
-GO
-
-INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2034628286256123904', N'LVR-26030005', N'1903486709602062336', N'', N'', NULL, NULL, N'0.00', N'', N'1903486709602062336', N'2026-03-19 21:49:19.680', NULL, N'1900-01-01 00:00:00.000')
+INSERT INTO [Form].[LeaveForm] ([FormId], [FormNo], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveHours], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2035455708547387392', N'LVR-26030002', N'1903486709602062336', N'Sick', N'123', N'2026-03-05 00:00:00.0000000', N'2026-03-06 00:00:00.0000000', N'24.00', N'E347473', N'1903486709602062336', N'2026-03-22 04:37:12.513', N'1903486709602062336', N'2026-03-22 05:10:50.620')
 GO
 
 
@@ -932,19 +930,10 @@ GO
 -- ----------------------------
 -- Records of PendingApproval
 -- ----------------------------
-INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034598010989711360', N'Primary', N'1903486709602062336')
+INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2035455708547387392', N'Primary', N'1903486709602062336')
 GO
 
-INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034613948455718912', N'Primary', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034626547993939968', N'Primary', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034627408128249856', N'Primary', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2034628286256123904', N'Primary', N'1903486709602062336')
+INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2035454156742987776', N'Primary', N'1903486709602062336')
 GO
 
 
@@ -1284,7 +1273,7 @@ GO
 -- ----------------------------
 -- Records of WorkflowStepBranch
 -- ----------------------------
-INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2009890853346217984', N'-1', N'0', N'2009892923604340736', N'1903486709602062336', N'2026-01-10 16:02:15.000')
+INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2009890853346217984', N'-1', N'1', N'2009892923604340736', N'1903486709602062336', N'2026-01-10 16:02:15.000')
 GO
 
 INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2009892923604340736', N'-1', N'1', N'2009897830268932096', N'1903486709602062336', N'2026-01-10 16:02:40.000')
@@ -1303,9 +1292,6 @@ INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatche
 GO
 
 INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2032353104544010241', N'-1', N'1', N'-1', N'1903486709602062336', N'2026-03-13 15:12:19.693')
-GO
-
-INSERT INTO [Form].[WorkflowStepBranch] ([StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate]) VALUES (N'2009890853346217984', N'-1', N'1', N'2009892923604340736', N'1903486709602062336', N'2026-01-10 16:02:15.000')
 GO
 
 
@@ -1591,6 +1577,15 @@ GO
 -- Primary Key structure for table ControlInfo
 -- ----------------------------
 ALTER TABLE [Form].[ControlInfo] ADD CONSTRAINT [PK__FormCont__3399DDEB13F7B41D] PRIMARY KEY CLUSTERED ([ControlCode])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
+-- Primary Key structure for table FormFile
+-- ----------------------------
+ALTER TABLE [Form].[FormFile] ADD CONSTRAINT [PK__FormFile__6F0F98BF2AF1086B] PRIMARY KEY CLUSTERED ([FileId])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
 ON [PRIMARY]
 GO

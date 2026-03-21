@@ -5,7 +5,7 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Queries
     /// <summary>
     /// 查询待签核信息请求参数
     /// </summary>
-    public class GetPendingApprovalPage : PageModel
+    public class GetPendingSubAppPage : PageModel
     {
         /// <summary>
         /// 表单组别Id

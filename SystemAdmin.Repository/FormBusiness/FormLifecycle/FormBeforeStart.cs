@@ -29,34 +29,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
         }
 
         /// <summary>
-        /// 验证是否有权限申请表单
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="formTypeId"></param>
-        /// <returns></returns>
-        public async Task<bool> HasUserApplyFormType(long formTypeId, long userId)
-        {
-            return await _db.Queryable<UserFormEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(userform => userform.UserId == userId && userform.FormGroupTypeId == formTypeId)
-                            .AnyAsync();
-        }
-
-        /// <summary>
-        /// 验证是否有权限查看表单
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        public async Task<bool> HasUserViewFormType(long formId, long userId)
-        {
-            return await _db.Queryable<FormInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(form => form.FormId == formId && form.CreatedBy == userId)
-                            .AnyAsync();
-        }
-
-        /// <summary>
         /// 生成表单编号
         /// </summary>
         /// <param name="userId"></param>

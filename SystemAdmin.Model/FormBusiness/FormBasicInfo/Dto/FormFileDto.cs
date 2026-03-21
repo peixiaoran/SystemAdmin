@@ -9,6 +9,12 @@ namespace SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto
     public class FormFileDto
     {
         /// <summary>
+        /// 附件Id
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long FileId { get; set; }
+
+        /// <summary>
         /// 表单Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]

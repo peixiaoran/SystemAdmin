@@ -123,22 +123,22 @@
   <data name="SaveSuccess" xml:space="preserve">
     <value>Form saved successfully</value>
   </data>
-  <data name="NotPermissionApply" xml:space="preserve">
-    <value>You do not currently have permission to submit this form</value>
-  </data>
   <data name="FileNotNull" xml:space="preserve">
     <value>The uploaded file cannot be empty</value>
   </data>
   <data name="FileSizeLimit" xml:space="preserve">
     <value>The maximum file size is 25MB!</value>
   </data>
-  <data name="UploadSuccess" xml:space="preserve">
-    <value>File uploaded successfully</value>
-  </data>
   <data name="UploadFailed" xml:space="preserve">
     <value>File upload failed</value>
   </data>
-  <data name="NotPermissionView" xml:space="preserve">
-    <value>You do not have permission to view this form</value>
+  <data name="FileIdNotNull" xml:space="preserve">
+    <value>Please select the files you want to delete</value>
+  </data>
+  <data name="DeleteFileFailed" xml:space="preserve">
+    <value>Failed to delete attachment</value>
+  </data>
+  <data name="NotVoided" xml:space="preserve">
+    <value>This form cannot be voided because it is not in the Pending Submission stage</value>
   </data>
 </root>

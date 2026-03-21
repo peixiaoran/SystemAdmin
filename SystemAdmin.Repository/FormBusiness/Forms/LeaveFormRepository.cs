@@ -108,7 +108,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 查询请假单明细
+        /// 查询文件列表
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
@@ -118,7 +118,6 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
                                     .With(SqlWith.NoLock)
                                     .Where(formfile => formfile.FormId == formId)
                                     .ToListAsync();
-
             return fileList.Adapt<List<FormFileDto>>();
         }
 
@@ -130,6 +129,18 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         public async Task<int> InsertFile(FormFileEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
+        }
+
+        /// <summary>
+        /// 删除附件
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <returns></returns>
+        public async Task<int> DeleteFormFile(long fileId)
+        {
+            return await _db.Deleteable<FormFileEntity>()
+                            .Where(formfile => formfile.FileId == fileId)
+                            .ExecuteCommandAsync();
         }
     }
 }

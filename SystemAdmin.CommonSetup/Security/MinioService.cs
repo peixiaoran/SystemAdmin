@@ -39,7 +39,7 @@ namespace SystemAdmin.CommonSetup.Security
                          .WithObjectSize(data.Length)
                          .WithContentType(contentType));
 
-            return $"/{bucket}/{newObjectName}";
+            return $"/{newObjectName}";
         }
 
         #endregion
@@ -92,8 +92,8 @@ namespace SystemAdmin.CommonSetup.Security
         public async Task DeleteAsync(string objectName)
         {
             await _client.RemoveObjectAsync(new RemoveObjectArgs()
-                .WithBucket(_settings.DefaultBucket)
-                .WithObject(objectName));
+                         .WithBucket(_settings.DefaultBucket)
+                         .WithObject(objectName));
         }
 
         // 批量删除

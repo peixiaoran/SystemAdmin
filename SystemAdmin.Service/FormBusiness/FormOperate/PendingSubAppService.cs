@@ -1,0 +1,105 @@
+﻿using Microsoft.Extensions.Logging;
+using SqlSugar;
+using SystemAdmin.CommonSetup.Security;
+using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
+using SystemAdmin.Model.FormBusiness.FormOperate.Queries;
+using SystemAdmin.Repository.FormBusiness.FormOperate;
+
+namespace SystemAdmin.Service.FormBusiness.FormOperate
+{
+    public class PendingSubAppService
+    {
+        private readonly CurrentUser _loginuser;
+        private readonly ILogger<PendingSubAppService> _logger;
+        private readonly SqlSugarScope _db;
+        private readonly PendingSubAppRepository _PendingSubAppRepository;
+        private readonly LocalizationService _localization;
+        private readonly string _this = "FormBusiness.FormOperate.PendingSubApp";
+
+        public PendingSubAppService(CurrentUser loginuser, ILogger<PendingSubAppService> logger, SqlSugarScope db, PendingSubAppRepository PendingSubAppRepository, LocalizationService localization)
+        {
+            _loginuser = loginuser;
+            _logger = logger;
+            _db = db;
+            _PendingSubAppRepository = PendingSubAppRepository;
+            _localization = localization;
+        }
+
+        /// <summary>
+        /// 请假组别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        {
+            var drop = await _PendingSubAppRepository.GetFormGroupDropDown();
+            return Result<List<FormGroupDropDto>>.Ok(drop);
+        }
+
+        /// <summary>
+        /// 请假类别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(string formGroupId)
+        {
+            var drop = await _PendingSubAppRepository.GetFormTypeDropDown(long.Parse(formGroupId));
+            return Result<List<FormTypeDropDto>>.Ok(drop);
+        }
+
+        /// <summary>
+        /// 表单状态下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<FormStatusDropDto>>> GetFormStatusDropDown()
+        {
+            var drop = await _PendingSubAppRepository.GetFormStatusDropDown();
+            return Result<List<FormStatusDropDto>>.Ok(drop);
+        }
+
+        /// <summary>
+        /// 查询待送审分页
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ResultPaged<PendingSubAppDto>> GetPendingSubmissionPage(GetPendingSubAppPage getpage)
+        {
+            return await _PendingSubAppRepository.GetPendingSubmissionPage(getpage, _loginuser.UserId);
+        }
+
+        /// <summary>
+        /// 查询待签核分页
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ResultPaged<PendingSubAppDto>> GetPendingApprovalPage(GetPendingSubAppPage getpage)
+        {
+            return await _PendingSubAppRepository.GetPendingApprovalPage(getpage, _loginuser.UserId);
+        }
+
+        /// <summary>
+        /// 作废表单
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<int>> VoidedForm(string formId)
+        {
+            try
+            {
+                await _db.BeginTranAsync();
+                var isCan = await _PendingSubAppRepository.IsVoidedForm(long.Parse(formId));
+                if (!isCan)
+                {
+                    return Result<int>.Ok(500, _localization.ReturnMsg($"{_this}NotVoided"));
+                }
+                var count = await _PendingSubAppRepository.VoidedForm(long.Parse(formId), _loginuser.UserId);
+                await _db.CommitTranAsync();
+
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}VoidedSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}VoidedFailed"));
+            }
+            catch (Exception ex)
+            {
+                await _db.RollbackTranAsync();
+                _logger.LogError(ex, ex.Message);
+                return Result<int>.Failure(500, ex.Message);
+            }
+        }
+    }
+}
