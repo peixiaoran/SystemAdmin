@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.FormBusiness.FormLifecycle.FormBeforeStart
+namespace SystemAdmin.Model.FormBusiness.Forms.FormLifecycle.FormBeforeStart
 {
     /// <summary>
     /// 流程审批人员Dto
