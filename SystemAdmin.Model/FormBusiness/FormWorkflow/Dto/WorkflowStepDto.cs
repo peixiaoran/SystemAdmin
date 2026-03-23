@@ -62,6 +62,11 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public int ReminderIntervalMinutes { get; set; }
 
         /// <summary>
+        /// 排序
+        /// </summary>
+        public int SortOrder { get; set; }
+
+        /// <summary>
         /// 签核步骤组织架构来源实体
         /// </summary>
         public WorkflowStepOrgDto workflowStepOrgDto { get; set; } = new WorkflowStepOrgDto();

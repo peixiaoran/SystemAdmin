@@ -377,8 +377,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                            .LeftJoin<WorkflowConditionEntity>((stepbranch, condition) => stepbranch.ConditionId == condition.ConditionId)
                                            .LeftJoin<WorkflowStepEntity>((stepbranch, condition, nextStep) => stepbranch.NextStepId == nextStep.StepId)
                                            .Where((stepbranch, condition, nextStep) => stepbranch.StepId == stepItem.StepId)
-                                           .OrderByDescending((stepbranch, condition, nextStep) => stepbranch.CreatedDate)
                                            .OrderByDescending((stepbranch, condition, nextStep) => stepbranch.ExecuteMatched)
+                                           .OrderByDescending((stepbranch, condition, nextStep) => stepbranch.CreatedDate)
                                            .Select((stepbranch, condition, nextStep) => new WorkflowStepBranchDto()
                                            {
                                                BranChId = stepbranch.BranChId,

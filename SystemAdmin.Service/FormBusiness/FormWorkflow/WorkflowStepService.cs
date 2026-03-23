@@ -473,6 +473,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             try
             {
                 var entity = await _workflowStepRepository.GetWorkflowStepEntity(long.Parse(stepId));
+
                 entity.workflowStepOrgDto = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(stepId)) ?? new WorkflowStepOrgDto();
                 entity.workflowStepDeptUserDto = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(stepId)) ?? new WorkflowStepDeptUserDto();
                 entity.workflowStepUserDto = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(stepId)) ?? new WorkflowStepUserDto();
