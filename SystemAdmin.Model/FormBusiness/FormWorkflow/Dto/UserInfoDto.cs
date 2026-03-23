@@ -42,6 +42,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public string NationalityName { get; set; } = string.Empty;
 
         /// <summary>
+        /// 是否代理
+        /// </summary>
+        [JsonConverter(typeof(IntToStringConverter))]
+        public int IsAgent { get; set; }
+
+        /// <summary>
         /// 是否签核描述
         /// </summary>
         [JsonConverter(typeof(IntToStringConverter))]

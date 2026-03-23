@@ -22,6 +22,14 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
+        [EndpointSummary("[员工信息] 部门下拉")]
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            return await _userAgentService.GetDepartmentDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工代理] 查询员工分页")]
         public async Task<ResultPaged<UserAgentDto>> GetUserInfoPage([FromBody] GetUserAgentPage getPage)
         {
@@ -66,14 +74,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         public async Task<Result<List<UserAgentPassiveDto>>> GetUserAgentList([FromForm] string substituteUserId)
         {
             return await _userAgentService.GetUserAgentPassiveList(substituteUserId);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-员工相关配置")]
-        [EndpointSummary("[员工信息] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            return await _userAgentService.GetDepartmentDropDown();
         }
     }
 }

@@ -153,4 +153,25 @@
   <data name="WorkflowStepBranchUpdateSuccess" xml:space="preserve">
     <value>Step flow branch modification successful</value>
   </data>
+  <data name="WorkflowConditionInsertSuccess" xml:space="preserve">
+    <value>Condition added successfully</value>
+  </data>
+  <data name="WorkflowConditionInsertFailed" xml:space="preserve">
+    <value>Failed to add condition</value>
+  </data>
+  <data name="WorkflowConditionNotDelete" xml:space="preserve">
+    <value>The condition is bound to a process branch. Please remove the corresponding branch condition before deleting it</value>
+  </data>
+  <data name="WorkflowConditionDeleteSuccess" xml:space="preserve">
+    <value>Conditional deletion successful</value>
+  </data>
+  <data name="WorkflowConditionDeleteFailed" xml:space="preserve">
+    <value>Conditional deletion failed</value>
+  </data>
+  <data name="WorkflowConditionUpdateSuccess" xml:space="preserve">
+    <value>Condition modified successfully</value>
+  </data>
+  <data name="WorkflowConditionUpdateFailed" xml:space="preserve">
+    <value>Failed to modify conditions</value>
+  </data>
 </root>

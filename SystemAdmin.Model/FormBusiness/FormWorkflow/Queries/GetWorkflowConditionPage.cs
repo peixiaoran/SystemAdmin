@@ -3,9 +3,9 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Queries
 {
     /// <summary>
-    /// 查询流程审批步骤分页请求参数
+    /// 查询流程条件信息请求参数
     /// </summary>
-    public class GetWorkflowStepList
+    public class GetWorkflowConditionPage : PageModel
     {
         /// <summary>
         /// 表单类型Id

@@ -1,22 +1,23 @@
-﻿using SqlSugar;
+﻿using System.Text.Json.Serialization;
+using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
+namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 流程条件实体类
+    /// 流程条件Dto
     /// </summary>
-    [SugarTable("[Form].[WorkflowCondition]")]
-    public class WorkflowConditionEntity
+    public class WorkflowConditionDto
     {
         /// <summary>
         /// 流程条件Id
         /// </summary>
-        [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
+        [JsonConverter(typeof(LongToStringConverter))]
         public long ConditionId { get; set; }
 
         /// <summary>
         /// 所属表单Id
         /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
         public long FormTypeId { get; set; }
 
         /// <summary>
@@ -38,25 +39,5 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// 逻辑说明
         /// </summary>
         public string Description { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        public long CreatedBy { get; set; }
-
-        /// <summary>
-        /// 创建日期
-        /// </summary>
-        public DateTime CreatedDate { get; set; }
-
-        /// <summary>
-        /// 修改人
-        /// </summary>
-        public long? ModifiedBy { get; set; }
-
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        public DateTime? ModifiedDate { get; set; }
     }
 }

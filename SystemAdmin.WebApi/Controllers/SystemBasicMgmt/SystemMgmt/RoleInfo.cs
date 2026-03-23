@@ -21,6 +21,14 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
+        [EndpointSummary("[角色信息] 角色模块下拉")]
+        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown([FromForm] string roleId)
+        {
+            return await _roleService.GetRoleModuleDropDown(roleId);
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 新增角色")]
         public async Task<Result<int>> InsertRole([FromBody] RoleInfoUpsert upsert)
         {
@@ -81,14 +89,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         public async Task<Result<int>> UpdateRoleModuleList([FromBody] RoleModuleUpsert upsert)
         {
             return await _roleService.UpdateRoleModuleList(upsert);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[角色信息] 角色模块下拉")]
-        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown([FromBody] GetRoleModuleDropDown getDrop)
-        {
-            return await _roleService.GetRoleModuleDropDown(getDrop);
         }
 
         [HttpPost]

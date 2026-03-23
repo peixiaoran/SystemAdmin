@@ -1,5 +1,4 @@
 ﻿using SqlSugar;
-using System.Collections;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
@@ -120,28 +119,28 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
             query = query.OrderBy((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => new { forminfo.CreatedDate });
 
             var page = await query.Select((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => new PendingSubAppDto
-            {
-                FormId = forminfo.FormId,
-                FormNo = forminfo.FormNo,
-                FormTypeId = formtype.FormTypeId,
-                FormTypeName = _lang.Locale == "zh-CN"
-                               ? formtype.FormTypeNameCn
-                               : formtype.FormTypeNameEn,
-                FormStatus = forminfo.FormStatus,
-                FormStatusName = _lang.Locale == "zh-CN"
-                               ? dic.DicNameCn
-                               : dic.DicNameEn,
-                ApplyUserName = _lang.Locale == "zh-CN"
-                               ? appuser.UserNameCn
-                               : appuser.UserNameEn,
-                ApplyUserDeptName = _lang.Locale == "zh-CN"
-                               ? appuserdept.DepartmentNameCn
-                               : appuserdept.DepartmentNameEn,
-                ApprovalPath = formtype.ApprovalPath,
-                ViewPath = formtype.ViewPath,
-                isDelete = (appuser.CreatedBy == loginUserId
-                            && forminfo.FormStatus != FormStatus.Voided.ToEnumString()) ? 1 : 0
-            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+                                  {
+                                      FormId = forminfo.FormId,
+                                      FormNo = forminfo.FormNo,
+                                      FormTypeId = formtype.FormTypeId,
+                                      FormTypeName = _lang.Locale == "zh-CN"
+                                                     ? formtype.FormTypeNameCn
+                                                     : formtype.FormTypeNameEn,
+                                      FormStatus = forminfo.FormStatus,
+                                      FormStatusName = _lang.Locale == "zh-CN"
+                                                     ? dic.DicNameCn
+                                                     : dic.DicNameEn,
+                                      ApplyUserName = _lang.Locale == "zh-CN"
+                                                     ? appuser.UserNameCn
+                                                     : appuser.UserNameEn,
+                                      ApplyUserDeptName = _lang.Locale == "zh-CN"
+                                                     ? appuserdept.DepartmentNameCn
+                                                     : appuserdept.DepartmentNameEn,
+                                      ApprovalPath = formtype.ApprovalPath,
+                                      ViewPath = formtype.ViewPath,
+                                      isDelete = (appuser.CreatedBy == loginUserId
+                                                  && forminfo.FormStatus != FormStatus.Voided.ToEnumString()) ? 1 : 0
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<PendingSubAppDto>.Ok(page, totalCount, "");
         }
 
@@ -186,27 +185,27 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
             query = query.OrderBy((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => new { forminfo.CreatedDate });
 
             var page = await query.Select((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => new PendingSubAppDto
-            {
-                FormId = forminfo.FormId,
-                FormNo = forminfo.FormNo,
-                FormTypeId = formtype.FormTypeId,
-                FormTypeName = _lang.Locale == "zh-CN"
-                               ? formtype.FormTypeNameCn
-                               : formtype.FormTypeNameEn,
-                FormStatus = forminfo.FormStatus,
-                FormStatusName = _lang.Locale == "zh-CN"
-                               ? dic.DicNameCn
-                               : dic.DicNameEn,
-                ApplyUserName = _lang.Locale == "zh-CN"
-                               ? appuser.UserNameCn
-                               : appuser.UserNameEn,
-                ApplyUserDeptName = _lang.Locale == "zh-CN"
-                               ? appuserdept.DepartmentNameCn
-                               : appuserdept.DepartmentNameEn,
-                ApprovalPath = formtype.ApprovalPath,
-                ViewPath = formtype.ViewPath,
-                isDelete = 0
-            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+                                  {
+                                      FormId = forminfo.FormId,
+                                      FormNo = forminfo.FormNo,
+                                      FormTypeId = formtype.FormTypeId,
+                                      FormTypeName = _lang.Locale == "zh-CN"
+                                                     ? formtype.FormTypeNameCn
+                                                     : formtype.FormTypeNameEn,
+                                      FormStatus = forminfo.FormStatus,
+                                      FormStatusName = _lang.Locale == "zh-CN"
+                                                     ? dic.DicNameCn
+                                                     : dic.DicNameEn,
+                                      ApplyUserName = _lang.Locale == "zh-CN"
+                                                     ? appuser.UserNameCn
+                                                     : appuser.UserNameEn,
+                                      ApplyUserDeptName = _lang.Locale == "zh-CN"
+                                                     ? appuserdept.DepartmentNameCn
+                                                     : appuserdept.DepartmentNameEn,
+                                      ApprovalPath = formtype.ApprovalPath,
+                                      ViewPath = formtype.ViewPath,
+                                      isDelete = 0
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<PendingSubAppDto>.Ok(page, totalCount, "");
         }
 

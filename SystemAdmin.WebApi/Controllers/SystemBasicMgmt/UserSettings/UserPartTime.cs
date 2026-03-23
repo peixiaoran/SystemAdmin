@@ -23,6 +23,30 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
+        [EndpointSummary("[员工兼任] 职业下拉")]
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        {
+            return await _userPartTimeService.GetLaborDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-员工相关配置")]
+        [EndpointSummary("[员工兼任] 部门下拉")]
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            return await _userPartTimeService.GetDepartmentDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-员工相关配置")]
+        [EndpointSummary("[员工兼任] 职级下拉")]
+        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        {
+            return await _userPartTimeService.GetUserPositionDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 新增员工兼任")]
         public async Task<Result<int>> InsertUserPartTime([FromBody] UserPartTimeInsert upsert)
         {
@@ -67,30 +91,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         public async Task<Result<UserPartTimeDto>> GetUserPartTimeEntity(GetUserPartTimeEntity getEntity)
         {
             return await _userPartTimeService.GetUserPartTimeEntity(getEntity);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-员工相关配置")]
-        [EndpointSummary("[员工兼任] 职业下拉")]
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
-        {
-            return await _userPartTimeService.GetLaborDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-员工相关配置")]
-        [EndpointSummary("[员工兼任] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            return await _userPartTimeService.GetDepartmentDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-员工相关配置")]
-        [EndpointSummary("[员工兼任] 职级下拉")]
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
-        {
-            return await _userPartTimeService.GetUserPositionDropDown();
         }
     }
 }

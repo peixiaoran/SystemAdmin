@@ -24,6 +24,47 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
             _userInfoService = userInfoService;
         }
 
+
+        [HttpPost]
+        [Tags("系统基础管理-基本信息模块")]
+        [EndpointSummary("[员工信息] 国籍下拉")]
+        public async Task<Result<List<NationalityDropDto>>> GetNationalityDropDown()
+        {
+            return await _userInfoService.GetNationalityDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-基本信息模块")]
+        [EndpointSummary("[员工信息] 职业下拉")]
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        {
+            return await _userInfoService.GetLaborDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-基本信息模块")]
+        [EndpointSummary("[员工信息] 部门下拉")]
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            return await _userInfoService.GetDepartmentDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-基本信息模块")]
+        [EndpointSummary("[员工信息] 职级下拉")]
+        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        {
+            return await _userInfoService.GetUserPositionDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-基本信息模块")]
+        [EndpointSummary("[员工信息] 角色下拉")]
+        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
+        {
+            return await _userInfoService.GetRoleDropDown();
+        }
+
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 上传员工头像（新增员工）")]
@@ -78,46 +119,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         public async Task<ResultPaged<UserInfoPageDto>> GetUserInfoPage([FromBody] GetUserInfoPage getPage)
         {
             return await _userInfoService.GetUserInfoPage(getPage);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 国籍下拉")]
-        public async Task<Result<List<NationalityDropDto>>> GetNationalityDropDown()
-        {
-            return await _userInfoService.GetNationalityDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 职业下拉")]
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
-        {
-            return await _userInfoService.GetLaborDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            return await _userInfoService.GetDepartmentDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 职级下拉")]
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
-        {
-            return await _userInfoService.GetUserPositionDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 角色下拉")]
-        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
-        {
-            return await _userInfoService.GetRoleDropDown();
         }
 
         [HttpPost]

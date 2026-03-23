@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using Minio.DataModel.Notification;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
@@ -9,7 +8,6 @@ using SystemAdmin.Model.FormBusiness.FormWorkflow.Queries;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto;
 
 namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
 {
@@ -22,6 +20,176 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         {
             _db = db;
             _lang = lang;
+        }
+
+        /// <summary>
+        /// 表单组别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()
+        {
+            return await _db.Queryable<FormGroupEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(formgroup => formgroup.SortOrder)
+                            .Select(formgroup => new FormGroupDropDto
+                            {
+                                FormGroupId = formgroup.FormGroupId,
+                                FormGroupName = _lang.Locale == "zh-CN"
+                                                ? formgroup.FormGroupNameCn
+                                                : formgroup.FormGroupNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 表单类型下拉
+        /// </summary>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        public async Task<List<FormTypeDropDto>> GetFormTypeDropDown(long groupId)
+        {
+            return await _db.Queryable<FormTypeEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(formtype => formtype.FormGroupId == groupId)
+                            .OrderBy(formtype => formtype.SortOrder)
+                            .Select(formtype => new FormTypeDropDto
+                            {
+                                FormTypeId = formtype.FormTypeId,
+                                FormTypeName = _lang.Locale == "zh-CN"
+                                               ? formtype.FormTypeNameCn
+                                               : formtype.FormTypeNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 流程步骤下拉
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <returns></returns>
+        public async Task<List<WorkflowStepDropDto>> GetWorkflowStepDropDown(long formTypeId)
+        {
+            return await _db.Queryable<WorkflowStepEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(step => step.SortOrder)
+                            .Where(step => step.FormTypeId == formTypeId)
+                            .Select(step => new WorkflowStepDropDto
+                            {
+                                StepId = step.StepId,
+                                StepName = _lang.Locale == "zh-CN"
+                                           ? step.StepNameCn
+                                           : step.StepNameEn
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 步骤指派规则下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<AssignmentDropDto>> GetAssignmentDropDown()
+        {
+            return await _db.Queryable<DictionaryInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(dic => dic.DicType == "Assignment")
+                            .Select(dic => new AssignmentDropDto
+                            {
+                                AssignmentCode = dic.DicCode,
+                                AssignmentName = _lang.Locale == "zh-CN"
+                                                 ? dic.DicNameCn
+                                                 : dic.DicNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 步骤签核方式下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ApproveModeDropDto>> GetApproveModeDropDown()
+        {
+            return await _db.Queryable<DictionaryInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderByDescending(dic => dic.CreatedDate)
+                            .Where(dic => dic.DicType == "ApproveMode")
+                            .Select(dic => new ApproveModeDropDto
+                            {
+                                ApproveModeCode = dic.DicCode,
+                                ApproveModeName = _lang.Locale == "zh-CN"
+                                                  ? dic.DicNameCn
+                                                  : dic.DicNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 部门树下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        {
+            return await _db.Queryable<DepartmentInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .OrderBy(dept => dept.SortOrder)
+                            .Select((dept, deptlevel) => new DepartmentDropDto
+                            {
+                                DepartmentId = dept.DepartmentId,
+                                DepartmentName = _lang.Locale == "zh-CN"
+                                                 ? dept.DepartmentNameCn
+                                                 : dept.DepartmentNameEn,
+                                ParentId = dept.ParentId,
+                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
+        }
+
+        /// <summary>
+        /// 部门级别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDropDown()
+        {
+            return await _db.Queryable<DepartmentLevelEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(deptlevel => deptlevel.SortOrder)
+                            .Select(deptlevel => new DepartmentLevelDropDto
+                            {
+                                DepartmentLevelId = deptlevel.DepartmentLevelId,
+                                DepartmentLevelName = _lang.Locale == "zh-CN"
+                                                      ? deptlevel.DepartmentLevelNameCn
+                                                      : deptlevel.DepartmentLevelNameEn
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 职级下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
+        {
+            return await _db.Queryable<UserPositionEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(userpos => userpos.SortOrder)
+                            .Select((userpos) => new UserPositionDropDto
+                            {
+                                PositionId = userpos.PositionId,
+                                PositionName = _lang.Locale == "zh-CN"
+                                               ? userpos.PositionNameCn
+                                               : userpos.PositionNameEn
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 流程条件下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<WorkflowConditionDropDto>> GetWorkflowConditionDropDown(long formTypeId)
+        {
+            return await _db.Queryable<WorkflowConditionEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(condition => condition.CreatedDate)
+                            .Where(condition => condition.FormTypeId == formTypeId)
+                            .Select(condition => new WorkflowConditionDropDto
+                            {
+                                ConditionId = condition.ConditionId,
+                                ConditionName = _lang.Locale == "zh-CN"
+                                                ? condition.ConditionNameCn
+                                                : condition.ConditionNameEn,
+                            }).ToListAsync();
         }
 
         /// <summary>
@@ -137,12 +305,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 删除步骤流程分支
         /// </summary>
-        /// <param name="stepId"></param>
+        /// <param name="branChId"></param>
         /// <returns></returns>
-        public async Task<int> DeleteWorkflowStepBranch(long stepId)
+        public async Task<int> DeleteWorkflowStepBranch(long branChId)
         {
             return await _db.Deleteable<WorkflowStepBranchEntity>()
-                            .Where(stepcondition => stepcondition.StepId == stepId)
+                            .Where(stepcondition => stepcondition.BranChId == branChId)
                             .ExecuteCommandAsync();
         }
 
@@ -180,44 +348,47 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 查询步骤及流程分支列表
         /// </summary>
-        /// <param name="getPage"></param>
+        /// <param name="formTypeId"></param>
         /// <returns></returns>
-        public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList(GetWorkflowStepList getList)
+        public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList(string formTypeId)
         {
             var page = await _db.Queryable<WorkflowStepEntity>()
-                                    .With(SqlWith.NoLock)
-                                    .InnerJoin<DictionaryInfoEntity>((stepinfo, dic) => dic.DicType == "Assignment" && stepinfo.Assignment == dic.DicCode)
-                                    .Where((stepinfo, dic) => stepinfo.FormTypeId == long.Parse(getList.FormTypeId))
-                                    .OrderBy((stepinfo, dic) => stepinfo.CreatedDate)
-                                    .Select((stepinfo, dic) => new WorkflowStepListDto()
-                                    {
-                                        StepId = stepinfo.StepId,
-                                        StepName = _lang.Locale == "zh-CN"
-                                                   ? stepinfo.StepNameCn
-                                                   : stepinfo.StepNameEn,
-                                        Assignment = dic.DicCode,
-                                        AssignmentName = _lang.Locale == "zh-CN"
-                                                   ? dic.DicNameCn
-                                                   : dic.DicNameEn,
-                                    }).ToListAsync();
+                                .With(SqlWith.NoLock)
+                                .InnerJoin<DictionaryInfoEntity>((stepinfo, dic) => dic.DicType == "Assignment" && stepinfo.Assignment == dic.DicCode)
+                                .Where((stepinfo, dic) => stepinfo.FormTypeId == long.Parse(formTypeId))
+                                .OrderBy((stepinfo, dic) => stepinfo.SortOrder)
+                                .Select((stepinfo, dic) => new WorkflowStepListDto()
+                                {
+                                    StepId = stepinfo.StepId,
+                                    StepName = _lang.Locale == "zh-CN"
+                                               ? stepinfo.StepNameCn
+                                               : stepinfo.StepNameEn,
+                                    Assignment = dic.DicCode,
+                                    AssignmentName = _lang.Locale == "zh-CN"
+                                               ? dic.DicNameCn
+                                               : dic.DicNameEn,
+                                }).ToListAsync();
 
             // 循环查询步骤流程分支信息
             foreach (var stepItem in page)
             {
                 var stepConList = await _db.Queryable<WorkflowStepBranchEntity>()
                                            .With(SqlWith.NoLock)
-                                           .LeftJoin<WorkflowConditionEntity>((stepBranch, condition) => stepBranch.ConditionId == condition.ConditionId)
-                                           .LeftJoin<WorkflowStepEntity>((stepBranch, condition, nextStep) => stepBranch.NextStepId == nextStep.StepId)
-                                           .Where((stepBranch, condition, nextStep) => stepBranch.StepId == stepItem.StepId)
-                                           .Select((stepBranch, condition, nextStep) => new WorkflowStepBranchDto()
+                                           .LeftJoin<WorkflowConditionEntity>((stepbranch, condition) => stepbranch.ConditionId == condition.ConditionId)
+                                           .LeftJoin<WorkflowStepEntity>((stepbranch, condition, nextStep) => stepbranch.NextStepId == nextStep.StepId)
+                                           .Where((stepbranch, condition, nextStep) => stepbranch.StepId == stepItem.StepId)
+                                           .OrderByDescending((stepbranch, condition, nextStep) => stepbranch.CreatedDate)
+                                           .OrderByDescending((stepbranch, condition, nextStep) => stepbranch.ExecuteMatched)
+                                           .Select((stepbranch, condition, nextStep) => new WorkflowStepBranchDto()
                                            {
+                                               BranchId = stepbranch.BranChId,
                                                StepId = stepItem.StepId,
                                                ConditionId = condition.ConditionId,
                                                ConditionName = _lang.Locale == "zh-CN"
                                                                ? condition.ConditionNameCn
                                                                : condition.ConditionNameEn,
-                                               ExecuteMatched = stepBranch.ExecuteMatched,
-                                               NextStepId = stepBranch.NextStepId,
+                                               ExecuteMatched = stepbranch.ExecuteMatched,
+                                               NextStepId = stepbranch.NextStepId,
                                                NextStepName = _lang.Locale == "zh-CN"
                                                                ? nextStep.StepNameCn
                                                                : nextStep.StepNameEn
@@ -322,149 +493,34 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
+        /// 新增步骤流程分支
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<int> UpdateWorkflowStepBranch(WorkflowStepBranchEntity entity)
+        {
+            return await _db.Updateable(entity)
+                            .IgnoreColumns(stepbranch => new
+                            {
+                                stepbranch.BranChId,
+                                stepbranch.CreatedBy,
+                                stepbranch.CreatedDate,
+                            }).Where(stepbranch=> stepbranch.BranChId==entity.BranChId)
+                            .ExecuteCommandAsync();
+        }
+
+        /// <summary>
         /// 查询步骤流程分支实体
         /// </summary>
-        /// <param name="stepId"></param>
-        /// <param name="conditionId"></param>
+        /// <param name="branChId"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepBranchDto> GetWorkflowStepBranchEntity(long stepId, long conditionId)
+        public async Task<WorkflowStepBranchDto> GetWorkflowStepBranchEntity(long branChId)
         {
             var entity = await _db.Queryable<WorkflowStepBranchEntity>()
                                   .With(SqlWith.NoLock)
-                                  .Where(condition => condition.StepId == stepId && condition.ConditionId == conditionId)
+                                  .Where(condition => condition.BranChId == branChId)
                                   .FirstAsync();
             return entity.Adapt<WorkflowStepBranchDto>();
-        }
-       
-        /// <summary>
-        /// 表单组别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()
-        {
-            return await _db.Queryable<FormGroupEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(formgroup => formgroup.SortOrder)
-                            .Select(formgroup => new FormGroupDropDto
-                            {
-                                FormGroupId = formgroup.FormGroupId,
-                                FormGroupName = _lang.Locale == "zh-CN"
-                                                ? formgroup.FormGroupNameCn
-                                                : formgroup.FormGroupNameEn,
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 表单类型下拉
-        /// </summary>
-        /// <param name="groupId"></param>
-        /// <returns></returns>
-        public async Task<List<FormTypeDropDto>> GetFormTypeDropDown(long groupId)
-        {
-            return await _db.Queryable<FormTypeEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(formtype => formtype.FormGroupId == groupId)
-                            .OrderBy(formtype => formtype.SortOrder)
-                            .Select(formtype => new FormTypeDropDto
-                            {
-                                FormTypeId = formtype.FormTypeId,
-                                FormTypeName = _lang.Locale == "zh-CN"
-                                               ? formtype.FormTypeNameCn
-                                               : formtype.FormTypeNameEn,
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 步骤指派规则下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<AssignmentDropDto>> GetAssignmentDropDown()
-        {
-            return await _db.Queryable<DictionaryInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(dic => dic.DicType == "Assignment")
-                            .Select(dic => new AssignmentDropDto
-                            {
-                                AssignmentCode = dic.DicCode,
-                                AssignmentName = _lang.Locale == "zh-CN"
-                                                 ? dic.DicNameCn
-                                                 : dic.DicNameEn,
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 步骤签核方式下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<ApproveModeDropDto>> GetApproveModeDropDown()
-        {
-            return await _db.Queryable<DictionaryInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderByDescending(dic => dic.CreatedDate)
-                            .Where(dic => dic.DicType == "ApproveMode")
-                            .Select(dic => new ApproveModeDropDto
-                            {
-                                ApproveModeCode = dic.DicCode,
-                                ApproveModeName = _lang.Locale == "zh-CN"
-                                                  ? dic.DicNameCn
-                                                  : dic.DicNameEn,
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 部门树下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
-        {
-            return await _db.Queryable<DepartmentInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                            .OrderBy(dept => dept.SortOrder)
-                            .Select((dept, deptlevel) => new DepartmentDropDto
-                            {
-                                DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-CN"
-                                                 ? dept.DepartmentNameCn
-                                                 : dept.DepartmentNameEn,
-                                ParentId = dept.ParentId,
-                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
-        }
-
-        /// <summary>
-        /// 部门级别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDropDown()
-        {
-            return await _db.Queryable<DepartmentLevelEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(deptlevel => deptlevel.SortOrder)
-                            .Select(deptlevel => new DepartmentLevelDropDto
-                            {
-                                DepartmentLevelId = deptlevel.DepartmentLevelId,
-                                DepartmentLevelName = _lang.Locale == "zh-CN"
-                                                      ? deptlevel.DepartmentLevelNameCn
-                                                      : deptlevel.DepartmentLevelNameEn
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 职级下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
-        {
-            return await _db.Queryable<UserPositionEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(userpos => userpos.SortOrder)
-                            .Select((userpos) => new UserPositionDropDto
-                            {
-                                PositionId = userpos.PositionId,
-                                PositionName = _lang.Locale == "zh-CN"
-                                               ? userpos.PositionNameCn
-                                               : userpos.PositionNameEn
-                            }).ToListAsync();
         }
 
         /// <summary>
@@ -507,8 +563,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
             // 排序
             query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
 
-            var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserWorkflowStepDto
-            {
+            var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserInfoDto
+                                  {
                                      UserId = user.UserId,
                                      UserNo = user.UserNo,
                                      UserName = _lang.Locale == "zh-CN"
@@ -529,26 +585,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                      IsAgent = user.IsAgent,
                                      IsApproval = user.IsApproval,
                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<UserInfoDto>.Ok(page.Adapt<List<UserInfoDto>>(), totalCount, "");
-        }
-
-        /// <summary>
-        /// 条件下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<WorkflowConditionDropDto>> GetConditionDropDown(long formTypeId)
-        {
-            return await _db.Queryable<WorkflowConditionEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(condition => condition.CreatedDate)
-                            .Where(condition => condition.FormTypeId == formTypeId)
-                            .Select(condition => new WorkflowConditionDropDto
-                            {
-                                ConditionId = condition.ConditionId,
-                                ConditionName = _lang.Locale == "zh-CN"
-                                                ? condition.ConditionNameCn
-                                                : condition.ConditionNameEn,
-                            }).ToListAsync();
+            return ResultPaged<UserInfoDto>.Ok(page, totalCount, "");
         }
     }
 }

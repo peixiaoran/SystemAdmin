@@ -28,6 +28,42 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
+        /// 部门下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            try
+            {
+                var drop = await _deptInfoRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 部门级别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
+        {
+            try
+            {
+                var drop = await _deptInfoRepository.GetDepartmentLevelDropDown();
+                return Result<List<DepartmentLevelDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DepartmentLevelDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
         /// 新增部门信息
         /// </summary>
         /// <param name="upsert"></param>
@@ -238,42 +274,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<List<DepartmentInfoDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 部门下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            try
-            {
-                var drop = await _deptInfoRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 部门级别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
-        {
-            try
-            {
-                var drop = await _deptInfoRepository.GetDepartmentLevelDropDown();
-                return Result<List<DepartmentLevelDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<DepartmentLevelDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
     }

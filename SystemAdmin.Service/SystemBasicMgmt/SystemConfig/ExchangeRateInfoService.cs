@@ -27,6 +27,25 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
             _localization = localization;
         }
 
+
+        /// <summary>
+        /// 币别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<CurrencyInfoDropDto>>> GetCurrencyInfoDropDown()
+        {
+            try
+            {
+                var drop = await _ExchangeRateRepository.GetCurrencyInfoDropDown();
+                return Result<List<CurrencyInfoDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<CurrencyInfoDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
         /// <summary>
         /// 新增汇率对照信息
         /// </summary>
@@ -181,24 +200,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<ExchangeRateDto>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 查询币别下拉选单
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<CurrencyInfoDropDto>>> GetCurrencyInfoDropDown()
-        {
-            try
-            {
-                var drop = await _ExchangeRateRepository.GetCurrencyInfoDropDown();
-                return Result<List<CurrencyInfoDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<CurrencyInfoDropDto>>.Failure(500, ex.Message);
             }
         }
     }

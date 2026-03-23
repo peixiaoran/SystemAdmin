@@ -19,6 +19,24 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         }
 
         /// <summary>
+        /// 表单组别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()
+        {
+            return await _db.Queryable<FormGroupEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(formgroup => formgroup.SortOrder)
+                            .Select(formgroup => new FormGroupDropDto
+                            {
+                                FormGroupId = formgroup.FormGroupId,
+                                FormGroupName = _lang.Locale == "zh-CN"
+                                                ? formgroup.FormGroupNameCn
+                                                : formgroup.FormGroupNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
         /// 查询申请表单分页
         /// </summary>
         /// <param name="getPage"></param>
@@ -44,24 +62,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                                                    : formtype.DescriptionEn,
                                 }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<ApplyFormInfoDto>.Ok(page, totalCount);
-        }
-
-        /// <summary>
-        /// 表单组别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()
-        {
-            return await _db.Queryable<FormGroupEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(formgroup => formgroup.SortOrder)
-                            .Select(formgroup => new FormGroupDropDto
-                            {
-                                FormGroupId = formgroup.FormGroupId,
-                                FormGroupName = _lang.Locale == "zh-CN"
-                                                ? formgroup.FormGroupNameCn
-                                                : formgroup.FormGroupNameEn,
-                            }).ToListAsync();
         }
     }
 }

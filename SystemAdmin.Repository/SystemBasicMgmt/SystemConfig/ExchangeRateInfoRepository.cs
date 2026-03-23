@@ -21,6 +21,24 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         }
 
         /// <summary>
+        /// 币别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<CurrencyInfoDropDto>> GetCurrencyInfoDropDown()
+        {
+            return await _db.Queryable<CurrencyInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(currency => currency.SortOrder)
+                            .Select(currency => new CurrencyInfoDropDto
+                            {
+                                CurrencyCode = currency.CurrencyCode,
+                                CurrencyName = _lang.Locale == "zh-CN"
+                                               ? currency.CurrencyNameCn
+                                               : currency.CurrencyNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
         /// 新增汇率信息
         /// </summary>
         /// <param name="entity"></param>
@@ -101,24 +119,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                                               .Where(rate => rate.CurrencyCode == getEntity.CurrencyCode && rate.ExchangeCurrencyCode == getEntity.ExchangeCurrencyCode && getEntity.YearMonth == getEntity.YearMonth)
                                               .FirstAsync();
             return entity.Adapt<ExchangeRateDto>();
-        }
-
-        /// <summary>
-        /// 币别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<CurrencyInfoDropDto>> GetCurrencyInfoDropDown()
-        {
-            return await _db.Queryable<CurrencyInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(currency => currency.SortOrder)
-                            .Select(currency => new CurrencyInfoDropDto
-                            {
-                                CurrencyCode = currency.CurrencyCode,
-                                CurrencyName = _lang.Locale == "zh-CN"
-                                               ? currency.CurrencyNameCn
-                                               : currency.CurrencyNameEn,
-                            }).ToListAsync();
         }
 
         /// <summary>

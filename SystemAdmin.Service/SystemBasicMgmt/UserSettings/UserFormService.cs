@@ -29,6 +29,24 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
+        /// 部门下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            try
+            {
+                var drop = await _userFormBindRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
         /// 查询员工分页
         /// </summary>
         /// <param name="getPage"></param>
@@ -102,24 +120,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 部门下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            try
-            {
-                var drop = await _userFormBindRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
     }

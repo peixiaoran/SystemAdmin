@@ -153,4 +153,25 @@
   <data name="WorkflowStepBranchUpdateSuccess" xml:space="preserve">
     <value>步骤流程分支修改成功</value>
   </data>
+  <data name="WorkflowConditionInsertSuccess" xml:space="preserve">
+    <value>条件新增成功</value>
+  </data>
+  <data name="WorkflowConditionInsertFailed" xml:space="preserve">
+    <value>条件新增失败</value>
+  </data>
+  <data name="WorkflowConditionNotDelete" xml:space="preserve">
+    <value>条件已绑定流程分支，请先移除对应分支条件再删除</value>
+  </data>
+  <data name="WorkflowConditionDeleteSuccess" xml:space="preserve">
+    <value>条件删除成功</value>
+  </data>
+  <data name="WorkflowConditionDeleteFailed" xml:space="preserve">
+    <value>条件删除失败</value>
+  </data>
+  <data name="WorkflowConditionUpdateSuccess" xml:space="preserve">
+    <value>条件修改成功</value>
+  </data>
+  <data name="WorkflowConditionUpdateFailed" xml:space="preserve">
+    <value>条件修改失败</value>
+  </data>
 </root>

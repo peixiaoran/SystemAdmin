@@ -52,6 +52,14 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
+        [EndpointSummary("[请假单] 查询表单审批流程")]
+        public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser([FromForm] string fromId)
+        {
+            return await _leaveFormService.GetWorkflowAllApproveUser(fromId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 上传附件")]
         public async Task<Result<List<FormFileDto>>> UploadFile([FromForm] string formId, List<IFormFile> files)
         {
@@ -64,14 +72,6 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         public async Task<Result<int>> DeleteFile([FromForm] string fileId, [FromForm] string filePath)
         {
             return await _leaveFormService.DeleteFile(fileId, filePath);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 查询表单审批流程")]
-        public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser([FromForm] string fromId)
-        {
-            return await _leaveFormService.GetWorkflowAllApproveUser(fromId);
         }
     }
 }

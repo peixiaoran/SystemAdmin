@@ -21,6 +21,22 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
+        [EndpointSummary("[员工信息] 部门下拉")]
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            return await _departmentInfoService.GetDepartmentDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-基本信息模块")]
+        [EndpointSummary("[部门信息] 部门级别下拉")]
+        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
+        {
+            return await _departmentInfoService.GetDepartmentLevelDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[部门信息] 新增部门信息")]
         public async Task<Result<int>> InsertDepartmentInfo([FromBody] DepartmentInfoUpsert upsert)
         {
@@ -57,22 +73,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         public async Task<Result<List<DepartmentInfoDto>>> GetDepartmentInfoTree([FromBody] GetDepartmentTree getPage)
         {
             return await _departmentInfoService.GetDepartmentInfoTree(getPage);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            return await _departmentInfoService.GetDepartmentDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[部门信息] 部门级别下拉")]
-        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
-        {
-            return await _departmentInfoService.GetDepartmentLevelDropDown();
         }
     }
 }

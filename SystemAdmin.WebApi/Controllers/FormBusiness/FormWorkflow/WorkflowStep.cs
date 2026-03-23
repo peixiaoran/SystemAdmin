@@ -22,78 +22,6 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 新增步骤")]
-        public async Task<Result<int>> InsertWorkflowStep([FromBody] WorkflowStepUpsert upsert)
-        {
-            return await _workflowStepService.InsertWorkflowStep(upsert);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 删除步骤")]
-        public async Task<Result<int>> DeleteWorkflowStep([FromForm] string stepId)
-        {
-            return await _workflowStepService.DeleteWorkflowStep(stepId);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 修改步骤")]
-        public async Task<Result<int>> UpdateWorkflowStep([FromBody] WorkflowStepUpsert upsert)
-        {
-            return await _workflowStepService.UpdateWorkflowStep(upsert);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 查询步骤及流程分支列表")]
-        public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList([FromBody] GetWorkflowStepList getList)
-        {
-            return await _workflowStepService.GetWorkflowStepList(getList);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 查询步骤实体")]
-        public async Task<Result<WorkflowStepDto>> GetWorkflowStepEntity([FromForm] string stepId)
-        {
-            return await _workflowStepService.GetWorkflowStepEntity(stepId);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 查询步骤流程分支实体")]
-        public async Task<Result<WorkflowStepBranchDto>> GetWorkflowStepBranchEntity([FromForm] string stepId, string conditionId)
-        {
-            return await _workflowStepService.GetWorkflowStepBranchEntity(stepId, conditionId);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 新增步骤流程分支")]
-        public async Task<Result<int>> InsertWorkflowStepBranch([FromBody] WorkflowStepBranchUpsert upsert)
-        {
-            return await _workflowStepService.InsertWorkflowStepBranch(upsert);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 删除步骤流程分支")]
-        public async Task<Result<int>> DeleteWorkflowStepBranch([FromForm] string stepId, [FromForm] string conditionId)
-        {
-            return await _workflowStepService.DeleteWorkflowStepBranch(stepId, conditionId);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 修改步骤流程分支")]
-        public async Task<Result<int>> UpdateWorkflowStepBranch([FromBody] WorkflowStepBranchUpsert upsert)
-        {
-            return await _workflowStepService.UpdateWorkflowStepBranch(upsert);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单流程步骤] 表单组别下拉")]
         public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
         {
@@ -106,6 +34,14 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown([FromForm] string formGroupId)
         {
             return await _workflowStepService.GetFormTypeDropDown(formGroupId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 流程步骤下拉")]
+        public async Task<Result<List<WorkflowStepDropDto>>> GetWorkflowStepDropDown([FromForm] string formTypeId)
+        {
+            return await _workflowStepService.GetWorkflowStepDropDown(formTypeId);
         }
 
         [HttpPost]
@@ -150,18 +86,90 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 查询员工信息分页")]
-        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
+        [EndpointSummary("[表单流程步骤] 流程条件下拉")]
+        public async Task<Result<List<WorkflowConditionDropDto>>> GetConditionDropDown([FromForm] string formTypeId)
         {
-            return await _workflowStepService.GetUserInfoPage(getPage);
+            return await _workflowStepService.GetWorkflowConditionDropDown(formTypeId);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程步骤] 条件下拉")]
-        public async Task<Result<List<WorkflowConditionDropDto>>> GetConditionDropDown([FromForm] string formTypeId)
+        [EndpointSummary("[表单流程步骤] 新增步骤")]
+        public async Task<Result<int>> InsertWorkflowStep([FromBody] WorkflowStepUpsert upsert)
         {
-            return await _workflowStepService.GetConditionDropDown(formTypeId);
+            return await _workflowStepService.InsertWorkflowStep(upsert);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 删除步骤")]
+        public async Task<Result<int>> DeleteWorkflowStep([FromForm] string stepId)
+        {
+            return await _workflowStepService.DeleteWorkflowStep(stepId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 修改步骤")]
+        public async Task<Result<int>> UpdateWorkflowStep([FromBody] WorkflowStepUpsert upsert)
+        {
+            return await _workflowStepService.UpdateWorkflowStep(upsert);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 查询步骤及流程分支列表")]
+        public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList([FromForm] string formTypeId)
+        {
+            return await _workflowStepService.GetWorkflowStepList(formTypeId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 查询步骤实体")]
+        public async Task<Result<WorkflowStepDto>> GetWorkflowStepEntity([FromForm] string stepId)
+        {
+            return await _workflowStepService.GetWorkflowStepEntity(stepId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 查询步骤流程分支实体")]
+        public async Task<Result<WorkflowStepBranchDto>> GetWorkflowStepBranchEntity([FromForm] string branChId)
+        {
+            return await _workflowStepService.GetWorkflowStepBranchEntity(branChId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 新增步骤流程分支")]
+        public async Task<Result<int>> InsertWorkflowStepBranch([FromBody] WorkflowStepBranchUpsert upsert)
+        {
+            return await _workflowStepService.InsertWorkflowStepBranch(upsert);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 删除步骤流程分支")]
+        public async Task<Result<int>> DeleteWorkflowStepBranch([FromForm] string branChId)
+        {
+            return await _workflowStepService.DeleteWorkflowStepBranch(branChId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 修改步骤流程分支")]
+        public async Task<Result<int>> UpdateWorkflowStepBranch([FromBody] WorkflowStepBranchUpsert upsert)
+        {
+            return await _workflowStepService.UpdateWorkflowStepBranch(upsert);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程步骤] 查询员工信息分页")]
+        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
+        {
+            return await _workflowStepService.GetUserInfoPage(getPage);
         }
     }
 }

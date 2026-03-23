@@ -26,23 +26,39 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         }
 
         /// <summary>
-        /// 请假组别下拉
+        /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
         {
-            var drop = await _PendingSubAppRepository.GetFormGroupDropDown();
-            return Result<List<FormGroupDropDto>>.Ok(drop);
+            try
+            {
+                var drop = await _PendingSubAppRepository.GetFormGroupDropDown();
+                return Result<List<FormGroupDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<FormGroupDropDto>>.Failure(500, ex.Message);
+            }
         }
 
         /// <summary>
-        /// 请假类别下拉
+        /// 表单类别下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(string formGroupId)
         {
-            var drop = await _PendingSubAppRepository.GetFormTypeDropDown(long.Parse(formGroupId));
-            return Result<List<FormTypeDropDto>>.Ok(drop);
+            try
+            {
+                var drop = await _PendingSubAppRepository.GetFormTypeDropDown(long.Parse(formGroupId));
+                return Result<List<FormTypeDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<FormTypeDropDto>>.Failure(500, ex.Message);
+            }
         }
 
         /// <summary>
@@ -51,8 +67,16 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// <returns></returns>
         public async Task<Result<List<FormStatusDropDto>>> GetFormStatusDropDown()
         {
-            var drop = await _PendingSubAppRepository.GetFormStatusDropDown();
-            return Result<List<FormStatusDropDto>>.Ok(drop);
+            try
+            {
+                var drop = await _PendingSubAppRepository.GetFormStatusDropDown();
+                return Result<List<FormStatusDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<FormStatusDropDto>>.Failure(500, ex.Message);
+            }
         }
 
         /// <summary>
@@ -61,7 +85,15 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// <returns></returns>
         public async Task<ResultPaged<PendingSubAppDto>> GetPendingSubmissionPage(GetPendingSubAppPage getpage)
         {
-            return await _PendingSubAppRepository.GetPendingSubmissionPage(getpage, _loginuser.UserId);
+            try
+            {
+                return await _PendingSubAppRepository.GetPendingSubmissionPage(getpage, _loginuser.UserId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return ResultPaged<PendingSubAppDto>.Failure(500, ex.Message);
+            }
         }
 
         /// <summary>
@@ -70,7 +102,15 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// <returns></returns>
         public async Task<ResultPaged<PendingSubAppDto>> GetPendingApprovalPage(GetPendingSubAppPage getpage)
         {
-            return await _PendingSubAppRepository.GetPendingApprovalPage(getpage, _loginuser.UserId);
+            try
+            {
+                return await _PendingSubAppRepository.GetPendingApprovalPage(getpage, _loginuser.UserId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return ResultPaged<PendingSubAppDto>.Failure(500, ex.Message);
+            }
         }
 
         /// <summary>

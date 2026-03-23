@@ -56,6 +56,11 @@
         public int ReminderIntervalMinutes { get; set; }
 
         /// <summary>
+        /// 排序
+        /// </summary>
+        public int SortOrder { get; set; }
+
+        /// <summary>
         /// 步骤组织架构新增/修改类
         /// </summary>
         public WorkflowStepOrgUpsert stepOrgUpsert { get; set; } = new WorkflowStepOrgUpsert();

@@ -15,10 +15,25 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
     public class DictionaryInfo : ControllerBase
     {
         private readonly DictionaryInfoService _dictionaryService;
-
         public DictionaryInfo(DictionaryInfoService dictionaryService)
         {
             _dictionaryService = dictionaryService;
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-系统设定模块")]
+        [EndpointSummary("[系统字典] 模块下拉")]
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        {
+            return await _dictionaryService.GetModuleDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-系统设定模块")]
+        [EndpointSummary("[系统字典] 字典类型下拉")]
+        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown([FromForm] string moduleId)
+        {
+            return await _dictionaryService.GetDicTypeDropDown(moduleId);
         }
 
         [HttpPost]
@@ -59,22 +74,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         public async Task<ResultPaged<DictionaryInfoDto>> GetDictionaryInfoPage([FromBody] GetDictionaryInfoPage getPage)
         {
             return await _dictionaryService.GetDictionaryInfoPage(getPage);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-系统设定模块")]
-        [EndpointSummary("[系统字典] 模块下拉")]
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
-        {
-            return await _dictionaryService.GetModuleDropDown();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-系统设定模块")]
-        [EndpointSummary("[系统字典] 字典类型下拉")]
-        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown([FromBody] GetDicTypeDropDown getDrop)
-        {
-            return await _dictionaryService.GetDicTypeDropDown(getDrop);
         }
     }
 }

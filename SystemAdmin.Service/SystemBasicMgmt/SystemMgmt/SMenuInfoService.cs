@@ -29,6 +29,43 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
+        /// 模块下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        {
+            try
+            {
+                var drop = await _sMenuRepository.GetModuleDropDown();
+                return Result<List<ModuleDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<ModuleDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 一级菜单下拉
+        /// </summary>
+        /// <param name="moduleId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<MenuDropDto>>> GetPMenuDropDown(string moduleId)
+        {
+            try
+            {
+                var drop = await _sMenuRepository.GetPMenuDropDown(long.Parse(moduleId));
+                return Result<List<MenuDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<MenuDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
         /// 新增菜单
         /// </summary>
         /// <param name="upsert"></param>
@@ -181,43 +218,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             {
                 _logger.LogError(ex, ex.Message);
                 return ResultPaged<MenuInfoDto>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 模块下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
-        {
-            try
-            {
-                var drop = await _sMenuRepository.GetModuleDropDown();
-                return Result<List<ModuleDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<ModuleDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 一级菜单下拉
-        /// </summary>
-        /// <param name="getDrop"></param>
-        /// <returns></returns>
-        public async Task<Result<List<MenuDropDto>>> GetPMenuDropDown(GetPMenuDropDown getDrop)
-        {
-            try
-            {
-                var drop = await _sMenuRepository.GetPMenuDropDown(long.Parse(getDrop.ModuleId));
-                return Result<List<MenuDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<MenuDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
     }

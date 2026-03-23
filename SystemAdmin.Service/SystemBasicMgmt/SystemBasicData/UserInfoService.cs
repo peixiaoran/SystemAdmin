@@ -40,6 +40,96 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
+        /// 国籍下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<NationalityDropDto>>> GetNationalityDropDown()
+        {
+            try
+            {
+                var drop = await _userInfoRepository.GetNationalityDropDown();
+                return Result<List<NationalityDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<NationalityDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 职业下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        {
+            try
+            {
+                var drop = await _userInfoRepository.GetLaborDropDown();
+                return Result<List<UserLaborDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<UserLaborDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 部门树下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            try
+            {
+                var drop = await _userInfoRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 职级下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        {
+            try
+            {
+                var drop = await _userInfoRepository.GetUserPositionDropDown();
+                return Result<List<UserPositionDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 角色下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
+        {
+            try
+            {
+                var drop = await _userInfoRepository.GetRoleDropDown();
+                return Result<List<RoleInfoDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<RoleInfoDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
         /// 上传员工头像（新增员工）
         /// </summary>
         /// <param name="file"></param>
@@ -374,95 +464,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             {
                 _logger.LogError(ex, ex.Message);
                 return ResultPaged<UserInfoPageDto>.Failure(500, ex.Message.ToString());
-            }
-        }
-        /// <summary>
-        /// 国籍字典下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<NationalityDropDto>>> GetNationalityDropDown()
-        {
-            try
-            {
-                var drop = await _userInfoRepository.GetNationalityDropDown();
-                return Result<List<NationalityDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<NationalityDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 职业下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
-        {
-            try
-            {
-                var drop = await _userInfoRepository.GetLaborDropDown();
-                return Result<List<UserLaborDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<UserLaborDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 部门树下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            try
-            {
-                var drop = await _userInfoRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 职级下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
-        {
-            try
-            {
-                var drop = await _userInfoRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 角色下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
-        {
-            try
-            {
-                var drop = await _userInfoRepository.GetRoleDropDown();
-                return Result<List<RoleInfoDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<RoleInfoDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
 

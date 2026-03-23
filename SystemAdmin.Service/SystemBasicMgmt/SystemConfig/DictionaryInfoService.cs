@@ -28,6 +28,44 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
             _localization = localization;
         }
 
+
+        /// <summary>
+        /// 模块下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        {
+            try
+            {
+                var drop = await _dictionaryRepository.GetModuleDropDown();
+                return Result<List<ModuleDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<ModuleDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 字典类型下拉
+        /// </summary>
+        /// <param name="moduleId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown(string moduleId)
+        {
+            try
+            {
+                var drop = await _dictionaryRepository.GetDicTypeDropDown(long.Parse(moduleId));
+                return Result<List<DicTypeDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DicTypeDropDto>>.Failure(500, "");
+            }
+        }
+
         /// <summary>
         /// 新增字典信息
         /// </summary>
@@ -172,42 +210,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
             {
                 _logger.LogError(ex, ex.Message);
                 return ResultPaged<DictionaryInfoDto>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 模块下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
-        {
-            try
-            {
-                var drop = await _dictionaryRepository.GetModuleDropDown();
-                return Result<List<ModuleDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<ModuleDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 字典类型下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown(GetDicTypeDropDown getDrop)
-        {
-            try
-            {
-                var drop = await _dictionaryRepository.GetDicTypeDropDown(long.Parse(getDrop.ModuleId));
-                return Result<List<DicTypeDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<DicTypeDropDto>>.Failure(500, "");
             }
         }
     }

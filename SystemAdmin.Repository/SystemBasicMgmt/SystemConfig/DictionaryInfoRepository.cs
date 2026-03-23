@@ -22,6 +22,38 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         }
 
         /// <summary>
+        /// 字典类型下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DicTypeDropDto>> GetDicTypeDropDown(long moduleId)
+        {
+            return await _db.Queryable<DictionaryInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(dic => dic.ModuleId == moduleId)
+                            .GroupBy(dic => dic.DicType)
+                            .OrderBy(dic => dic.DicType)
+                            .Select(dic => new DicTypeDropDto
+                            {
+                                DicTypeCode = dic.DicType,
+                                DicTypeName = dic.DicType,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 查询同一个字典类型下字典编码是否存在
+        /// </summary>
+        /// <param name="dicType"></param>
+        /// <param name="dicCode"></param>
+        /// <returns></returns>
+        public async Task<bool> GetDictionaryInfoIsExist(string dicType, string dicCode)
+        {
+            return await _db.Queryable<DictionaryInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(dic => dic.DicType == dicType && dic.DicCode == dicCode)
+                            .AnyAsync();
+        }
+
+        /// <summary>
         /// 新增系统字典
         /// </summary>
         /// <param name="entity"></param>
@@ -108,20 +140,20 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
             // 排序
             query = query.OrderBy((dicinfo, moduleinfo) => dicinfo.SortOrder);
 
-            var dicPage = await query.Select((dicinfo, moduleinfo) => new DictionaryInfoDto
-                                     {
-                                         DicId = dicinfo.DicId,
-                                         ModuleId = dicinfo.ModuleId,
-                                         ModuleName = _lang.Locale == "zh-CN"
-                                                      ? moduleinfo.ModuleNameCn
-                                                      : moduleinfo.ModuleNameEn,
-                                         DicType = dicinfo.DicType,
-                                         DicCode = dicinfo.DicCode,
-                                         DicNameCn = dicinfo.DicNameCn,
-                                         DicNameEn = dicinfo.DicNameEn,
-                                         SortOrder = dicinfo.SortOrder
-            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<DictionaryInfoDto>.Ok(dicPage.Adapt<List<DictionaryInfoDto>>(), totalCount, "");
+            var page = await query.Select((dicinfo, moduleinfo) => new DictionaryInfoDto
+                                  {
+                                      DicId = dicinfo.DicId,
+                                      ModuleId = dicinfo.ModuleId,
+                                      ModuleName = _lang.Locale == "zh-CN"
+                                                   ? moduleinfo.ModuleNameCn
+                                                   : moduleinfo.ModuleNameEn,
+                                      DicType = dicinfo.DicType,
+                                      DicCode = dicinfo.DicCode,
+                                      DicNameCn = dicinfo.DicNameCn,
+                                      DicNameEn = dicinfo.DicNameEn,
+                                      SortOrder = dicinfo.SortOrder
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<DictionaryInfoDto>.Ok(page.Adapt<List<DictionaryInfoDto>>(), totalCount, "");
         }
 
         /// <summary>
@@ -140,38 +172,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
                                              ? module.ModuleNameCn
                                              : module.ModuleNameEn
                             }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 字典类型下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<DicTypeDropDto>> GetDicTypeDropDown(long moduleId)
-        {
-            return await _db.Queryable<DictionaryInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(dic => dic.ModuleId == moduleId)
-                            .GroupBy(dic => dic.DicType)
-                            .OrderBy(dic => dic.DicType)
-                            .Select(dic => new DicTypeDropDto
-                            {
-                                DicTypeCode = dic.DicType,
-                                DicTypeName = dic.DicType,
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 查询同一个字典类型下字典编码是否存在
-        /// </summary>
-        /// <param name="dicType"></param>
-        /// <param name="dicCode"></param>
-        /// <returns></returns>
-        public async Task<bool> GetDictionaryInfoIsExist(string dicType, string dicCode)
-        {
-            return await _db.Queryable<DictionaryInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(dic => dic.DicType == dicType && dic.DicCode == dicCode)
-                            .AnyAsync();
         }
     }
 }

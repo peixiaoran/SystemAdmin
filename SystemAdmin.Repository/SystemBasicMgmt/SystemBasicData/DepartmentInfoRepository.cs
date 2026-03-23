@@ -20,6 +20,45 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             _lang = lang;
         }
 
+
+        /// <summary>
+        /// 部门树下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        {
+            return await _db.Queryable<DepartmentInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .OrderBy(dept => dept.SortOrder)
+                            .Select((dept, deptlevel) => new DepartmentDropDto
+                            {
+                                DepartmentId = dept.DepartmentId,
+                                DepartmentName = _lang.Locale == "zh-CN"
+                                                 ? dept.DepartmentNameCn
+                                                 : dept.DepartmentNameEn,
+                                ParentId = dept.ParentId,
+                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
+        }
+
+        /// <summary>
+        /// 部门级别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDropDown()
+        {
+            return await _db.Queryable<DepartmentLevelEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(deptlevel => deptlevel.SortOrder)
+                            .Select(deptlevel => new DepartmentLevelDropDto
+                            {
+                                DepartmentLevelId = deptlevel.DepartmentLevelId,
+                                DepartmentLevelName = _lang.Locale == "zh-CN"
+                                                      ? deptlevel.DepartmentLevelNameCn
+                                                      : deptlevel.DepartmentLevelNameEn
+                            }).ToListAsync();
+        }
+
         /// <summary>
         /// 新增部门信息
         /// </summary>
@@ -176,44 +215,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             }
             var deptTree = BuildTree(deptList);
             return deptTree;
-        }
-
-        /// <summary>
-        /// 部门树下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
-        {
-            return await _db.Queryable<DepartmentInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                            .OrderBy(dept => dept.SortOrder)
-                            .Select((dept, deptlevel) => new DepartmentDropDto
-                            {
-                                DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-CN"
-                                                 ? dept.DepartmentNameCn
-                                                 : dept.DepartmentNameEn,
-                                ParentId = dept.ParentId,
-                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
-        }
-
-        /// <summary>
-        /// 部门级别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDropDown()
-        {
-            return await _db.Queryable<DepartmentLevelEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(deptlevel => deptlevel.SortOrder)
-                            .Select(deptlevel => new DepartmentLevelDropDto
-                            {
-                                DepartmentLevelId = deptlevel.DepartmentLevelId,
-                                DepartmentLevelName = _lang.Locale == "zh-CN"
-                                                      ? deptlevel.DepartmentLevelNameCn
-                                                      : deptlevel.DepartmentLevelNameEn
-                            }).ToListAsync();
         }
 
         /// <summary>

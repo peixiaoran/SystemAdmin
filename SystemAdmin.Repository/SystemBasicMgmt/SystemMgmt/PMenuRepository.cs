@@ -21,6 +21,24 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
+        /// 模块下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ModuleDropDto>> GetModuleDropDown()
+        {
+            return await _db.Queryable<ModuleInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(module => module.SortOrder)
+                            .Select(module => new ModuleDropDto
+                            {
+                                ModuleId = module.ModuleId,
+                                ModuleName = _lang.Locale == "zh-CN"
+                                             ? module.ModuleNameCn
+                                             : module.ModuleNameEn
+                            }).ToListAsync();
+        }
+
+        /// <summary>
         /// 新增一级菜单
         /// </summary>
         /// <param name="entity"></param>
@@ -158,41 +176,23 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             // 排序
             query = query.OrderBy(pmenu => pmenu.SortOrder);
 
-            var pmenuPage = await query.Select((pmenu, dic) => new MenuInfoDto
-                                       {
-                                           MenuId = pmenu.MenuId,
-                                           MenuCode = pmenu.MenuCode,
-                                           MenuNameCn = pmenu.MenuNameCn,
-                                           MenuNameEn = pmenu.MenuNameEn,
-                                           MenuType = pmenu.MenuType,
-                                           MenuTypeName = _lang.Locale == "zh-CN"
-                                                          ? dic.DicNameCn
-                                                          : dic.DicNameEn,
-                                           MenuIcon = pmenu.MenuIcon,
-                                           SortOrder = pmenu.SortOrder,
-                                           IsVisible = pmenu.IsVisible,
-                                           Path = pmenu.Path,
-                                           Remark = pmenu.Remark,
-                                       }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<MenuInfoDto>.Ok(pmenuPage, totalCount, "");
-        }
-
-        /// <summary>
-        /// 模块下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<ModuleDropDto>> GetModuleDropDown()
-        {
-            return await _db.Queryable<ModuleInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(module => module.SortOrder)
-                            .Select(module => new ModuleDropDto
-                            {
-                                ModuleId = module.ModuleId,
-                                ModuleName = _lang.Locale == "zh-CN"
-                                             ? module.ModuleNameCn
-                                             : module.ModuleNameEn
-                            }).ToListAsync();
+            var page = await query.Select((pmenu, dic) => new MenuInfoDto
+                                  {
+                                      MenuId = pmenu.MenuId,
+                                      MenuCode = pmenu.MenuCode,
+                                      MenuNameCn = pmenu.MenuNameCn,
+                                      MenuNameEn = pmenu.MenuNameEn,
+                                      MenuType = pmenu.MenuType,
+                                      MenuTypeName = _lang.Locale == "zh-CN"
+                                                     ? dic.DicNameCn
+                                                     : dic.DicNameEn,
+                                      MenuIcon = pmenu.MenuIcon,
+                                      SortOrder = pmenu.SortOrder,
+                                      IsVisible = pmenu.IsVisible,
+                                      Path = pmenu.Path,
+                                      Remark = pmenu.Remark,
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<MenuInfoDto>.Ok(page, totalCount, "");
         }
     }
 }

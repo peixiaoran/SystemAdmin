@@ -31,6 +31,60 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
+        /// 职业下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        {
+            try
+            {
+                var drop = await _personalInfoRepository.GetLaborDropDown();
+                return Result<List<UserLaborDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<UserLaborDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 部门下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            try
+            {
+                var drop = await _personalInfoRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 角色下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
+        {
+            try
+            {
+                var drop = await _personalInfoRepository.GetRoleDropDown();
+                return Result<List<RoleInfoDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<RoleInfoDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
         /// 上传员工头像
         /// </summary>
         /// <param name="userId"></param>
@@ -78,7 +132,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 return Result<string>.Failure(500, _localization.ReturnMsg($"{_this}UploadFailed"));
             }
         }
-
 
         /// <summary>
         /// 查询个人信息实体
@@ -163,42 +216,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 职业下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
-        {
-            try
-            {
-                var drop = await _personalInfoRepository.GetLaborDropDown();
-                return Result<List<UserLaborDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<UserLaborDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 部门下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            try
-            {
-                var drop = await _personalInfoRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
         /// 查询职级列表
         /// </summary>
         /// <returns></returns>
@@ -213,24 +230,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 角色下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
-        {
-            try
-            {
-                var drop = await _personalInfoRepository.GetRoleDropDown();
-                return Result<List<RoleInfoDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<RoleInfoDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
     }

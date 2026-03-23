@@ -21,7 +21,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
     public class LeaveFormService
     {
         private readonly CurrentUser _loginuser;
-        private readonly ILogger<ControlInfoService> _logger;
+        private readonly ILogger<LeaveFormService> _logger;
         private readonly SqlSugarScope _db;
         private readonly FormBeforeStart _formBeforeStart;
         private readonly MinioService _minioService;
@@ -30,7 +30,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         //private readonly string _this = "FormBusiness.Forms.LeaveForm";
         private readonly string _publicthis = "FormBusiness.Forms.";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, MinioService minioService, FormBeforeStart formBeforeStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, MinioService minioService, FormBeforeStart formBeforeStart, LeaveFormRepository leaveFormRepository, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
@@ -47,8 +47,8 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// <returns></returns>
         public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDropDown()
         {
-            var leaveTypeDrop = await _leaveFormRepository.GetLeaveTypeDropDown();
-            return Result<List<LeaveTypeDropDto>>.Ok(leaveTypeDrop);
+            var drop = await _leaveFormRepository.GetLeaveTypeDropDown();
+            return Result<List<LeaveTypeDropDto>>.Ok(drop);
         }
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     FormNo = initForm.FormNo,
                     ApplicantUserId = _loginuser.UserId,
                     LeaveTypeCode = "",
-                    LeaveStartTime = null,
-                    LeaveEndTime = null,
+                    LeaveStartTime = DateTime.Now,
+                    LeaveEndTime = DateTime.Now,
                     LeaveReason = "",
                     LeaveHours = 0,
                     AgentUserNo = "",
@@ -158,6 +158,25 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<LeaveFormDto>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 查询表单审批流程
+        /// </summary>
+        /// <param name="fromId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser(string fromId)
+        {
+            try
+            {
+                var approveUser = await _formBeforeStart.GetWorkflowAllApproveUser(long.Parse(fromId));
+                return Result<List<WorkflowApproveUser>>.Ok(approveUser);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<WorkflowApproveUser>>.Failure(500, ex.Message);
             }
         }
 
@@ -247,25 +266,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, _localization.ReturnMsg($"{_publicthis}DeleteFileFailed"));
-            }
-        }
-
-        /// <summary>
-        /// 查询表单审批流程
-        /// </summary>
-        /// <param name="fromId"></param>
-        /// <returns></returns>
-        public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser(string fromId)
-        {
-            try
-            {
-                var appUser = await _formBeforeStart.GetWorkflowAllApproveUser(long.Parse(fromId));
-                return Result<List<WorkflowApproveUser>>.Ok(appUser);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<WorkflowApproveUser>>.Failure(500, ex.Message);
             }
         }
     }

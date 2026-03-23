@@ -23,6 +23,86 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
+        /// 职业下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<UserLaborDropDto>> GetLaborDropDown()
+        {
+            var query = _db.Queryable<UserLaborEntity>().With(SqlWith.NoLock);
+            if (_lang.Locale == "zh-CN")
+            {
+                query = query.OrderBy(labor => labor.LaborNameCn);
+            }
+            else
+            {
+                query = query.OrderBy(labor => labor.LaborNameEn);
+            }
+
+            return await query.Select(labor => new UserLaborDropDto
+            {
+                LaborId = labor.LaborId,
+                LaborName = _lang.Locale == "zh-CN"
+                            ? labor.LaborNameCn
+                            : labor.LaborNameEn
+            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 部门树下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        {
+            return await _db.Queryable<DepartmentInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .OrderBy(dept => dept.SortOrder)
+                            .Select((dept, deptlevel) => new DepartmentDropDto
+                            {
+                                DepartmentId = dept.DepartmentId,
+                                DepartmentName = _lang.Locale == "zh-CN"
+                                                 ? dept.DepartmentNameCn
+                                                 : dept.DepartmentNameEn,
+                                ParentId = dept.ParentId,
+                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
+        }
+
+        /// <summary>
+        /// 职级下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
+        {
+            return await _db.Queryable<UserPositionEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(userpos => userpos.CreatedDate)
+                            .Select((userpos) => new UserPositionDropDto
+                            {
+                                PositionId = userpos.PositionId,
+                                PositionName = _lang.Locale == "zh-CN"
+                                               ? userpos.PositionNameCn
+                                               : userpos.PositionNameEn
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 角色下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<RoleInfoDropDto>> GetRoleDropDown()
+        {
+            return await _db.Queryable<RoleInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .Select(role => new RoleInfoDropDto
+                            {
+                                RoleId = role.RoleId,
+                                RoleName = _lang.Locale == "zh-CN"
+                                           ? role.RoleNameCn
+                                           : role.RoleNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
         /// 查询个人信息实体
         /// </summary>
         /// <param name="loginUserId"></param>
@@ -104,86 +184,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                 ModifiedDate = DateTime.Now
                             }).Where(user => user.UserId == userId)
                             .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 职业下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<UserLaborDropDto>> GetLaborDropDown()
-        {
-            var query = _db.Queryable<UserLaborEntity>().With(SqlWith.NoLock);
-            if (_lang.Locale == "zh-CN")
-            {
-                query = query.OrderBy(labor => labor.LaborNameCn);
-            }
-            else
-            {
-                query = query.OrderBy(labor => labor.LaborNameEn);
-            }
-
-            return await query.Select(labor => new UserLaborDropDto
-            {
-                LaborId = labor.LaborId,
-                LaborName = _lang.Locale == "zh-CN"
-                            ? labor.LaborNameCn
-                            : labor.LaborNameEn
-            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 部门树下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
-        {
-            return await _db.Queryable<DepartmentInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                            .OrderBy(dept => dept.SortOrder)
-                            .Select((dept, deptlevel) => new DepartmentDropDto
-                            {
-                                DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-CN"
-                                                 ? dept.DepartmentNameCn
-                                                 : dept.DepartmentNameEn,
-                                ParentId = dept.ParentId,
-                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
-        }
-
-        /// <summary>
-        /// 职级下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
-        {
-            return await _db.Queryable<UserPositionEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(userpos => userpos.CreatedDate)
-                            .Select((userpos) => new UserPositionDropDto
-                            {
-                                PositionId = userpos.PositionId,
-                                PositionName = _lang.Locale == "zh-CN"
-                                               ? userpos.PositionNameCn
-                                               : userpos.PositionNameEn
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 角色下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<RoleInfoDropDto>> GetRoleDropDown()
-        {
-            return await _db.Queryable<RoleInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Select(role => new RoleInfoDropDto
-                            {
-                                RoleId = role.RoleId,
-                                RoleName = _lang.Locale == "zh-CN"
-                                           ? role.RoleNameCn
-                                           : role.RoleNameEn,
-                            }).ToListAsync();
         }
 
         /// <summary>

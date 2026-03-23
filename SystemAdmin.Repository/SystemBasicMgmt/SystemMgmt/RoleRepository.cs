@@ -233,6 +233,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <summary>
         /// 角色模块下拉
         /// </summary>
+        /// <param name="roleId"></param>
         /// <returns></returns>
         public async Task<List<RoleModuleDropDto>> GetRoleModuleDropDown(long roleId)
         {

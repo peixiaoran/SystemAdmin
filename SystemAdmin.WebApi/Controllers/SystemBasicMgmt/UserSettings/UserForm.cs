@@ -22,6 +22,14 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
+        [EndpointSummary("[员工表单绑定] 部门下拉")]
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            return await _userFormBindService.GetDepartmentDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工表单绑定] 查询员工分页")]
         public async Task<ResultPaged<UserFormDto>> GetUserInfoPage([FromBody] GetUserFormPage getPage)
         {
@@ -42,14 +50,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         public async Task<Result<int>> UpdateUserForm([FromBody] UserFormUpsert upsert)
         {
             return await _userFormBindService.UpdateUserForm(upsert);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-员工相关配置")]
-        [EndpointSummary("[员工表单绑定] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            return await _userFormBindService.GetDepartmentDropDown();
         }
     }
 }

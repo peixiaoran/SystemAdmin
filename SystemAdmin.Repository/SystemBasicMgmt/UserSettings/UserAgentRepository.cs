@@ -2,7 +2,6 @@
 using SqlSugar;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Queries;
@@ -19,6 +18,26 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         {
             _db = db;
             _lang = lang;
+        }
+
+        /// <summary>
+        /// 部门树下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        {
+            return await _db.Queryable<DepartmentInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .OrderBy((dept, deptlevel) => deptlevel.SortOrder)
+                            .Select((dept, deptlevel) => new DepartmentDropDto
+                            {
+                                DepartmentId = dept.DepartmentId,
+                                DepartmentName = _lang.Locale == "zh-CN"
+                                                 ? dept.DepartmentNameCn
+                                                 : dept.DepartmentNameEn,
+                                ParentId = dept.ParentId,
+                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
         }
 
         /// <summary>
@@ -61,29 +80,28 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             //排序
             query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
 
-            var page = await query
-            .Select((user, dept, userpos, userlabor, nation) => new UserAgentDto
-            {
-                UserId = user.UserId,
-                UserNo = user.UserNo,
-                UserName = _lang.Locale == "zh-CN"
-                           ? user.UserNameCn
-                           : user.UserNameEn,
-                DepartmentName = _lang.Locale == "zh-CN"
-                           ? dept.DepartmentNameCn
-                           : dept.DepartmentNameEn,
-                PositionName = _lang.Locale == "zh-CN"
-                           ? userpos.PositionNameCn
-                           : userpos.PositionNameEn,
-                LaborName = _lang.Locale == "zh-CN"
-                           ? userlabor.LaborNameCn
-                           : userlabor.LaborNameEn,
-                NationalityName = _lang.Locale == "zh-CN"
-                           ? nation.NationNameCn
-                           : nation.NationNameEn,
-                IsAgent = user.IsAgent,
-                IsApproval = user.IsApproval,
-            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserAgentDto
+                                  {
+                                      UserId = user.UserId,
+                                      UserNo = user.UserNo,
+                                      UserName = _lang.Locale == "zh-CN"
+                                                 ? user.UserNameCn
+                                                 : user.UserNameEn,
+                                      DepartmentName = _lang.Locale == "zh-CN"
+                                                 ? dept.DepartmentNameCn
+                                                 : dept.DepartmentNameEn,
+                                      PositionName = _lang.Locale == "zh-CN"
+                                                 ? userpos.PositionNameCn
+                                                 : userpos.PositionNameEn,
+                                      LaborName = _lang.Locale == "zh-CN"
+                                                 ? userlabor.LaborNameCn
+                                                 : userlabor.LaborNameEn,
+                                      NationalityName = _lang.Locale == "zh-CN"
+                                                 ? nation.NationNameCn
+                                                 : nation.NationNameEn,
+                                      IsAgent = user.IsAgent,
+                                      IsApproval = user.IsApproval,
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserAgentDto>.Ok(page.Adapt<List<UserAgentDto>>(), totalCount, "");
         }
 
@@ -126,27 +144,26 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             // 排序
             query = query.OrderBy((user, dept, userpos, userlabor, nation) => user.UserId);
 
-            var page = await query
-            .Select((user, dept, userpos, userlabor, nation) => new UserAgentViewDto
-            {
-                UserId = user.UserId,
-                UserNo = user.UserNo,
-                UserName = _lang.Locale == "zh-CN"
-                           ? user.UserNameCn
-                           : user.UserNameEn,
-                DepartmentName = _lang.Locale == "zh-CN"
-                           ? dept.DepartmentNameCn
-                           : dept.DepartmentNameEn,
-                PositionName = _lang.Locale == "zh-CN"
-                           ? userpos.PositionNameCn
-                           : userpos.PositionNameEn,
-                LaborName = _lang.Locale == "zh-CN"
-                           ? userlabor.LaborNameCn
-                           : userlabor.LaborNameEn,
-                NationalityName = _lang.Locale == "zh-CN"
-                           ? nation.NationNameCn
-                           : nation.NationNameEn,
-            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserAgentViewDto
+                                  {
+                                      UserId = user.UserId,
+                                      UserNo = user.UserNo,
+                                      UserName = _lang.Locale == "zh-CN"
+                                                 ? user.UserNameCn
+                                                 : user.UserNameEn,
+                                      DepartmentName = _lang.Locale == "zh-CN"
+                                                 ? dept.DepartmentNameCn
+                                                 : dept.DepartmentNameEn,
+                                      PositionName = _lang.Locale == "zh-CN"
+                                                 ? userpos.PositionNameCn
+                                                 : userpos.PositionNameEn,
+                                      LaborName = _lang.Locale == "zh-CN"
+                                                 ? userlabor.LaborNameCn
+                                                 : userlabor.LaborNameEn,
+                                      NationalityName = _lang.Locale == "zh-CN"
+                                                 ? nation.NationNameCn
+                                                 : nation.NationNameEn,
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserAgentViewDto>.Ok(page, totalCount, "");
         }
 
@@ -198,17 +215,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                 .LeftJoin<UserInfoEntity>((useragent, agentuser) => useragent.AgentUserId == agentuser.UserId)
                                 .LeftJoin<UserInfoEntity>((useragent, agentuser, substituteuser) => useragent.SubstituteUserId == substituteuser.UserId)
                                 .Where((useragent, agentuser, substituteuser) => useragent.AgentUserId == long.Parse(getList.UserId))
-                                 .Select((useragent, agentuser, substituteuser) => new UserAgentProactiveDto
-                                 {
-                                     AgentUserId = useragent.AgentUserId,
-                                     SubstituteUserId = substituteuser.UserId,
-                                     SubstituteUserNo = substituteuser.UserNo,
-                                     SubstituteUserName = _lang.Locale == "zh-CN"
-                                                          ? substituteuser.UserNameCn
-                                                          : substituteuser.UserNameEn,
-                                     StartTime = useragent.StartTime,
-                                     EndTime = useragent.EndTime
-                                 }).ToListAsync();
+                                .Select((useragent, agentuser, substituteuser) => new UserAgentProactiveDto
+                                {
+                                    AgentUserId = useragent.AgentUserId,
+                                    SubstituteUserId = substituteuser.UserId,
+                                    SubstituteUserNo = substituteuser.UserNo,
+                                    SubstituteUserName = _lang.Locale == "zh-CN"
+                                                         ? substituteuser.UserNameCn
+                                                         : substituteuser.UserNameEn,
+                                    StartTime = useragent.StartTime,
+                                    EndTime = useragent.EndTime
+                                }).ToListAsync();
             return Result<List<UserAgentProactiveDto>>.Ok(list.Adapt<List<UserAgentProactiveDto>>(), "");
         }
 
@@ -236,26 +253,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                     EndTime = useragent.EndTime
                                 }).ToListAsync();
             return Result<List<UserAgentPassiveDto>>.Ok(list.Adapt<List<UserAgentPassiveDto>>(), "");
-        }
-
-        /// <summary>
-        /// 部门树下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
-        {
-            return await _db.Queryable<DepartmentInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                            .OrderBy((dept, deptlevel) => deptlevel.SortOrder)
-                            .Select((dept, deptlevel) => new DepartmentDropDto
-                            {
-                                DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-CN"
-                                                 ? dept.DepartmentNameCn
-                                                 : dept.DepartmentNameEn,
-                                ParentId = dept.ParentId,
-                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
         }
 
         /// <summary>

@@ -29,6 +29,24 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
+        /// 模块下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        {
+            try
+            {
+                var drop = await _pMenuRepository.GetModuleDropDown();
+                return Result<List<ModuleDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<ModuleDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
         /// 新增一级菜单
         /// </summary>
         /// <param name="upsert"></param>
@@ -179,24 +197,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             {
                 _logger.LogError(ex, ex.Message);
                 return ResultPaged<MenuInfoDto>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 模块下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
-        {
-            try
-            {
-                var drop = await _pMenuRepository.GetModuleDropDown();
-                return Result<List<ModuleDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<ModuleDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
     }

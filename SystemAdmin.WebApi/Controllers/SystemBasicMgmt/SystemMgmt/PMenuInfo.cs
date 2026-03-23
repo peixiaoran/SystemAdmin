@@ -20,6 +20,14 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
+        [EndpointSummary("[一级菜单信息] 模块下拉")]
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        {
+            return await _pMenuInfoService.GetModuleDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[一级菜单信息] 新增一级菜单")]
         public async Task<Result<int>> InsertPMenu([FromBody] MenuInfoUpsert upsert)
         {
@@ -56,14 +64,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         public async Task<ResultPaged<MenuInfoDto>> GetPMenuPage([FromBody] GetMenuInfoPage getPage)
         {
             return await _pMenuInfoService.GetPMenuPage(getPage);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[一级菜单信息] 模块下拉")]
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
-        {
-            return await _pMenuInfoService.GetModuleDropDown();
         }
     }
 }

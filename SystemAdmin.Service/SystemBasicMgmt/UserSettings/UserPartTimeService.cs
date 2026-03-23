@@ -29,6 +29,61 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
             _localization = localization;
         }
 
+
+        /// <summary>
+        /// 职业下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        {
+            try
+            {
+                var drop = await _userPartTimeRepository.GetLaborDropDown();
+                return Result<List<UserLaborDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<UserLaborDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 部门下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            try
+            {
+                var drop = await _userPartTimeRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 职级下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        {
+            try
+            {
+                var drop = await _userPartTimeRepository.GetUserPositionDropDown();
+                return Result<List<UserPositionDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
         /// <summary>
         /// 查询员工兼任分页
         /// </summary>
@@ -212,60 +267,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 职业下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
-        {
-            try
-            {
-                var drop = await _userPartTimeRepository.GetLaborDropDown();
-                return Result<List<UserLaborDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<UserLaborDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 部门下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            try
-            {
-                var drop = await _userPartTimeRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 职级下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
-        {
-            try
-            {
-                var drop = await _userPartTimeRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
     }

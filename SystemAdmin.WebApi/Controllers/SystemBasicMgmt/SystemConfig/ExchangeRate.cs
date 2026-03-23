@@ -22,6 +22,14 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
+        [EndpointSummary("[汇率对照] 币别下拉")]
+        public async Task<Result<List<CurrencyInfoDropDto>>> GetCurrencyInfoDropDown()
+        {
+            return await _exchangeRateService.GetCurrencyInfoDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[汇率对照] 新增汇率对照")]
         public async Task<Result<int>> InsertExchangeRate([FromBody] ExchangeRateUpsert upsert)
         {
@@ -58,14 +66,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         public async Task<Result<ExchangeRateDto>> GetExchangeRateEntity([FromBody] GetExchangeRateEntity getEntity)
         {
             return await _exchangeRateService.GetExchangeRateEntity(getEntity);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-系统设定模块")]
-        [EndpointSummary("[汇率对照] 币别信息下拉")]
-        public async Task<Result<List<CurrencyInfoDropDto>>> GetCurrencyInfoDropDown()
-        {
-            return await _exchangeRateService.GetCurrencyInfoDropDown();
         }
     }
 }

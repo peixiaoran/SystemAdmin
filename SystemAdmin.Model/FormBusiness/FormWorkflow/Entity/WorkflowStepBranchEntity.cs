@@ -9,6 +9,11 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
     public class WorkflowStepBranchEntity
     {
         /// <summary>
+        /// 分支Id
+        /// </summary>
+        public long BranChId { get; set; }
+
+        /// <summary>
         /// 步骤Id
         /// </summary>
         public long StepId { get; set; }
@@ -37,5 +42,15 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// 创建日期
         /// </summary>
         public DateTime? CreatedDate { get; set; }
+
+        /// <summary>
+        /// 修改人
+        /// </summary>
+        public long ModifiedBy { get; set; }
+
+        /// <summary>
+        /// 修改日期
+        /// </summary>
+        public DateTime? ModifiedDate { get; set; }
     }
 }

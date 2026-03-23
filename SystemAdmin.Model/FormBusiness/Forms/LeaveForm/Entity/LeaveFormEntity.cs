@@ -37,12 +37,12 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
         /// <summary>
         /// 开始时间
         /// </summary>
-        public DateTime? LeaveStartTime { get; set; }
+        public DateTime LeaveStartTime { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public DateTime? LeaveEndTime { get; set; }
+        public DateTime LeaveEndTime { get; set; }
 
         /// <summary>
         /// 请假小时

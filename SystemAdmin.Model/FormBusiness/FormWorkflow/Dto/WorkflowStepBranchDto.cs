@@ -9,6 +9,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
     public class WorkflowStepBranchDto
     {
         /// <summary>
+        /// 分支Id
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long BranchId { get; set; }
+
+        /// <summary>
         /// 步骤Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]

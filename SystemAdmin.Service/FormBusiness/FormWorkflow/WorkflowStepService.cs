@@ -31,6 +31,171 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
+        /// 表单组别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetFormGroupDropDown();
+                return Result<List<FormGroupDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<FormGroupDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 表单类别下拉
+        /// </summary>
+        /// <param name="formGroupId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(string formGroupId)
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetFormTypeDropDown(long.Parse(formGroupId));
+                return Result<List<FormTypeDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<FormTypeDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 流程步骤下拉
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<WorkflowStepDropDto>>> GetWorkflowStepDropDown(string formTypeId)
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetWorkflowStepDropDown(long.Parse(formTypeId));
+                return Result<List<WorkflowStepDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<WorkflowStepDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 步骤指派规则下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<AssignmentDropDto>>> GetAssignmentDropDown()
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetAssignmentDropDown();
+                return Result<List<AssignmentDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<AssignmentDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 步骤签核方式下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<ApproveModeDropDto>>> GetApproveModeDropDown()
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetApproveModeDropDown();
+                return Result<List<ApproveModeDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<ApproveModeDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 部门级别下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetDepartmentLevelDropDown();
+                return Result<List<DepartmentLevelDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DepartmentLevelDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 职级下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetUserPositionDropDown();
+                return Result<List<UserPositionDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 部门树下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetDepartmentDropDown();
+                return Result<List<DepartmentDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 流程条件下拉
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<WorkflowConditionDropDto>>> GetWorkflowConditionDropDown(string formTypeId)
+        {
+            try
+            {
+                var drop = await _workflowStepRepository.GetWorkflowConditionDropDown(long.Parse(formTypeId));
+                return Result<List<WorkflowConditionDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<WorkflowConditionDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 新增步骤
         /// </summary>
         /// <param name="upsert"></param>
@@ -57,6 +222,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     ApproveMode = upsert.ApproveMode,
                     IsReminderEnabled = upsert.IsReminderEnabled,
                     ReminderIntervalMinutes = upsert.ReminderIntervalMinutes,
+                    SortOrder = upsert.SortOrder,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
@@ -196,6 +362,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     ApproveMode = upsert.ApproveMode,
                     IsReminderEnabled = upsert.IsReminderEnabled,
                     ReminderIntervalMinutes = upsert.ReminderIntervalMinutes,
+                    SortOrder = upsert.SortOrder,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
@@ -281,13 +448,13 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <summary>
         /// 查询步骤及流程分支列表
         /// </summary>
-        /// <param name="getList"></param>
+        /// <param name="formTypeId"></param>
         /// <returns></returns>
-        public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList(GetWorkflowStepList getList)
+        public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList(string formTypeId)
         {
             try
             {
-                return await _workflowStepRepository.GetWorkflowStepList(getList);
+                return await _workflowStepRepository.GetWorkflowStepList(formTypeId);
             }
             catch (Exception ex)
             {
@@ -306,16 +473,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             try
             {
                 var entity = await _workflowStepRepository.GetWorkflowStepEntity(long.Parse(stepId));
-                //entity.StepId = entityHead.StepId;
-                //entity.StepNameCn = entityHead.StepNameCn;
-                //entity.StepNameEn = entityHead.StepNameEn;
-                //entity.IsStartStep = entityHead.IsStartStep;
-                //entity.Assignment = entityHead.Assignment;
-                //entity.ApproveMode = entityHead.ApproveMode;
-                //entity.IsReminderEnabled = entityHead.IsReminderEnabled;
-                //entity.ReminderIntervalMinutes = entityHead.ReminderIntervalMinutes;
-
-                entity.workflowStepOrgDto = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(stepId)) ?? new WorkflowStepOrgDto(); ;
+                entity.workflowStepOrgDto = await _workflowStepRepository.GetWorkflowStepOrgEntity(long.Parse(stepId)) ?? new WorkflowStepOrgDto();
                 entity.workflowStepDeptUserDto = await _workflowStepRepository.GetWorkflowStepDeptUserEntity(long.Parse(stepId)) ?? new WorkflowStepDeptUserDto();
                 entity.workflowStepUserDto = await _workflowStepRepository.GetWorkflowStepUserEntity(long.Parse(stepId)) ?? new WorkflowStepUserDto();
                 entity.workflowStepCustomDto = await _workflowStepRepository.GetWorkflowStepCustomEntity(long.Parse(stepId)) ?? new WorkflowStepCustomDto();
@@ -340,6 +498,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             {
                 var entity = new WorkflowStepBranchEntity
                 {
+                    BranChId = SnowFlakeSingle.Instance.NextId(),
                     StepId = long.Parse(upsert.StepId),
                     ConditionId = long.Parse(upsert.ConditionId),
                     ExecuteMatched = upsert.ExecuteMatched,
@@ -366,15 +525,14 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <summary>
         /// 删除步骤流程分支
         /// </summary>
-        /// <param name="stepId"></param>
-        /// <param name="conditionId"></param>
+        /// <param name="branChId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteWorkflowStepBranch(string stepId, string conditionId)
+        public async Task<Result<int>> DeleteWorkflowStepBranch(string branChId)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var count = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(stepId), long.Parse(conditionId));
+                var count = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(branChId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -399,21 +557,21 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             try
             {
                 await _db.BeginTranAsync();
-                var delCount = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(upsert.StepId), long.Parse(upsert.ConditionId));
                 var entity = new WorkflowStepBranchEntity
                 {
+                    BranChId = long.Parse(upsert.BranChId),
                     StepId = long.Parse(upsert.StepId),
                     ConditionId = long.Parse(upsert.ConditionId),
                     ExecuteMatched = upsert.ExecuteMatched,
                     NextStepId = long.Parse(upsert.NextStepId),
-                    CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now
+                    ModifiedBy = _loginuser.UserId,
+                    ModifiedDate = DateTime.Now
                 };
-                var insertCount = await _workflowStepRepository.InsertWorkflowStepBranch(entity);
+                var count = await _workflowStepRepository.UpdateWorkflowStepBranch(entity);
                 await _db.CommitTranAsync();
 
-                return delCount >=1 && insertCount >= 1
-                        ? Result<int>.Ok(insertCount, _localization.ReturnMsg($"{_this}BranchUpdateSuccess"))
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}BranchUpdateSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}BranchUpdateFailed"));
             }
             catch (Exception ex)
@@ -427,147 +585,19 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <summary>
         /// 查询步骤流程分支实体
         /// </summary>
-        /// <param name="stepId"></param>
-        /// <param name="conditionId"></param>
+        /// <param name="branChId"></param>
         /// <returns></returns>
-        public async Task<Result<WorkflowStepBranchDto>> GetWorkflowStepBranchEntity(string stepId, string conditionId)
+        public async Task<Result<WorkflowStepBranchDto>> GetWorkflowStepBranchEntity(string branChId)
         {
             try
             {
-                var entity = await _workflowStepRepository.GetWorkflowStepBranchEntity(long.Parse(stepId), long.Parse(conditionId));
+                var entity = await _workflowStepRepository.GetWorkflowStepBranchEntity(long.Parse(branChId));
                 return Result<WorkflowStepBranchDto>.Ok(entity);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<WorkflowStepBranchDto>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 表单组别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetFormGroupDropDown();
-                return Result<List<FormGroupDropDto>>.Ok(drop);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<FormGroupDropDto>>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 表单类别下拉
-        /// </summary>
-        /// <param name="formGroupId"></param>
-        /// <returns></returns>
-        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(string formGroupId)
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetFormTypeDropDown(long.Parse(formGroupId));
-                return Result<List<FormTypeDropDto>>.Ok(drop);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<FormTypeDropDto>>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 步骤指派规则下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<AssignmentDropDto>>> GetAssignmentDropDown()
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetAssignmentDropDown();
-                return Result<List<AssignmentDropDto>>.Ok(drop);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<AssignmentDropDto>>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 步骤签核方式下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<ApproveModeDropDto>>> GetApproveModeDropDown()
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetApproveModeDropDown();
-                return Result<List<ApproveModeDropDto>>.Ok(drop);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<ApproveModeDropDto>>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 部门级别下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetDepartmentLevelDropDown();
-                return Result<List<DepartmentLevelDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<DepartmentLevelDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 职级下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 部门树下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetDepartmentDropDown();
-                return Result<List<DepartmentDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
 
@@ -587,25 +617,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             {
                 _logger.LogError(ex, ex.Message);
                 return ResultPaged<UserInfoDto>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 条件下拉框
-        /// </summary>
-        /// <param name="formTypeId"></param>
-        /// <returns></returns>
-        public async Task<Result<List<WorkflowConditionDropDto>>> GetConditionDropDown(string formTypeId)
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetConditionDropDown(long.Parse(formTypeId));
-                return Result<List<WorkflowConditionDropDto>>.Ok(drop);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<WorkflowConditionDropDto>>.Failure(500, ex.Message);
             }
         }
     }

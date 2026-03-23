@@ -38,22 +38,21 @@ namespace SystemAdmin.Repository.FormBusiness.FormAudit
             // 排序
             query = query.OrderBy((formtype, formcounting) => formcounting.YM);
 
-            var formCountingPage = await query
-            .Select((formtype, formcounting) => new FormCountingDto
-            {
-                FormTypeId = formtype.FormTypeId,
-                FormTypeName = _lang.Locale == "zh-CN"
-                               ? formtype.FormTypeNameCn
-                               : formtype.FormTypeNameEn,
-                YM = formcounting.YM,
-                Total = formcounting.Total,
-                Draft = formcounting.Draft,
-                Submitted = formcounting.Submitted,
-                Approved = formcounting.Approved,
-                Rejected = formcounting.Rejected,
-                Canceled = formcounting.Canceled
-            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<FormCountingDto>.Ok(formCountingPage, totalCount, "");
+            var page = await query.Select((formtype, formcounting) => new FormCountingDto
+                                  {
+                                      FormTypeId = formtype.FormTypeId,
+                                      FormTypeName = _lang.Locale == "zh-CN"
+                                                     ? formtype.FormTypeNameCn
+                                                     : formtype.FormTypeNameEn,
+                                      YM = formcounting.YM,
+                                      Total = formcounting.Total,
+                                      Draft = formcounting.Draft,
+                                      Submitted = formcounting.Submitted,
+                                      Approved = formcounting.Approved,
+                                      Rejected = formcounting.Rejected,
+                                      Canceled = formcounting.Canceled
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<FormCountingDto>.Ok(page, totalCount, "");
         }
     }
 }

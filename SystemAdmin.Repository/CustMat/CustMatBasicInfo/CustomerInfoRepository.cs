@@ -18,11 +18,11 @@ namespace SystemAdmin.Repository.CustMat.CustMatBasicInfo
         /// <summary>
         /// 新增客户信息
         /// </summary>
-        /// <param name="customerEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertCustomerInfo(CustomerInfoEntity customerEntity)
+        public async Task<int> InsertCustomerInfo(CustomerInfoEntity entity)
         {
-            return await _db.Insertable(customerEntity).ExecuteCommandAsync();
+            return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -40,17 +40,17 @@ namespace SystemAdmin.Repository.CustMat.CustMatBasicInfo
         /// <summary>
         /// 修改客户信息
         /// </summary>
-        /// <param name="customerEntity"></param>
+        /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateCustomerInfo(CustomerInfoEntity customerEntity)
+        public async Task<int> UpdateCustomerInfo(CustomerInfoEntity entity)
         {
-            return await _db.Updateable(customerEntity)
+            return await _db.Updateable(entity)
                             .IgnoreColumns(customer => new
                             {
                                 customer.CustomerId,
                                 customer.CreatedBy,
                                 customer.CreatedDate,
-                            }).Where(customer => customer.CustomerId == customerEntity.CustomerId)
+                            }).Where(customer => customer.CustomerId == entity.CustomerId)
                             .ExecuteCommandAsync();
         }
 
@@ -71,29 +71,29 @@ namespace SystemAdmin.Repository.CustMat.CustMatBasicInfo
         /// <summary>
         /// 查询客户分页
         /// </summary>
-        /// <param name="getCustomerPage"></param>
+        /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<CustomerInfoDto>> GetCustomerInfoPage(GetCustomerInfoPage getCustomerPage)
+        public async Task<ResultPaged<CustomerInfoDto>> GetCustomerInfoPage(GetCustomerInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<CustomerInfoEntity>()
                            .With(SqlWith.NoLock);
 
             // 客户编码
-            if (!string.IsNullOrEmpty(getCustomerPage.CustomerCode))
+            if (!string.IsNullOrEmpty(getPage.CustomerCode))
             {
-                query.Where(customer => customer.CustomerCode.Contains(getCustomerPage.CustomerCode));
+                query.Where(customer => customer.CustomerCode.Contains(getPage.CustomerCode));
             }
             // 客户名称
-            if (!string.IsNullOrEmpty(getCustomerPage.CustomerName))
+            if (!string.IsNullOrEmpty(getPage.CustomerName))
             {
-                query.Where(customer => customer.CustomerNameCn.Contains(getCustomerPage.CustomerName) || customer.CustomerNameEn.Contains(getCustomerPage.CustomerName));
+                query.Where(customer => customer.CustomerNameCn.Contains(getPage.CustomerName) || customer.CustomerNameEn.Contains(getPage.CustomerName));
             }
 
             // 排序
             query = query.OrderBy(customer => customer.CreatedDate);
 
-            var customerPage = await query.ToPageListAsync(getCustomerPage.PageIndex, getCustomerPage.PageSize, totalCount);
+            var customerPage = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<CustomerInfoDto>.Ok(customerPage.Adapt<List<CustomerInfoDto>>(), totalCount, "");
         }
     }

@@ -61,6 +61,69 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         }
         
         /// <summary>
+        ///   查找类似 条件删除失败 的本地化字符串。
+        /// </summary>
+        public static string WorkflowConditionDeleteFailed {
+            get {
+                return ResourceManager.GetString("WorkflowConditionDeleteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 条件删除成功 的本地化字符串。
+        /// </summary>
+        public static string WorkflowConditionDeleteSuccess {
+            get {
+                return ResourceManager.GetString("WorkflowConditionDeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 条件新增失败 的本地化字符串。
+        /// </summary>
+        public static string WorkflowConditionInsertFailed {
+            get {
+                return ResourceManager.GetString("WorkflowConditionInsertFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 条件新增成功 的本地化字符串。
+        /// </summary>
+        public static string WorkflowConditionInsertSuccess {
+            get {
+                return ResourceManager.GetString("WorkflowConditionInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 条件已绑定流程分支，请先移除对应分支条件再删除 的本地化字符串。
+        /// </summary>
+        public static string WorkflowConditionNotDelete {
+            get {
+                return ResourceManager.GetString("WorkflowConditionNotDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 条件修改失败 的本地化字符串。
+        /// </summary>
+        public static string WorkflowConditionUpdateFailed {
+            get {
+                return ResourceManager.GetString("WorkflowConditionUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 条件修改成功 的本地化字符串。
+        /// </summary>
+        public static string WorkflowConditionUpdateSuccess {
+            get {
+                return ResourceManager.GetString("WorkflowConditionUpdateSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 步骤流程分支删除失败 的本地化字符串。
         /// </summary>
         public static string WorkflowStepBranchDeleteFailed {

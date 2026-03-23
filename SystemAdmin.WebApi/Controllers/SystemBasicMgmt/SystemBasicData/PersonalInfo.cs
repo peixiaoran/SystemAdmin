@@ -19,29 +19,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
             _personalInfoService = personalInfoService;
         }
 
-        [HttpPost]
-        [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[个人信息] 上传员工头像")]
-        public async Task<Result<string>> UploadAvatar([FromForm] string userId, IFormFile file)
-        {
-            return await _personalInfoService.UploadAvatar(userId, file);
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[个人信息] 查询个人信息实体")]
-        public async Task<Result<PersonalInfoDto>> GetPersonalInfoEntity()
-        {
-            return await _personalInfoService.GetPersonalInfoEntity();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-系统管理模块")]
-        [EndpointSummary("[个人信息] 修改个人信息")]
-        public async Task<Result<int>> UpdatePersonalInfo([FromBody] PersonalInfoUpsert upsert)
-        {
-            return await _personalInfoService.UpdatePersonalInfo(upsert);
-        }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
@@ -74,6 +51,30 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
         {
             return await _personalInfoService.GetRoleDropDown();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-系统管理模块")]
+        [EndpointSummary("[个人信息] 上传员工头像")]
+        public async Task<Result<string>> UploadAvatar([FromForm] string userId, IFormFile file)
+        {
+            return await _personalInfoService.UploadAvatar(userId, file);
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-系统管理模块")]
+        [EndpointSummary("[个人信息] 查询个人信息实体")]
+        public async Task<Result<PersonalInfoDto>> GetPersonalInfoEntity()
+        {
+            return await _personalInfoService.GetPersonalInfoEntity();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-系统管理模块")]
+        [EndpointSummary("[个人信息] 修改个人信息")]
+        public async Task<Result<int>> UpdatePersonalInfo([FromBody] PersonalInfoUpsert upsert)
+        {
+            return await _personalInfoService.UpdatePersonalInfo(upsert);
         }
     }
 }

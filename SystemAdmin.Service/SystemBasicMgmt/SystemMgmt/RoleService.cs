@@ -28,6 +28,25 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
+        /// 角色模块下拉
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(string roleId)
+        {
+            try
+            {
+                var drop = await _roleRepository.GetRoleModuleDropDown(long.Parse(roleId));
+                return Result<List<RoleModuleDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<RoleModuleDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
         /// 新增角色
         /// </summary>
         /// <param name="upsert"></param>
@@ -259,24 +278,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 角色模块下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(GetRoleModuleDropDown getDrop)
-        {
-            try
-            {
-                var roleModuleDrop = await _roleRepository.GetRoleModuleDropDown(long.Parse(getDrop.RoleId));
-                return Result<List<RoleModuleDropDto>>.Ok(roleModuleDrop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<RoleModuleDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
 

@@ -22,6 +22,44 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         }
 
         /// <summary>
+        /// 模块下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<ModuleDropDto>> GetModuleDropDown()
+        {
+            return await _db.Queryable<ModuleInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(module => module.SortOrder)
+                            .Select(module => new ModuleDropDto
+                            {
+                                ModuleId = module.ModuleId,
+                                ModuleName = _lang.Locale == "zh-CN"
+                                             ? module.ModuleNameCn
+                                             : module.ModuleNameEn
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 一级菜单下拉
+        /// </summary>
+        /// <param name="moduleId"></param>
+        /// <returns></returns>
+        public async Task<List<MenuDropDto>> GetPMenuDropDown(long moduleId)
+        {
+            return await _db.Queryable<MenuInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(pmenu => pmenu.SortOrder)
+                            .Where(pmenu => pmenu.MenuType == "PrimaryMenu" && pmenu.ModuleId == moduleId)
+                            .Select(pmenu => new MenuDropDto
+                            {
+                                MenuId = pmenu.MenuId,
+                                MenuName = _lang.Locale == "zh-CN"
+                                           ? pmenu.MenuNameCn
+                                           : pmenu.MenuNameEn
+                            }).ToListAsync();
+        }
+
+        /// <summary>
         /// 新增二级菜单
         /// </summary>
         /// <param name="entity"></param>
@@ -79,11 +117,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// <returns></returns>
         public async Task<MenuInfoDto> GetSMenuEntity(long smenuId)
         {
-            var smenuEntity = await _db.Queryable<MenuInfoEntity>()
-                                       .With(SqlWith.NoLock)
-                                       .Where(smenu => smenu.MenuType == MenuType.SecondaryMenu.ToEnumString() && smenu.MenuId == smenuId)
-                                       .FirstAsync();
-            return smenuEntity.Adapt<MenuInfoDto>();
+            var entity = await _db.Queryable<MenuInfoEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(smenu => smenu.MenuType == MenuType.SecondaryMenu.ToEnumString() && smenu.MenuId == smenuId)
+                                  .FirstAsync();
+            return entity.Adapt<MenuInfoDto>();
         }
 
         /// <summary>
@@ -123,61 +161,23 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             // 排序
             query.OrderBy((pmenu, dic) => pmenu.SortOrder);
 
-            var smenuPage = await query.Select((pmenu, dic) => new MenuInfoDto
-                                       {
-                                           MenuId = pmenu.MenuId,
-                                           MenuCode = pmenu.MenuCode,
-                                           MenuNameCn = pmenu.MenuNameCn,
-                                           MenuNameEn = pmenu.MenuNameEn,
-                                           MenuType = pmenu.MenuType,
-                                           MenuTypeName = _lang.Locale == "zh-CN"
-                                                          ? dic.DicNameCn
-                                                          : dic.DicNameEn,
-                                           MenuIcon = pmenu.MenuIcon,
-                                           SortOrder = pmenu.SortOrder,
-                                           IsVisible = pmenu.IsVisible,
-                                           Path = pmenu.Path,
-                                           Remark = pmenu.Remark,
-                                       }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<MenuInfoDto>.Ok(smenuPage.Adapt<List<MenuInfoDto>>(), totalCount, "");
-        }
-
-        /// <summary>
-        /// 模块下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<ModuleDropDto>> GetModuleDropDown()
-        {
-            return await _db.Queryable<ModuleInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(module => module.SortOrder)
-                            .Select(module => new ModuleDropDto
-                            {
-                                ModuleId = module.ModuleId,
-                                ModuleName = _lang.Locale == "zh-CN"
-                                             ? module.ModuleNameCn
-                                             : module.ModuleNameEn
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 一级菜单下拉
-        /// </summary>
-        /// <param name="moduleId"></param>
-        /// <returns></returns>
-        public async Task<List<MenuDropDto>> GetPMenuDropDown(long moduleId)
-        {
-            return await _db.Queryable<MenuInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(pmenu => pmenu.SortOrder)
-                            .Where(pmenu => pmenu.MenuType == "PrimaryMenu" && pmenu.ModuleId == moduleId)
-                            .Select(pmenu => new MenuDropDto
-                            {
-                                MenuId = pmenu.MenuId,
-                                MenuName = _lang.Locale == "zh-CN"
-                                           ? pmenu.MenuNameCn
-                                           : pmenu.MenuNameEn
-                            }).ToListAsync();
+            var page = await query.Select((pmenu, dic) => new MenuInfoDto
+                                  {
+                                      MenuId = pmenu.MenuId,
+                                      MenuCode = pmenu.MenuCode,
+                                      MenuNameCn = pmenu.MenuNameCn,
+                                      MenuNameEn = pmenu.MenuNameEn,
+                                      MenuType = pmenu.MenuType,
+                                      MenuTypeName = _lang.Locale == "zh-CN"
+                                                     ? dic.DicNameCn
+                                                     : dic.DicNameEn,
+                                      MenuIcon = pmenu.MenuIcon,
+                                      SortOrder = pmenu.SortOrder,
+                                      IsVisible = pmenu.IsVisible,
+                                      Path = pmenu.Path,
+                                      Remark = pmenu.Remark,
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<MenuInfoDto>.Ok(page.Adapt<List<MenuInfoDto>>(), totalCount, "");
         }
     }
 }

@@ -21,6 +21,26 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         }
 
         /// <summary>
+        /// 部门树下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        {
+            return await _db.Queryable<DepartmentInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .OrderBy((dept, deptlevel) => new { deptlevel.DepartmentLevelCode, dept.SortOrder })
+                            .Select((dept, deptlevel) => new DepartmentDropDto
+                            {
+                                DepartmentId = dept.DepartmentId,
+                                DepartmentName = _lang.Locale == "zh-CN"
+                                                 ? dept.DepartmentNameCn
+                                                 : dept.DepartmentNameEn,
+                                ParentId = dept.ParentId,
+                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
+        }
+
+        /// <summary>
         /// 查询员工分页
         /// </summary>
         /// <param name="getPage"></param>
@@ -60,28 +80,27 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             // 排序
             query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
 
-            var page = await query
-                             .Select((user, dept, userpos, userlabor, nation) => new UserFormDto
-                             {
-                                 UserId = user.UserId,
-                                 UserNo = user.UserNo,
-                                 UserName = _lang.Locale == "zh-CN"
-                                            ? user.UserNameCn
-                                            : user.UserNameEn,
-                                 DepartmentName = _lang.Locale == "zh-CN"
-                                            ? dept.DepartmentNameCn
-                                            : dept.DepartmentNameEn,
-                                 PositionName = _lang.Locale == "zh-CN"
-                                            ? userpos.PositionNameCn
-                                            : userpos.PositionNameEn,
-                                 LaborName = _lang.Locale == "zh-CN"
-                                            ? userlabor.LaborNameCn
-                                            : userlabor.LaborNameEn,
-                                 NationalityName = _lang.Locale == "zh-CN"
-                                            ? nation.NationNameCn
-                                            : nation.NationNameEn,
-                                 IsApproval = user.IsApproval,
-                             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserFormDto
+                                  {
+                                      UserId = user.UserId,
+                                      UserNo = user.UserNo,
+                                      UserName = _lang.Locale == "zh-CN"
+                                                 ? user.UserNameCn
+                                                 : user.UserNameEn,
+                                      DepartmentName = _lang.Locale == "zh-CN"
+                                                 ? dept.DepartmentNameCn
+                                                 : dept.DepartmentNameEn,
+                                      PositionName = _lang.Locale == "zh-CN"
+                                                 ? userpos.PositionNameCn
+                                                 : userpos.PositionNameEn,
+                                      LaborName = _lang.Locale == "zh-CN"
+                                                 ? userlabor.LaborNameCn
+                                                 : userlabor.LaborNameEn,
+                                      NationalityName = _lang.Locale == "zh-CN"
+                                                 ? nation.NationNameCn
+                                                 : nation.NationNameEn,
+                                      IsApproval = user.IsApproval,
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserFormDto>.Ok(page, totalCount, "");
         }
 
@@ -165,26 +184,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         public async Task<int> InsertUserForm(List<UserFormEntity> entityList)
         {
             return await _db.Insertable(entityList).ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 部门树下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
-        {
-            return await _db.Queryable<DepartmentInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .InnerJoin<DepartmentLevelEntity>((dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                            .OrderBy((dept, deptlevel) => new { deptlevel.DepartmentLevelCode, dept.SortOrder })
-                            .Select((dept, deptlevel) => new DepartmentDropDto
-                            {
-                                DepartmentId = dept.DepartmentId,
-                                DepartmentName = _lang.Locale == "zh-CN"
-                                                 ? dept.DepartmentNameCn
-                                                 : dept.DepartmentNameEn,
-                                ParentId = dept.ParentId,
-                            }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
         }
     }
 }

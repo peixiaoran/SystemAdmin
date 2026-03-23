@@ -27,12 +27,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public long FormTypeId { get; set; }
 
         /// <summary>
-        /// 表单步骤名称（中文）
+        /// 步骤名称（中文）
         /// </summary>
         public string StepNameCn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 表单步骤名称（英文）
+        /// 步骤名称（英文）
         /// </summary>
         public string StepNameEn { get; set; } = string.Empty;
 

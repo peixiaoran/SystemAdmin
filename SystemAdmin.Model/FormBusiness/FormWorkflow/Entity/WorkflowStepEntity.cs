@@ -25,12 +25,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long FormTypeId { get; set; }
 
         /// <summary>
-        /// 表单步骤名称（中文）
+        /// 步骤名称（中文）
         /// </summary>
         public string StepNameCn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 表单步骤名称（英文）
+        /// 步骤名称（英文）
         /// </summary>
         public string StepNameEn { get; set; } = string.Empty;
 
@@ -58,6 +58,11 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// 催签间隔分钟
         /// </summary>
         public int ReminderIntervalMinutes { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int SortOrder { get; set; }
 
         /// <summary>
         /// 创建人

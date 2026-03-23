@@ -1,4 +1,5 @@
 ﻿using SqlSugar;
+using System.Reflection;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
@@ -9,6 +10,7 @@ using SystemAdmin.Model.FormBusiness.Forms.FormLifecycle.FormBeforeStart;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
+using SystemAdmin.Repository.FormBusiness.Forms.FormLifecycle;
 
 namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
 {
@@ -19,12 +21,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
+        private readonly WorkflowConditionFun _workflowConditionFun;
         //private readonly string _this = "FormBusiness.FormLifecycle.FormBeforeStart";
 
-        public FormBeforeStart(SqlSugarScope db, Language lang)
+        public FormBeforeStart(SqlSugarScope db, Language lang, WorkflowConditionFun workflowConditionFun)
         {
             _db = db;
             _lang = lang;
+            _workflowConditionFun = workflowConditionFun;
         }
 
         /// <summary>
@@ -271,23 +275,62 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
 
                 }
 
-                // 查找下一个步骤
-                var stepBranch = await _db.Queryable<WorkflowStepBranchEntity>()
+                // 查询步骤下面的分支走向
+                var branchList = await _db.Queryable<WorkflowStepBranchEntity>()
                                           .With(SqlWith.NoLock)
-                                          .Where(condition => condition.StepId == nowStep.StepId)
+                                          .Where(branch => branch.StepId == nowStep.StepId)
+                                          .Select(branch => branch)
                                           .ToListAsync();
 
-                List<long> conditionIds = new List<long>();
-                foreach (var conItem in stepBranch)
+                // 声明符合条件的分支
+                var accBranchList = new List<AccordanceBranch>();
+                foreach (var branchItem in branchList)
                 {
-                    if (conItem.ConditionId == -1)
+                    // 如果是默认分支则跳过
+                    if (branchItem.ConditionId != -1)
                     {
-                        conditionIds.Add(conItem.ConditionId);
+                        // 寻找符合条件的分支添加到 accBranchList
+                        var condition = await _db.Queryable<WorkflowConditionEntity>().Where(condition => condition.ConditionId == branchItem.ConditionId).FirstAsync();
+                        var method = _workflowConditionFun.GetType().GetMethod(condition.HandlerKey);
+
+                        if (method != null)
+                        {
+                            var resultObj = method.Invoke(_workflowConditionFun, new object[] { formId });
+                            if (resultObj is Task<bool> task)
+                            {
+                                bool result = await task;
+                                if (result)
+                                {
+                                    var conitem = new AccordanceBranch();
+                                    conitem.ConditionId = condition.ConditionId;
+                                    conitem.ExecuteMatched = branchItem.ExecuteMatched;
+                                    conitem.NextStepId = branchItem.NextStepId;
+                                    accBranchList.Add(conitem);
+                                }
+                            }
+                        }
                     }
                 }
 
-                // 赋值下一个步骤Id
-                nowStepId = stepBranch.Where(condition => conditionIds.Contains(condition.ConditionId) && condition.ExecuteMatched == 1).First().NextStepId;
+                // 如果没有符合条件，则将默认分支的下一步骤赋值
+                var accCount = accBranchList.Where(acc => acc.ExecuteMatched == 1);
+                if (accCount.Count() == 0)
+                {
+                    nowStepId = branchList.Where(branch => branch.ConditionId == -1).First().NextStepId;
+                }
+                // 如果有多个符合条件，则选择执行唯一的分支的下一步骤赋值
+                else
+                {
+                    var matched = accBranchList.Where(acc => acc.ExecuteMatched == 1);
+                    if (matched != null && matched.Count() > 0)
+                    {
+                        nowStepId = matched.First().NextStepId;
+                    }
+                    else
+                    {
+                        nowStepId = accBranchList.First().NextStepId;
+                    }
+                }
             }
             return approveList;
         }
