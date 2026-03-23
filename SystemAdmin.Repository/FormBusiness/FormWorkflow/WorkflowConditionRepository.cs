@@ -91,18 +91,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程条件实体
-        /// </summary>
-        /// <param name="conditionId"></param>
-        /// <returns></returns>
-        public async Task<WorkflowConditionEntity> GetWorkflowConditionEntity(long conditionId)
-        {
-            return await _db.Queryable<WorkflowConditionEntity>()
-                            .Where(branch => branch.ConditionId == conditionId)
-                            .FirstAsync();
-        }
-
-        /// <summary>
         /// 修改流程条件
         /// </summary>
         /// <param name="entity"></param>
@@ -118,6 +106,18 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                 condition.CreatedDate,
                             }).Where(branch => branch.ConditionId == entity.ConditionId)
                             .ExecuteCommandAsync();
+        }
+
+        /// <summary>
+        /// 查询流程条件实体
+        /// </summary>
+        /// <param name="conditionId"></param>
+        /// <returns></returns>
+        public async Task<WorkflowConditionEntity> GetWorkflowConditionEntity(long conditionId)
+        {
+            return await _db.Queryable<WorkflowConditionEntity>()
+                            .Where(branch => branch.ConditionId == conditionId)
+                            .FirstAsync();
         }
 
         /// <summary>

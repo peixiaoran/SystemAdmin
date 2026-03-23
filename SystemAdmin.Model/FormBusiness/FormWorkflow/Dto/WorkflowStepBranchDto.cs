@@ -12,7 +12,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// 分支Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
-        public long BranchId { get; set; }
+        public long BranChId { get; set; }
 
         /// <summary>
         /// 步骤Id

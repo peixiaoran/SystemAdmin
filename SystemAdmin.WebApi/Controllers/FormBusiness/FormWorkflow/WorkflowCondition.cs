@@ -11,7 +11,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
     [RoutingAuthorize]
     [Route("api/FormBusiness/FormWorkFlow/[controller]/[action]")]
     [ApiController]
-    public class WorkflowCondition
+    public class WorkflowCondition : ControllerBase
     {
         private readonly WorkflowConditionService _workflowConditionService;
         public WorkflowCondition(WorkflowConditionService workflowConditionService)
@@ -57,6 +57,14 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         public async Task<Result<int>> UpdateWorkflowCondition([FromBody] WorkflowConditionUpsert upsert)
         {
             return await _workflowConditionService.UpdateWorkflowCondition(upsert);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单流程条件] 查询流程条件实体")]
+        public async Task<Result<WorkflowConditionDto>> GetWorkflowConditionEntity([FromForm] string conditionId)
+        {
+            return await _workflowConditionService.GetWorkflowConditionEntity(conditionId);
         }
 
         [HttpPost]

@@ -381,7 +381,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                            .OrderByDescending((stepbranch, condition, nextStep) => stepbranch.ExecuteMatched)
                                            .Select((stepbranch, condition, nextStep) => new WorkflowStepBranchDto()
                                            {
-                                               BranchId = stepbranch.BranChId,
+                                               BranChId = stepbranch.BranChId,
                                                StepId = stepItem.StepId,
                                                ConditionId = condition.ConditionId,
                                                ConditionName = _lang.Locale == "zh-CN"
@@ -505,7 +505,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                 stepbranch.BranChId,
                                 stepbranch.CreatedBy,
                                 stepbranch.CreatedDate,
-                            }).Where(stepbranch=> stepbranch.BranChId==entity.BranChId)
+                            }).Where(stepbranch => stepbranch.BranChId == entity.BranChId)
                             .ExecuteCommandAsync();
         }
 

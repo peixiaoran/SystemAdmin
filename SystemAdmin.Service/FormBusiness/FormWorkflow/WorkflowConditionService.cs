@@ -134,26 +134,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程条件实体
-        /// </summary>
-        /// <param name="conditionId"></param>
-        /// <returns></returns>
-        public async Task<Result<WorkflowConditionDto>> GetWorkflowConditionEntity(string conditionId)
-        {
-            try
-            {
-                var entity = await _workflowConditionRepository.GetWorkflowConditionEntity(long.Parse(conditionId));
-                return Result<WorkflowConditionDto>.Ok(entity.Adapt<WorkflowConditionDto>(), "");
-            }
-            catch (Exception ex)
-            {
-                await _db.RollbackTranAsync();
-                _logger.LogError(ex, ex.Message);
-                return Result<WorkflowConditionDto>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
         /// 修改流程条件
         /// </summary>
         /// <param name="upsert"></param>
@@ -164,7 +144,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             {
                 var entity = new WorkflowConditionEntity()
                 {
-                    ConditionId = SnowFlakeSingle.Instance.NextId(),
+                    ConditionId = long.Parse(upsert.ConditionId),
                     ConditionNameCn = upsert.ConditionNameCn,
                     ConditionNameEn = upsert.ConditionNameEn,
                     HandlerKey = upsert.HandlerKey,
@@ -186,6 +166,27 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// 查询流程条件实体
+        /// </summary>
+        /// <param name="conditionId"></param>
+        /// <returns></returns>
+        public async Task<Result<WorkflowConditionDto>> GetWorkflowConditionEntity(string conditionId)
+        {
+            try
+            {
+                var entity = await _workflowConditionRepository.GetWorkflowConditionEntity(long.Parse(conditionId));
+                return Result<WorkflowConditionDto>.Ok(entity.Adapt<WorkflowConditionDto>(), "");
+            }
+            catch (Exception ex)
+            {
+                await _db.RollbackTranAsync();
+                _logger.LogError(ex, ex.Message);
+                return Result<WorkflowConditionDto>.Failure(500, ex.Message);
             }
         }
 
