@@ -166,17 +166,17 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// </summary>
         /// <param name="fromId"></param>
         /// <returns></returns>
-        public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser(string fromId)
+        public async Task<Result<FormWorkflowInfo>> GetWorkflowAllApproveUser(string fromId)
         {
             try
             {
                 var approveUser = await _formBeforeStart.GetWorkflowAllApproveUser(long.Parse(fromId));
-                return Result<List<WorkflowApproveUser>>.Ok(approveUser);
+                return Result<FormWorkflowInfo>.Ok(approveUser);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<WorkflowApproveUser>>.Failure(500, ex.Message);
+                return Result<FormWorkflowInfo>.Failure(500, ex.Message);
             }
         }
 

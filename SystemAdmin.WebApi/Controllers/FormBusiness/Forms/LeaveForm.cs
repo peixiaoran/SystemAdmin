@@ -53,7 +53,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 查询表单审批流程")]
-        public async Task<Result<List<WorkflowApproveUser>>> GetWorkflowAllApproveUser([FromForm] string fromId)
+        public async Task<Result<FormWorkflowInfo>> GetWorkflowAllApproveUser([FromForm] string fromId)
         {
             return await _leaveFormService.GetWorkflowAllApproveUser(fromId);
         }

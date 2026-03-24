@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 17001105 (17.00.1105)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Basic
 
  Target Server Type    : SQL Server
- Target Server Version : 17001105 (17.00.1105)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 23/03/2026 22:38:21
+ Date: 24/03/2026 17:01:30
 */
 
 
@@ -3404,6 +3404,9 @@ GO
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'127.0.0.1', N'LoginSuccessful', N'2026-03-23 22:14:42.827')
 GO
 
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-24 17:00:05.363')
+GO
+
 
 -- ----------------------------
 -- Table structure for UserPartTime
@@ -3652,24 +3655,6 @@ INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn]
 GO
 
 INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351602976027836416', N'S01', N'师一', N'Division 1', N'15', N'师一', N'1903486709602062336', N'2025-01-23 15:11:08.000', N'1903486709602062336', N'2025-01-23 15:11:08.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351604412149137408', N'Y01', N'员一', N'Member 1', N'16', N'员一', N'1903486709602062336', N'2025-01-23 15:13:59.000', N'1903486709602062336', N'2025-01-23 15:13:59.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351604819424444416', N'Y02', N'员二', N'Member 2', N'17', N'员二', N'1903486709602062336', N'2025-01-23 15:14:47.000', N'1903486709602062336', N'2025-01-23 15:14:47.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351604916346421248', N'Y03', N'员三', N'Member 3', N'18', N'员三', N'1903486709602062336', N'2025-01-23 15:14:59.000', N'1903486709602062336', N'2025-01-23 15:14:59.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351605048617992192', N'Y04', N'员四', N'Member 4', N'19', N'员四', N'1903486709602062336', N'2025-01-23 15:15:15.000', N'1903486709602062336', N'2025-01-23 15:15:15.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351605261411811328', N'Y05', N'员五', N'Member 5', N'20', N'员五', N'1903486709602062336', N'2025-01-23 15:15:40.000', N'1903486709602062336', N'2025-01-23 15:15:40.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351612928515637248', N'Y06', N'员级', N'Member level', N'21', N'员级', N'1903486709602062336', N'2025-01-23 15:30:54.000', N'1903486709602062336', N'2025-01-23 15:30:54.000')
 GO
 
 

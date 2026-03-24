@@ -10,11 +10,22 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
     public class LeaveFormDto
     {
         /// <summary>
+        /// 请假单Id
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long FormId { get; set; }
+
+        /// <summary>
         /// 表单类别Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
         public long FormTypeId { get; set; }
 
+        /// <summary>
+        /// 请假单号
+        /// </summary>
+        public string FormNo { get; set; } = string.Empty;
+          
         /// <summary>
         /// 表单状态
         /// </summary>
@@ -24,17 +35,6 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
         /// 表单状态名称
         /// </summary>
         public string FormStatusName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 请假单Id
-        /// </summary>
-        [JsonConverter(typeof(LongToStringConverter))]
-        public long FormId { get; set; }
-
-        /// <summary>
-        /// 请假单号
-        /// </summary>
-        public string FormNo { get; set; } = string.Empty;
 
         /// <summary>
         /// 申请人工号

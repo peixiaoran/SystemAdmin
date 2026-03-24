@@ -3,10 +3,13 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 
 namespace SystemAdmin.Model.FormBusiness.Forms.FormLifecycle.FormBeforeStart
 {
+    /// <summary>
+    /// 步骤待签核人
+    /// </summary>
     public class StepApproveUser
     {
         /// <summary>
-        /// 员工Id（本或兼）
+        /// 员工Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
         public long UserId { get; set; }
@@ -30,13 +33,16 @@ namespace SystemAdmin.Model.FormBusiness.Forms.FormLifecycle.FormBeforeStart
         /// <summary>
         /// 签核类型（实任、兼任、代理）
         /// </summary>
-
         public string AppointmentType { get; set; } = string.Empty;
 
         /// <summary>
         /// 签核类型名称（实任、兼任、代理）
         /// </summary>
-
         public string AppointmentTypeName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 是否完成签核
+        /// </summary>
+        public int IsPending { get; set; }
     }
 }
