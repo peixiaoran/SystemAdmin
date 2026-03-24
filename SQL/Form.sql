@@ -12,7 +12,7 @@
  Target Server Version : 17001105 (17.00.1105)
  File Encoding         : 65001
 
- Date: 24/03/2026 20:39:27
+ Date: 24/03/2026 20:42:05
 */
 
 
@@ -684,6 +684,12 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'Form',
 'TABLE', N'FormLog',
 'COLUMN', N'OperationDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单日志信息',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog'
 GO
 
 
