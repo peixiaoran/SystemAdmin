@@ -374,8 +374,110 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
             // 申请人职级信息
             var applyPositon = await _db.Queryable<UserPositionEntity>().Where(position => position.PositionId == applyUser.PositionId).FirstAsync();
 
-            #region 查询符合步骤条件的签核人，带有注本、兼、代的标识并按照入职时间正序排序
-            var candidateUserSql = @"SELECT
+            // 查询指定部门所有上级部门Ids
+            var parentDeptList = await _db.Queryable<DepartmentInfoEntity>()
+                                          .With(SqlWith.NoLock)
+                                          .ToParentListAsync(dept => dept.ParentId, applyUser.DepartmentId);
+            var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
+            var deptInSql = string.Join(", ", parentDeptIds);
+
+            #region 查询符合步骤条件的签核人，带有注本、代、兼、兼代并按照入职时间正序排序
+            var candidateUserSql = $@";WITH Dic AS
+                                        (
+                                            SELECT
+                                                DicCode,
+                                                CASE 
+                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                    ELSE DicNameEn
+                                                END AS DicName
+                                            FROM Basic.DictionaryInfo WITH (NOLOCK)
+                                            WHERE DicType = 'AppointmentType'
+                                        ),
+                                        MainJob AS
+                                        (
+                                            SELECT
+                                                1 AS SortGroup,
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE 
+                                                    WHEN agentuser.UserId IS NULL THEN @pprimary
+                                                    ELSE @pagent
+                                                END AS AppointmentType,
+                                                CASE 
+                                                    WHEN agentuser.UserId IS NULL THEN d1.DicName
+                                                    ELSE d2.DicName
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                            INNER JOIN Basic.UserPosition position WITH (NOLOCK)
+                                                ON users.PositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept WITH (NOLOCK)
+                                                ON users.DepartmentId = dept.DepartmentId
+                                            LEFT JOIN Basic.UserAgent agent WITH (NOLOCK)
+                                                ON users.UserId = agent.SubstituteUserId
+                                                AND agent.StartTime <= GETDATE()
+                                                AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser WITH (NOLOCK)
+                                                ON agent.AgentUserId = agentuser.UserId
+                                            LEFT JOIN Dic d1
+                                                ON d1.DicCode = @pprimary
+                                            LEFT JOIN Dic d2
+                                                ON d2.DicCode = @pagent
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
+                                                AND users.IsApproval = 1
+                                                AND dept.DepartmentId IN ({deptInSql})
+                                                AND dept.DepartmentLevelId = @pdeptLevelId
+                                                AND users.PositionId = @pposId
+                                                AND position.SortOrder < @pappUserPosOrder
+                                        ),
+                                        PartTimeJob AS
+                                        (
+                                            SELECT
+                                                2 AS SortGroup,
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE 
+                                                    WHEN agentuser.UserId IS NULL THEN @pconcurrent
+                                                    ELSE @pconcurrentagent
+                                                END AS AppointmentType,
+                                                CASE 
+                                                    WHEN agentuser.UserId IS NULL THEN d3.DicName
+                                                    ELSE d4.DicName
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                            INNER JOIN Basic.UserInfo users WITH (NOLOCK)
+                                                ON part.UserId = users.UserId
+                                            INNER JOIN Basic.UserPosition position WITH (NOLOCK)
+                                                ON part.PartTimePositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept WITH (NOLOCK)
+                                                ON part.PartTimeDeptId = dept.DepartmentId
+                                            LEFT JOIN Basic.UserAgent agent WITH (NOLOCK)
+                                                ON users.UserId = agent.SubstituteUserId
+                                                AND agent.StartTime <= GETDATE()
+                                                AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser WITH (NOLOCK)
+                                                ON agent.AgentUserId = agentuser.UserId
+                                            LEFT JOIN Dic d3
+                                                ON d3.DicCode = @pconcurrent
+                                            LEFT JOIN Dic d4
+                                                ON d4.DicCode = @pconcurrentagent
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
+                                                AND users.IsApproval = 1
+                                                AND dept.DepartmentId IN ({deptInSql})
+                                                AND dept.DepartmentLevelId = @pdeptLevelId
+                                                AND part.PartTimePositionId = @pposId
+                                                AND position.SortOrder < @pappUserPosOrder
+                                        )
+                                        SELECT
                                             t.UserId,
                                             t.UserName,
                                             t.AppointmentType,
@@ -384,96 +486,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                             t.AgentUserName
                                         FROM
                                         (
-                                            SELECT
-                                                users.UserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
-                                                users.HireDate,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
-                                                    ELSE
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
-                                                END AS AppointmentType,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
-                                                    ELSE
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
-                                                END AS AppointmentTypeName,
-                                                agentuser.UserId AS AgentUserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
-                                            FROM Basic.UserInfo users WITH (NOLOCK)
-                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
-                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
-                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
-                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                AND agent.StartTime <= GETDATE()
-                                                AND agent.EndTime >= GETDATE()
-                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
-                                            WHERE
-                                                users.IsEmployed = 1
-                                                AND users.IsFreeze = 0
-                                                AND users.IsApproval = 1
-                                                AND dept.DepartmentLevelId = @pdeptLevelId
-                                                AND users.PositionId = @pposId
-                                                AND position.SortOrder < @pappUserPosOrder
-
+                                            SELECT * FROM MainJob
                                             UNION ALL
-
-                                            SELECT
-                                                users.UserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
-                                                users.HireDate,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
-                                                    ELSE
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
-                                                END AS AppointmentType,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
-                                                    ELSE
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
-                                                END AS AppointmentTypeName,
-                                                agentuser.UserId AS AgentUserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
-                                            FROM Basic.UserPartTime part WITH (NOLOCK)
-                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
-                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
-                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
-                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                AND agent.StartTime <= GETDATE()
-                                                AND agent.EndTime >= GETDATE()
-                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
-                                            WHERE
-                                                users.IsEmployed = 1
-                                                AND users.IsFreeze = 0
-                                                AND users.IsApproval = 1
-                                                AND dept.DepartmentLevelId = @pdeptLevelId
-                                                AND part.PartTimePositionId = @pposId
-                                                AND position.SortOrder < @pappUserPosOrder
-                                        ) t ORDER BY t.HireDate ASC;";
+                                            SELECT * FROM PartTimeJob
+                                        ) t
+                                        ORDER BY
+                                            t.SortGroup ASC,
+                                            t.HireDate ASC;";
             #endregion
 
             var candidateUserPar = new List<SugarParameter>
@@ -488,23 +507,22 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                 new SugarParameter("@pappUserPosOrder", applyPositon.SortOrder),
             };
 
-            // 查询符合条件审批人候选人，注本、兼、代、兼代的标识并按照入职时间正序排序
+            for (int i = 0; i < parentDeptIds.Count; i++)
+            {
+                candidateUserPar.Add(new SugarParameter($"@dept{i}", parentDeptIds[i]));
+            }
+
+            // 查询符合条件审批人候选人，注本、代、兼、兼代并按照入职时间正序排序
             var candidateList = await _db.Ado.SqlQueryAsync<StepApproveUser>(candidateUserSql, candidateUserPar);
             if (candidateList.Count() > 0)
             {
-                // 按照本、兼、代、兼代的顺序筛选最终审批人
+                // 按照本、代、兼、兼代的顺序筛选最终审批人
                 finalApproveUser = await GetFinalStepApproveUserList(candidateList, approveMode, "PirCon");
             }
 
             // 如果没有符合条件的审批人，则查询本部门及以上的符合条件审批人（自动指派）
             else
             {
-                // 查询指定部门所有上级部门Ids
-                var parentDeptList = await _db.Queryable<DepartmentInfoEntity>()
-                                              .With(SqlWith.NoLock)
-                                              .ToParentListAsync(dept => dept.ParentId, applyUser.DepartmentId);
-                var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
-
                 var deptLevelMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
                                                  .With(SqlWith.NoLock)
                                                  .MaxAsync(deptlevel => deptlevel.SortOrder);
@@ -528,10 +546,119 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                     // 依次按照职级递减
                     for (int itemPosOrder = stepPosStartOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
                     {
-                        var deptInSql = string.Join(", ", parentDeptIds);
-
-                        #region 查询高阶审批人候选人，注本、兼、代、兼代的标识并按照职级倒序、入职时间正序排序
-                        var highCandidateUserSql = $@"SELECT
+                        #region 查询高阶审批人候选人，注本、代、兼、兼代的标识并按照职级倒序、入职时间正序排序
+                        var highCandidateUserSql = $@";WITH Dic AS
+                                                        (
+                                                            SELECT
+                                                                DicCode,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                    ELSE DicNameEn
+                                                                END AS DicName
+                                                            FROM Basic.DictionaryInfo WITH (NOLOCK)
+                                                            WHERE DicType = 'AppointmentType'
+                                                        ),
+                                                        MainJob AS
+                                                        (
+                                                            SELECT
+                                                                1 AS SortGroup,
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN @pautoprimary
+                                                                    ELSE @pautoagent
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN d1.DicName
+                                                                    ELSE d2.DicName
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserPosition position
+                                                                ON users.PositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept
+                                                                ON users.DepartmentId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel
+                                                                ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            LEFT JOIN Basic.UserAgent agent
+                                                                ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser
+                                                                ON agent.AgentUserId = agentuser.UserId
+                                                            LEFT JOIN Dic d1
+                                                                ON d1.DicCode = @pautoprimary
+                                                            LEFT JOIN Dic d2
+                                                                ON d2.DicCode = @pautoagent
+                                                            WHERE users.IsEmployed = 1
+                                                              AND users.IsFreeze = 0
+                                                              AND users.IsApproval = 1
+                                                              AND dept.DepartmentId IN ({deptInSql})
+                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
+                                                              AND position.SortOrder = @pposOrder
+                                                              AND position.SortOrder < @pappUserPosOrder
+                                                        ),
+                                                        PartTimeJob AS
+                                                        (
+                                                            SELECT
+                                                                2 AS SortGroup,
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN @pautoconcurrent
+                                                                    ELSE @pautoconcurrentagent
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN d3.DicName
+                                                                    ELSE d4.DicName
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserInfo users
+                                                                ON part.UserId = users.UserId
+                                                            INNER JOIN Basic.UserPosition position
+                                                                ON part.PartTimePositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept
+                                                                ON part.PartTimeDeptId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel
+                                                                ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            LEFT JOIN Basic.UserAgent agent
+                                                                ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser
+                                                                ON agent.AgentUserId = agentuser.UserId
+                                                            LEFT JOIN Dic d3
+                                                                ON d3.DicCode = @pautoconcurrent
+                                                            LEFT JOIN Dic d4
+                                                                ON d4.DicCode = @pautoconcurrentagent
+                                                            WHERE users.IsEmployed = 1
+                                                              AND users.IsFreeze = 0
+                                                              AND users.IsApproval = 1
+                                                              AND dept.DepartmentId IN ({deptInSql})
+                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
+                                                              AND position.SortOrder = @pposOrder
+                                                              AND position.SortOrder < @pappUserPosOrder
+                                                        )
+                                                        SELECT
                                                             t.UserId,
                                                             t.UserName,
                                                             t.AppointmentType,
@@ -540,151 +667,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                                             t.AgentUserName
                                                         FROM
                                                         (
-                                                            SELECT
-                                                                users.UserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
-                                                                    ELSE users.UserNameEn
-                                                                END AS UserName,
-                                                                position.SortOrder,
-                                                                users.HireDate,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoprimary
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoagent
-                                                                        )
-                                                                END AS AppointmentType,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoprimary
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoagent
-                                                                        )
-                                                                END AS AppointmentTypeName,
-                                                                agentuser.UserId AS AgentUserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
-                                                                    ELSE agentuser.UserNameEn
-                                                                END AS AgentUserName
-                                                            FROM Basic.UserInfo users WITH (NOLOCK)
-                                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
-                                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
-                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
-                                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
-                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                               AND agent.StartTime <= GETDATE()
-                                                               AND agent.EndTime >= GETDATE()
-                                                            LEFT JOIN Basic.UserInfo agentuser
-                                                                ON agent.AgentUserId = agentuser.UserId
-                                                            WHERE 
-                                                              users.IsEmployed = 1
-                                                              AND users.IsFreeze = 0
-                                                              AND users.IsApproval = 1
-                                                              AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
-                                                              AND position.SortOrder = @pposOrder
-                                                              AND position.SortOrder < @pappUserPosOrder
-
+                                                            SELECT * FROM MainJob
                                                             UNION ALL
-
-                                                            SELECT
-                                                                users.UserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
-                                                                    ELSE users.UserNameEn
-                                                                END AS UserName,
-                                                                position.SortOrder,
-                                                                users.HireDate,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrent
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrentagent
-                                                                        )
-                                                                END AS AppointmentType,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrent
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrentagent
-                                                                        )
-                                                                END AS AppointmentTypeName,
-                                                                agentuser.UserId AS AgentUserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
-                                                                    ELSE agentuser.UserNameEn
-                                                                END AS AgentUserName
-                                                            FROM Basic.UserPartTime part WITH (NOLOCK)
-                                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
-                                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
-                                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
-                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
-                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                               AND agent.StartTime <= GETDATE()
-                                                               AND agent.EndTime >= GETDATE()
-                                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
-                                                            WHERE 
-                                                              users.IsEmployed = 1
-                                                              AND users.IsFreeze = 0
-                                                              AND users.IsApproval = 1
-                                                              AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
-                                                              AND position.SortOrder = @pposOrder
-                                                              AND position.SortOrder < @pappUserPosOrder
-                                                        ) t ORDER BY SortOrder DESC,t.HireDate ASC;";
+                                                            SELECT * FROM PartTimeJob
+                                                        ) t
+                                                        ORDER BY
+                                                            t.SortGroup ASC,
+                                                            t.SortOrder DESC,
+                                                            t.HireDate ASC;";
                         #endregion
 
                         var highCandidateUserPar = new List<SugarParameter>
@@ -707,7 +697,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                         var highLevelUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(highCandidateUserSql, highCandidateUserPar);
                         if (highLevelUser.Count > 0)
                         {
-                            // 按照本、兼、代、兼代的顺序筛选最终审批人
+                            // 按照本、代、兼、兼代的顺序筛选最终审批人
                             hightLevelApproveUser = await GetFinalStepApproveUserList(highLevelUser, approveMode, "Auto");
                             itemPosOrder = -1;
                         }
@@ -745,8 +735,95 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
             // 指定部门信息
             var deptInfo = await _db.Queryable<DepartmentInfoEntity>().Where(dept => dept.DepartmentId == deptId).FirstAsync();
 
-            #region 查询符合步骤条件的签核人，带有注本、兼、代的标识并按照入职时间正序排序
-            var candidateUserSql = @"SELECT
+            #region 查询符合步骤条件的签核人，带有注本、代、兼、兼代的标识并按照入职时间正序排序
+            var candidateUserSql = @";WITH Dic AS
+                                        (
+                                            SELECT
+                                                DicCode,
+                                                CASE 
+                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                    ELSE DicNameEn
+                                                END AS DicName
+                                            FROM Basic.DictionaryInfo WITH (NOLOCK)
+                                            WHERE DicType = 'AppointmentType'
+                                        ),
+                                        MainJob AS
+                                        (
+                                            SELECT
+                                                1 AS SortGroup,
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE 
+                                                    WHEN agentuser.UserId IS NULL THEN @pprimary
+                                                    ELSE @pagent
+                                                END AS AppointmentType,
+                                                CASE 
+                                                    WHEN agentuser.UserId IS NULL THEN d1.DicName
+                                                    ELSE d2.DicName
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                            INNER JOIN Basic.UserPosition position 
+                                                ON users.PositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept 
+                                                ON users.DepartmentId = dept.DepartmentId
+                                            LEFT JOIN Basic.UserAgent agent 
+                                                ON users.UserId = agent.SubstituteUserId
+                                               AND agent.StartTime <= GETDATE()
+                                               AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser 
+                                                ON agent.AgentUserId = agentuser.UserId
+                                            LEFT JOIN Dic d1 ON d1.DicCode = @pprimary
+                                            LEFT JOIN Dic d2 ON d2.DicCode = @pagent
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
+                                                AND users.IsApproval = 1
+                                                AND dept.DepartmentId = @pdeptId
+                                                AND users.PositionId = @pposId
+                                        ),
+                                        PartTimeJob AS
+                                        (
+                                            SELECT
+                                                2 AS SortGroup,
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE 
+                                                    WHEN agentuser.UserId IS NULL THEN @pconcurrent
+                                                    ELSE @pconcurrentagent
+                                                END AS AppointmentType,
+                                                CASE 
+                                                    WHEN agentuser.UserId IS NULL THEN d3.DicName
+                                                    ELSE d4.DicName
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                            INNER JOIN Basic.UserInfo users 
+                                                ON part.UserId = users.UserId
+                                            INNER JOIN Basic.UserPosition position 
+                                                ON part.PartTimePositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept 
+                                                ON part.PartTimeDeptId = dept.DepartmentId
+                                            LEFT JOIN Basic.UserAgent agent 
+                                                ON users.UserId = agent.SubstituteUserId
+                                               AND agent.StartTime <= GETDATE()
+                                               AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser 
+                                                ON agent.AgentUserId = agentuser.UserId
+                                            LEFT JOIN Dic d3 ON d3.DicCode = @pconcurrent
+                                            LEFT JOIN Dic d4 ON d4.DicCode = @pconcurrentagent
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
+                                                AND users.IsApproval = 1
+                                                AND dept.DepartmentId = @pdeptId
+                                                AND part.PartTimePositionId = @pposId
+                                        )
+                                        SELECT
                                             t.UserId,
                                             t.UserName,
                                             t.AppointmentType,
@@ -755,94 +832,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                             t.AgentUserName
                                         FROM
                                         (
-                                            SELECT
-                                                users.UserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
-                                                users.HireDate,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
-                                                    ELSE
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
-                                                END AS AppointmentType,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
-                                                    ELSE
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
-                                                END AS AppointmentTypeName,
-                                                agentuser.UserId AS AgentUserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
-                                            FROM Basic.UserInfo users WITH (NOLOCK)
-                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
-                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
-                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
-                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                AND agent.StartTime <= GETDATE()
-                                                AND agent.EndTime >= GETDATE()
-                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
-                                            WHERE
-                                                users.IsEmployed = 1
-                                                AND users.IsFreeze = 0
-                                                AND users.IsApproval = 1
-                                                AND dept.DepartmentId = @pdeptId
-                                                AND users.PositionId = @pposId
-
+                                            SELECT * FROM MainJob
                                             UNION ALL
-
-                                            SELECT
-                                                users.UserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
-                                                users.HireDate,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
-                                                    ELSE
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
-                                                END AS AppointmentType,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
-                                                    ELSE
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
-                                                END AS AppointmentTypeName,
-                                                agentuser.UserId AS AgentUserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
-                                            FROM Basic.UserPartTime part WITH (NOLOCK)
-                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
-                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
-                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
-                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                AND agent.StartTime <= GETDATE()
-                                                AND agent.EndTime >= GETDATE()
-                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
-                                            WHERE
-                                                users.IsEmployed = 1
-                                                AND users.IsFreeze = 0
-                                                AND users.IsApproval = 1
-                                                AND dept.DepartmentId = @pdeptId
-                                                AND part.PartTimePositionId = @pposId
-                                        ) t ORDER BY t.HireDate ASC;";
+                                            SELECT * FROM PartTimeJob
+                                        ) t
+                                        ORDER BY
+                                            t.SortGroup ASC,
+                                            t.HireDate ASC;";
             #endregion
 
             var candidateUserPar = new List<SugarParameter>
@@ -856,11 +852,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                 new SugarParameter("@pposId", positionId),
             };
 
-            // 查询符合条件审批人候选人，注本、兼、代、兼代的标识并按照入职时间正序排序
+            // 查询符合条件审批人候选人，注本、代、兼、兼代并按照入职时间正序排序
             var candidateList = await _db.Ado.SqlQueryAsync<StepApproveUser>(candidateUserSql, candidateUserPar);
             if (candidateList.Count() > 0)
             {
-                // 按照本、兼、代、兼代的顺序筛选最终审批人
+                // 按照本、代、兼、兼代的顺序筛选最终审批人
                 finalApproveUser = await GetFinalStepApproveUserList(candidateList, approveMode, "PirCon");
             }
 
@@ -872,6 +868,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                               .With(SqlWith.NoLock)
                                               .ToParentListAsync(dept => dept.ParentId, deptId);
                 var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
+                var deptInSql = string.Join(", ", parentDeptIds);
 
                 var deptLevelMaxOrder = await _db.Queryable<DepartmentLevelEntity>()
                                                  .With(SqlWith.NoLock)
@@ -896,10 +893,119 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                     // 依次按照职级递减
                     for (int itemPosOrder = stepPosStartOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
                     {
-                        var deptInSql = string.Join(", ", parentDeptIds);
-
-                        #region 查询高阶审批人候选人，注本、兼、代、兼代的标识并按照职级倒序、入职时间正序排序
-                        var highCandidateUserSql = $@"SELECT
+                        #region 查询高阶审批人候选人，注本、代、兼、兼代并按照职级倒序、入职时间正序排序
+                        var highCandidateUserSql = $@";WITH Dic AS
+                                                        (
+                                                            SELECT
+                                                                DicCode,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                    ELSE DicNameEn
+                                                                END AS DicName
+                                                            FROM Basic.DictionaryInfo WITH (NOLOCK)
+                                                            WHERE DicType = 'AppointmentType'
+                                                        ),
+                                                        MainJob AS
+                                                        (
+                                                            SELECT
+                                                                1 AS SortGroup,
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN @pautoprimary
+                                                                    ELSE @pautoagent
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN d1.DicName
+                                                                    ELSE d2.DicName
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserPosition position
+                                                                ON users.PositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept
+                                                                ON users.DepartmentId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel
+                                                                ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            LEFT JOIN Basic.UserAgent agent
+                                                                ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser
+                                                                ON agent.AgentUserId = agentuser.UserId
+                                                            LEFT JOIN Dic d1
+                                                                ON d1.DicCode = @pautoprimary
+                                                            LEFT JOIN Dic d2
+                                                                ON d2.DicCode = @pautoagent
+                                                            WHERE
+                                                                users.IsEmployed = 1
+                                                                AND users.IsFreeze = 0
+                                                                AND users.IsApproval = 1
+                                                                AND dept.DepartmentId IN ({deptInSql})
+                                                                AND deptlevel.SortOrder = @pdeptlevelOrder
+                                                                AND position.SortOrder = @pposOrder
+                                                        ),
+                                                        PartTimeJob AS
+                                                        (
+                                                            SELECT
+                                                                2 AS SortGroup,
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN @pautoconcurrent
+                                                                    ELSE @pautoconcurrentagent
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN d3.DicName
+                                                                    ELSE d4.DicName
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserInfo users
+                                                                ON part.UserId = users.UserId
+                                                            INNER JOIN Basic.UserPosition position
+                                                                ON part.PartTimePositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept
+                                                                ON part.PartTimeDeptId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel
+                                                                ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            LEFT JOIN Basic.UserAgent agent
+                                                                ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser
+                                                                ON agent.AgentUserId = agentuser.UserId
+                                                            LEFT JOIN Dic d3
+                                                                ON d3.DicCode = @pautoconcurrent
+                                                            LEFT JOIN Dic d4
+                                                                ON d4.DicCode = @pautoconcurrentagent
+                                                            WHERE
+                                                                users.IsEmployed = 1
+                                                                AND users.IsFreeze = 0
+                                                                AND users.IsApproval = 1
+                                                                AND dept.DepartmentId IN ({deptInSql})
+                                                                AND deptlevel.SortOrder = @pdeptlevelOrder
+                                                                AND position.SortOrder = @pposOrder
+                                                        )
+                                                        SELECT
                                                             t.UserId,
                                                             t.UserName,
                                                             t.AppointmentType,
@@ -908,149 +1014,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                                             t.AgentUserName
                                                         FROM
                                                         (
-                                                            SELECT
-                                                                users.UserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
-                                                                    ELSE users.UserNameEn
-                                                                END AS UserName,
-                                                                position.SortOrder,
-                                                                users.HireDate,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoprimary
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoagent
-                                                                        )
-                                                                END AS AppointmentType,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoprimary
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoagent
-                                                                        )
-                                                                END AS AppointmentTypeName,
-                                                                agentuser.UserId AS AgentUserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
-                                                                    ELSE agentuser.UserNameEn
-                                                                END AS AgentUserName
-                                                            FROM Basic.UserInfo users WITH (NOLOCK)
-                                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
-                                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
-                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
-                                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
-                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                               AND agent.StartTime <= GETDATE()
-                                                               AND agent.EndTime >= GETDATE()
-                                                            LEFT JOIN Basic.UserInfo agentuser
-                                                                ON agent.AgentUserId = agentuser.UserId
-                                                            WHERE 
-                                                              users.IsEmployed = 1
-                                                              AND users.IsFreeze = 0
-                                                              AND users.IsApproval = 1
-                                                              AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
-                                                              AND position.SortOrder = @pposOrder
-
+                                                            SELECT * FROM MainJob
                                                             UNION ALL
-
-                                                            SELECT
-                                                                users.UserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
-                                                                    ELSE users.UserNameEn
-                                                                END AS UserName,
-                                                                position.SortOrder,
-                                                                users.HireDate,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrent
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrentagent
-                                                                        )
-                                                                END AS AppointmentType,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrent
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrentagent
-                                                                        )
-                                                                END AS AppointmentTypeName,
-                                                                agentuser.UserId AS AgentUserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
-                                                                    ELSE agentuser.UserNameEn
-                                                                END AS AgentUserName
-                                                            FROM Basic.UserPartTime part WITH (NOLOCK)
-                                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
-                                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
-                                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
-                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
-                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                               AND agent.StartTime <= GETDATE()
-                                                               AND agent.EndTime >= GETDATE()
-                                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
-                                                            WHERE 
-                                                              users.IsEmployed = 1
-                                                              AND users.IsFreeze = 0
-                                                              AND users.IsApproval = 1
-                                                              AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
-                                                              AND position.SortOrder = @pposOrder
-                                                        ) t ORDER BY SortOrder DESC,t.HireDate ASC;";
+                                                            SELECT * FROM PartTimeJob
+                                                        ) t
+                                                        ORDER BY
+                                                            t.SortGroup ASC,
+                                                            t.SortOrder DESC,
+                                                            t.HireDate ASC;";
                         #endregion
 
                         var highCandidateUserPar = new List<SugarParameter>
@@ -1072,7 +1043,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                         var highLevelUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(highCandidateUserSql, highCandidateUserPar);
                         if (highLevelUser.Count > 0)
                         {
-                            // 按照本、兼、代、兼代的顺序筛选最终审批人
+                            // 按照本、代、兼、兼代的顺序筛选最终审批人
                             hightLevelApproveUser = await GetFinalStepApproveUserList(highLevelUser, approveMode, "Auto");
                             itemPosOrder = -1;
                         }
@@ -1109,8 +1080,97 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
             // 申请人信息
             var stepUser = await _db.Queryable<UserInfoEntity>().Where(user => user.UserId == stepUserId).FirstAsync();
 
-            #region 查询符合步骤条件的签核人，带有注本、兼、代的标识并按照入职时间正序排序
-            var candidateUserSql = @"SELECT
+            #region 查询符合步骤条件的签核人，带有注本、代、兼、兼代并按照入职时间正序排序
+            var candidateUserSql = @";WITH Dic AS
+                                        (
+                                            SELECT
+                                                DicCode,
+                                                CASE
+                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                    ELSE DicNameEn
+                                                END AS DicName
+                                            FROM Basic.DictionaryInfo WITH (NOLOCK)
+                                            WHERE DicType = 'AppointmentType'
+                                        ),
+                                        MainJob AS
+                                        (
+                                            SELECT
+                                                1 AS SortGroup,
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN @pprimary
+                                                    ELSE @pagent
+                                                END AS AppointmentType,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN d1.DicName
+                                                    ELSE d2.DicName
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                            INNER JOIN Basic.UserPosition position
+                                                ON users.PositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept
+                                                ON users.DepartmentId = dept.DepartmentId
+                                            LEFT JOIN Basic.UserAgent agent
+                                                ON users.UserId = agent.SubstituteUserId
+                                               AND agent.StartTime <= GETDATE()
+                                               AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser
+                                                ON agent.AgentUserId = agentuser.UserId
+                                            LEFT JOIN Dic d1
+                                                ON d1.DicCode = @pprimary
+                                            LEFT JOIN Dic d2
+                                                ON d2.DicCode = @pagent
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
+                                                AND users.IsApproval = 1
+                                                AND users.UserId = @puserId
+                                        ),
+                                        PartTimeJob AS
+                                        (
+                                            SELECT
+                                                2 AS SortGroup,
+                                                users.UserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
+                                                users.HireDate,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN @pconcurrent
+                                                    ELSE @pconcurrentagent
+                                                END AS AppointmentType,
+                                                CASE
+                                                    WHEN agentuser.UserId IS NULL THEN d3.DicName
+                                                    ELSE d4.DicName
+                                                END AS AppointmentTypeName,
+                                                agentuser.UserId AS AgentUserId,
+                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
+                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                            INNER JOIN Basic.UserInfo users
+                                                ON part.UserId = users.UserId
+                                            INNER JOIN Basic.UserPosition position
+                                                ON part.PartTimePositionId = position.PositionId
+                                            INNER JOIN Basic.DepartmentInfo dept
+                                                ON part.PartTimeDeptId = dept.DepartmentId
+                                            LEFT JOIN Basic.UserAgent agent
+                                                ON users.UserId = agent.SubstituteUserId
+                                               AND agent.StartTime <= GETDATE()
+                                               AND agent.EndTime >= GETDATE()
+                                            LEFT JOIN Basic.UserInfo agentuser
+                                                ON agent.AgentUserId = agentuser.UserId
+                                            LEFT JOIN Dic d3
+                                                ON d3.DicCode = @pconcurrent
+                                            LEFT JOIN Dic d4
+                                                ON d4.DicCode = @pconcurrentagent
+                                            WHERE
+                                                users.IsEmployed = 1
+                                                AND users.IsFreeze = 0
+                                                AND users.IsApproval = 1
+                                                AND part.UserId = @puserId
+                                        )
+                                        SELECT
                                             t.UserId,
                                             t.UserName,
                                             t.AppointmentType,
@@ -1119,92 +1179,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                             t.AgentUserName
                                         FROM
                                         (
-                                            SELECT
-                                                users.UserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
-                                                users.HireDate,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
-                                                    ELSE
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
-                                                END AS AppointmentType,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pprimary)
-                                                    ELSE
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pagent)
-                                                END AS AppointmentTypeName,
-                                                agentuser.UserId AS AgentUserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
-                                            FROM Basic.UserInfo users WITH (NOLOCK)
-                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
-                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
-                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
-                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                AND agent.StartTime <= GETDATE()
-                                                AND agent.EndTime >= GETDATE()
-                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
-                                            WHERE
-                                                users.IsEmployed = 1
-                                                AND users.IsFreeze = 0
-                                                AND users.IsApproval = 1
-                                                AND users.UserId = @puserId
-
+                                            SELECT * FROM MainJob
                                             UNION ALL
-
-                                            SELECT
-                                                users.UserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN users.UserNameCn ELSE users.UserNameEn END AS UserName,
-                                                users.HireDate,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
-                                                    ELSE
-                                                        (SELECT TOP 1 DicCode
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
-                                                END AS AppointmentType,
-                                                CASE
-                                                    WHEN agentuser.UserId IS NULL THEN
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrent)
-                                                    ELSE
-                                                        (SELECT TOP 1 
-                                                                CASE WHEN @plocale = 'zh-CN' THEN DicNameCn ELSE DicNameEn END
-                                                         FROM Basic.DictionaryInfo
-                                                         WHERE DicType = 'AppointmentType' AND DicCode = @pconcurrentagent)
-                                                END AS AppointmentTypeName,
-                                                agentuser.UserId AS AgentUserId,
-                                                CASE WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn ELSE agentuser.UserNameEn END AS AgentUserName
-                                            FROM Basic.UserPartTime part WITH (NOLOCK)
-                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
-                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
-                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
-                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                AND agent.StartTime <= GETDATE()
-                                                AND agent.EndTime >= GETDATE()
-                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
-                                            WHERE
-                                                users.IsEmployed = 1
-                                                AND users.IsFreeze = 0
-                                                AND users.IsApproval = 1
-                                                AND part.UserId = @puserId
-                                        ) t ORDER BY t.HireDate ASC;";
+                                            SELECT * FROM PartTimeJob
+                                        ) t
+                                        ORDER BY
+                                            t.SortGroup ASC,
+                                            t.HireDate ASC;";
             #endregion
 
             var candidateUserPar = new List<SugarParameter>
@@ -1217,11 +1198,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                 new SugarParameter("@puserId", stepUser.UserId),
             };
 
-            // 查询符合条件审批人候选人，注本、兼、代、兼代的标识并按照入职时间正序排序
+            // 查询符合条件审批人候选人，注本、代、兼、兼代并按照入职时间正序排序
             var candidateList = await _db.Ado.SqlQueryAsync<StepApproveUser>(candidateUserSql, candidateUserPar);
             if (candidateList.Count() > 0)
             {
-                // 按照本、兼、代、兼代的顺序筛选最终审批人
+                // 按照本、代、兼、兼代的顺序筛选最终审批人
                 finalApproveUser = await GetFinalStepApproveUserList(candidateList, approveMode, "PirCon");
             }
 
@@ -1233,7 +1214,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                               .With(SqlWith.NoLock)
                                               .ToParentListAsync(dept => dept.ParentId, stepUser.DepartmentId);
                 var parentDeptIds = parentDeptList.Select(dept => dept.DepartmentId).ToList();
-
+                var deptInSql = string.Join(", ", parentDeptIds);
 
                 // 指定员工部门级别信息
                 var stepUserDeptLevel = await _db.Queryable<DepartmentInfoEntity>().Where(dept => dept.DepartmentId == stepUser.DepartmentId).FirstAsync();
@@ -1264,10 +1245,121 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                     // 依次按照职级递减
                     for (int itemPosOrder = stepPosStartOrder; itemPosOrder > 0 && itemPosOrder <= posMaxOrder;)
                     {
-                        var deptInSql = string.Join(", ", parentDeptIds);
-
-                        #region 查询高阶审批人候选人，注本、兼、代、兼代的标识并按照职级倒序、入职时间正序排序
-                        var highCandidateUserSql = $@"SELECT
+                        #region 查询高阶审批人候选人，注本、代、兼、兼代并按照职级倒序、入职时间正序排序
+                        var highCandidateUserSql = $@";WITH Dic AS
+                                                        (
+                                                            SELECT
+                                                                DicCode,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
+                                                                    ELSE DicNameEn
+                                                                END AS DicName
+                                                            FROM Basic.DictionaryInfo WITH (NOLOCK)
+                                                            WHERE DicType = 'AppointmentType'
+                                                        ),
+                                                        MainJob AS
+                                                        (
+                                                            SELECT
+                                                                1 AS SortGroup,
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN @pautoprimary
+                                                                    ELSE @pautoagent
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN d1.DicName
+                                                                    ELSE d2.DicName
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserInfo users WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserPosition position
+                                                                ON users.PositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept
+                                                                ON users.DepartmentId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel
+                                                                ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            LEFT JOIN Basic.UserAgent agent
+                                                                ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser
+                                                                ON agent.AgentUserId = agentuser.UserId
+                                                            LEFT JOIN Dic d1
+                                                                ON d1.DicCode = @pautoprimary
+                                                            LEFT JOIN Dic d2
+                                                                ON d2.DicCode = @pautoagent
+                                                            WHERE
+                                                                users.IsEmployed = 1
+                                                                AND users.IsFreeze = 0
+                                                                AND users.IsApproval = 1
+                                                                AND dept.DepartmentId IN ({deptInSql})
+                                                                AND deptlevel.SortOrder = @pdeptlevelOrder
+                                                                AND position.SortOrder = @pposOrder
+                                                                AND position.SortOrder < @pstepUserPosOrder
+                                                        ),
+                                                        PartTimeJob AS
+                                                        (
+                                                            SELECT
+                                                                2 AS SortGroup,
+                                                                users.UserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
+                                                                    ELSE users.UserNameEn
+                                                                END AS UserName,
+                                                                position.SortOrder,
+                                                                users.HireDate,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN @pautoconcurrent
+                                                                    ELSE @pautoconcurrentagent
+                                                                END AS AppointmentType,
+                                                                CASE
+                                                                    WHEN agentuser.UserId IS NULL THEN d3.DicName
+                                                                    ELSE d4.DicName
+                                                                END AS AppointmentTypeName,
+                                                                agentuser.UserId AS AgentUserId,
+                                                                CASE
+                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
+                                                                    ELSE agentuser.UserNameEn
+                                                                END AS AgentUserName
+                                                            FROM Basic.UserPartTime part WITH (NOLOCK)
+                                                            INNER JOIN Basic.UserInfo users
+                                                                ON part.UserId = users.UserId
+                                                            INNER JOIN Basic.UserPosition position
+                                                                ON part.PartTimePositionId = position.PositionId
+                                                            INNER JOIN Basic.DepartmentInfo dept
+                                                                ON part.PartTimeDeptId = dept.DepartmentId
+                                                            INNER JOIN Basic.DepartmentLevel deptlevel
+                                                                ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
+                                                            LEFT JOIN Basic.UserAgent agent
+                                                                ON users.UserId = agent.SubstituteUserId
+                                                               AND agent.StartTime <= GETDATE()
+                                                               AND agent.EndTime >= GETDATE()
+                                                            LEFT JOIN Basic.UserInfo agentuser
+                                                                ON agent.AgentUserId = agentuser.UserId
+                                                            LEFT JOIN Dic d3
+                                                                ON d3.DicCode = @pautoconcurrent
+                                                            LEFT JOIN Dic d4
+                                                                ON d4.DicCode = @pautoconcurrentagent
+                                                            WHERE
+                                                                users.IsEmployed = 1
+                                                                AND users.IsFreeze = 0
+                                                                AND users.IsApproval = 1
+                                                                AND dept.DepartmentId IN ({deptInSql})
+                                                                AND deptlevel.SortOrder = @pdeptlevelOrder
+                                                                AND position.SortOrder = @pposOrder
+                                                                AND position.SortOrder < @pstepUserPosOrder
+                                                        )
+                                                        SELECT
                                                             t.UserId,
                                                             t.UserName,
                                                             t.AppointmentType,
@@ -1276,151 +1368,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                                             t.AgentUserName
                                                         FROM
                                                         (
-                                                            SELECT
-                                                                users.UserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
-                                                                    ELSE users.UserNameEn
-                                                                END AS UserName,
-                                                                position.SortOrder,
-                                                                users.HireDate,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoprimary
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoagent
-                                                                        )
-                                                                END AS AppointmentType,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoprimary
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoagent
-                                                                        )
-                                                                END AS AppointmentTypeName,
-                                                                agentuser.UserId AS AgentUserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
-                                                                    ELSE agentuser.UserNameEn
-                                                                END AS AgentUserName
-                                                            FROM Basic.UserInfo users WITH (NOLOCK)
-                                                            INNER JOIN Basic.UserPosition position ON users.PositionId = position.PositionId
-                                                            INNER JOIN Basic.DepartmentInfo dept ON users.DepartmentId = dept.DepartmentId
-                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
-                                                            INNER JOIN Basic.UserPosition pos ON users.PositionId = pos.PositionId
-                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                               AND agent.StartTime <= GETDATE()
-                                                               AND agent.EndTime >= GETDATE()
-                                                            LEFT JOIN Basic.UserInfo agentuser
-                                                                ON agent.AgentUserId = agentuser.UserId
-                                                            WHERE 
-                                                              users.IsEmployed = 1
-                                                              AND users.IsFreeze = 0
-                                                              AND users.IsApproval = 1
-                                                              AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
-                                                              AND position.SortOrder = @pposOrder
-                                                              AND position.SortOrder < @pstepUserPosOrder
-
+                                                            SELECT * FROM MainJob
                                                             UNION ALL
-
-                                                            SELECT
-                                                                users.UserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN users.UserNameCn
-                                                                    ELSE users.UserNameEn
-                                                                END AS UserName,
-                                                                position.SortOrder,
-                                                                users.HireDate,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrent
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1 DicCode
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrentagent
-                                                                        )
-                                                                END AS AppointmentType,
-                                                                CASE
-                                                                    WHEN agentuser.UserId IS NULL THEN
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrent
-                                                                        )
-                                                                    ELSE
-                                                                        (
-                                                                            SELECT TOP 1
-                                                                                CASE
-                                                                                    WHEN @plocale = 'zh-CN' THEN DicNameCn
-                                                                                    ELSE DicNameEn
-                                                                                END
-                                                                            FROM Basic.DictionaryInfo
-                                                                            WHERE DicType = 'AppointmentType'
-                                                                              AND DicCode = @pautoconcurrentagent
-                                                                        )
-                                                                END AS AppointmentTypeName,
-                                                                agentuser.UserId AS AgentUserId,
-                                                                CASE
-                                                                    WHEN @plocale = 'zh-CN' THEN agentuser.UserNameCn
-                                                                    ELSE agentuser.UserNameEn
-                                                                END AS AgentUserName
-                                                            FROM Basic.UserPartTime part WITH (NOLOCK)
-                                                            INNER JOIN Basic.UserInfo users ON part.UserId = users.UserId
-                                                            INNER JOIN Basic.UserPosition position ON part.PartTimePositionId = position.PositionId
-                                                            INNER JOIN Basic.DepartmentInfo dept ON part.PartTimeDeptId = dept.DepartmentId
-                                                            INNER JOIN Basic.DepartmentLevel deptlevel ON dept.DepartmentLevelId = deptlevel.DepartmentLevelId
-                                                            LEFT JOIN Basic.UserAgent agent ON users.UserId = agent.SubstituteUserId
-                                                               AND agent.StartTime <= GETDATE()
-                                                               AND agent.EndTime >= GETDATE()
-                                                            LEFT JOIN Basic.UserInfo agentuser ON agent.AgentUserId = agentuser.UserId
-                                                            WHERE 
-                                                              users.IsEmployed = 1
-                                                              AND users.IsFreeze = 0
-                                                              AND users.IsApproval = 1
-                                                              AND dept.DepartmentId IN ({deptInSql})
-                                                              AND deptlevel.SortOrder = @pdeptlevelOrder
-                                                              AND position.SortOrder = @pposOrder
-                                                              AND position.SortOrder < @pstepUserPosOrder
-                                                        ) t ORDER BY SortOrder DESC,t.HireDate ASC;";
+                                                            SELECT * FROM PartTimeJob
+                                                        ) t
+                                                        ORDER BY
+                                                            t.SortGroup ASC,
+                                                            t.SortOrder DESC,
+                                                            t.HireDate ASC;";
                         #endregion
 
                         var highCandidateUserPar = new List<SugarParameter>
@@ -1443,7 +1398,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                         var highLevelUser = await _db.Ado.SqlQueryAsync<StepApproveUser>(highCandidateUserSql, highCandidateUserPar);
                         if (highLevelUser.Count > 0)
                         {
-                            // 按照本、兼、代、兼代的顺序筛选最终审批人
+                            // 按照本、代、兼、兼代的顺序筛选最终审批人
                             hightLevelApproveUser = await GetFinalStepApproveUserList(highLevelUser, approveMode, "Auto");
                             itemPosOrder = -1;
                         }
@@ -1475,44 +1430,50 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
         /// <returns></returns>
         public async Task<List<StepApproveUser>> GetFinalStepApproveUserList(List<StepApproveUser> stepApproveUser, string approveMode, string seekType)
         {
-            List<StepApproveUser> finalApproveUserList = new List<StepApproveUser>();
+            List<StepApproveUser> finalApproveUserList = new();
 
-            string AppTypePrimary = seekType == "PirCon"
-                ? AppointmentType.Primary.ToEnumString() : AppointmentType.AutoPrimary.ToEnumString();
-            string AppTypeAgent = seekType == "PirCon"
-                ? AppointmentType.Agent.ToEnumString() : AppointmentType.AutoAgent.ToEnumString();
-            string AppTypeConcurrent = seekType == "PirCon"
-                ? AppointmentType.Concurrent.ToEnumString() : AppointmentType.AutoConcurrent.ToEnumString();
-            string AppTypeConcurrentAgent = seekType == "PirCon"
-                ? AppointmentType.ConcurrentAgent.ToEnumString() : AppointmentType.AutoConcurrentAgent.ToEnumString();
+            string appTypePrimary = seekType == "PirCon"
+                ? AppointmentType.Primary.ToEnumString()
+                : AppointmentType.AutoPrimary.ToEnumString();
+
+            string appTypeAgent = seekType == "PirCon"
+                ? AppointmentType.Agent.ToEnumString()
+                : AppointmentType.AutoAgent.ToEnumString();
+
+            string appTypeConcurrent = seekType == "PirCon"
+                ? AppointmentType.Concurrent.ToEnumString()
+                : AppointmentType.AutoConcurrent.ToEnumString();
+
+            string appTypeConcurrentAgent = seekType == "PirCon"
+                ? AppointmentType.ConcurrentAgent.ToEnumString()
+                : AppointmentType.AutoConcurrentAgent.ToEnumString();
 
             if (approveMode == ApproveMode.Single.ToEnumString())
             {
-                var primary = stepApproveUser.Where(user => user.AppointmentType == AppTypePrimary).Count();
-                var Agent = stepApproveUser.Where(user => user.AppointmentType == AppTypeAgent).Count();
-                var Concurrent = stepApproveUser.Where(user => user.AppointmentType == AppTypeConcurrent).Count();
-                var ConcurrentAgent = stepApproveUser.Where(user => user.AppointmentType == AppTypeConcurrentAgent).Count();
-                if (primary > 0)
+                var priorityOrder = new[]
                 {
-                    finalApproveUserList = stepApproveUser.Where(user => user.AppointmentType == AppTypePrimary).ToList();
-                }
-                else if (Agent > 0)
+                    appTypePrimary,           // 实
+                    appTypeAgent,             // 代
+                    appTypeConcurrent,        // 兼
+                    appTypeConcurrentAgent    // 兼代
+                };
+
+                foreach (var appointmentType in priorityOrder)
                 {
-                    finalApproveUserList = stepApproveUser.Where(user => user.AppointmentType == AppTypeAgent).ToList();
-                }
-                else if (Concurrent > 0)
-                {
-                    finalApproveUserList = stepApproveUser.Where(user => user.AppointmentType == AppTypeConcurrent).ToList();
-                }
-                else if (ConcurrentAgent > 0)
-                {
-                    finalApproveUserList = stepApproveUser.Where(user => user.AppointmentType == AppTypeConcurrentAgent).ToList();
+                    var matchedUsers = stepApproveUser.Where(user => user.AppointmentType == appointmentType).ToList();
+
+                    if (matchedUsers.Count > 0)
+                    {
+                        finalApproveUserList = matchedUsers;
+                        break;
+                    }
                 }
             }
             else if (approveMode == ApproveMode.AndSingle.ToEnumString() || approveMode == ApproveMode.OrSingle.ToEnumString())
             {
                 finalApproveUserList = stepApproveUser;
             }
+
             return finalApproveUserList;
         }
     }

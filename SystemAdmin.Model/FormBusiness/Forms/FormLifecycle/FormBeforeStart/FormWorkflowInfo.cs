@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
+using SystemAdmin.Model.ModelHelper.ModelConverter;
 
 namespace SystemAdmin.Model.FormBusiness.Forms.FormLifecycle.FormBeforeStart
 {
@@ -12,11 +14,13 @@ namespace SystemAdmin.Model.FormBusiness.Forms.FormLifecycle.FormBeforeStart
         /// <summary>
         /// 表单Id
         /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
         public long FormId { get; set; }
 
         /// <summary>
         /// 当前步骤Id
         /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
         public long NowStepId { get; set; }
 
         /// <summary>
