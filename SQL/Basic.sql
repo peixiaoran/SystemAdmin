@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 17001105 (17.00.1105)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Basic
 
  Target Server Type    : SQL Server
- Target Server Version : 17001105 (17.00.1105)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 24/03/2026 20:42:13
+ Date: 25/03/2026 16:57:49
 */
 
 
@@ -2593,9 +2593,6 @@ GO
 INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsFreeze], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022542422663368704', N'1929535196076576770', N'1351584014896463872', N'E350428', N'李静远', N'Steven Lee', N'1', N'2026-02-14 00:00:00.000', N'1972220823855042560', N'1956372741586292736', N'3841510708@qq.com', N'18815384916', N'E350428', N'IcV2Og14Uyjsy9Wu4fQCnTNU45DYFglm/tA4we6yB8g=', N'iB4+0eMXDe00XNpS+sYWKA==', N'/20260315/20260315005909792_70ff1e94.jpg', N'1', N'0', N'1', N'1', N'1', N'0', N'0', N'180', N'2026-09-11 01:02:36.017', N'', N'1903486709602062336', N'2026-02-14 13:24:25.000', N'1903486709602062336', N'2026-03-15 01:02:36.017')
 GO
 
-INSERT INTO [Basic].[UserInfo] ([UserId], [DepartmentId], [PositionId], [UserNo], [UserNameCn], [UserNameEn], [Gender], [HireDate], [Nationality], [LaborId], [Email], [PhoneNumber], [LoginNo], [PassWord], [PwdSalt], [AvatarAddress], [IsEmployed], [IsFreeze], [IsApproval], [IsRealtimeNotification], [IsScheduledNotification], [IsAgent], [IsParttime], [ExpirationDays], [ExpirationTime], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2036414386679189504', N'1929535196076576773', N'1351584014896463872', N'E00001', N'E00001', N'E00001', N'1', N'2026-03-24 00:00:00.000', N'1972220728019390464', N'2032485639995396096', N'xiaoranpei3@gmail.com', N'18815384916', N'E00001', N'YCCgM6FaqGbDeQD4qIsThUfg/hBwyhWt8y9TLOXhzL0=', N'5C2MNMeg/AWbr/v1alf80w==', N'/20260324/20260324200638117_be3be34e.jpg', N'1', N'0', N'1', N'1', N'1', N'0', N'0', N'180', N'2026-09-20 20:31:35.823', N'', N'1903486709602062336', N'2026-03-24 20:06:39.450', N'1903486709602062336', N'2026-03-24 20:31:35.823')
-GO
-
 
 -- ----------------------------
 -- Table structure for UserLabor
@@ -3422,6 +3419,9 @@ GO
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-24 20:30:51.907')
 GO
 
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-25 15:42:47.823')
+GO
+
 
 -- ----------------------------
 -- Table structure for UserPartTime
@@ -3817,9 +3817,6 @@ INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [Cre
 GO
 
 INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022542422663368704', N'1979881189825187840', NULL, N'1903486709602062336', N'2026-02-14 13:24:25.000', N'1903486709602062336', N'2026-03-15 01:02:36.020')
-GO
-
-INSERT INTO [Basic].[UserRole] ([UserId], [RoleId], [Remarks], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2036414386679189504', N'1905670034215276544', NULL, N'1903486709602062336', N'2026-03-24 20:06:39.483', N'1903486709602062336', N'2026-03-24 20:31:35.823')
 GO
 
 

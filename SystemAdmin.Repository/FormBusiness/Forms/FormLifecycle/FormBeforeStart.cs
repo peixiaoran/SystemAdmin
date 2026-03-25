@@ -1,4 +1,5 @@
 ﻿using SqlSugar;
+using System.Text.RegularExpressions;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
@@ -168,11 +169,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
 
             // 查询表单审批开始步骤
             var workflowStepId = await _db.Queryable<WorkflowStepEntity>()
-                                     .With(SqlWith.NoLock)
-                                     .InnerJoin<FormInfoEntity>((stepinfo, form) => stepinfo.FormTypeId == form.FormTypeId)
-                                     .Where((stepinfo, form) => form.FormId == formId && stepinfo.IsStartStep == 1)
-                                     .Select((stepinfo, form) => stepinfo.StepId)
-                                     .FirstAsync();
+                                          .With(SqlWith.NoLock)
+                                          .InnerJoin<FormInfoEntity>((stepinfo, form) => stepinfo.FormTypeId == form.FormTypeId)
+                                          .Where((stepinfo, form) => form.FormId == formId && stepinfo.IsStartStep == 1)
+                                          .Select((stepinfo, form) => stepinfo.StepId)
+                                          .FirstAsync();
             while (workflowStepId > -1)
             {
                 var nowStep = await _db.Queryable<WorkflowStepEntity>()
@@ -295,50 +296,40 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                     {
                         // 寻找符合条件的分支添加到 accBranchList
                         var condition = await _db.Queryable<WorkflowConditionEntity>().Where(condition => condition.ConditionId == branchItem.ConditionId).FirstAsync();
+
+                        // 获取条件表达式方法
                         var method = _workflowConditionFun.GetType().GetMethod(condition.HandlerKey);
 
                         if (method != null)
                         {
-                            var resultObj = method.Invoke(_workflowConditionFun, new object[] { formId });
-                            if (resultObj is Task<bool> task)
+                            // 执行表达式方法结果
+                            bool result = await EvaluateExpression(condition.HandlerKey, formId);
+                            if (result)
                             {
-                                bool result = await task;
-                                if (result)
-                                {
-                                    var conitem = new AccordanceBranch();
-                                    conitem.ConditionId = condition.ConditionId;
-                                    conitem.ExecuteMatched = branchItem.ExecuteMatched;
-                                    conitem.NextStepId = branchItem.NextStepId;
-                                    accBranchList.Add(conitem);
-                                }
+                                var conitem = new AccordanceBranch();
+                                conitem.ConditionId = condition.ConditionId;
+                                conitem.ExecuteMatched = branchItem.ExecuteMatched;
+                                conitem.NextStepId = branchItem.NextStepId;
+                                accBranchList.Add(conitem);
                             }
                         }
                     }
                 }
 
                 // 如果没有符合条件，则将默认分支的下一步骤赋值
-                var accCount = accBranchList.Where(acc => acc.ExecuteMatched == 1);
-                if (accCount.Count() == 0)
+                if (accBranchList.Count() == 0)
                 {
                     workflowStepId = branchList.Where(branch => branch.ConditionId == -1).First().NextStepId;
                 }
                 // 如果有多个符合条件，则选择执行唯一的分支的下一步骤赋值
                 else
                 {
-                    var matched = accBranchList.Where(acc => acc.ExecuteMatched == 1);
-                    if (matched != null && matched.Count() > 0)
-                    {
-                        workflowStepId = matched.First().NextStepId;
-                    }
-                    else
-                    {
-                        workflowStepId = accBranchList.First().NextStepId;
-                    }
+                    workflowStepId = accBranchList.First().NextStepId;
                 }
             }
 
             // 标识当前步骤的签核人签核状态
-            var pendingAppUser =  await _db.Queryable<PendingApprovalEntity>()
+            var pendingAppUser = await _db.Queryable<PendingApprovalEntity>()
                                            .Where(pending => pending.FormId == formId)
                                            .ToListAsync();
 
@@ -1474,6 +1465,74 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
             }
 
             return finalApproveUserList;
+        }
+
+        /// <summary>
+        /// 条件方法表达式结果
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        private async Task<bool> EvaluateExpression(string expression, long formId)
+        {
+            expression = Regex.Replace(expression, @"\s+", "");
+
+            // 拆方法
+            var tokens = Regex.Split(expression, @"&&|\|\|");
+
+            // 提取操作符
+            var operators = Regex.Matches(expression, @"&&|\|\|")
+                                 .Select(m => m.Value)
+                                 .ToList();
+
+            if (tokens.Length == 0)
+                return false;
+
+            // 第一个方法
+            bool result = await InvokeMethod(tokens[0], formId);
+
+            for (int i = 1; i < tokens.Length; i++)
+            {
+                string op = operators[i - 1];
+
+                // ✅ 短路逻辑（关键优化）
+                if (op == "&&" && !result)
+                    return false;
+
+                if (op == "||" && result)
+                    return true;
+
+                bool next = await InvokeMethod(tokens[i], formId);
+
+                if (op == "&&")
+                    result = result && next;
+                else
+                    result = result || next;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 表达式调用方法
+        /// </summary>
+        /// <param name="methodName"></param>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        private async Task<bool> InvokeMethod(string methodName, long formId)
+        {
+            var method = _workflowConditionFun.GetType().GetMethod(methodName);
+
+            if (method == null)
+                throw new Exception($"找不到方法: {methodName}");
+
+            var resultObj = method.Invoke(_workflowConditionFun, new object[] { formId });
+
+            if (resultObj is Task<bool> task)
+                return await task;
+
+            throw new Exception($"方法 {methodName} 必须返回 Task<bool>");
         }
     }
 }
