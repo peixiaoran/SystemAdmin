@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001000 (16.00.1000)
- Source Host           : 127.0.0.1:1433
+ Source Server Version : 17001105 (17.00.1105)
+ Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001000 (16.00.1000)
+ Target Server Version : 17001105 (17.00.1105)
  File Encoding         : 65001
 
- Date: 25/03/2026 16:57:24
+ Date: 26/03/2026 19:01:17
 */
 
 
@@ -703,87 +703,6 @@ GO
 
 -- ----------------------------
 -- Records of FormLog
--- ----------------------------
-
--- ----------------------------
--- Table structure for FormLog_copy1
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormLog_copy1]') AND type IN ('U'))
-	DROP TABLE [Form].[FormLog_copy1]
-GO
-
-CREATE TABLE [Form].[FormLog_copy1] (
-  [FormId] bigint  NOT NULL,
-  [StepId] bigint  NOT NULL,
-  [OperationUserId] bigint  NOT NULL,
-  [OperationStatus] bigint  NOT NULL,
-  [RejectedStepId] bigint  NULL,
-  [Comment] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [OperationDate] datetime2(3)  NOT NULL
-)
-GO
-
-ALTER TABLE [Form].[FormLog_copy1] SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单Id',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog_copy1',
-'COLUMN', N'FormId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'步骤Id',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog_copy1',
-'COLUMN', N'StepId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作员工Id',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog_copy1',
-'COLUMN', N'OperationUserId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作类型（签核、驳回）',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog_copy1',
-'COLUMN', N'OperationStatus'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'驳回至步骤',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog_copy1',
-'COLUMN', N'RejectedStepId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'审批意见',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog_copy1',
-'COLUMN', N'Comment'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作时间',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog_copy1',
-'COLUMN', N'OperationDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单日志信息',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog_copy1'
-GO
-
-
--- ----------------------------
--- Records of FormLog_copy1
 -- ----------------------------
 
 -- ----------------------------
@@ -1494,9 +1413,6 @@ GO
 -- ----------------------------
 -- Records of WorkflowStepBranch
 -- ----------------------------
-INSERT INTO [Form].[WorkflowStepBranch] ([BranChId], [StepId], [ConditionId], [ExecuteMatched], [NextStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2036720432031338496', N'2029389483455156224', N'-1', N'0', N'2036076248547069952', N'1903486709602062336', N'2026-03-25 16:22:46.090', N'0', NULL)
-GO
-
 
 -- ----------------------------
 -- Table structure for WorkflowStepCustom
