@@ -44,5 +44,10 @@
         /// 自动指派 - 兼 - 代
         /// </summary
         AutoConcurrentAgent = 8,
+
+        /// <summary>
+        /// 职级覆盖跳过
+        /// </summary
+        HierarchySkipped = 9,
     }
 }

@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 17001105 (17.00.1105)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Basic
 
  Target Server Type    : SQL Server
- Target Server Version : 17001105 (17.00.1105)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 26/03/2026 19:01:11
+ Date: 27/03/2026 17:01:14
 */
 
 
@@ -998,19 +998,19 @@ GO
 INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022522679818588160', N'1968271760889614336', N'AppointmentType', N'Primary', N'本', N'Primary', N'1', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523046727913472', N'1968271760889614336', N'AppointmentType', N'Concurrent', N'兼', N'Concurrent', N'2', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523046727913472', N'1968271760889614336', N'AppointmentType', N'Concurrent', N'兼', N'Concurrent', N'3', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523134879600640', N'1968271760889614336', N'AppointmentType', N'Agent', N'代', N'Agent', N'3', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523134879600640', N'1968271760889614336', N'AppointmentType', N'Agent', N'代', N'Agent', N'2', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
 INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523379030036480', N'1968271760889614336', N'AppointmentType', N'AutoPrimary', N'自动指派 - 本', N'Auto - Primary', N'5', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2027616422913511424', N'1968271760889614336', N'AppointmentType', N'AutoConcurrent', N'自动指派 - 兼', N'Auto - Concurrent', N'6', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2027616422913511424', N'1968271760889614336', N'AppointmentType', N'AutoConcurrent', N'自动指派 - 兼', N'Auto - Concurrent', N'7', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
-INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2029030380463591424', N'1968271760889614336', N'AppointmentType', N'AutoAgent', N'自动指派 - 代', N'Auto - Agent', N'7', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2029030380463591424', N'1968271760889614336', N'AppointmentType', N'AutoAgent', N'自动指派 - 代', N'Auto - Agent', N'6', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
 GO
 
 INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2022523134879600641', N'1968271760889614336', N'AppointmentType', N'ConcurrentAgent', N'兼 - 代', N'Concurren - Agent', N'4', N'1903486709602062336', N'2026-03-05 09:12:20.000', NULL, NULL)
@@ -1023,6 +1023,9 @@ INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode],
 GO
 
 INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2035212012572774400', N'1968271760889614336', N'LeaveType', N'Bereavement', N'丧假', N'Bereavement Leave', N'8', N'1903486709602062336', N'2026-03-21 12:28:50.867', N'1903486709602062336', N'2026-03-21 12:29:06.873')
+GO
+
+INSERT INTO [Basic].[DictionaryInfo] ([DicId], [ModuleId], [DicType], [DicCode], [DicNameCn], [DicNameEn], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2037436582025367552', N'1968271760889614336', N'AppointmentType', N'HierarchySkipped', N'职级覆盖跳过', N'Hierarchy-Skipped', N'9', N'1903486709602062336', N'2026-03-27 15:48:29.553', NULL, NULL)
 GO
 
 
@@ -3429,6 +3432,12 @@ INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALU
 GO
 
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-26 18:49:36.540')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'IncorrectPassword', N'2026-03-27 15:45:40.570')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-03-27 15:45:49.973')
 GO
 
 

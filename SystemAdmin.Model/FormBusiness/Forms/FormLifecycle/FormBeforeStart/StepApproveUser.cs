@@ -31,12 +31,12 @@ namespace SystemAdmin.Model.FormBusiness.Forms.FormLifecycle.FormBeforeStart
         public string AgentUserName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 签核类型（实任、兼任、代理）
+        /// 签核类型
         /// </summary>
         public string AppointmentType { get; set; } = string.Empty;
 
         /// <summary>
-        /// 签核类型名称（实任、兼任、代理）
+        /// 签核类型名称
         /// </summary>
         public string AppointmentTypeName { get; set; } = string.Empty;
 

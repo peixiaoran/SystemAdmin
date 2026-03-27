@@ -103,14 +103,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
         /// 保存表单信息
         /// </summary>
         /// <param name="formId"></param>
-        /// <param name="modifiedUserId"></param>
+        /// <param name="loginuserId"></param>
         /// <returns></returns>
-        public async Task<int> SaveFormInfo(long formId, long modifiedUserId)
+        public async Task<int> SaveFormInfo(long formId, long loginuserId)
         {
             return await _db.Updateable<FormInfoEntity>()
                             .SetColumns(forminfo => new FormInfoEntity
                             {
-                                ModifiedBy = modifiedUserId,
+                                ModifiedBy = loginuserId,
                                 ModifiedDate = DateTime.Now,
                             }).Where(forminfo => forminfo.FormId == formId)
                             .ExecuteCommandAsync();
@@ -186,7 +186,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                 {
                     WorkflowApproveUser approveItem = new WorkflowApproveUser();
 
-                    // 查询签核类型（本、兼、代、自动指派）
+                    // 查询签核类型（本）
                     var applyTypePrimary = await _db.Queryable<DictionaryInfoEntity>()
                                                     .With(SqlWith.NoLock)
                                                     .Where(app => app.DicType == "AppointmentType" && app.DicCode == AppointmentType.Primary.ToEnumString())
@@ -216,26 +216,74 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                 // 依照组织架构
                 else if (nowStep.Assignment == Assignment.Org.ToEnumString())
                 {
-                    // 申请人所有上级部门
-                    var parentDeptList = await _db.Queryable<DepartmentInfoEntity>()
-                                                  .With(SqlWith.NoLock)
-                                                  .ToParentListAsync(dept => dept.ParentId, applyUserInfo.DepartmentId);
-
                     // 步骤要求（部门级别、职级）
                     var stepOrg = await _db.Queryable<WorkflowStepOrgEntity>()
                                            .With(SqlWith.NoLock)
                                            .Where(org => org.StepId == nowStep.StepId)
                                            .FirstAsync();
-                    // 查询此步骤的审批人
-                    var orgApproveUser = await GetStepApproveUserByOrg(applyUserInfo.UserId, nowStep.ApproveMode, stepOrg.DeptLeaveId, stepOrg.PositionId);
 
-                    WorkflowApproveUser approveItem = new WorkflowApproveUser();
-                    approveItem.StepId = nowStep.StepId;
-                    approveItem.StepName = _lang.Locale == "zh-CN"
-                                           ? nowStep.StepNameCn
-                                           : nowStep.StepNameEn;
-                    approveItem.stepApproveUser = orgApproveUser;
-                    workflowApproveList.Add(approveItem);
+                    // 组织架构部门级别、信息
+                    var orgDeptLeave = await _db.Queryable<DepartmentLevelEntity>()
+                                                .With(SqlWith.NoLock)
+                                                .Where(deptleave => deptleave.DepartmentLevelId == stepOrg.DeptLeaveId)
+                                                .FirstAsync();
+                    // 组织架构职级信息
+                    var orgPostion = await _db.Queryable<DepartmentLevelEntity>()
+                                                .With(SqlWith.NoLock)
+                                                .Where(deptleave => deptleave.DepartmentLevelId == stepOrg.DeptLeaveId)
+                                                .FirstAsync();
+
+
+                    // 申请人部门等级信息
+                    var applyDeptLevel = await _db.Queryable<UserInfoEntity>()
+                                                  .With(SqlWith.NoLock)
+                                                  .LeftJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
+                                                  .LeftJoin<DepartmentLevelEntity>((user, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                                                  .Where((user, dept, deptlevel) => user.UserId == applyUserInfo.UserId)
+                                                  .Select((user, dept, deptlevel) => deptlevel)
+                                                  .FirstAsync();
+
+
+                    // 如果申请人部门等级大于组织架构步骤的部门等级，则职级覆盖跳过
+                    if (applyDeptLevel.SortOrder <= orgDeptLeave.SortOrder)
+                    {
+                        WorkflowApproveUser approveItem = new WorkflowApproveUser();
+
+                        // 查询签核类型（职级覆盖跳过）
+                        var applyTypeSkip = await _db.Queryable<DictionaryInfoEntity>()
+                                                     .With(SqlWith.NoLock)
+                                                     .Where(app => app.DicType == "AppointmentType" && app.DicCode == AppointmentType.HierarchySkipped.ToEnumString())
+                                                     .FirstAsync();
+
+                        List<StepApproveUser> stepApproveUser = new List<StepApproveUser>();
+                        stepApproveUser.Add(new StepApproveUser
+                        {
+                            AppointmentType = applyTypeSkip.DicCode,
+                            AppointmentTypeName = _lang.Locale == "zh-CN"
+                                       ? applyTypeSkip.DicNameCn
+                                       : applyTypeSkip.DicNameEn
+                        });
+
+                        approveItem.StepId = nowStep.StepId;
+                        approveItem.StepName = _lang.Locale == "zh-CN"
+                                               ? nowStep.StepNameCn
+                                               : nowStep.StepNameEn;
+                        approveItem.stepApproveUser = stepApproveUser;
+                        workflowApproveList.Add(approveItem);
+                    }
+                    else
+                    {
+                        // 查询此步骤的审批人
+                        var orgApproveUser = await GetStepApproveUserByOrg(applyUserInfo.UserId, nowStep.ApproveMode, stepOrg.DeptLeaveId, stepOrg.PositionId);
+
+                        WorkflowApproveUser approveItem = new WorkflowApproveUser();
+                        approveItem.StepId = nowStep.StepId;
+                        approveItem.StepName = _lang.Locale == "zh-CN"
+                                               ? nowStep.StepNameCn
+                                               : nowStep.StepNameEn;
+                        approveItem.stepApproveUser = orgApproveUser;
+                        workflowApproveList.Add(approveItem);
+                    }
                 }
 
                 // 依照指定部门、职级
