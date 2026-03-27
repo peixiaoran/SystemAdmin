@@ -222,19 +222,17 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                            .Where(org => org.StepId == nowStep.StepId)
                                            .FirstAsync();
 
-                    // 组织架构部门级别、信息
+                    // 组织架构部门级别、职级信息
                     var orgDeptLeave = await _db.Queryable<DepartmentLevelEntity>()
                                                 .With(SqlWith.NoLock)
                                                 .Where(deptleave => deptleave.DepartmentLevelId == stepOrg.DeptLeaveId)
                                                 .FirstAsync();
-                    // 组织架构职级信息
-                    var orgPostion = await _db.Queryable<DepartmentLevelEntity>()
+                    var orgPosition = await _db.Queryable<UserPositionEntity>()
                                                 .With(SqlWith.NoLock)
-                                                .Where(deptleave => deptleave.DepartmentLevelId == stepOrg.DeptLeaveId)
+                                                .Where(position => position.PositionId == stepOrg.PositionId)
                                                 .FirstAsync();
 
-
-                    // 申请人部门等级信息
+                    // 申请人部门等级、职级信息
                     var applyDeptLevel = await _db.Queryable<UserInfoEntity>()
                                                   .With(SqlWith.NoLock)
                                                   .LeftJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
@@ -242,10 +240,15 @@ namespace SystemAdmin.Repository.FormBusiness.FormLifecycle
                                                   .Where((user, dept, deptlevel) => user.UserId == applyUserInfo.UserId)
                                                   .Select((user, dept, deptlevel) => deptlevel)
                                                   .FirstAsync();
+                    var applyPosition = await _db.Queryable<UserInfoEntity>()
+                                                 .With(SqlWith.NoLock)
+                                                 .LeftJoin<UserPositionEntity>((user, position) => user.PositionId == position.PositionId)
+                                                 .Where((user, position) => user.UserId == applyUserInfo.UserId)
+                                                 .Select((user, position) => position)
+                                                 .FirstAsync();
 
-
-                    // 如果申请人部门等级大于组织架构步骤的部门等级，则职级覆盖跳过
-                    if (applyDeptLevel.SortOrder <= orgDeptLeave.SortOrder)
+                    // 如果申请人部门等级、职级大于组织架构步骤的部门等级，则职级覆盖跳过
+                    if (applyDeptLevel.SortOrder <= orgDeptLeave.SortOrder && applyPosition.SortOrder <= orgPosition.SortOrder)
                     {
                         WorkflowApproveUser approveItem = new WorkflowApproveUser();
 
