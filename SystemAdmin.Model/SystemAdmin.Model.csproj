@@ -14,4 +14,8 @@
     <ProjectReference Include="..\SystemAdmin.Common\SystemAdmin.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FormBusiness\Workflow\Form\" />
+  </ItemGroup>
+
 </Project>

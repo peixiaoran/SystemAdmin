@@ -10,10 +10,10 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormAudit
     [RoutingAuthorize]
     [Route("api/FormBusiness/FormBasicInfo/[controller]/[action]")]
     [ApiController]
-    public class FormCounting : ControllerBase
+    public class FormSequence : ControllerBase
     {
-        private readonly FormCountingService _formCountingService;
-        public FormCounting(FormCountingService formCountingService)
+        private readonly FormSequenceService _formCountingService;
+        public FormSequence(FormSequenceService formCountingService)
         {
             _formCountingService = formCountingService;
         }
@@ -21,7 +21,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormAudit
         [HttpPost]
         [Tags("表单业务管理-表单审计模块")]
         [EndpointSummary("[表单计数] 查询表单计数分页")]
-        public async Task<ResultPaged<FormCountingDto>> GetFormCountingPage([FromBody] GetFormCountingPage getPage)
+        public async Task<ResultPaged<FormSequenceDto>> GetFormCountingPage([FromBody] GetFormSequencePage getPage)
         {
             return await _formCountingService.GetFormCountingPage(getPage);
         }

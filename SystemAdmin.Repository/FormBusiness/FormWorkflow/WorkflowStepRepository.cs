@@ -61,26 +61,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 流程步骤下拉
-        /// </summary>
-        /// <param name="formTypeId"></param>
-        /// <returns></returns>
-        public async Task<List<WorkflowStepDropDto>> GetWorkflowStepDropDown(long formTypeId)
-        {
-            return await _db.Queryable<WorkflowStepEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(step => step.SortOrder)
-                            .Where(step => step.FormTypeId == formTypeId)
-                            .Select(step => new WorkflowStepDropDto
-                            {
-                                StepId = step.StepId,
-                                StepName = _lang.Locale == "zh-CN"
-                                           ? step.StepNameCn
-                                           : step.StepNameEn
-                            }).ToListAsync();
-        }
-
-        /// <summary>
         /// 步骤指派规则下拉
         /// </summary>
         /// <returns></returns>
@@ -174,21 +154,21 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 流程条件下拉
+        /// 流程分支下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<WorkflowConditionDropDto>> GetWorkflowConditionDropDown(long formTypeId)
+        public async Task<List<WorkflowBranchDropDto>> GetWorkflowBranchDropDown(long formTypeId)
         {
-            return await _db.Queryable<WorkflowConditionEntity>()
+            return await _db.Queryable<WorkflowBranchEntity>()
                             .With(SqlWith.NoLock)
-                            .OrderBy(condition => condition.CreatedDate)
-                            .Where(condition => condition.FormTypeId == formTypeId)
-                            .Select(condition => new WorkflowConditionDropDto
+                            .OrderBy(branch => branch.CreatedDate)
+                            .Where(branch => branch.FormTypeId == formTypeId)
+                            .Select(branch => new WorkflowBranchDropDto
                             {
-                                ConditionId = condition.ConditionId,
-                                ConditionName = _lang.Locale == "zh-CN"
-                                                ? condition.ConditionNameCn
-                                                : condition.ConditionNameEn,
+                                BranchId = branch.BranchId,
+                                BranchName = _lang.Locale == "zh-CN"
+                                                ? branch.BranchNameCn
+                                                : branch.BranchNameEn,
                             }).ToListAsync();
         }
 
@@ -309,8 +289,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <returns></returns>
         public async Task<int> DeleteWorkflowStepBranch(long branChId)
         {
-            return await _db.Deleteable<WorkflowStepBranchEntity>()
-                            .Where(stepcondition => stepcondition.BranChId == branChId)
+            return await _db.Deleteable<WorkflowBranchStepEntity>()
+                            .Where(stepbranch => stepbranch.BranchId == branChId)
                             .ExecuteCommandAsync();
         }
 
@@ -321,9 +301,9 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <returns></returns>
         public async Task<int> UpdateWorkflowStepBranch(long stepId)
         {
-            return await _db.Updateable<WorkflowStepBranchEntity>()
-                            .SetColumns(stepcondition => stepcondition.NextStepId == -1)
-                            .Where(stepcondition => stepcondition.NextStepId == stepId)
+            return await _db.Updateable<WorkflowBranchStepEntity>()
+                            .SetColumns(stepbranch => stepbranch.NextStepId == -1)
+                            .Where(stepbranch => stepbranch.NextStepId == stepId)
                             .ExecuteCommandAsync();
         }
 
@@ -368,33 +348,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                                ? dic.DicNameCn
                                                : dic.DicNameEn,
                                 }).ToListAsync();
-
-            // 循环查询步骤流程分支信息
-            foreach (var stepItem in page)
-            {
-                var stepConList = await _db.Queryable<WorkflowStepBranchEntity>()
-                                           .With(SqlWith.NoLock)
-                                           .LeftJoin<WorkflowConditionEntity>((stepbranch, condition) => stepbranch.ConditionId == condition.ConditionId)
-                                           .LeftJoin<WorkflowStepEntity>((stepbranch, condition, nextStep) => stepbranch.NextStepId == nextStep.StepId)
-                                           .Where((stepbranch, condition, nextStep) => stepbranch.StepId == stepItem.StepId)
-                                           .OrderByDescending((stepbranch, condition, nextStep) => stepbranch.ExecuteMatched)
-                                           .OrderByDescending((stepbranch, condition, nextStep) => stepbranch.CreatedDate)
-                                           .Select((stepbranch, condition, nextStep) => new WorkflowStepBranchDto()
-                                           {
-                                               BranChId = stepbranch.BranChId,
-                                               StepId = stepItem.StepId,
-                                               ConditionId = condition.ConditionId,
-                                               ConditionName = _lang.Locale == "zh-CN"
-                                                               ? condition.ConditionNameCn
-                                                               : condition.ConditionNameEn,
-                                               ExecuteMatched = stepbranch.ExecuteMatched,
-                                               NextStepId = stepbranch.NextStepId,
-                                               NextStepName = _lang.Locale == "zh-CN"
-                                                               ? nextStep.StepNameCn
-                                                               : nextStep.StepNameEn
-                                           }).ToListAsync();
-                stepItem.StepBranchList = stepConList;
-            }
             return Result<List<WorkflowStepListDto>>.Ok(page.Adapt<List<WorkflowStepListDto>>());
         }
 
@@ -474,7 +427,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowStepBranch(WorkflowStepBranchEntity entity)
+        public async Task<int> InsertWorkflowStepBranch(WorkflowBranchStepEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
@@ -483,12 +436,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 删除步骤流程分支
         /// </summary>
         /// <param name="stepId"></param>
-        /// <param name="conditionId"></param>
+        /// <param name="branchId"></param>
         /// <returns></returns>
-        public async Task<int> DeleteWorkflowStepBranch(long stepId, long conditionId)
+        public async Task<int> DeleteWorkflowStepBranch(long stepId, long branchId)
         {
-            return await _db.Deleteable<WorkflowStepBranchEntity>()
-                            .Where(stepbranch => stepbranch.StepId == stepId && stepbranch.ConditionId == conditionId)
+            return await _db.Deleteable<WorkflowBranchStepEntity>()
+                            .Where(stepbranch => stepbranch.StepId == stepId && stepbranch.BranchId == branchId)
                             .ExecuteCommandAsync();
         }
 
@@ -497,15 +450,15 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepBranch(WorkflowStepBranchEntity entity)
+        public async Task<int> UpdateWorkflowStepBranch(WorkflowBranchStepEntity entity)
         {
             return await _db.Updateable(entity)
                             .IgnoreColumns(stepbranch => new
                             {
-                                stepbranch.BranChId,
+                                stepbranch.BranchId,
                                 stepbranch.CreatedBy,
                                 stepbranch.CreatedDate,
-                            }).Where(stepbranch => stepbranch.BranChId == entity.BranChId)
+                            }).Where(stepbranch => stepbranch.BranchId == entity.BranchId)
                             .ExecuteCommandAsync();
         }
 
@@ -514,13 +467,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="branChId"></param>
         /// <returns></returns>
-        public async Task<WorkflowStepBranchDto> GetWorkflowStepBranchEntity(long branChId)
+        public async Task<WorkflowBranchStepDto> GetWorkflowStepBranchEntity(long branChId)
         {
-            var entity = await _db.Queryable<WorkflowStepBranchEntity>()
+            var entity = await _db.Queryable<WorkflowBranchStepEntity>()
                                   .With(SqlWith.NoLock)
-                                  .Where(condition => condition.BranChId == branChId)
+                                  .Where(branch => branch.BranchId == branChId)
                                   .FirstAsync();
-            return entity.Adapt<WorkflowStepBranchDto>();
+            return entity.Adapt<WorkflowBranchStepDto>();
         }
 
         /// <summary>

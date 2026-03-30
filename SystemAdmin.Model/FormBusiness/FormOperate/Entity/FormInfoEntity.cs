@@ -35,11 +35,6 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         public long? LastStepId { get; set; }
 
         /// <summary>
-        /// 上一条件Id
-        /// </summary>
-        public long? LastConditionId { get; set; }
-
-        /// <summary>
         /// 当前步骤Id
         /// </summary>
         public long NowStepId { get; set; }

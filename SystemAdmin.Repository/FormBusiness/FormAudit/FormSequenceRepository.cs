@@ -7,12 +7,12 @@ using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.FormAudit
 {
-    public class FormCountingRepository
+    public class FormSequenceRepository
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
 
-        public FormCountingRepository(SqlSugarScope db, Language lang)
+        public FormSequenceRepository(SqlSugarScope db, Language lang)
         {
             _db = db;
             _lang = lang;
@@ -22,12 +22,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormAudit
         /// 查询表单计数信息分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<FormCountingDto>> GetFormCountingPage(GetFormCountingPage getPage)
+        public async Task<ResultPaged<FormSequenceDto>> GetFormCountingPage(GetFormSequencePage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<FormTypeEntity>()
                            .With(SqlWith.NoLock)
-                           .LeftJoin<FormCountingEntity>((formtype, formcounting) => formcounting.FormTypeId == formtype.FormTypeId);
+                           .LeftJoin<FormSequenceEntity>((formtype, formcounting) => formcounting.FormTypeId == formtype.FormTypeId);
 
             // 表单组别Id
             if (!string.IsNullOrEmpty(getPage.FormTypeId))
@@ -36,23 +36,18 @@ namespace SystemAdmin.Repository.FormBusiness.FormAudit
             }
 
             // 排序
-            query = query.OrderBy((formtype, formcounting) => formcounting.YM);
+            query = query.OrderBy((formtype, formcounting) => formcounting.Ym);
 
-            var page = await query.Select((formtype, formcounting) => new FormCountingDto
+            var page = await query.Select((formtype, formcounting) => new FormSequenceDto
                                   {
                                       FormTypeId = formtype.FormTypeId,
                                       FormTypeName = _lang.Locale == "zh-CN"
                                                      ? formtype.FormTypeNameCn
                                                      : formtype.FormTypeNameEn,
-                                      YM = formcounting.YM,
+                                      Ym = formcounting.Ym,
                                       Total = formcounting.Total,
-                                      Draft = formcounting.Draft,
-                                      Submitted = formcounting.Submitted,
-                                      Approved = formcounting.Approved,
-                                      Rejected = formcounting.Rejected,
-                                      Canceled = formcounting.Canceled
                                   }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<FormCountingDto>.Ok(page, totalCount, "");
+            return ResultPaged<FormSequenceDto>.Ok(page, totalCount, "");
         }
     }
 }

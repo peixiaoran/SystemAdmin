@@ -6,7 +6,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
     /// <summary>
     /// 步骤流程分支Dto
     /// </summary>
-    public class WorkflowStepBranchDto
+    public class WorkflowBranchStepDto
     {
         /// <summary>
         /// 分支Id
@@ -15,26 +15,21 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public long BranChId { get; set; }
 
         /// <summary>
+        /// 分支Id
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long BranchId { get; set; }
+
+        /// <summary>
         /// 步骤Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
         public long StepId { get; set; }
 
         /// <summary>
-        /// 条件Id
+        /// 分支名称
         /// </summary>
-        [JsonConverter(typeof(LongToStringConverter))]
-        public long ConditionId { get; set; }
-
-        /// <summary>
-        /// 条件名称
-        /// </summary>
-        public string ConditionName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 同时符合多条件时，是否执行此条件
-        /// </summary>
-        public int ExecuteMatched { get; set; }
+        public string BranchName { get; set; } = string.Empty;
 
         /// <summary>
         /// 下一步骤Id

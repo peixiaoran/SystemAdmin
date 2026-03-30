@@ -135,43 +135,43 @@
   <data name="WorkflowStepUpdateSuccess" xml:space="preserve">
     <value>Step modification successful</value>
   </data>
-  <data name="WorkflowStepBranchInsertSuccess" xml:space="preserve">
-    <value>Step flow branch added successfully</value>
+  <data name="WorkflowBranchStepInsertSuccess" xml:space="preserve">
+    <value>Branch creation successful</value>
   </data>
-  <data name="WorkflowStepBranchInsertFailed" xml:space="preserve">
-    <value>Step flow branch addition failed</value>
+  <data name="WorkflowBranchStepInsertFailed" xml:space="preserve">
+    <value>Failed to add branch step</value>
   </data>
-  <data name="WorkflowStepBranchDeleteSuccess" xml:space="preserve">
-    <value>Step flow branch deletion successful</value>
+  <data name="WorkflowBranchStepDeleteSuccess" xml:space="preserve">
+    <value>Branch deletion successful</value>
   </data>
-  <data name="WorkflowStepBranchDeleteFailed" xml:space="preserve">
-    <value>Step flow branch deletion failed</value>
+  <data name="WorkflowBranchStepDeleteFailed" xml:space="preserve">
+    <value>Failed to delete branch</value>
   </data>
-  <data name="WorkflowStepBranchUpdateFailed" xml:space="preserve">
-    <value>Step flow branch modification failed</value>
+  <data name="WorkflowBranchStepUpdateFailed" xml:space="preserve">
+    <value>Failed to modify branch steps</value>
   </data>
-  <data name="WorkflowStepBranchUpdateSuccess" xml:space="preserve">
-    <value>Step flow branch modification successful</value>
+  <data name="WorkflowBranchStepUpdateSuccess" xml:space="preserve">
+    <value>Branch modification successful</value>
   </data>
-  <data name="WorkflowConditionInsertSuccess" xml:space="preserve">
-    <value>Condition added successfully</value>
+  <data name="WorkflowBranchInsertSuccess" xml:space="preserve">
+    <value>Branch added successfully</value>
   </data>
-  <data name="WorkflowConditionInsertFailed" xml:space="preserve">
-    <value>Failed to add condition</value>
+  <data name="WorkflowBranchInsertFailed" xml:space="preserve">
+    <value>Failed to add branch</value>
   </data>
-  <data name="WorkflowConditionNotDelete" xml:space="preserve">
-    <value>The condition is bound to a process branch. Please remove the corresponding branch condition before deleting it</value>
+  <data name="WorkflowBranchNotDelete" xml:space="preserve">
+    <value>This branch already has associated branch steps. Please delete the associated branch steps before deleting the branch</value>
   </data>
-  <data name="WorkflowConditionDeleteSuccess" xml:space="preserve">
-    <value>Conditional deletion successful</value>
+  <data name="WorkflowBranchDeleteSuccess" xml:space="preserve">
+    <value>Branchal deletion successful</value>
   </data>
-  <data name="WorkflowConditionDeleteFailed" xml:space="preserve">
-    <value>Conditional deletion failed</value>
+  <data name="WorkflowBranchDeleteFailed" xml:space="preserve">
+    <value>Branchal deletion failed</value>
   </data>
-  <data name="WorkflowConditionUpdateSuccess" xml:space="preserve">
-    <value>Condition modified successfully</value>
+  <data name="WorkflowBranchUpdateSuccess" xml:space="preserve">
+    <value>Branch modified successfully</value>
   </data>
-  <data name="WorkflowConditionUpdateFailed" xml:space="preserve">
-    <value>Failed to modify conditions</value>
+  <data name="WorkflowBranchUpdateFailed" xml:space="preserve">
+    <value>Failed to modify branchs</value>
   </data>
 </root>

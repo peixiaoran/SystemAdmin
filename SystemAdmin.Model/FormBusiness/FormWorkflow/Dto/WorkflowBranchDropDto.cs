@@ -4,19 +4,19 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 流程条件下拉Dto
+    /// 流程分支下拉Dto
     /// </summary>
-    public class WorkflowConditionDropDto
+    public class WorkflowBranchDropDto
     {
         /// <summary>
-        /// 流程条件Id
+        /// 流程分支Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
-        public long ConditionId { get; set; }
+        public long BranchId { get; set; }
 
         /// <summary>
-        /// 流程条件名称
+        /// 流程分支名称
         /// </summary>
-        public string ConditionName { get; set; } = string.Empty;
+        public string BranchName { get; set; } = string.Empty;
     }
 }

@@ -10,21 +10,21 @@ using SystemAdmin.Repository.FormBusiness.FormWorkflow;
 
 namespace SystemAdmin.Service.FormBusiness.FormWorkflow
 {
-    public class WorkflowConditionService
+    public class WorkflowBranchStepService
     {
         private readonly CurrentUser _loginuser;
-        private readonly ILogger<WorkflowConditionService> _logger;
+        private readonly ILogger<WorkflowBranchStepService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly WorkflowConditionRepository _workflowConditionRepository;
+        private readonly WorkflowBranchStepRepository _workflowBranchStep;
         private readonly LocalizationService _localization;
-        private readonly string _this = "FormBusiness.FormWorkflow.WorkflowCondition";
+        private readonly string _this = "FormBusiness.FormWorkflow.WorkflowBranchStep";
 
-        public WorkflowConditionService(CurrentUser loginuser, ILogger<WorkflowConditionService> logger, SqlSugarScope db, WorkflowConditionRepository workflowConditionRepository, LocalizationService localization)
+        public WorkflowBranchStepService(CurrentUser loginuser, ILogger<WorkflowBranchStepService> logger, SqlSugarScope db, WorkflowBranchStepRepository workflowBranchStep, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _workflowConditionRepository = workflowConditionRepository;
+            _workflowBranchStep = workflowBranchStep;
             _localization = localization;
         }
 
@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowConditionRepository.GetFormGroupDropDown();
+                var drop = await _workflowBranchStep.GetFormGroupDropDown();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowConditionRepository.GetFormTypeDropDown(long.Parse(formGroupId));
+                var drop = await _workflowBranchStep.GetFormTypeDropDown(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -66,28 +66,26 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增流程条件
+        /// 新增流程分支步骤
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertWorkflowCondition(WorkflowConditionUpsert upsert)
+        public async Task<Result<int>> InsertWorkflowBranchStep(WorkflowBranchStepUpsert upsert)
         {
             try
             {
-                var entity = new WorkflowConditionEntity()
+                var entity = new WorkflowBranchStepEntity()
                 {
-                    ConditionId = SnowFlakeSingle.Instance.NextId(),
-                    FormTypeId = long.Parse(upsert.FormTypeId),
-                    ConditionNameCn = upsert.ConditionNameCn,
-                    ConditionNameEn = upsert.ConditionNameEn,
-                    HandlerKey = upsert.HandlerKey,
-                    Description = upsert.Description,
+                    BranchId = SnowFlakeSingle.Instance.NextId(),
+                    StepId = long.Parse(upsert.StepId),
+                    NextStepId = long.Parse(upsert.NextStepId),
+                    SortOrder = upsert.SortOrder,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now,
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _workflowConditionRepository.InsertWorkflowCondition(entity);
+                var count = await _workflowBranchStep.InsertWorkflowBranchStep(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -103,22 +101,16 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除流程条件
+        /// 删除流程分支步骤
         /// </summary>
-        /// <param name="conditionId"></param>
+        /// <param name="branchId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteWorkflowCondition(string conditionId)
+        public async Task<Result<int>> DeleteWorkflowBranchStep(string branchId, string stepId)
         {
             try
             {
-                var canDel = await _workflowConditionRepository.GetWorkflowStepBranchByCon(long.Parse(conditionId));
-                if (canDel)
-                {
-                    return Result<int>.Ok(0, _localization.ReturnMsg($"{_this}NotDelete"));
-                }
-
                 await _db.BeginTranAsync();
-                var count = await _workflowConditionRepository.DeleteWorkflowCondition(long.Parse(conditionId));
+                var count = await _workflowBranchStep.DeleteWorkflowBranchStep(long.Parse(branchId), long.Parse(stepId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -134,27 +126,26 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改流程条件
+        /// 修改流程分支步骤
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateWorkflowCondition(WorkflowConditionUpsert upsert)
+        public async Task<Result<int>> UpdateWorkflowBranchStep(WorkflowBranchStepUpsert upsert)
         {
             try
             {
-                var entity = new WorkflowConditionEntity()
+                var entity = new WorkflowBranchStepEntity()
                 {
-                    ConditionId = long.Parse(upsert.ConditionId),
-                    ConditionNameCn = upsert.ConditionNameCn,
-                    ConditionNameEn = upsert.ConditionNameEn,
-                    HandlerKey = upsert.HandlerKey,
-                    Description = upsert.Description,
+                    BranchId = long.Parse(upsert.BranchId),
+                    StepId = long.Parse(upsert.StepId),
+                    NextStepId = long.Parse(upsert.NextStepId),
+                    SortOrder = upsert.SortOrder,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now,
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _workflowConditionRepository.UpdateWorkflowCondition(entity);
+                var count = await _workflowBranchStep.UpdateWorkflowBranchStep(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -169,42 +160,41 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             }
         }
 
-
         /// <summary>
-        /// 查询流程条件实体
+        /// 查询流程分支步骤实体
         /// </summary>
-        /// <param name="conditionId"></param>
+        /// <param name="branchId"></param>
         /// <returns></returns>
-        public async Task<Result<WorkflowConditionDto>> GetWorkflowConditionEntity(string conditionId)
+        public async Task<Result<WorkflowBranchStepDto>> GetWorkflowBranchStepEntity(string branchId, string stepId)
         {
             try
             {
-                var entity = await _workflowConditionRepository.GetWorkflowConditionEntity(long.Parse(conditionId));
-                return Result<WorkflowConditionDto>.Ok(entity.Adapt<WorkflowConditionDto>(), "");
+                var entity = await _workflowBranchStep.GetWorkflowBranchStepEntity(long.Parse(branchId), long.Parse(stepId));
+                return Result<WorkflowBranchStepDto>.Ok(entity);
             }
             catch (Exception ex)
             {
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
-                return Result<WorkflowConditionDto>.Failure(500, ex.Message);
+                return Result<WorkflowBranchStepDto>.Failure(500, ex.Message);
             }
         }
 
         /// <summary>
-        /// 查询流程条件分页
+        /// 查询流程分支分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<WorkflowConditionDto>> GetWorkflowConditionPage(GetWorkflowConditionPage getPage)
+        public async Task<ResultPaged<WorkflowBranchStepDto>> GetWorkflowBranchPage(GetWorkflowBranchStepPage getPage)
         {
             try
             {
-                return await _workflowConditionRepository.GetWorkflowConditionPage(getPage);
+                return await _workflowBranchStep.GetWorkflowBranchStepPage(getPage);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<WorkflowConditionDto>.Failure(500, ex.Message);
+                return ResultPaged<WorkflowBranchStepDto>.Failure(500, ex.Message);
             }
         }
     }

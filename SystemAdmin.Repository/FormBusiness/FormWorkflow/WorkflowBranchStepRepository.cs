@@ -8,12 +8,12 @@ using SystemAdmin.Model.FormBusiness.FormWorkflow.Queries;
 
 namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
 {
-    public class WorkflowConditionRepository
+    public class WorkflowBranchStepRepository
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
 
-        public WorkflowConditionRepository(SqlSugarScope db, Language lang)
+        public WorkflowBranchStepRepository(SqlSugarScope db, Language lang)
         {
             _db = db;
             _lang = lang;
@@ -57,82 +57,74 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增流程条件
+        /// 新增流程分支步骤
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertWorkflowCondition(WorkflowConditionEntity entity)
+        public async Task<int> InsertWorkflowBranchStep(WorkflowBranchStepEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
-        /// 查询流程条件是否绑定流程分支
+        /// 删除流程分支步骤
         /// </summary>
-        /// <param name="conditionId"></param>
+        /// <param name="branchId"></param>
+        /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<bool> GetWorkflowStepBranchByCon(long conditionId)
+        public async Task<int> DeleteWorkflowBranchStep(long branchId, long stepId)
         {
-            return await _db.Queryable<WorkflowStepBranchEntity>()
-                            .Where(branch => branch.ConditionId == conditionId)
-                            .AnyAsync();
-        }
-
-        /// <summary>
-        /// 删除流程条件
-        /// </summary>
-        /// <param name="conditionId"></param>
-        /// <returns></returns>
-        public async Task<int> DeleteWorkflowCondition(long conditionId)
-        {
-            return await _db.Deleteable<WorkflowConditionEntity>()
-                            .Where(branch => branch.ConditionId == conditionId)
+            return await _db.Deleteable<WorkflowBranchStepEntity>()
+                            .Where(branchstep => branchstep.BranchId == branchId && branchstep.StepId == stepId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
-        /// 修改流程条件
+        /// 修改流程分支步骤
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateWorkflowCondition(WorkflowConditionEntity entity)
+        public async Task<int> UpdateWorkflowBranchStep(WorkflowBranchStepEntity entity)
         {
             return await _db.Updateable(entity)
-                            .IgnoreColumns(condition => new
+                            .IgnoreColumns(branchstep => new
                             {
-                                condition.ConditionId,
-                                condition.FormTypeId,
-                                condition.CreatedBy,
-                                condition.CreatedDate,
-                            }).Where(branch => branch.ConditionId == entity.ConditionId)
+                                branchstep.BranchId, 
+                                branchstep.StepId,
+                                branchstep.CreatedBy,
+                                branchstep.CreatedDate,
+                            }).Where(branchstep => branchstep.BranchId == entity.BranchId && branchstep.StepId == entity.StepId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
-        /// 查询流程条件实体
+        /// 查询流程分支步骤实体
         /// </summary>
-        /// <param name="conditionId"></param>
+        /// <param name="branchId"></param>
+        /// <param name="stepId"></param>
         /// <returns></returns>
-        public async Task<WorkflowConditionEntity> GetWorkflowConditionEntity(long conditionId)
+        public async Task<WorkflowBranchStepDto> GetWorkflowBranchStepEntity(long branchId, long stepId)
         {
-            return await _db.Queryable<WorkflowConditionEntity>()
-                            .Where(branch => branch.ConditionId == conditionId)
-                            .FirstAsync();
+            var entity = await _db.Queryable<WorkflowBranchStepEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(branchstep => branchstep.BranchId == branchId && branchstep.StepId == stepId)
+                                  .FirstAsync();
+            return entity.Adapt<WorkflowBranchStepDto>();
         }
 
         /// <summary>
-        /// 查询流程条件分页
+        /// 查询流程分支步骤分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<WorkflowConditionDto>> GetWorkflowConditionPage(GetWorkflowConditionPage getPage)
+        public async Task<ResultPaged<WorkflowBranchStepDto>> GetWorkflowBranchStepPage(GetWorkflowBranchStepPage getPage)
         {
             RefAsync<int> totalCount = 0;
-            var page = await _db.Queryable<WorkflowConditionEntity>()
+            var page = await _db.Queryable<WorkflowBranchStepEntity>()
                                 .With(SqlWith.NoLock)
-                                .OrderByDescending(condition => condition.CreatedDate)
+                                .OrderBy(branchstep => branchstep.SortOrder)
                                 .ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<WorkflowConditionDto>.Ok(page.Adapt<List<WorkflowConditionDto>>(), totalCount);
+            return ResultPaged<WorkflowBranchStepDto>.Ok(page.Adapt<List<WorkflowBranchStepDto>>(), totalCount);
         }
     }
 }

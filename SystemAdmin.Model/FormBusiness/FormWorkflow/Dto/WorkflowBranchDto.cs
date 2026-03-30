@@ -4,15 +4,15 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 流程条件Dto
+    /// 流程分支Dto
     /// </summary>
-    public class WorkflowConditionDto
+    public class WorkflowBranchDto
     {
         /// <summary>
-        /// 流程条件Id
+        /// 流程分支Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
-        public long ConditionId { get; set; }
+        public long BranchId { get; set; }
 
         /// <summary>
         /// 所属表单Id
@@ -21,14 +21,14 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public long FormTypeId { get; set; }
 
         /// <summary>
-        /// 流程条件名称（中文）
+        /// 流程分支名称（中文）
         /// </summary>
-        public string ConditionNameCn { get; set; } = string.Empty;
+        public string BranchNameCn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 流程条件名称（英文）
+        /// 流程分支名称（英文）
         /// </summary>
-        public string ConditionNameEn { get; set; } = string.Empty;
+        public string BranchNameEn { get; set; } = string.Empty;
 
         /// <summary>
         /// 代码标记

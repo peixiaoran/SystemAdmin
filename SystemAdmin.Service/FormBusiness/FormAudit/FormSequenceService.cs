@@ -8,12 +8,12 @@ using SystemAdmin.Service.FormBusiness.FormBasicInfo;
 
 namespace SystemAdmin.Service.FormBusiness.FormAudit
 {
-    public class FormCountingService
+    public class FormSequenceService
     {
         private readonly ILogger<FormTypeService> _logger;
-        private readonly FormCountingRepository _formCountingRepository;
+        private readonly FormSequenceRepository _formCountingRepository;
 
-        public FormCountingService(CurrentUser loginuser, ILogger<FormTypeService> logger, SqlSugarScope db, FormCountingRepository formTypeRepository, LocalizationService localization)
+        public FormSequenceService(CurrentUser loginuser, ILogger<FormTypeService> logger, SqlSugarScope db, FormSequenceRepository formTypeRepository, LocalizationService localization)
         {
             _logger = logger;
             _formCountingRepository = formTypeRepository;
@@ -24,7 +24,7 @@ namespace SystemAdmin.Service.FormBusiness.FormAudit
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<FormCountingDto>> GetFormCountingPage(GetFormCountingPage getPage)
+        public async Task<ResultPaged<FormSequenceDto>> GetFormCountingPage(GetFormSequencePage getPage)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace SystemAdmin.Service.FormBusiness.FormAudit
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<FormCountingDto>.Failure(500, ex.Message);
+                return ResultPaged<FormSequenceDto>.Failure(500, ex.Message);
             }
         }
     }

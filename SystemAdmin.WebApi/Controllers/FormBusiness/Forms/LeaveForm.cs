@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto;
-using SystemAdmin.Model.FormBusiness.Forms.FormLifecycle.FormBeforeStart;
-using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Service.FormBusiness.Forms;
+using SystemAdmin.Service.FormBusiness.Workflow;
 
 namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 {
@@ -12,9 +11,11 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
     [ApiController]
     public class LeaveForm : ControllerBase
     {
+        private readonly FormService _formService;
         private readonly LeaveFormService _leaveFormService;
-        public LeaveForm(LeaveFormService leaveFormService)
+        public LeaveForm(FormService formService, LeaveFormService leaveFormService)
         {
+            _formService = formService;
             _leaveFormService = leaveFormService;
         }
 
@@ -26,37 +27,13 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
             return await _leaveFormService.GetLeaveTypeDropDown();
         }
 
-        [HttpPost]
-        [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 初始化请假单")]
-        public async Task<Result<string>> InitLeaveForm([FromForm] string formTypeId)
-        {
-            return await _leaveFormService.InitLeaveForm(formTypeId);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 保存请假单")]
-        public async Task<Result<int>> SaveLeaveForm([FromBody] LeaveFormSave formSave)
-        {
-            return await _leaveFormService.SaveLeaveForm(formSave);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 查询请假单明细")]
-        public async Task<Result<LeaveFormDto>> GetLeaveForm([FromForm] string formId)
-        {
-            return await _leaveFormService.GetLeaveForm(formId);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 查询表单审批流程")]
-        public async Task<Result<FormWorkflowInfo>> GetWorkflowAllApproveUser([FromForm] string fromId)
-        {
-            return await _leaveFormService.GetWorkflowAllApproveUser(fromId);
-        }
+        //[HttpPost]
+        //[Tags("表单业务管理-表单Forms")]
+        //[EndpointSummary("[请假单] 查询最大表单类别表单号")]
+        //public async Task<Result<string>> GetFormAutoNo([FromForm] string formTypeId)
+        //{
+        //    return await _formService.GetFormAutoNo(formTypeId);
+        //}
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]

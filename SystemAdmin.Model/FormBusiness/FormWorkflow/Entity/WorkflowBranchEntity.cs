@@ -3,16 +3,16 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 流程条件实体类
+    /// 流程分支实体类
     /// </summary>
-    [SugarTable("[Form].[WorkflowCondition]")]
-    public class WorkflowConditionEntity
+    [SugarTable("[Form].[WorkflowBranch]")]
+    public class WorkflowBranchEntity
     {
         /// <summary>
-        /// 流程条件Id
+        /// 流程分支Id
         /// </summary>
         [SugarColumn(IsPrimaryKey = true, ColumnDescription = "Primary Key")]
-        public long ConditionId { get; set; }
+        public long BranchId { get; set; }
 
         /// <summary>
         /// 所属表单Id
@@ -20,14 +20,14 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long FormTypeId { get; set; }
 
         /// <summary>
-        /// 流程条件名称（中文）
+        /// 流程分支名称（中文）
         /// </summary>
-        public string ConditionNameCn { get; set; } = string.Empty;
+        public string BranchNameCn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 流程条件名称（英文）
+        /// 流程分支名称（英文）
         /// </summary>
-        public string ConditionNameEn { get; set; } = string.Empty;
+        public string BranchNameEn { get; set; } = string.Empty;
 
         /// <summary>
         /// 代码标记

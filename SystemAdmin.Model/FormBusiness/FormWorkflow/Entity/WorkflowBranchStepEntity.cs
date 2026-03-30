@@ -5,13 +5,13 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
     /// <summary>
     /// 步骤流程分支表
     /// </summary>
-    [SugarTable("[Form].[WorkflowStepBranch]")]
-    public class WorkflowStepBranchEntity
+    [SugarTable("[Form].[WorkflowBranch]")]
+    public class WorkflowBranchStepEntity
     {
         /// <summary>
         /// 分支Id
         /// </summary>
-        public long BranChId { get; set; }
+        public long BranchId { get; set; }
 
         /// <summary>
         /// 步骤Id
@@ -19,19 +19,14 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long StepId { get; set; }
 
         /// <summary>
-        /// 条件Id
-        /// </summary>
-        public long ConditionId { get; set; }
-
-        /// <summary>
-        /// 同时符合多条件时，是否执行此条件
-        /// </summary>
-        public int ExecuteMatched { get; set; }
-
-        /// <summary>
         /// 下一步骤Id
         /// </summary>
         public long NextStepId { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int SortOrder { get; set; }
 
         /// <summary>
         /// 创建人

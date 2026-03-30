@@ -62,9 +62,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         public async Task<CurrencyInfoDto> GetCurrencyInfoEntity(long currencyId)
         {
             var entity = await _db.Queryable<CurrencyInfoEntity>()
-                                          .With(SqlWith.NoLock)
-                                          .Where(currency => currency.CurrencyId == currencyId)
-                                          .FirstAsync();
+                                  .With(SqlWith.NoLock)
+                                  .Where(currency => currency.CurrencyId == currencyId)
+                                  .FirstAsync();
             return entity.Adapt<CurrencyInfoDto>();
         }
 

@@ -68,25 +68,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 流程步骤下拉
-        /// </summary>
-        /// <param name="formTypeId"></param>
-        /// <returns></returns>
-        public async Task<Result<List<WorkflowStepDropDto>>> GetWorkflowStepDropDown(string formTypeId)
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetWorkflowStepDropDown(long.Parse(formTypeId));
-                return Result<List<WorkflowStepDropDto>>.Ok(drop);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<WorkflowStepDropDto>>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
         /// 步骤指派规则下拉
         /// </summary>
         /// <returns></returns>
@@ -173,25 +154,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<List<DepartmentDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 流程条件下拉
-        /// </summary>
-        /// <param name="formTypeId"></param>
-        /// <returns></returns>
-        public async Task<Result<List<WorkflowConditionDropDto>>> GetWorkflowConditionDropDown(string formTypeId)
-        {
-            try
-            {
-                var drop = await _workflowStepRepository.GetWorkflowConditionDropDown(long.Parse(formTypeId));
-                return Result<List<WorkflowConditionDropDto>>.Ok(drop);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<WorkflowConditionDropDto>>.Failure(500, ex.Message);
             }
         }
 
@@ -320,10 +282,10 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 int delDeptUserCount = await _workflowStepRepository.DeleteWorkflowStepDeptUser(long.Parse(stepId));
                 int delUserCount = await _workflowStepRepository.DeleteWorkflowStepUser(long.Parse(stepId));
                 int delCustomCount = await _workflowStepRepository.DeleteWorkflowStepCustom(long.Parse(stepId));
-                int delConditionCount = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(stepId));
+                int delBranchCount = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(stepId));
                 int updateStepBranchCount = await _workflowStepRepository.UpdateWorkflowStepBranch(long.Parse(stepId));
 
-                return delStepCount >= 1 && (delOrgCount >= 1 || delDeptUserCount >= 1 || delUserCount >= 1 || delCustomCount >= 1 || delConditionCount >= 1 || updateStepBranchCount >= 1)
+                return delStepCount >= 1 && (delOrgCount >= 1 || delDeptUserCount >= 1 || delUserCount >= 1 || delCustomCount >= 1 || delBranchCount >= 1 || updateStepBranchCount >= 1)
                         ? Result<int>.Ok(delStepCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
             }
@@ -446,7 +408,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询步骤及流程分支列表
+        /// 查询步骤列表
         /// </summary>
         /// <param name="formTypeId"></param>
         /// <returns></returns>
@@ -485,120 +447,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<WorkflowStepDto>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 新增步骤流程分支
-        /// </summary>
-        /// <param name="upsert"></param>
-        /// <returns></returns>
-        public async Task<Result<int>> InsertWorkflowStepBranch(WorkflowStepBranchUpsert upsert)
-        {
-            try
-            {
-                var entity = new WorkflowStepBranchEntity
-                {
-                    BranChId = SnowFlakeSingle.Instance.NextId(),
-                    StepId = long.Parse(upsert.StepId),
-                    ConditionId = long.Parse(upsert.ConditionId),
-                    ExecuteMatched = upsert.ExecuteMatched,
-                    NextStepId = long.Parse(upsert.NextStepId),
-                    CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now
-                };
-                await _db.BeginTranAsync();
-                var count = await _workflowStepRepository.InsertWorkflowStepBranch(entity);
-                await _db.CommitTranAsync();
-
-                return count >= 1
-                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}BranchInsertSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}BranchInsertFailed"));
-            }
-            catch (Exception ex)
-            {
-                await _db.RollbackTranAsync();
-                _logger.LogError(ex, ex.Message);
-                return Result<int>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 删除步骤流程分支
-        /// </summary>
-        /// <param name="branChId"></param>
-        /// <returns></returns>
-        public async Task<Result<int>> DeleteWorkflowStepBranch(string branChId)
-        {
-            try
-            {
-                await _db.BeginTranAsync();
-                var count = await _workflowStepRepository.DeleteWorkflowStepBranch(long.Parse(branChId));
-                await _db.CommitTranAsync();
-
-                return count >= 1
-                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}BranchDeleteSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}BranchDeleteFailed"));
-            }
-            catch (Exception ex)
-            {
-                await _db.RollbackTranAsync();
-                _logger.LogError(ex, ex.Message);
-                return Result<int>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 修改步骤流程分支
-        /// </summary>
-        /// <param name="upsert"></param>
-        /// <returns></returns>
-        public async Task<Result<int>> UpdateWorkflowStepBranch(WorkflowStepBranchUpsert upsert)
-        {
-            try
-            {
-                await _db.BeginTranAsync();
-                var entity = new WorkflowStepBranchEntity
-                {
-                    BranChId = long.Parse(upsert.BranChId),
-                    StepId = long.Parse(upsert.StepId),
-                    ConditionId = long.Parse(upsert.ConditionId),
-                    ExecuteMatched = upsert.ExecuteMatched,
-                    NextStepId = long.Parse(upsert.NextStepId),
-                    ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now
-                };
-                var count = await _workflowStepRepository.UpdateWorkflowStepBranch(entity);
-                await _db.CommitTranAsync();
-
-                return count >= 1
-                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}BranchUpdateSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}BranchUpdateFailed"));
-            }
-            catch (Exception ex)
-            {
-                await _db.RollbackTranAsync();
-                _logger.LogError(ex, ex.Message);
-                return Result<int>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 查询步骤流程分支实体
-        /// </summary>
-        /// <param name="branChId"></param>
-        /// <returns></returns>
-        public async Task<Result<WorkflowStepBranchDto>> GetWorkflowStepBranchEntity(string branChId)
-        {
-            try
-            {
-                var entity = await _workflowStepRepository.GetWorkflowStepBranchEntity(long.Parse(branChId));
-                return Result<WorkflowStepBranchDto>.Ok(entity);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<WorkflowStepBranchDto>.Failure(500, ex.Message);
             }
         }
 

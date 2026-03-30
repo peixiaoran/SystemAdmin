@@ -1,14 +1,14 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 流程条件新增/修改类
+    /// 流程分支新增/修改类
     /// </summary>
-    public class WorkflowConditionUpsert
+    public class WorkflowBranchUpsert
     {
         /// <summary>
-        /// 流程条件Id
+        /// 流程分支Id
         /// </summary>
-        public string ConditionId { get; set; } = string.Empty;
+        public string BranchId { get; set; } = string.Empty;
 
         /// <summary>
         /// 所属表单Id
@@ -16,14 +16,14 @@
         public string FormTypeId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 流程条件名称（中文）
+        /// 流程分支名称（中文）
         /// </summary>
-        public string ConditionNameCn { get; set; } = string.Empty;
+        public string BranchNameCn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 流程条件名称（英文）
+        /// 流程分支名称（英文）
         /// </summary>
-        public string ConditionNameEn { get; set; } = string.Empty;
+        public string BranchNameEn { get; set; } = string.Empty;
 
         /// <summary>
         /// 代码标记
