@@ -97,7 +97,7 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         }
         
         /// <summary>
-        ///   查找类似 分支已有对应分支步骤，请先删除所有对应分支步骤再删除分支 的本地化字符串。
+        ///   查找类似 分支已有对应步骤，请先删除所有对应步骤 的本地化字符串。
         /// </summary>
         public static string WorkflowBranchNotDelete {
             get {
@@ -138,6 +138,15 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         public static string WorkflowBranchStepInsertSuccess {
             get {
                 return ResourceManager.GetString("WorkflowBranchStepInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 请勿重复配置分支步骤 的本地化字符串。
+        /// </summary>
+        public static string WorkflowBranchStepIsRepat {
+            get {
+                return ResourceManager.GetString("WorkflowBranchStepIsRepat", resourceCulture);
             }
         }
         

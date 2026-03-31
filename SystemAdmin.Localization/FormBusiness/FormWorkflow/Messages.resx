@@ -160,7 +160,7 @@
     <value>分支新增失败</value>
   </data>
   <data name="WorkflowBranchNotDelete" xml:space="preserve">
-    <value>分支已有对应分支步骤，请先删除所有对应分支步骤再删除分支</value>
+    <value>分支已有对应步骤，请先删除所有对应步骤</value>
   </data>
   <data name="WorkflowBranchDeleteSuccess" xml:space="preserve">
     <value>分支删除成功</value>
@@ -173,5 +173,8 @@
   </data>
   <data name="WorkflowBranchUpdateFailed" xml:space="preserve">
     <value>分支修改失败</value>
+  </data>
+  <data name="WorkflowBranchStepIsRepat" xml:space="preserve">
+    <value>请勿重复配置分支步骤</value>
   </data>
 </root>

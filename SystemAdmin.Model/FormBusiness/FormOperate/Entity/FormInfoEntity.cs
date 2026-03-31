@@ -47,7 +47,7 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         /// <summary>
         /// 创建日期
         /// </summary>
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// 修改人

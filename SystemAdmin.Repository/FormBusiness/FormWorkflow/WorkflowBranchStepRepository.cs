@@ -57,7 +57,20 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增流程分支步骤
+        /// 分支步骤是否重复配置
+        /// </summary>
+        /// <param name="branchId"></param>
+        /// <param name="stepId"></param>
+        /// <returns></returns>
+        public async Task<bool> BranchStepIsRepeat(long branchId, long stepId)
+        {
+            return await _db.Queryable<WorkflowBranchStepEntity>()
+                            .Where(branch => branch.BranchId == branchId && branch.StepId == stepId)
+                            .AnyAsync();
+        }
+
+        /// <summary>
+        /// 新增分支步骤
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -67,7 +80,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除流程分支步骤
+        /// 删除分支步骤
         /// </summary>
         /// <param name="branchId"></param>
         /// <param name="stepId"></param>
@@ -80,7 +93,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改流程分支步骤
+        /// 修改分支步骤
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -98,7 +111,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程分支步骤实体
+        /// 查询分支步骤实体
         /// </summary>
         /// <param name="branchId"></param>
         /// <param name="stepId"></param>
@@ -113,17 +126,23 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程分支步骤分页
+        /// 查询分支步骤分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
         public async Task<ResultPaged<WorkflowBranchStepDto>> GetWorkflowBranchStepPage(GetWorkflowBranchStepPage getPage)
         {
             RefAsync<int> totalCount = 0;
-            var page = await _db.Queryable<WorkflowBranchStepEntity>()
-                                .With(SqlWith.NoLock)
-                                .OrderBy(branchstep => branchstep.SortOrder)
-                                .ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            var query = _db.Queryable<WorkflowBranchStepEntity>()
+                           .With(SqlWith.NoLock);
+
+            if (!string.IsNullOrEmpty(getPage.BranchId) && long.Parse(getPage.BranchId) > -1)
+            {
+                query.Where(branchstep => branchstep.BranchId == long.Parse(getPage.BranchId));
+            }
+
+            var page = await query.OrderBy(branchstep => branchstep.SortOrder)
+                                  .ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<WorkflowBranchStepDto>.Ok(page.Adapt<List<WorkflowBranchStepDto>>(), totalCount);
         }
     }

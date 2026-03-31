@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 流程步骤组织架构新增/修改类
+    /// 步骤组织架构新增/修改类
     /// </summary>
     public class WorkflowStepOrgUpsert
     {

@@ -160,7 +160,7 @@
     <value>Failed to add branch</value>
   </data>
   <data name="WorkflowBranchNotDelete" xml:space="preserve">
-    <value>This branch already has associated branch steps. Please delete the associated branch steps before deleting the branch</value>
+    <value>There are already corresponding steps in this branch. Please delete all of them first</value>
   </data>
   <data name="WorkflowBranchDeleteSuccess" xml:space="preserve">
     <value>Branchal deletion successful</value>
@@ -173,5 +173,8 @@
   </data>
   <data name="WorkflowBranchUpdateFailed" xml:space="preserve">
     <value>Failed to modify branchs</value>
+  </data>
+  <data name="WorkflowBranchStepIsRepat" xml:space="preserve">
+    <value>Please do not repeat the branch configuration steps</value>
   </data>
 </root>

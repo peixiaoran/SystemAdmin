@@ -32,6 +32,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// <summary>
         /// 创建日期
         /// </summary>
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

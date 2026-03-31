@@ -4,16 +4,10 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 步骤流程分支Dto
+    /// 步骤分支Dto
     /// </summary>
     public class WorkflowBranchStepDto
     {
-        /// <summary>
-        /// 分支Id
-        /// </summary>
-        [JsonConverter(typeof(LongToStringConverter))]
-        public long BranChId { get; set; }
-
         /// <summary>
         /// 分支Id
         /// </summary>

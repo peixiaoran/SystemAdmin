@@ -59,25 +59,5 @@
         /// 备注（英文）
         /// </summary>
         public string RemarkEn { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 创建人
-        /// </summary>
-        public string CreatedBy { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 创建日期
-        /// </summary>
-        public string CreatedDate { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 修改人
-        /// </summary>
-        public string ModifiedBy { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 修改时间
-        /// </summary>
-        public string? ModifiedDate { get; set; }
     }
 }

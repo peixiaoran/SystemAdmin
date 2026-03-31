@@ -154,7 +154,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 流程分支下拉
+        /// 分支下拉
         /// </summary>
         /// <returns></returns>
         public async Task<List<WorkflowBranchDropDto>> GetWorkflowBranchDropDown(long formTypeId)
@@ -172,12 +172,77 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             }).ToListAsync();
         }
 
-        /// <summary>
-        /// 新增步骤
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> InsertWorkflowStep(WorkflowStepEntity entity)
+		/// <summary>
+		/// 查询员工分页
+		/// </summary>
+		/// <param name="getPage"></param>
+		/// <returns></returns>
+		public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
+		{
+			RefAsync<int> totalCount = 0;
+			var query = _db.Queryable<UserInfoEntity>()
+						   .With(SqlWith.NoLock)
+						   .InnerJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
+						   .InnerJoin<UserPositionEntity>((user, dept, userpos) => user.PositionId == userpos.PositionId)
+						   .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
+						   .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) =>
+							user.Nationality == nation.NationId)
+						   .Where((user, dept, userpos, userlabor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
+
+			// 员工工号
+			if (!string.IsNullOrEmpty(getPage.UserNo))
+			{
+				query = query.Where((user, dept, userpos, userlabor, nation) =>
+					user.UserNo.Contains(getPage.UserNo));
+			}
+			// 员工姓名
+			if (!string.IsNullOrEmpty(getPage.UserName))
+			{
+				query = query.Where((user, dept, userpos, userlabor, nation) =>
+					user.UserNameCn.Contains(getPage.UserName) ||
+					user.UserNameEn.Contains(getPage.UserName));
+			}
+			// 部门Id
+			if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
+			{
+				query = query.Where((user, dept, userpos, userlabor, nation) =>
+					user.DepartmentId == long.Parse(getPage.DepartmentId));
+			}
+
+			// 排序
+			query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
+
+			var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserInfoDto
+			{
+				UserId = user.UserId,
+				UserNo = user.UserNo,
+				UserName = _lang.Locale == "zh-CN"
+												? user.UserNameCn
+												: user.UserNameEn,
+				DepartmentName = _lang.Locale == "zh-CN"
+												? dept.DepartmentNameCn
+												: dept.DepartmentNameEn,
+				PositionName = _lang.Locale == "zh-CN"
+												? userpos.PositionNameCn
+												: userpos.PositionNameEn,
+				LaborName = _lang.Locale == "zh-CN"
+												? userlabor.LaborNameCn
+												: userlabor.LaborNameEn,
+				NationalityName = _lang.Locale == "zh-CN"
+												? nation.NationNameCn
+												: nation.NationNameEn,
+				IsAgent = user.IsAgent,
+				IsApproval = user.IsApproval,
+			}).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+			return ResultPaged<UserInfoDto>.Ok(page, totalCount, "");
+		}
+
+		/// <summary>
+		/// 新增步骤
+		/// </summary>
+		/// <param name="entity"></param>
+		/// <returns></returns>
+		public async Task<int> InsertWorkflowStep(WorkflowStepEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
@@ -283,7 +348,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除步骤流程分支
+        /// 删除步骤分支
         /// </summary>
         /// <param name="branChId"></param>
         /// <returns></returns>
@@ -326,13 +391,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询步骤及流程分支列表
+        /// 查询步骤及分支列表
         /// </summary>
         /// <param name="formTypeId"></param>
         /// <returns></returns>
         public async Task<Result<List<WorkflowStepListDto>>> GetWorkflowStepList(string formTypeId)
         {
-            var page = await _db.Queryable<WorkflowStepEntity>()
+            var list = await _db.Queryable<WorkflowStepEntity>()
                                 .With(SqlWith.NoLock)
                                 .InnerJoin<DictionaryInfoEntity>((stepinfo, dic) => dic.DicType == "Assignment" && stepinfo.Assignment == dic.DicCode)
                                 .Where((stepinfo, dic) => stepinfo.FormTypeId == long.Parse(formTypeId))
@@ -348,7 +413,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                                ? dic.DicNameCn
                                                : dic.DicNameEn,
                                 }).ToListAsync();
-            return Result<List<WorkflowStepListDto>>.Ok(page.Adapt<List<WorkflowStepListDto>>());
+            return Result<List<WorkflowStepListDto>>.Ok(list.Adapt<List<WorkflowStepListDto>>());
         }
 
         /// <summary>
@@ -420,125 +485,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                   .Where(stepcustom => stepcustom.StepId == stepId)
                                   .FirstAsync();
             return entity.Adapt<WorkflowStepCustomDto>();
-        }
-
-        /// <summary>
-        /// 新增步骤流程分支
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> InsertWorkflowStepBranch(WorkflowBranchStepEntity entity)
-        {
-            return await _db.Insertable(entity).ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 删除步骤流程分支
-        /// </summary>
-        /// <param name="stepId"></param>
-        /// <param name="branchId"></param>
-        /// <returns></returns>
-        public async Task<int> DeleteWorkflowStepBranch(long stepId, long branchId)
-        {
-            return await _db.Deleteable<WorkflowBranchStepEntity>()
-                            .Where(stepbranch => stepbranch.StepId == stepId && stepbranch.BranchId == branchId)
-                            .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 新增步骤流程分支
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepBranch(WorkflowBranchStepEntity entity)
-        {
-            return await _db.Updateable(entity)
-                            .IgnoreColumns(stepbranch => new
-                            {
-                                stepbranch.BranchId,
-                                stepbranch.CreatedBy,
-                                stepbranch.CreatedDate,
-                            }).Where(stepbranch => stepbranch.BranchId == entity.BranchId)
-                            .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 查询步骤流程分支实体
-        /// </summary>
-        /// <param name="branChId"></param>
-        /// <returns></returns>
-        public async Task<WorkflowBranchStepDto> GetWorkflowStepBranchEntity(long branChId)
-        {
-            var entity = await _db.Queryable<WorkflowBranchStepEntity>()
-                                  .With(SqlWith.NoLock)
-                                  .Where(branch => branch.BranchId == branChId)
-                                  .FirstAsync();
-            return entity.Adapt<WorkflowBranchStepDto>();
-        }
-
-        /// <summary>
-        /// 查询员工分页
-        /// </summary>
-        /// <param name="getPage"></param>
-        /// <returns></returns>
-        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
-        {
-            RefAsync<int> totalCount = 0;
-            var query = _db.Queryable<UserInfoEntity>()
-                           .With(SqlWith.NoLock)
-                           .InnerJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
-                           .InnerJoin<UserPositionEntity>((user, dept, userpos) => user.PositionId == userpos.PositionId)
-                           .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
-                           .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) =>
-                            user.Nationality == nation.NationId)
-                           .Where((user, dept, userpos, userlabor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
-
-            // 员工工号
-            if (!string.IsNullOrEmpty(getPage.UserNo))
-            {
-                query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNo.Contains(getPage.UserNo));
-            }
-            // 员工姓名
-            if (!string.IsNullOrEmpty(getPage.UserName))
-            {
-                query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.UserNameCn.Contains(getPage.UserName) ||
-                    user.UserNameEn.Contains(getPage.UserName));
-            }
-            // 部门Id
-            if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
-            {
-                query = query.Where((user, dept, userpos, userlabor, nation) =>
-                    user.DepartmentId == long.Parse(getPage.DepartmentId));
-            }
-
-            // 排序
-            query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
-
-            var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserInfoDto
-                                  {
-                                     UserId = user.UserId,
-                                     UserNo = user.UserNo,
-                                     UserName = _lang.Locale == "zh-CN"
-                                                ? user.UserNameCn
-                                                : user.UserNameEn,
-                                     DepartmentName = _lang.Locale == "zh-CN"
-                                                ? dept.DepartmentNameCn
-                                                : dept.DepartmentNameEn,
-                                     PositionName = _lang.Locale == "zh-CN"
-                                                ? userpos.PositionNameCn
-                                                : userpos.PositionNameEn,
-                                     LaborName = _lang.Locale == "zh-CN"
-                                                ? userlabor.LaborNameCn
-                                                : userlabor.LaborNameEn,
-                                     NationalityName = _lang.Locale == "zh-CN"
-                                                ? nation.NationNameCn
-                                                : nation.NationNameEn,
-                                     IsAgent = user.IsAgent,
-                                     IsApproval = user.IsApproval,
-                                 }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<UserInfoDto>.Ok(page, totalCount, "");
         }
     }
 }

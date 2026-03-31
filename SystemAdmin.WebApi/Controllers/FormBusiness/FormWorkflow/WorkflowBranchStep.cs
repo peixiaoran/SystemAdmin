@@ -13,66 +13,66 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
     [ApiController]
     public class WorkflowBranchStep : ControllerBase
     {
-        private readonly WorkflowBranchService _workflowBranchService;
-        public WorkflowBranchStep(WorkflowBranchService workflowBranchService)
+        private readonly WorkflowBranchStepService _workflowBranchStepService;
+        public WorkflowBranchStep(WorkflowBranchStepService workflowBranchStepService)
         {
-            _workflowBranchService = workflowBranchService;
+            _workflowBranchStepService = workflowBranchStepService;
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[流程分支步骤] 表单组别下拉")]
+        [EndpointSummary("[表单分支步骤] 表单组别下拉")]
         public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
         {
-            return await _workflowBranchService.GetFormGroupDropDown();
+            return await _workflowBranchStepService.GetFormGroupDropDown();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[流程分支步骤] 表单类别下拉")]
+        [EndpointSummary("[表单分支步骤] 表单类别下拉")]
         public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown([FromForm] string formGroupId)
         {
-            return await _workflowBranchService.GetFormTypeDropDown(formGroupId);
+            return await _workflowBranchStepService.GetFormTypeDropDown(formGroupId);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[流程分支步骤] 新增分支步骤")]
-        public async Task<Result<int>> InsertWorkflowBranch([FromBody] WorkflowBranchUpsert upsert)
+        [EndpointSummary("[表单分支步骤] 新增分支步骤")]
+        public async Task<Result<int>> InsertWorkflowBranchStep([FromBody] WorkflowBranchStepUpsert upsert)
         {
-            return await _workflowBranchService.InsertWorkflowBranch(upsert);
+            return await _workflowBranchStepService.InsertWorkflowBranchStep(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[流程分支步骤] 删除分支步骤")]
-        public async Task<Result<int>> DeleteWorkflowBranch([FromForm] string condititonId)
+        [EndpointSummary("[表单分支步骤] 删除分支步骤")]
+        public async Task<Result<int>> DeleteWorkflowBranchStep([FromForm] string branchId, string stepId)
         {
-            return await _workflowBranchService.DeleteWorkflowBranch(condititonId);
+            return await _workflowBranchStepService.DeleteWorkflowBranchStep(branchId, stepId);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[流程分支步骤] 修改分支步骤")]
-        public async Task<Result<int>> UpdateWorkflowBranch([FromBody] WorkflowBranchUpsert upsert)
+        [EndpointSummary("[表单分支步骤] 修改分支步骤")]
+        public async Task<Result<int>> UpdateWorkflowBranchStep([FromBody] WorkflowBranchStepUpsert upsert)
         {
-            return await _workflowBranchService.UpdateWorkflowBranch(upsert);
+            return await _workflowBranchStepService.UpdateWorkflowBranchStep(upsert);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[流程分支步骤] 查询流程分支实体")]
-        public async Task<Result<WorkflowBranchDto>> GetWorkflowBranchEntity([FromForm] string branchId)
+        [EndpointSummary("[表单分支步骤] 查询分支步骤实体")]
+        public async Task<Result<WorkflowBranchStepDto>> GetWorkflowBranchStepEntity([FromForm] string branchId, string stepId)
         {
-            return await _workflowBranchService.GetWorkflowBranchEntity(branchId);
+            return await _workflowBranchStepService.GetWorkflowBranchStepEntity(branchId, stepId);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[流程分支步骤] 查询流程分支分页")]
-        public async Task<ResultPaged<WorkflowBranchDto>> GetWorkflowBranchPage([FromBody] GetWorkflowBranchPage getPage)
+        [EndpointSummary("[表单分支步骤] 查询分支步骤分页")]
+        public async Task<ResultPaged<WorkflowBranchStepDto>> GetWorkflowBranchStepPage([FromBody] GetWorkflowBranchStepPage getPage)
         {
-            return await _workflowBranchService.GetWorkflowBranchPage(getPage);
+            return await _workflowBranchStepService.GetWorkflowBranchStepPage(getPage);
         }
     }
 }

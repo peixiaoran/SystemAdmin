@@ -3,9 +3,9 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 步骤流程分支表
+    /// 分支步骤表
     /// </summary>
-    [SugarTable("[Form].[WorkflowBranch]")]
+    [SugarTable("[Form].[WorkflowBranchStep]")]
     public class WorkflowBranchStepEntity
     {
         /// <summary>
@@ -36,12 +36,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// <summary>
         /// 创建日期
         /// </summary>
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// 修改人
         /// </summary>
-        public long ModifiedBy { get; set; }
+        public long? ModifiedBy { get; set; }
 
         /// <summary>
         /// 修改日期

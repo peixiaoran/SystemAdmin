@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 流程步骤下拉Dto
+    /// 步骤下拉Dto
     /// </summary>
     public class WorkflowStepDropDto
     {

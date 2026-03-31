@@ -1,5 +1,4 @@
-﻿using Mapster;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Commands;
@@ -66,7 +65,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增流程分支步骤
+        /// 新增分支步骤
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -74,23 +73,32 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var entity = new WorkflowBranchStepEntity()
+                // 分支步骤是否重复配置
+                var isRepat = await _workflowBranchStep.BranchStepIsRepeat(long.Parse(upsert.BranchId), long.Parse(upsert.StepId));
+                if (isRepat)
                 {
-                    BranchId = SnowFlakeSingle.Instance.NextId(),
-                    StepId = long.Parse(upsert.StepId),
-                    NextStepId = long.Parse(upsert.NextStepId),
-                    SortOrder = upsert.SortOrder,
-                    CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now,
-                };
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}BranchStepIsRepat"));
+                }
+                else
+                {
+                    var entity = new WorkflowBranchStepEntity()
+                    {
+                        BranchId = SnowFlakeSingle.Instance.NextId(),
+                        StepId = long.Parse(upsert.StepId),
+                        NextStepId = long.Parse(upsert.NextStepId),
+                        SortOrder = upsert.SortOrder,
+                        CreatedBy = _loginuser.UserId,
+                        CreatedDate = DateTime.Now,
+                    };
 
-                await _db.BeginTranAsync();
-                var count = await _workflowBranchStep.InsertWorkflowBranchStep(entity);
-                await _db.CommitTranAsync();
+                    await _db.BeginTranAsync();
+                    var count = await _workflowBranchStep.InsertWorkflowBranchStep(entity);
+                    await _db.CommitTranAsync();
 
-                return count >= 1
-                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                    return count >= 1
+                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                }
             }
             catch (Exception ex)
             {
@@ -101,7 +109,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除流程分支步骤
+        /// 删除分支步骤
         /// </summary>
         /// <param name="branchId"></param>
         /// <returns></returns>
@@ -126,7 +134,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改流程分支步骤
+        /// 修改分支步骤
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -161,7 +169,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程分支步骤实体
+        /// 查询分支步骤实体
         /// </summary>
         /// <param name="branchId"></param>
         /// <returns></returns>
@@ -181,11 +189,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程分支分页
+        /// 查询分支步骤分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<WorkflowBranchStepDto>> GetWorkflowBranchPage(GetWorkflowBranchStepPage getPage)
+        public async Task<ResultPaged<WorkflowBranchStepDto>> GetWorkflowBranchStepPage(GetWorkflowBranchStepPage getPage)
         {
             try
             {

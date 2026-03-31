@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 流程步骤指定员工新增/修改类
+    /// 步骤指定员工新增/修改类
     /// </summary>
     public class WorkflowStepUserUpsert
     {

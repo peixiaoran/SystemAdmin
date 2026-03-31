@@ -1,15 +1,10 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 流程分支新增/修改类
+    /// 分支新增/修改类
     /// </summary>
     public class WorkflowBranchStepUpsert
     {
-        /// <summary>
-        /// 分支Id
-        /// </summary>
-        public string BranChId { get; set; } = string.Empty;
-
         /// <summary>
         /// 分支Id
         /// </summary>

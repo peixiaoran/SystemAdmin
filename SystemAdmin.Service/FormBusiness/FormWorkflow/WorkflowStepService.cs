@@ -158,6 +158,25 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
+        /// 查询员工信息分页
+        /// </summary>
+        /// <param name="getPage"></param>
+        /// <returns></returns>
+        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
+        {
+            try
+            {
+                var page = await _workflowStepRepository.GetUserInfoPage(getPage);
+                return page;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return ResultPaged<UserInfoDto>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
         /// 新增步骤
         /// </summary>
         /// <param name="upsert"></param>
@@ -447,25 +466,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<WorkflowStepDto>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 查询员工信息分页
-        /// </summary>
-        /// <param name="getPage"></param>
-        /// <returns></returns>
-        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
-        {
-            try
-            {
-                var page = await _workflowStepRepository.GetUserInfoPage(getPage);
-                return page;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return ResultPaged<UserInfoDto>.Failure(500, ex.Message.ToString());
             }
         }
     }

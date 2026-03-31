@@ -4,12 +4,12 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 流程分支Dto
+    /// 分支Dto
     /// </summary>
     public class WorkflowBranchDto
     {
         /// <summary>
-        /// 流程分支Id
+        /// 分支Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
         public long BranchId { get; set; }
@@ -21,12 +21,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public long FormTypeId { get; set; }
 
         /// <summary>
-        /// 流程分支名称（中文）
+        /// 分支名称（中文）
         /// </summary>
         public string BranchNameCn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 流程分支名称（英文）
+        /// 分支名称（英文）
         /// </summary>
         public string BranchNameEn { get; set; } = string.Empty;
 

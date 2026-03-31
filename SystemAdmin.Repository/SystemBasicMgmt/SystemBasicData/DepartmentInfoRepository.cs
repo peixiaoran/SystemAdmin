@@ -1,4 +1,5 @@
-﻿using MapsterMapper;
+﻿using Mapster;
+using MapsterMapper;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
@@ -10,13 +11,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
     public class DepartmentInfoRepository
     {
         private readonly SqlSugarScope _db;
-        private readonly IMapper _mapper;
         private readonly Language _lang;
 
-        public DepartmentInfoRepository(SqlSugarScope db, IMapper mapper, Language lang)
+        public DepartmentInfoRepository(SqlSugarScope db, Language lang)
         {
             _db = db;
-            _mapper = mapper;
             _lang = lang;
         }
 
@@ -129,10 +128,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         public async Task<DepartmentInfoDto> GetDepartmentInfoEntity(long deptId)
         {
             var entity = await _db.Queryable<DepartmentInfoEntity>()
-                                      .With(SqlWith.NoLock)
-                                      .Where(dept => dept.DepartmentId == deptId)
-                                      .FirstAsync();
-            return _mapper.Map<DepartmentInfoDto>(entity);
+                                  .With(SqlWith.NoLock)
+                                  .Where(dept => dept.DepartmentId == deptId)
+                                  .FirstAsync();
+            return entity.Adapt<DepartmentInfoDto>();
         }
 
         /// <summary>

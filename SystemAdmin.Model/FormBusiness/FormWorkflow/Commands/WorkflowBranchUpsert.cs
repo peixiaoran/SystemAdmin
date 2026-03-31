@@ -1,12 +1,12 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 流程分支新增/修改类
+    /// 分支新增/修改类
     /// </summary>
     public class WorkflowBranchUpsert
     {
         /// <summary>
-        /// 流程分支Id
+        /// 分支Id
         /// </summary>
         public string BranchId { get; set; } = string.Empty;
 
@@ -16,12 +16,12 @@
         public string FormTypeId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 流程分支名称（中文）
+        /// 分支名称（中文）
         /// </summary>
         public string BranchNameCn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 流程分支名称（英文）
+        /// 分支名称（英文）
         /// </summary>
         public string BranchNameEn { get; set; } = string.Empty;
 

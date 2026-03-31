@@ -3,7 +3,7 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Queries
 {
     /// <summary>
-    /// 查询流程分支信息请求参数
+    /// 查询分支请求参数
     /// </summary>
     public class GetWorkflowBranchPage : PageModel
     {

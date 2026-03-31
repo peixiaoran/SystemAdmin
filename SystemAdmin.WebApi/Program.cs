@@ -26,9 +26,6 @@ builder.Services.AddCustomOpenApiAction();
 // 注入 Jwt
 builder.Services.AddJwtSetup(builder.Configuration);
 
-// 注入 Mapster
-builder.Services.AddMapsterSetup();
-
 // 注入 Minio
 builder.Services.AddMinioSetup(builder.Configuration);
 

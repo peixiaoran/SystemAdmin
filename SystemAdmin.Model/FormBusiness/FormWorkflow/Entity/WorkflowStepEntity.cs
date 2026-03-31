@@ -3,7 +3,7 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 流程步骤实体类
+    /// 步骤实体类
     /// </summary>
     [SugarTable("[Form].[WorkflowStep]")]
     public class WorkflowStepEntity
@@ -72,7 +72,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// <summary>
         /// 创建日期
         /// </summary>
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// 修改人

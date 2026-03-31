@@ -57,7 +57,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增流程分支
+        /// 新增分支
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -67,7 +67,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程分支是否有对应分支步骤
+        /// 查询分支是否有对应分支步骤
         /// </summary>
         /// <param name="branchId"></param>
         /// <returns></returns>
@@ -79,7 +79,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除流程分支
+        /// 删除分支
         /// </summary>
         /// <param name="branchId"></param>
         /// <returns></returns>
@@ -91,7 +91,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改流程分支
+        /// 修改分支
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
@@ -109,19 +109,21 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程分支实体
+        /// 查询分支实体
         /// </summary>
         /// <param name="branchId"></param>
         /// <returns></returns>
-        public async Task<WorkflowBranchEntity> GetWorkflowBranchEntity(long branchId)
+        public async Task<WorkflowBranchDto> GetWorkflowBranchEntity(long branchId)
         {
-            return await _db.Queryable<WorkflowBranchEntity>()
-                            .Where(branch => branch.BranchId == branchId)
-                            .FirstAsync();
+            var entity = await _db.Queryable<WorkflowBranchEntity>()
+                                  .With(SqlWith.NoLock)
+                                  .Where(branch => branch.BranchId == branchId)
+                                  .FirstAsync();
+            return entity.Adapt<WorkflowBranchDto>();
         }
 
         /// <summary>
-        /// 查询流程分支分页
+        /// 查询分支分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>

@@ -72,7 +72,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         /// <summary>
         /// 创建时间
         /// </summary>
-        public DateTime? CreatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
 
         /// <summary>
         /// 修改人Id

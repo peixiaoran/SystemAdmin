@@ -72,6 +72,6 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
         /// <summary>
         /// 修改时间
         /// </summary>
-        public DateTime ModifiedDate { get; set; }
+        public DateTime? ModifiedDate { get; set; }
     }
 }

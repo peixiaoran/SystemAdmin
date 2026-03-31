@@ -21,7 +21,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程分支] 表单组别下拉")]
+        [EndpointSummary("[表单分支信息] 表单组别下拉")]
         public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
         {
             return await _workflowBranchService.GetFormGroupDropDown();
@@ -29,7 +29,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程分支] 表单类别下拉")]
+        [EndpointSummary("[表单分支信息] 表单类别下拉")]
         public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown([FromForm] string formGroupId)
         {
             return await _workflowBranchService.GetFormTypeDropDown(formGroupId);
@@ -37,7 +37,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程分支] 新增流程分支")]
+        [EndpointSummary("[表单分支信息] 新增分支")]
         public async Task<Result<int>> InsertWorkflowBranch([FromBody] WorkflowBranchUpsert upsert)
         {
             return await _workflowBranchService.InsertWorkflowBranch(upsert);
@@ -45,7 +45,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程分支] 删除流程分支")]
+        [EndpointSummary("[表单分支信息] 删除分支")]
         public async Task<Result<int>> DeleteWorkflowBranch([FromForm] string condititonId)
         {
             return await _workflowBranchService.DeleteWorkflowBranch(condititonId);
@@ -53,7 +53,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程分支] 修改流程分支")]
+        [EndpointSummary("[表单分支信息] 修改分支")]
         public async Task<Result<int>> UpdateWorkflowBranch([FromBody] WorkflowBranchUpsert upsert)
         {
             return await _workflowBranchService.UpdateWorkflowBranch(upsert);
@@ -61,7 +61,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程分支] 查询流程分支实体")]
+        [EndpointSummary("[表单分支信息] 查询分支实体")]
         public async Task<Result<WorkflowBranchDto>> GetWorkflowBranchEntity([FromForm] string branchId)
         {
             return await _workflowBranchService.GetWorkflowBranchEntity(branchId);
@@ -69,7 +69,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
-        [EndpointSummary("[表单流程分支] 查询流程分支分页")]
+        [EndpointSummary("[表单分支信息] 查询分支分页")]
         public async Task<ResultPaged<WorkflowBranchDto>> GetWorkflowBranchPage([FromBody] GetWorkflowBranchPage getPage)
         {
             return await _workflowBranchService.GetWorkflowBranchPage(getPage);

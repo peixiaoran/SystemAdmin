@@ -1,5 +1,4 @@
-﻿using Mapster;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Commands;
@@ -66,7 +65,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增流程分支
+        /// 新增分支
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -103,7 +102,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除流程分支
+        /// 删除分支
         /// </summary>
         /// <param name="branchId"></param>
         /// <returns></returns>
@@ -134,7 +133,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改流程分支
+        /// 修改分支
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -170,7 +169,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程分支实体
+        /// 查询分支实体
         /// </summary>
         /// <param name="branchId"></param>
         /// <returns></returns>
@@ -179,6 +178,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             try
             {
                 var entity = await _workflowBranchRepository.GetWorkflowBranchEntity(long.Parse(branchId));
+                return Result<WorkflowBranchDto>.Ok(entity);
             }
             catch (Exception ex)
             {
@@ -189,7 +189,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询流程分支分页
+        /// 查询分支分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
