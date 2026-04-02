@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001000 (16.00.1000)
- Source Host           : 127.0.0.1:1433
+ Source Server Version : 17001105 (17.00.1105)
+ Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001000 (16.00.1000)
+ Target Server Version : 17001105 (17.00.1105)
  File Encoding         : 65001
 
- Date: 31/03/2026 17:00:58
+ Date: 02/04/2026 22:36:03
 */
 
 
@@ -121,6 +121,130 @@ INSERT INTO [Form].[ControlInfo] ([ControlCode], [ControlName], [Description], [
 GO
 
 INSERT INTO [Form].[ControlInfo] ([ControlCode], [ControlName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-switch', N'el-switch', N'开关', N'1903486709602062336', N'2025-11-09 00:13:35.000', NULL, NULL)
+GO
+
+
+-- ----------------------------
+-- Table structure for FormCounting
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormCounting]') AND type IN ('U'))
+	DROP TABLE [Form].[FormCounting]
+GO
+
+CREATE TABLE [Form].[FormCounting] (
+  [FormTypeId] bigint  NOT NULL,
+  [YM] char(6) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [Total] int DEFAULT 0 NOT NULL,
+  [Draft] int DEFAULT 0 NOT NULL,
+  [Submitted] int DEFAULT 0 NOT NULL,
+  [Approved] int DEFAULT 0 NOT NULL,
+  [Rejected] int DEFAULT 0 NOT NULL,
+  [Canceled] int DEFAULT 0 NOT NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime DEFAULT NULL NULL
+)
+GO
+
+ALTER TABLE [Form].[FormCounting] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单类型Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'FormTypeId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'年月（yyyyMM）',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'YM'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'当前表单数量',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'Total'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'草稿数量',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'Draft'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'提交数量',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'Submitted'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'送审数量',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'Approved'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'驳回数量',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'Rejected'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'作废数量',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'Canceled'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting',
+'COLUMN', N'ModifiedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单审计信息表',
+'SCHEMA', N'Form',
+'TABLE', N'FormCounting'
+GO
+
+
+-- ----------------------------
+-- Records of FormCounting
+-- ----------------------------
+INSERT INTO [Form].[FormCounting] ([FormTypeId], [YM], [Total], [Draft], [Submitted], [Approved], [Rejected], [Canceled], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'2603  ', N'1', N'0', N'0', N'0', N'0', N'0', N'1903486709602062336', N'2026-03-28 23:17:07.000', NULL, NULL)
 GO
 
 
@@ -1701,15 +1825,6 @@ GO
 -- Primary Key structure for table LeaveForm
 -- ----------------------------
 ALTER TABLE [Form].[LeaveForm] ADD CONSTRAINT [PK__LeaveIns__796DB959B422B703] PRIMARY KEY CLUSTERED ([FormId])
-WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
-ON [PRIMARY]
-GO
-
-
--- ----------------------------
--- Primary Key structure for table WorkflowBranch
--- ----------------------------
-ALTER TABLE [Form].[WorkflowBranch] ADD CONSTRAINT [PK__Workflow__37F5C0CF755E1DC7] PRIMARY KEY CLUSTERED ([BranchId])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
 ON [PRIMARY]
 GO
