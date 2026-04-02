@@ -405,13 +405,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                 .Select((stepinfo, dic) => new WorkflowStepListDto()
                                 {
                                     StepId = stepinfo.StepId,
-                                    StepName = _lang.Locale == "zh-CN"
-                                               ? stepinfo.StepNameCn
-                                               : stepinfo.StepNameEn,
+                                    StepNameCn = stepinfo.StepNameCn,
+                                    StepNameEn = stepinfo.StepNameEn,
                                     Assignment = dic.DicCode,
                                     AssignmentName = _lang.Locale == "zh-CN"
-                                               ? dic.DicNameCn
-                                               : dic.DicNameEn,
+                                                     ? dic.DicNameCn
+                                                     : dic.DicNameEn,
                                 }).ToListAsync();
             return Result<List<WorkflowStepListDto>>.Ok(list.Adapt<List<WorkflowStepListDto>>());
         }

@@ -17,7 +17,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// <summary>
         /// 步骤名称
         /// </summary>
-        public string StepName { get; set; } = string.Empty;
+        public string StepNameCn { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 步骤名称
+        /// </summary>
+        public string StepNameEn { get; set; } = string.Empty;
 
         /// <summary>
         /// 步骤指派规则
