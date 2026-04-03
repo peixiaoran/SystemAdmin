@@ -21,9 +21,9 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public long StepId { get; set; }
 
         /// <summary>
-        /// 分支名称
+        /// 步骤Id
         /// </summary>
-        public string BranchName { get; set; } = string.Empty;
+        public string StepName { get; set; } = string.Empty;
 
         /// <summary>
         /// 下一步骤Id

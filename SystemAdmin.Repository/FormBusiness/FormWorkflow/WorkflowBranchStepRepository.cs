@@ -134,16 +134,28 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<WorkflowBranchStepEntity>()
-                           .With(SqlWith.NoLock);
+                           .With(SqlWith.NoLock)
+                           .InnerJoin<WorkflowStepEntity>((branchstep, step) => branchstep.StepId == step.StepId)
+                           .InnerJoin<WorkflowStepEntity>((branchstep, step, nextstep) => branchstep.NextStepId == nextstep.StepId);
 
             if (!string.IsNullOrEmpty(getPage.BranchId) && long.Parse(getPage.BranchId) > -1)
             {
-                query.Where(branchstep => branchstep.BranchId == long.Parse(getPage.BranchId));
+                query.Where((branchstep, step, nextstep) => branchstep.BranchId == long.Parse(getPage.BranchId));
             }
 
-            var page = await query.OrderBy(branchstep => branchstep.SortOrder)
-                                  .ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<WorkflowBranchStepDto>.Ok(page.Adapt<List<WorkflowBranchStepDto>>(), totalCount);
+            var page = await query.OrderBy((branchstep, step, nextstep) => branchstep.SortOrder)
+                                  .Select((branchstep, step, nextstep) => new WorkflowBranchStepDto { 
+                                      BranchId = branchstep.BranchId,
+                                      StepId = step.StepId,
+                                      StepName = _lang.Locale == "zh-CN"
+                                                 ? step.StepNameCn
+                                                 : step.StepNameEn,
+                                      NextStepId = nextstep.StepId,
+                                      NextStepName = _lang.Locale == "zh-CN"
+                                                 ? nextstep.StepNameCn
+                                                 : nextstep.StepNameEn,
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<WorkflowBranchStepDto>.Ok(page, totalCount);
         }
     }
 }

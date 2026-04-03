@@ -48,6 +48,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                 await _db.BeginTranAsync();
                 int count = await _controlInfoRepository.InsertControlInfo(entity);
                 await _db.CommitTranAsync();
+
                 return count >= 1
                         ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
                         : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));

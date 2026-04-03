@@ -1,8 +1,7 @@
 ﻿using Mapster;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Options;
-using SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto;
-using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
+using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
@@ -74,7 +73,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         /// <returns></returns>
         public async Task<LeaveFormDto> GetLeaveForm(long formId)
         {
-            return await _db.Queryable<FormInfoEntity>()
+            return await _db.Queryable<FormInstanceEntity>()
                             .With(SqlWith.NoLock)
                             .InnerJoin<LeaveFormEntity>((form, leave) => form.FormId == leave.FormId)
                             .InnerJoin<UserInfoEntity>((form, leave, user) => leave.ApplicantUserId == user.UserId)
@@ -111,13 +110,13 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<List<FormFileDto>> GetLeaveFileList(long formId)
+        public async Task<List<FormAttachmentDto>> GetLeaveFileList(long formId)
         {
-            var fileList = await _db.Queryable<FormFileEntity>()
+            var fileList = await _db.Queryable<FormAttachmentEntity>()
                                     .With(SqlWith.NoLock)
                                     .Where(formfile => formfile.FormId == formId)
                                     .ToListAsync();
-            return fileList.Adapt<List<FormFileDto>>();
+            return fileList.Adapt<List<FormAttachmentDto>>();
         }
 
         /// <summary>
@@ -125,7 +124,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertFile(FormFileEntity entity)
+        public async Task<int> InsertFile(FormAttachmentEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
@@ -137,8 +136,8 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         /// <returns></returns>
         public async Task<int> DeleteFormFile(long fileId)
         {
-            return await _db.Deleteable<FormFileEntity>()
-                            .Where(formfile => formfile.FileId == fileId)
+            return await _db.Deleteable<FormAttachmentEntity>()
+                            .Where(formfile => formfile.AttachmentId == fileId)
                             .ExecuteCommandAsync();
         }
     }

@@ -70,6 +70,15 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
+        ///   查找类似 文件后缀不符合规范 的本地化字符串。
+        /// </summary>
+        internal static string FileExtensionNotAllow {
+            get {
+                return ResourceManager.GetString("FileExtensionNotAllow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 请选择附件进行删除 的本地化字符串。
         /// </summary>
         internal static string FileIdNotNull {

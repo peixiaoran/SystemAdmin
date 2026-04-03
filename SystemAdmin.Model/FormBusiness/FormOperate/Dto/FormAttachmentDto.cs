@@ -1,18 +1,18 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto
+namespace SystemAdmin.Model.FormBusiness.FormOperate.Dto
 {
     /// <summary>
-    /// 请假表文件表Dto
+    /// 表单附件表Dto
     /// </summary>
-    public class FormFileDto
+    public class FormAttachmentDto
     {
         /// <summary>
         /// 附件Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
-        public long FileId { get; set; }
+        public long AttachmentId { get; set; }
 
         /// <summary>
         /// 表单Id
@@ -21,18 +21,18 @@ namespace SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto
         public long FormId { get; set; }
 
         /// <summary>
-        /// 文件名
+        /// 附件文件名
         /// </summary>
-        public string FileName { get; set; } = string.Empty;
+        public string AttachmentName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 文件相对路径
+        /// 附件相对路径
         /// </summary>
-        public string FilePath { get; set; } = string.Empty;
+        public string AttachmentPath { get; set; } = string.Empty;
 
         /// <summary>
-        /// 文件大小（kb）
+        /// 附件大小（kb）
         /// </summary>
-        public int FileSize { get; set; }
+        public int AttachmentSize { get; set; }
     }
 }

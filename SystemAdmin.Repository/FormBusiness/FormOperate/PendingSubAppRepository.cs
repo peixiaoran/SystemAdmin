@@ -89,7 +89,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
 
             var query = _db.Queryable<PendingApprovalEntity>()
                            .With(SqlWith.NoLock)
-                           .InnerJoin<FormInfoEntity>((pendapp, forminfo) => pendapp.FormId == forminfo.FormId)
+                           .InnerJoin<FormInstanceEntity>((pendapp, forminfo) => pendapp.FormId == forminfo.FormId)
                            .InnerJoin<FormTypeEntity>((pendapp, forminfo, formtype) => forminfo.FormTypeId == formtype.FormTypeId)
                            .InnerJoin<DictionaryInfoEntity>((pendapp, forminfo, formtype, dic) => dic.DicType == "FormStatus" && dic.DicCode == FormStatus.PendingSubmission.ToEnumString() && forminfo.FormStatus == dic.DicCode)
                            .InnerJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser) => pendapp.ApproveUserId == penduser.UserId)
@@ -155,7 +155,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
 
             var query = _db.Queryable<PendingApprovalEntity>()
                            .With(SqlWith.NoLock)
-                           .InnerJoin<FormInfoEntity>((pendapp, forminfo) => pendapp.FormId == forminfo.FormId)
+                           .InnerJoin<FormInstanceEntity>((pendapp, forminfo) => pendapp.FormId == forminfo.FormId)
                            .InnerJoin<FormTypeEntity>((pendapp, forminfo, formtype) => forminfo.FormTypeId == formtype.FormTypeId)
                            .InnerJoin<DictionaryInfoEntity>((pendapp, forminfo, formtype, dic) => dic.DicType == "FormStatus" && forminfo.FormStatus == dic.DicCode)
                            .InnerJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser) => pendapp.ApproveUserId == penduser.UserId)
@@ -216,7 +216,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// <returns></returns>
         public Task<bool> IsVoidedForm(long formId)
         {
-            return _db.Queryable<FormInfoEntity>()
+            return _db.Queryable<FormInstanceEntity>()
                       .Where(forminfo => forminfo.FormStatus == FormStatus.PendingSubmission.ToEnumString())
                       .AnyAsync();
         }
@@ -229,8 +229,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// <returns></returns>
         public Task<int> VoidedForm(long formId,long loginUserId)
         {
-            return _db.Updateable<FormInfoEntity>()
-                      .SetColumns(forminfo => new FormInfoEntity
+            return _db.Updateable<FormInstanceEntity>()
+                      .SetColumns(forminfo => new FormInstanceEntity
                       {
                           FormStatus = FormStatus.Voided.ToEnumString(),
                           ModifiedBy = loginUserId,

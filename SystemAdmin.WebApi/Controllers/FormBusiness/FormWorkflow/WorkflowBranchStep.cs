@@ -46,7 +46,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单分支步骤] 删除分支步骤")]
-        public async Task<Result<int>> DeleteWorkflowBranchStep([FromForm] string branchId, string stepId)
+        public async Task<Result<int>> DeleteWorkflowBranchStep([FromForm] string branchId, [FromForm] string stepId)
         {
             return await _workflowBranchStepService.DeleteWorkflowBranchStep(branchId, stepId);
         }
@@ -62,7 +62,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单分支步骤] 查询分支步骤实体")]
-        public async Task<Result<WorkflowBranchStepDto>> GetWorkflowBranchStepEntity([FromForm] string branchId, string stepId)
+        public async Task<Result<WorkflowBranchStepDto>> GetWorkflowBranchStepEntity([FromForm] string branchId, [FromForm] string stepId)
         {
             return await _workflowBranchStepService.GetWorkflowBranchStepEntity(branchId, stepId);
         }

@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SystemAdmin.CommonSetup.Security;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection

@@ -5,8 +5,8 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
     /// <summary>
     /// 表单信息实体类
     /// </summary>
-    [SugarTable("[Form].[FormInfo]")]
-    public class FormInfoEntity
+    [SugarTable("[Form].[FormInstance]")]
+    public class FormInstanceEntity
     {
         /// <summary>
         /// 表单Id
@@ -30,14 +30,19 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         public string FormStatus { get; set; } = string.Empty;
 
         /// <summary>
-        /// 上一步骤Id
+        /// 申请人Id
         /// </summary>
-        public long? LastStepId { get; set; }
+        public long ApplicantUserId { get; set; }
+
+        /// <summary>
+        /// 所属分支
+        /// </summary>
+        public long BranchId { get; set; }
 
         /// <summary>
         /// 当前步骤Id
         /// </summary>
-        public long NowStepId { get; set; }
+        public long CurrentStepId { get; set; }
 
         /// <summary>
         /// 创建人

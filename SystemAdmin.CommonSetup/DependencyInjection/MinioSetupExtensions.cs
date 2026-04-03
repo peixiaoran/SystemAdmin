@@ -12,9 +12,7 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
         /// <summary>
         /// 注册 Minio 相关依赖：MinioSettings、IMinioClient、MinioService
         /// </summary>
-        public static IServiceCollection AddMinioSetup(
-            this IServiceCollection services,
-            IConfiguration configuration)
+        public static IServiceCollection AddMinioSetup(this IServiceCollection services, IConfiguration configuration)
         {
             // 1. 绑定 MinioSettings
             services.Configure<MinioSettings>(opts =>
@@ -23,7 +21,7 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
             });
 
             // 2. 注册 IMinioClient 单例
-            services.AddSingleton<IMinioClient>(sp =>
+            services.AddSingleton(sp =>
             {
                 var options = sp.GetRequiredService<IOptions<MinioSettings>>().Value;
 

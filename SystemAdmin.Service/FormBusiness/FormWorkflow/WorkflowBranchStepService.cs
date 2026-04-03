@@ -77,13 +77,13 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 var isRepat = await _workflowBranchStep.BranchStepIsRepeat(long.Parse(upsert.BranchId), long.Parse(upsert.StepId));
                 if (isRepat)
                 {
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}BranchStepIsRepat"));
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsRepat"));
                 }
                 else
                 {
                     var entity = new WorkflowBranchStepEntity()
                     {
-                        BranchId = SnowFlakeSingle.Instance.NextId(),
+                        BranchId = long.Parse(upsert.BranchId),
                         StepId = long.Parse(upsert.StepId),
                         NextStepId = long.Parse(upsert.NextStepId),
                         SortOrder = upsert.SortOrder,

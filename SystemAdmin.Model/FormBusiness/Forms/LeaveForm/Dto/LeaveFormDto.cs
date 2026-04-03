@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using SystemAdmin.Model.FormBusiness.FormBasicInfo.Dto;
+using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
 namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
@@ -84,6 +84,6 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
         /// <summary>
         /// 附件列表
         /// </summary>
-        public List<FormFileDto> FileList { get; set; } = new List<FormFileDto>();
+        public List<FormAttachmentDto> FileList { get; set; } = new List<FormAttachmentDto>();
     }
 }

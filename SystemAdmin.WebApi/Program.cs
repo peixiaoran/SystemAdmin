@@ -1,5 +1,6 @@
 ﻿using Scalar.AspNetCore;
 using SystemAdmin.CommonSetup.DependencyInjection;
+using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Hosting.DependencyInjection;
 using SystemAdmin.WebApi.DependencyInjection;
 
@@ -29,6 +30,9 @@ builder.Services.AddJwtSetup(builder.Configuration);
 // 注入 Minio
 builder.Services.AddMinioSetup(builder.Configuration);
 
+// 注入 文件上传设置
+builder.Services.AddFileUploadSetup(builder.Configuration);
+
 // 注入 MailKit
 builder.Services.AddMailKitSetup(builder.Configuration);
 
@@ -42,7 +46,7 @@ builder.Services.AddLanguage();
 builder.Services.SqlSugarScopeSetup(builder.Configuration);
 
 // 注入 业务服务和仓储
-builder.Services.AddServiceAndRepository();
+builder.Services.AddProjectClasses();
 
 // 注入 AddHybridCache缓存服务
 builder.Services.AddCache();
