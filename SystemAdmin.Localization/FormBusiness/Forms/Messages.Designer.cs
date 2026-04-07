@@ -61,47 +61,47 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 附件删除失败 的本地化字符串。
-        /// </summary>
-        internal static string DeleteFileFailed {
-            get {
-                return ResourceManager.GetString("DeleteFileFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 文件后缀不符合规范 的本地化字符串。
         /// </summary>
-        internal static string FileExtensionNotAllow {
+        internal static string AttachmentExtensionNotAllow {
             get {
-                return ResourceManager.GetString("FileExtensionNotAllow", resourceCulture);
+                return ResourceManager.GetString("AttachmentExtensionNotAllow", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 请选择附件进行删除 的本地化字符串。
         /// </summary>
-        internal static string FileIdNotNull {
+        internal static string AttachmentIdNotNull {
             get {
-                return ResourceManager.GetString("FileIdNotNull", resourceCulture);
+                return ResourceManager.GetString("AttachmentIdNotNull", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 附件不能为空 的本地化字符串。
         /// </summary>
-        internal static string FileNotNull {
+        internal static string AttachmentNotNull {
             get {
-                return ResourceManager.GetString("FileNotNull", resourceCulture);
+                return ResourceManager.GetString("AttachmentNotNull", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 附件最大限制为25MB！ 的本地化字符串。
         /// </summary>
-        internal static string FileSizeLimit {
+        internal static string AttachmentSizeLimit {
             get {
-                return ResourceManager.GetString("FileSizeLimit", resourceCulture);
+                return ResourceManager.GetString("AttachmentSizeLimit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 附件删除失败 的本地化字符串。
+        /// </summary>
+        internal static string DeleteAttachmentFailed {
+            get {
+                return ResourceManager.GetString("DeleteAttachmentFailed", resourceCulture);
             }
         }
         

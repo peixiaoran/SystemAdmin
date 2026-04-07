@@ -5,7 +5,7 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
     /// <summary>
     /// 请假表文件表
     /// </summary>
-    [SugarTable("[Form].[FormFile]")]
+    [SugarTable("[Form].[FormAttachment]")]
     public class FormAttachmentEntity
     {
         /// <summary>

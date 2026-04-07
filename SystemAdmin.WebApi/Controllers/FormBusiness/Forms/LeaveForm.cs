@@ -28,7 +28,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 初始化请假单")]
-        public async Task<Result<LeaveFormDto>> InitializeLevel(string formTypeId)
+        public async Task<Result<LeaveFormDto>> InitializeLevel([FromForm] string formTypeId)
         {
             return await _leaveFormService.InitializeLevel(formTypeId);
         }
@@ -36,9 +36,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 查询请假单明细")]
-        public async Task<Result<LeaveFormDto>> GetLeaveFormDto(string formId)
+        public async Task<Result<LeaveFormDto>> GetLeaveForm([FromForm] string formId)
         {
-            return await _leaveFormService.GetLeaveFormDto(formId);
+            return await _leaveFormService.GetLeaveForm(formId);
         }
 
         [HttpPost]
@@ -52,17 +52,17 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 上传附件")]
-        public async Task<Result<List<FormAttachmentDto>>> UploadFile([FromForm] string formId, List<IFormFile> files)
+        public async Task<Result<List<FormAttachmentDto>>> UploadAttachment([FromForm] string formId, List<IFormFile> files)
         {
-            return await _leaveFormService.UploadFile(formId, files);
+            return await _leaveFormService.UploadAttachment(formId, files);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 删除附件")]
-        public async Task<Result<int>> DeleteFile([FromForm] string fileId, [FromForm] string filePath)
+        public async Task<Result<int>> DeleteAttachment([FromForm] string attachmentId, [FromForm] string attachmentPath)
         {
-            return await _leaveFormService.DeleteFile(fileId, filePath);
+            return await _leaveFormService.DeleteAttachment(attachmentId, attachmentPath);
         }
     }
 }

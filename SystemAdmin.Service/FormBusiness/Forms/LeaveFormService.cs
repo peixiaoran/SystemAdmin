@@ -20,7 +20,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly CurrentUser _loginuser;
         private readonly ILogger<LeaveFormService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly FileUploadOptions _fileUploadOptions;
+        private readonly FileUploadOptions _attachmentUploadOptions;
         private readonly MinioService _minioService;
         private readonly FormManager _formRepository;
         private readonly LeaveFormRepository _leaveForm;
@@ -28,12 +28,12 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         //private readonly string _this = "FormBusiness.Forms.LeaveForm";
         private readonly string _form = "FormBusiness.Forms.";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> fileUploadOptions, MinioService minioService, FormManager formRepository, LeaveFormRepository leaveForm, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> attachmentUploadOptions, MinioService minioService, FormManager formRepository, LeaveFormRepository leaveForm, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _fileUploadOptions = fileUploadOptions.Value;
+            _attachmentUploadOptions = attachmentUploadOptions.Value;
             _minioService = minioService;
             _formRepository = formRepository;
             _leaveForm = leaveForm;
@@ -85,6 +85,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     await _db.CommitTranAsync();
 
                     var leaveFormDto = await _leaveForm.GetLeaveForm(long.Parse(formId));
+                    leaveFormDto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
 
                     return Result<LeaveFormDto>.Ok(leaveFormDto);
                 }
@@ -103,11 +104,12 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<Result<LeaveFormDto>> GetLeaveFormDto(string formId)
+        public async Task<Result<LeaveFormDto>> GetLeaveForm(string formId)
         {
             try
             {
                 var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
+                dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
                 return Result<LeaveFormDto>.Ok(dto);
             }
             catch (Exception ex)
@@ -160,66 +162,66 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// 上传附件
         /// </summary>
         /// <param name="formId"></param>
-        /// <param name="files"></param>
+        /// <param name="attachments"></param>
         /// <returns></returns>
-        public async Task<Result<List<FormAttachmentDto>>> UploadFile(string formId, List<IFormFile> files)
+        public async Task<Result<List<FormAttachmentDto>>> UploadAttachment(string formId, List<IFormFile> attachments)
         {
             try
             {
-                if (files == null || files.Count == 0)
+                if (attachments == null || attachments.Count == 0)
                 {
-                    return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}FileNotNull"));
+                    return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentNotNull"));
                 }
 
-                long maxFileSize = _fileUploadOptions.MaxSizeMB * 1024L * 1024L;
+                long maxAttachmentSize = _attachmentUploadOptions.MaxSizeMB * 1024L * 1024L;
 
-                var formFileList = new List<FormAttachmentDto>();
+                var formAttachmentList = new List<FormAttachmentDto>();
 
                 await _db.BeginTranAsync();
-                foreach (var file in files)
+                foreach (var attachment in attachments)
                 {
-                    if (file == null || file.Length == 0)
+                    if (attachment == null || attachment.Length == 0)
                     {
-                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}FileNotNull"));
+                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentNotNull"));
                     }
 
-                    if (file.Length > maxFileSize)
+                    if (attachment.Length > maxAttachmentSize)
                     {
-                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}FileSizeLimit"));
+                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentSizeLimit"));
                     }
 
-                    var fileExt = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+                    var attachmentExt = Path.GetExtension(attachment.FileName)?.ToLowerInvariant();
 
-                    if (string.IsNullOrWhiteSpace(fileExt) || !_fileUploadOptions.AllowExtensions.Contains(fileExt))
+                    if (string.IsNullOrWhiteSpace(attachmentExt) || !_attachmentUploadOptions.AllowExtensions.Contains(attachmentExt))
                     {
-                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}FileExtensionNotAllow"));
+                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentExtensionNotAllow"));
                     }
 
-                    using var stream = file.OpenReadStream();
+                    using var stream = attachment.OpenReadStream();
 
-                    var avatarUrl = await _minioService.UploadAsync(file.FileName, stream, file.ContentType);
+                    var avatarUrl = await _minioService.UploadAsync(attachment.FileName, stream, attachment.ContentType);
 
-                    int fileSizeKb = (int)(file.Length / 1024);
+                    int attachmentSizeKb = (int)(attachment.Length / 1024);
 
-                    var fileItem = new FormAttachmentEntity
+                    var attachmentItem = new FormAttachmentEntity
                     {
                         AttachmentId = SnowFlakeSingle.Instance.NextId(),
                         FormId = long.Parse(formId),
-                        AttachmentName = file.FileName,
+                        AttachmentName = attachment.FileName,
                         AttachmentPath = avatarUrl.ToString(),
-                        AttachmentSize = fileSizeKb,
+                        AttachmentSize = attachmentSizeKb,
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
 
-                    var fileItemDto = fileItem.Adapt<FormAttachmentDto>();
+                    var attachmentItemDto = attachmentItem.Adapt<FormAttachmentDto>();
 
-                    var count = await _leaveForm.InsertFile(fileItem);
-                    formFileList.Add(fileItemDto);
+                    var count = await _leaveForm.InsertAttachment(attachmentItem);
+                    formAttachmentList.Add(attachmentItemDto);
                 }
                 await _db.CommitTranAsync();
 
-                return Result<List<FormAttachmentDto>>.Ok(formFileList, _localization.ReturnMsg($"{_form}UploadSuccess"));
+                return Result<List<FormAttachmentDto>>.Ok(formAttachmentList, _localization.ReturnMsg($"{_form}UploadSuccess"));
             }
             catch (Exception ex)
             {
@@ -232,30 +234,30 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// <summary>
         /// 删除附件
         /// </summary>
-        /// <param name="fileId"></param>
-        /// <param name="filePath"></param>
+        /// <param name="attachmentId"></param>
+        /// <param name="attachmentPath"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteFile(string fileId, string filePath)
+        public async Task<Result<int>> DeleteAttachment(string attachmentId, string attachmentPath)
         {
             try
             {
-                if (string.IsNullOrEmpty(fileId))
+                if (string.IsNullOrEmpty(attachmentId))
                 {
-                    return Result<int>.Failure(400, _localization.ReturnMsg($"{_form}FileIdNotNull"));
+                    return Result<int>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentIdNotNull"));
                 }
 
                 await _db.BeginTranAsync();
-                var count = await _leaveForm.DeleteFormFile(long.Parse(fileId));
+                var count = await _leaveForm.DeleteAttachment(long.Parse(attachmentId));
                 await _db.CommitTranAsync();
 
-                await _minioService.DeleteAsync(filePath);
+                await _minioService.DeleteAsync(attachmentPath);
                 return Result<int>.Ok(count, "");
             }
             catch (Exception ex)
             {
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
-                return Result<int>.Failure(500, _localization.ReturnMsg($"{_form}DeleteFileFailed"));
+                return Result<int>.Failure(500, _localization.ReturnMsg($"{_form}DeleteAttachmentFailed"));
             }
         }
     }

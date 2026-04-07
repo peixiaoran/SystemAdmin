@@ -109,7 +109,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<List<FormAttachmentDto>> GetLeaveFileList(long formId)
+        public async Task<List<FormAttachmentDto>> GetAttachmentList(long formId)
         {
             var fileList = await _db.Queryable<FormAttachmentEntity>()
                                     .With(SqlWith.NoLock)
@@ -123,7 +123,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertFile(FormAttachmentEntity entity)
+        public async Task<int> InsertAttachment(FormAttachmentEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
@@ -131,12 +131,12 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         /// <summary>
         /// 删除附件
         /// </summary>
-        /// <param name="fileId"></param>
+        /// <param name="attachmentId"></param>
         /// <returns></returns>
-        public async Task<int> DeleteFormFile(long fileId)
+        public async Task<int> DeleteAttachment(long attachmentId)
         {
             return await _db.Deleteable<FormAttachmentEntity>()
-                            .Where(formfile => formfile.AttachmentId == fileId)
+                            .Where(attach => attach.AttachmentId == attachmentId)
                             .ExecuteCommandAsync();
         }
     }

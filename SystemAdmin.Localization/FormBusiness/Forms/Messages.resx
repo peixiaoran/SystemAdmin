@@ -123,25 +123,25 @@
   <data name="SaveSuccess" xml:space="preserve">
     <value>保存成功</value>
   </data>
-  <data name="FileNotNull" xml:space="preserve">
+  <data name="AttachmentNotNull" xml:space="preserve">
     <value>附件不能为空</value>
   </data>
-  <data name="FileSizeLimit" xml:space="preserve">
+  <data name="AttachmentSizeLimit" xml:space="preserve">
     <value>附件最大限制为25MB！</value>
   </data>
   <data name="UploadFailed" xml:space="preserve">
     <value>附件上传失败</value>
   </data>
-  <data name="FileIdNotNull" xml:space="preserve">
+  <data name="AttachmentIdNotNull" xml:space="preserve">
     <value>请选择附件进行删除</value>
   </data>
-  <data name="DeleteFileFailed" xml:space="preserve">
+  <data name="DeleteAttachmentFailed" xml:space="preserve">
     <value>附件删除失败</value>
   </data>
   <data name="NotVoided" xml:space="preserve">
     <value>表单不是待送审阶段，不可作废</value>
   </data>
-  <data name="FileExtensionNotAllow" xml:space="preserve">
+  <data name="AttachmentExtensionNotAllow" xml:space="preserve">
     <value>文件后缀不符合规范</value>
   </data>
 </root>
