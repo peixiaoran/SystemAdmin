@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 03/04/2026 17:02:06
+ Date: 07/04/2026 18:29:16
 */
 
 
@@ -482,6 +482,9 @@ GO
 -- ----------------------------
 -- Records of FormInstance
 -- ----------------------------
+INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [BranchId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2041417324984143872', N'1987217256446300160', N'LVR-2026040001', N'PendingSubmission', N'1903486709602062336', N'2036711225970266112', N'2009890853346217984', N'1903486709602062336', N'2026-04-07 15:26:32.603', N'1903486709602062336', N'2026-04-07 16:11:15.253')
+GO
+
 
 -- ----------------------------
 -- Table structure for FormLog
@@ -652,7 +655,7 @@ GO
 -- ----------------------------
 -- Records of FormSequence
 -- ----------------------------
-INSERT INTO [Form].[FormSequence] ([FormTypeId], [Ym], [Total], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'202603', N'17', N'1903486709602062336', N'2026-03-30 15:10:51.200', N'1903486709602062336', N'2026-03-30 15:11:35.243')
+INSERT INTO [Form].[FormSequence] ([FormTypeId], [Ym], [Total], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'202604', N'1', N'1903486709602062336', N'2026-04-07 15:26:32.603', NULL, NULL)
 GO
 
 
@@ -805,13 +808,12 @@ GO
 
 CREATE TABLE [Form].[LeaveForm] (
   [FormId] bigint  NOT NULL,
-  [FormNo] nvarchar(20) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [ApplicantUserId] bigint  NULL,
-  [LeaveTypeCode] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [LeaveReason] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [LeaveStartTime] datetime2(7)  NULL,
-  [LeaveEndTime] datetime2(7)  NULL,
-  [LeaveHours] decimal(6,2)  NOT NULL,
+  [LeaveType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [Reason] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [StartTime] datetime2(7)  NULL,
+  [EndTime] datetime2(7)  NULL,
+  [Days] decimal(6,2)  NOT NULL,
   [AgentUserNo] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime2(3)  NOT NULL,
@@ -831,13 +833,6 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'请假单单号',
-'SCHEMA', N'Form',
-'TABLE', N'LeaveForm',
-'COLUMN', N'FormNo'
-GO
-
-EXEC sp_addextendedproperty
 'MS_Description', N'申请人Id',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
@@ -848,35 +843,35 @@ EXEC sp_addextendedproperty
 'MS_Description', N'请假假别编码',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'LeaveTypeCode'
+'COLUMN', N'LeaveType'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'请假事由',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'LeaveReason'
+'COLUMN', N'Reason'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'请假开始时间',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'LeaveStartTime'
+'COLUMN', N'StartTime'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'请假结束时间',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'LeaveEndTime'
+'COLUMN', N'EndTime'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'请假时数',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'LeaveHours'
+'COLUMN', N'Days'
 GO
 
 EXEC sp_addextendedproperty
@@ -924,6 +919,9 @@ GO
 -- ----------------------------
 -- Records of LeaveForm
 -- ----------------------------
+INSERT INTO [Form].[LeaveForm] ([FormId], [ApplicantUserId], [LeaveType], [Reason], [StartTime], [EndTime], [Days], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2041417324984143872', N'1903486709602062336', N'Annual', N'1', N'2026-09-29 00:00:00.0000000', N'2026-09-30 23:59:59.0000000', N'2.00', N'E347473', N'1903486709602062336', N'2026-04-07 15:26:56.487', N'1903486709602062336', N'2026-04-07 16:11:08.583')
+GO
+
 
 -- ----------------------------
 -- Table structure for PendingApproval
@@ -934,8 +932,8 @@ GO
 
 CREATE TABLE [Form].[PendingApproval] (
   [FormId] bigint  NOT NULL,
-  [AppointmentType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [ApproveUserId] bigint  NULL
+  [CurrentStepId] bigint  NOT NULL,
+  [ApproveUserId] bigint  NOT NULL
 )
 GO
 
@@ -950,14 +948,14 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'签核身份',
+'MS_Description', N'当前步骤Id',
 'SCHEMA', N'Form',
 'TABLE', N'PendingApproval',
-'COLUMN', N'AppointmentType'
+'COLUMN', N'CurrentStepId'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'待签核员工Id',
+'MS_Description', N'待签核人员Id',
 'SCHEMA', N'Form',
 'TABLE', N'PendingApproval',
 'COLUMN', N'ApproveUserId'
@@ -973,13 +971,7 @@ GO
 -- ----------------------------
 -- Records of PendingApproval
 -- ----------------------------
-INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2035455708547387392', N'Primary', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2035454156742987776', N'Primary', N'1903486709602062336')
-GO
-
-INSERT INTO [Form].[PendingApproval] ([FormId], [AppointmentType], [ApproveUserId]) VALUES (N'2036412154202165248', N'Primary', N'1903486709602062336')
+INSERT INTO [Form].[PendingApproval] ([FormId], [CurrentStepId], [ApproveUserId]) VALUES (N'2041417324984143872', N'2009890853346217984', N'1903486709602062336')
 GO
 
 
@@ -1013,6 +1005,13 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowBranch',
 'COLUMN', N'BranchId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单类型Id',
+'SCHEMA', N'Form',
+'TABLE', N'WorkflowBranch',
+'COLUMN', N'FormTypeId'
 GO
 
 EXEC sp_addextendedproperty
@@ -1088,10 +1087,10 @@ GO
 -- ----------------------------
 -- Records of WorkflowBranch
 -- ----------------------------
-INSERT INTO [Form].[WorkflowBranch] ([BranchId], [FormTypeId], [BranchNameCn], [BranchNameEn], [HandlerKey], [IsDefault], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2035949443819376640', N'1987217256446300160', N'请假天数超过5天', N'Leave of absence exceeding 5 days', N'LeaveThanExceeDay5', N'0', NULL, N'1903486709602062336', N'2026-03-31 09:38:27.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowBranch] ([BranchId], [FormTypeId], [BranchNameCn], [BranchNameEn], [HandlerKey], [IsDefault], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2035949443819376640', N'1987217256446300160', N'请假天数超过5天', N'Leave of absence exceeding 5 days', N'IsLeaveDaysOver3', N'0', NULL, N'1903486709602062336', N'2026-03-31 09:38:27.000', NULL, NULL)
 GO
 
-INSERT INTO [Form].[WorkflowBranch] ([BranchId], [FormTypeId], [BranchNameCn], [BranchNameEn], [HandlerKey], [IsDefault], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2036711225970266112', N'1987217256446300160', N'请假天数少于5天', N'Leave of less than 5 days', N'LeaveThanLassDay3', N'0', NULL, N'1903486709602062336', N'2026-03-31 09:38:30.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowBranch] ([BranchId], [FormTypeId], [BranchNameCn], [BranchNameEn], [HandlerKey], [IsDefault], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2036711225970266112', N'1987217256446300160', N'默认', N'default', NULL, N'1', NULL, N'1903486709602062336', N'2026-03-31 09:38:30.000', NULL, NULL)
 GO
 
 
@@ -1679,7 +1678,7 @@ GO
 -- ----------------------------
 -- Primary Key structure for table FormInstance
 -- ----------------------------
-ALTER TABLE [Form].[FormInstance] ADD CONSTRAINT [PK__FormInfo__FB05B7DDADCFEA72] PRIMARY KEY CLUSTERED ([FormId])
+ALTER TABLE [Form].[FormInstance] ADD CONSTRAINT [PK__FormInfo__FB05B7DDADCFEA72] PRIMARY KEY CLUSTERED ([FormId], [FormNo])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
 ON [PRIMARY]
 GO

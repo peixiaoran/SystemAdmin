@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SaveFailed" xml:space="preserve">
-    <value>Form failed to save</value>
+    <value>Failed to save</value>
   </data>
   <data name="SaveSuccess" xml:space="preserve">
-    <value>Form saved successfully</value>
+    <value>Saved successfully</value>
   </data>
   <data name="FileNotNull" xml:space="preserve">
     <value>The uploaded file cannot be empty</value>

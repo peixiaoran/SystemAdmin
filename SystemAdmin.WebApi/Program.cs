@@ -1,6 +1,5 @@
 ﻿using Scalar.AspNetCore;
 using SystemAdmin.CommonSetup.DependencyInjection;
-using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Hosting.DependencyInjection;
 using SystemAdmin.WebApi.DependencyInjection;
 

@@ -7,6 +7,7 @@ using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
+using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
 using SystemAdmin.Repository.FormBusiness.Forms;
@@ -21,13 +22,13 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly SqlSugarScope _db;
         private readonly FileUploadOptions _fileUploadOptions;
         private readonly MinioService _minioService;
-        private readonly FormRepository _formRepository;
+        private readonly FormManager _formRepository;
         private readonly LeaveFormRepository _leaveForm;
         private readonly LocalizationService _localization;
         //private readonly string _this = "FormBusiness.Forms.LeaveForm";
-        private readonly string _publicthis = "FormBusiness.Forms.";
+        private readonly string _form = "FormBusiness.Forms.";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> fileUploadOptions, MinioService minioService, FormRepository formRepository, LeaveFormRepository leaveForm, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> fileUploadOptions, MinioService minioService, FormManager formRepository, LeaveFormRepository leaveForm, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
@@ -49,19 +50,110 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             return Result<List<LeaveTypeDropDto>>.Ok(drop);
         }
         
+        /// <summary>
+        /// 初始化表单
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <returns></returns>
         public async Task<Result<LeaveFormDto>> InitializeLevel(string formTypeId)
         {
-            var formId = await _formRepository.InitializeFormInstance(formTypeId);
+            try
+            {
+                await _db.BeginTranAsync();
+                var formId = await _formRepository.InitializeFormInstance(formTypeId);
+                if (string.IsNullOrEmpty(formId))
+                {
+                    await _db.RollbackTranAsync();
+                    return Result<LeaveFormDto>.Failure(500, _localization.ReturnMsg($"{_form}InitializeFailed"));
+                }
+                else
+                {
+                    var leaveForm = new LeaveFormEntity()
+                    {
+                        FormId = long.Parse(formId),
+                        ApplicantUserId = _loginuser.UserId,
+                        LeaveType = "",
+                        Reason = "",
+                        StartTime = null,
+                        EndTime = null,
+                        Days = 0,
+                        AgentUserNo = "",
+                        CreatedBy = _loginuser.UserId,
+                        CreatedDate = DateTime.Now
+                    };
+                    await _leaveForm.InitLeaveForm(leaveForm);
+                    await _db.CommitTranAsync();
 
-            if (formId < 0)
-            {
-                return Result<LeaveFormDto>.Failure(500, _localization.ReturnMsg($"{_publicthis}InitializeFailed"));
-            }
-            else
-            {
+                    var leaveFormDto = await _leaveForm.GetLeaveForm(long.Parse(formId));
+
+                    return Result<LeaveFormDto>.Ok(leaveFormDto);
+                }
                 
             }
-            return Result<LeaveFormDto>.Ok(null);
+            catch (Exception ex)
+            {
+                await _db.RollbackTranAsync();
+                _logger.LogError(ex, ex.Message);
+                return Result<LeaveFormDto>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 查询请假单明细
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public async Task<Result<LeaveFormDto>> GetLeaveFormDto(string formId)
+        {
+            try
+            {
+                var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
+                return Result<LeaveFormDto>.Ok(dto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<LeaveFormDto>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 保存请假单
+        /// </summary>
+        /// <param name="save"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> SaveLeaveForm(LeaveFormSave save)
+        {
+            try
+            {
+                await _db.BeginTranAsync();
+                var entity = new LeaveFormEntity()
+                {
+                    FormId = long.Parse(save.FormId),
+                    ApplicantUserId = _loginuser.UserId,
+                    LeaveType = save.LeaveType,
+                    Reason = save.Reason,
+                    StartTime = save.StartTime,
+                    EndTime = save.EndTime,
+                    Days = save.Days,
+                    AgentUserNo = save.AgentUserNo,
+                    ModifiedBy = _loginuser.UserId,
+                    ModifiedDate = DateTime.Now
+                };
+                var count = await _leaveForm.SaveLeaveForm(entity);
+                await _formRepository.SaveFormInstance(long.Parse(save.FormId));
+                await _db.CommitTranAsync();
+
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_form}SaveSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_form}SaveFailed"));
+            }
+            catch (Exception ex)
+            {
+                await _db.RollbackTranAsync();
+                _logger.LogError(ex, ex.Message);
+                return Result<int>.Failure(500, ex.Message);
+            }
         }
 
         /// <summary>
@@ -76,7 +168,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             {
                 if (files == null || files.Count == 0)
                 {
-                    return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
+                    return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}FileNotNull"));
                 }
 
                 long maxFileSize = _fileUploadOptions.MaxSizeMB * 1024L * 1024L;
@@ -88,19 +180,19 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 {
                     if (file == null || file.Length == 0)
                     {
-                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileNotNull"));
+                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}FileNotNull"));
                     }
 
                     if (file.Length > maxFileSize)
                     {
-                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileSizeLimit"));
+                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}FileSizeLimit"));
                     }
 
                     var fileExt = Path.GetExtension(file.FileName)?.ToLowerInvariant();
 
                     if (string.IsNullOrWhiteSpace(fileExt) || !_fileUploadOptions.AllowExtensions.Contains(fileExt))
                     {
-                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileExtensionNotAllow"));
+                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}FileExtensionNotAllow"));
                     }
 
                     using var stream = file.OpenReadStream();
@@ -127,13 +219,13 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 }
                 await _db.CommitTranAsync();
 
-                return Result<List<FormAttachmentDto>>.Ok(formFileList, _localization.ReturnMsg($"{_publicthis}UploadSuccess"));
+                return Result<List<FormAttachmentDto>>.Ok(formFileList, _localization.ReturnMsg($"{_form}UploadSuccess"));
             }
             catch (Exception ex)
             {
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
-                return Result<List<FormAttachmentDto>>.Failure(500, _localization.ReturnMsg($"{_publicthis}UploadFailed"));
+                return Result<List<FormAttachmentDto>>.Failure(500, _localization.ReturnMsg($"{_form}UploadFailed"));
             }
         }
 
@@ -149,7 +241,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             {
                 if (string.IsNullOrEmpty(fileId))
                 {
-                    return Result<int>.Failure(400, _localization.ReturnMsg($"{_publicthis}FileIdNotNull"));
+                    return Result<int>.Failure(400, _localization.ReturnMsg($"{_form}FileIdNotNull"));
                 }
 
                 await _db.BeginTranAsync();
@@ -163,7 +255,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             {
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
-                return Result<int>.Failure(500, _localization.ReturnMsg($"{_publicthis}DeleteFileFailed"));
+                return Result<int>.Failure(500, _localization.ReturnMsg($"{_form}DeleteFileFailed"));
             }
         }
     }

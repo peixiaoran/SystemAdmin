@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SystemAdmin.Repository.FormBusiness.Workflow
 {
-    public class ApprovalActionRepository
+    public class ApprovalActionManager
     {
     }
 }

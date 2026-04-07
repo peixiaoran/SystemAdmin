@@ -6,44 +6,34 @@
     public class LeaveFormSave
     {
         /// <summary>
-        /// 表单类别Id
-        /// </summary>
-        public string FormTypeId { get; set; } = string.Empty;
-
-        /// <summary>
         /// 请假单Id
         /// </summary>
         public string FormId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 请假单号
+        /// 假别
         /// </summary>
-        public string FormNo { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 假别编码
-        /// </summary>
-        public string LeaveTypeCode { get; set; } = string.Empty;
+        public string LeaveType { get; set; } = string.Empty;
 
         /// <summary>
         /// 请假事由
         /// </summary>
-        public string LeaveReason { get; set; } = string.Empty;
+        public string Reason { get; set; } = string.Empty;
 
         /// <summary>
         /// 开始时间
         /// </summary>
-        public DateTime LeaveStartTime { get; set; }
+        public DateTime StartTime { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public DateTime LeaveEndTime { get; set; }
+        public DateTime EndTime { get; set; }
 
         /// <summary>
-        /// 请假小时
+        /// 请假天数
         /// </summary>
-        public decimal LeaveHours { get; set; }
+        public decimal Days { get; set; }
 
         /// <summary>
         /// 代理人工号

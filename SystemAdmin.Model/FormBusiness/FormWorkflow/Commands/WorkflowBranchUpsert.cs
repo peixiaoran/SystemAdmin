@@ -31,6 +31,11 @@
         public string HandlerKey { get; set; } = string.Empty;
 
         /// <summary>
+        /// 代码标记
+        /// </summary>
+        public int IsDefault { get; set; }
+
+        /// <summary>
         /// 逻辑说明
         /// </summary>
         public string Description { get; set; } = string.Empty;

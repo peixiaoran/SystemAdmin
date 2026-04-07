@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
+using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Service.FormBusiness.Forms;
 
@@ -24,13 +25,29 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
             return await _leaveFormService.GetLeaveTypeDropDown();
         }
 
-        //[HttpPost]
-        //[Tags("表单业务管理-表单Forms")]
-        //[EndpointSummary("[请假单] 查询最大表单类别表单号")]
-        //public async Task<Result<string>> GetFormAutoNo([FromForm] string formTypeId)
-        //{
-        //    return await _formService.GetFormAutoNo(formTypeId);
-        //}
+        [HttpPost]
+        [Tags("表单业务管理-表单Forms")]
+        [EndpointSummary("[请假单] 初始化请假单")]
+        public async Task<Result<LeaveFormDto>> InitializeLevel(string formTypeId)
+        {
+            return await _leaveFormService.InitializeLevel(formTypeId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单Forms")]
+        [EndpointSummary("[请假单] 查询请假单明细")]
+        public async Task<Result<LeaveFormDto>> GetLeaveFormDto(string formId)
+        {
+            return await _leaveFormService.GetLeaveFormDto(formId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单Forms")]
+        [EndpointSummary("[请假单] 保存请假单")]
+        public async Task<Result<int>> SaveLeaveForm([FromBody] LeaveFormSave save)
+        {
+            return await _leaveFormService.SaveLeaveForm(save);
+        }
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]

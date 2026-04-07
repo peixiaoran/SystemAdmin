@@ -35,6 +35,11 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public string HandlerKey { get; set; } = string.Empty;
 
         /// <summary>
+        /// 是否默认
+        /// </summary>
+        public int IsDefault { get; set; }
+
+        /// <summary>
         /// 逻辑说明
         /// </summary>
         public string Description { get; set; } = string.Empty;

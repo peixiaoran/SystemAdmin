@@ -115,7 +115,7 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 表单保存失败 的本地化字符串。
+        ///   查找类似 保存失败 的本地化字符串。
         /// </summary>
         internal static string SaveFailed {
             get {
@@ -124,7 +124,7 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 表单保存成功 的本地化字符串。
+        ///   查找类似 保存成功 的本地化字符串。
         /// </summary>
         internal static string SaveSuccess {
             get {

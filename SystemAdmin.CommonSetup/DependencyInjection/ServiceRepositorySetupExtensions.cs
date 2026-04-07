@@ -20,8 +20,8 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
             var types = assembly.GetTypes()
                 .Where(t => t.IsClass
                             && !t.IsAbstract
-                            && !t.IsGenericTypeDefinition
-                            && (t.Name.EndsWith("Service") || t.Name.EndsWith("Repository")));
+                            && !t.IsGenericTypeDefinition);
+                            //&& (t.Name.EndsWith("Service") || t.Name.EndsWith("Repository")));
 
             foreach (var type in types)
             {
