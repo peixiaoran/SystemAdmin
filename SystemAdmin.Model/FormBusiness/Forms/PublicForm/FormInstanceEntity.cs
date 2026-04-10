@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
+namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm
 {
     /// <summary>
     /// 表单信息实体类

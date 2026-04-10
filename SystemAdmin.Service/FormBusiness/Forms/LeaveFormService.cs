@@ -100,26 +100,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 查询请假单明细
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        public async Task<Result<LeaveFormDto>> GetLeaveForm(string formId)
-        {
-            try
-            {
-                var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
-                dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
-                return Result<LeaveFormDto>.Ok(dto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<LeaveFormDto>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
         /// 保存请假单
         /// </summary>
         /// <param name="save"></param>
@@ -158,6 +138,46 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             }
         }
 
+        /// <summary>
+        /// 查询请假单明细
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public async Task<Result<LeaveFormDto>> GetLeaveForm(string formId)
+        {
+            try
+            {
+                var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
+                dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
+                return Result<LeaveFormDto>.Ok(dto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<LeaveFormDto>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 查询完整签核流程
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public async Task<Result<LeaveFormDto>> GetFullApprovalFlow(string formId)
+        {
+            try
+            {
+                var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
+                dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
+                return Result<LeaveFormDto>.Ok(dto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<LeaveFormDto>.Failure(500, ex.Message);
+            }
+        }
+        
         /// <summary>
         /// 上传附件
         /// </summary>

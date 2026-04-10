@@ -2,6 +2,9 @@
 
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Queries
 {
+    /// <summary>
+    /// 查询用户信息请求参数
+    /// </summary>
     public class GetUserInfoPage : PageModel
     {
         /// <summary>

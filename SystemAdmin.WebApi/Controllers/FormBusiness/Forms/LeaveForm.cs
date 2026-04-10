@@ -35,6 +35,14 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
+        [EndpointSummary("[请假单] 保存请假单")]
+        public async Task<Result<int>> SaveLeaveForm([FromBody] LeaveFormSave save)
+        {
+            return await _leaveFormService.SaveLeaveForm(save);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 查询请假单明细")]
         public async Task<Result<LeaveFormDto>> GetLeaveForm([FromForm] string formId)
         {
@@ -43,10 +51,10 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 保存请假单")]
-        public async Task<Result<int>> SaveLeaveForm([FromBody] LeaveFormSave save)
+        [EndpointSummary("[请假单] 查询请假单明细")]
+        public async Task<Result<LeaveFormDto>> Workflow([FromForm] string formId)
         {
-            return await _leaveFormService.SaveLeaveForm(save);
+            return await _leaveFormService.GetLeaveForm(formId);
         }
 
         [HttpPost]

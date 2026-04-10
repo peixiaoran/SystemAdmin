@@ -13,7 +13,7 @@
         /// <summary>
         /// 是否跳过
         /// </summary>
-        public int IsSkip { get; set; }
+        public int Skip { get; set; }
 
         /// <summary>
         /// 步骤签核人员
@@ -21,8 +21,8 @@
         public List<StepApprovalUser> stepApprovalUser { get; set; } = new List<StepApprovalUser>();
 
         /// <summary>
-        /// 是否签核完成
+        /// 目前状态（未审批、审批中、审批完成）
         /// </summary>
-        public int Result { get; set; }
+        public string Result { get; set; } = string.Empty;
     }
 }
