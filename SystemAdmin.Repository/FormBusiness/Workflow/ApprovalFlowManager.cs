@@ -17,6 +17,5 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             _db = db;
         }
 
-        public 
     }
 }
