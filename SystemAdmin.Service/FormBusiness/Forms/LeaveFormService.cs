@@ -72,11 +72,11 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     {
                         FormId = long.Parse(formId),
                         ApplicantUserId = _loginuser.UserId,
-                        LeaveType = "",
-                        Reason = "",
-                        StartTime = null,
-                        EndTime = null,
-                        Days = 0,
+                        LeaveTypeCode = "",
+                        LeaveReason = "",
+                        LeaveStartTime = null,
+                        LeaveEndTime = null,
+                        LeaveDays = 0,
                         AgentUserNo = "",
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
@@ -113,11 +113,11 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 {
                     FormId = long.Parse(save.FormId),
                     ApplicantUserId = _loginuser.UserId,
-                    LeaveType = save.LeaveType,
-                    Reason = save.Reason,
-                    StartTime = save.StartTime,
-                    EndTime = save.EndTime,
-                    Days = save.Days,
+                    LeaveTypeCode = save.LeaveTypeCode,
+                    LeaveReason = save.LeaveReason,
+                    LeaveStartTime = save.LeaveStartTime,
+                    LeaveEndTime = save.LeaveEndTime,
+                    LeaveDays = save.LeaveDays,
                     AgentUserNo = save.AgentUserNo,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now

@@ -96,11 +96,11 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
                                 ApplicantDeptName = _lang.Locale == "zh-CN"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
-                                LeaveTypeCode = leave.LeaveType,
-                                LeaveReason = leave.Reason,
-                                LeaveStartTime = leave.StartTime,
-                                LeaveEndTime = leave.EndTime,
-                                LeaveHours = leave.Days,
+                                LeaveTypeCode = leave.LeaveTypeCode,
+                                LeaveReason = leave.LeaveReason,
+                                LeaveStartTime = leave.LeaveStartTime,
+                                LeaveEndTime = leave.LeaveEndTime,
+                                LeaveHours = leave.LeaveDays,
                                 AgentUserNo = leave.AgentUserNo,
                             }).FirstAsync();
         }

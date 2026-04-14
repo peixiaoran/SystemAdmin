@@ -13,27 +13,27 @@
         /// <summary>
         /// 假别
         /// </summary>
-        public string LeaveType { get; set; } = string.Empty;
+        public string LeaveTypeCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 请假事由
         /// </summary>
-        public string Reason { get; set; } = string.Empty;
+        public string LeaveReason { get; set; } = string.Empty;
 
         /// <summary>
         /// 开始时间
         /// </summary>
-        public DateTime StartTime { get; set; }
+        public DateTime LeaveStartTime { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public DateTime EndTime { get; set; }
+        public DateTime LeaveEndTime { get; set; }
 
         /// <summary>
         /// 请假天数
         /// </summary>
-        public decimal Days { get; set; }
+        public decimal LeaveDays { get; set; }
 
         /// <summary>
         /// 代理人工号

@@ -211,7 +211,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                  .With(SqlWith.NoLock)
                                  .FirstAsync(x => x.FormId == formId);
 
-            return leave != null && leave.Days > 3;
+            return leave != null && leave.LeaveDays > 3;
         }
         #endregion
     }
