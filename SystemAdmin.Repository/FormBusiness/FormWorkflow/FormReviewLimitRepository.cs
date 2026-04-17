@@ -9,12 +9,12 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
 {
-    public class FormApprovalLimitRepository
+    public class FormReviewLimitRepository
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
 
-        public FormApprovalLimitRepository(SqlSugarScope db, Language lang)
+        public FormReviewLimitRepository(SqlSugarScope db, Language lang)
         {
             _db = db;
             _lang = lang;
@@ -58,34 +58,34 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增职级签至最大范围
+        /// 新增签核层级上限
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> InsertFormApprovalLimit(FormApprovalLimitEntity entity)
+        public async Task<int> InsertFormReviewLimit(FormReviewLimitEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
 
         /// <summary>
-        /// 删除职级签至最大范围
+        /// 删除签核层级上限
         /// </summary>
         /// <param name="formTypeId"></param>
         /// <param name="positionId"></param>
         /// <returns></returns>
-        public async Task<int> DeleteFormApprovalLimit(long formTypeId, long positionId)
+        public async Task<int> DeleteFormReviewLimit(long formTypeId, long positionId)
         {
-            return await _db.Deleteable<FormApprovalLimitEntity>()
+            return await _db.Deleteable<FormReviewLimitEntity>()
                             .Where(limit => limit.FormTypeId == formTypeId && limit.PositionId == positionId)
                             .ExecuteCommandAsync();
         }
 
         /// <summary>
-        /// 新增职级签至最大范围
+        /// 修改签核层级上限
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public async Task<int> UpdateFormApprovalLimit(FormApprovalLimitEntity entity)
+        public async Task<int> UpdateFormReviewLimit(FormReviewLimitEntity entity)
         {
             return await _db.Updateable(entity)
                             .IgnoreColumns(limit => new
@@ -99,40 +99,36 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询分支实体
+        /// 查询签核层级上限实体
         /// </summary>
         /// <param name="formTypeId"></param>
         /// <param name="positionId"></param>
         /// <returns></returns>
-        public async Task<FormApprovalLimitDto> GetFormApprovalLimitEntity(long formTypeId, long positionId)
+        public async Task<FormReviewLimitDto> GetFormReviewLimitEntity(long formTypeId, long positionId)
         {
-            var entity = await _db.Queryable<FormApprovalLimitEntity>()
+            var entity = await _db.Queryable<FormReviewLimitEntity>()
                                   .With(SqlWith.NoLock)
                                   .Where(limit => limit.FormTypeId == formTypeId && limit.PositionId == positionId)
                                   .FirstAsync();
-            return entity.Adapt<FormApprovalLimitDto>();
+            return entity.Adapt<FormReviewLimitDto>();
         }
 
         /// <summary>
-        /// 查询分支分页
+        /// 查询签核层级上限分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<FormApprovalLimitDto>> GetFormApprovalLimitPage(GetFormApprovalLimitPage getPage)
+        public async Task<ResultPaged<FormReviewLimitDto>> GetFormReviewLimitPage(GetFormReviewLimitPage getPage)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserPositionEntity>()
                            .With(SqlWith.NoLock)
-                           .InnerJoin<FormApprovalLimitEntity>((position, limit) => position.PositionId == limit.PositionId)
-                           .InnerJoin<UserPositionEntity>((position, limit, maxposition) => limit.MaxPositionId == maxposition.PositionId);
-
-            if (!string.IsNullOrEmpty(getPage.FormTypeId) && long.Parse(getPage.FormTypeId) > -1)
-            {
-                query.Where((position, limit, maxposition) => limit.FormTypeId == long.Parse(getPage.FormTypeId));
-            }
+                           .InnerJoin<FormReviewLimitEntity>((position, limit) => position.PositionId == limit.PositionId)
+                           .InnerJoin<UserPositionEntity>((position, limit, maxposition) => limit.MaxPositionId == maxposition.PositionId)
+                           .Where((position, limit, maxposition) => limit.FormTypeId == long.Parse(getPage.FormTypeId));
 
             var page = await query.OrderByDescending((position, limit, maxposition) => position.SortOrder)
-                                  .Select((position, limit, maxposition) => new FormApprovalLimitDto
+                                  .Select((position, limit, maxposition) => new FormReviewLimitDto
                                   {
                                       FormTypeId = limit.FormTypeId,
                                       PositionId = position.PositionId,
@@ -144,18 +140,18 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                                      ? maxposition.PositionNameCn
                                                      : maxposition.PositionNameEn,
                                   }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<FormApprovalLimitDto>.Ok(page, totalCount);
+            return ResultPaged<FormReviewLimitDto>.Ok(page, totalCount);
         }
 
         /// <summary>
-        /// 查询职级签至最大范围是否存在
+        /// 查询签核层级上限是否存在
         /// </summary>
         /// <param name="formTypeId"></param>
         /// <param name="positionId"></param>
         /// <returns></returns>
-        public async Task<bool> FormApprovalLimitRepeat(long formTypeId, long positionId)
+        public async Task<bool> FormReviewLimitRepeat(long formTypeId, long positionId)
         {
-            return await _db.Queryable<FormApprovalLimitEntity>()
+            return await _db.Queryable<FormReviewLimitEntity>()
                             .With(SqlWith.NoLock)
                             .Where(limit => limit.FormTypeId == formTypeId && limit.PositionId == positionId)
                             .AnyAsync();

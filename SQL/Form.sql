@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 10/04/2026 17:01:43
+ Date: 17/04/2026 16:59:06
 */
 
 
@@ -123,155 +123,6 @@ GO
 INSERT INTO [Form].[ControlInfo] ([ControlCode], [ControlName], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'el-switch', N'el-switch', N'开关', N'1903486709602062336', N'2025-11-09 00:13:35.000', NULL, NULL)
 GO
 
-
--- ----------------------------
--- Table structure for FormApprovalLimit
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormApprovalLimit]') AND type IN ('U'))
-	DROP TABLE [Form].[FormApprovalLimit]
-GO
-
-CREATE TABLE [Form].[FormApprovalLimit] (
-  [FormTypeId] bigint  NOT NULL,
-  [PositionId] bigint  NOT NULL,
-  [MaxPositionId] bigint  NOT NULL,
-  [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime2(3)  NOT NULL,
-  [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime2(3)  NULL
-)
-GO
-
-ALTER TABLE [Form].[FormApprovalLimit] SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建人',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLimit',
-'COLUMN', N'CreatedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLimit',
-'COLUMN', N'CreatedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改人',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLimit',
-'COLUMN', N'ModifiedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改时间',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLimit',
-'COLUMN', N'ModifiedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'职级签至最大范围',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLimit'
-GO
-
-
--- ----------------------------
--- Records of FormApprovalLimit
--- ----------------------------
-
--- ----------------------------
--- Table structure for FormApprovalLog
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormApprovalLog]') AND type IN ('U'))
-	DROP TABLE [Form].[FormApprovalLog]
-GO
-
-CREATE TABLE [Form].[FormApprovalLog] (
-  [FormId] bigint  NOT NULL,
-  [StepId] bigint  NOT NULL,
-  [OperationStatus] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [RejectedStepId] bigint  NULL,
-  [Comment] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [OperationType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [OperationUserId] bigint  NOT NULL,
-  [OperationDate] datetime2(3)  NOT NULL
-)
-GO
-
-ALTER TABLE [Form].[FormApprovalLog] SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单Id',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLog',
-'COLUMN', N'FormId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'步骤Id',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLog',
-'COLUMN', N'StepId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作状态（签核、驳回）',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLog',
-'COLUMN', N'OperationStatus'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'驳回至步骤',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLog',
-'COLUMN', N'RejectedStepId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'审批意见',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLog',
-'COLUMN', N'Comment'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作类型（手动操作、系统自动）',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLog',
-'COLUMN', N'OperationType'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作员工Id',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLog',
-'COLUMN', N'OperationUserId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作时间',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLog',
-'COLUMN', N'OperationDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单日志信息',
-'SCHEMA', N'Form',
-'TABLE', N'FormApprovalLog'
-GO
-
-
--- ----------------------------
--- Records of FormApprovalLog
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for FormAttachment
@@ -634,6 +485,166 @@ GO
 INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [BranchId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2041417324984143872', N'1987217256446300160', N'LVR-2026040001', N'PendingSubmission', N'1903486709602062336', N'2036711225970266112', N'2009890853346217984', N'1903486709602062336', N'2026-04-07 15:26:32.603', N'1903486709602062336', N'2026-04-07 16:11:15.253')
 GO
 
+
+-- ----------------------------
+-- Table structure for FormReviewLimit
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormReviewLimit]') AND type IN ('U'))
+	DROP TABLE [Form].[FormReviewLimit]
+GO
+
+CREATE TABLE [Form].[FormReviewLimit] (
+  [FormTypeId] bigint  NOT NULL,
+  [PositionId] bigint  NOT NULL,
+  [MaxPositionId] bigint  NOT NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime2(3)  NULL
+)
+GO
+
+ALTER TABLE [Form].[FormReviewLimit] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewLimit',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewLimit',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewLimit',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewLimit',
+'COLUMN', N'ModifiedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'签核层级上限',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewLimit'
+GO
+
+
+-- ----------------------------
+-- Records of FormReviewLimit
+-- ----------------------------
+INSERT INTO [Form].[FormReviewLimit] ([FormTypeId], [PositionId], [MaxPositionId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'1351602976027836416', N'1351602631784529920', N'1903486709602062336', N'2026-04-17 16:11:09.753', N'1903486709602062336', N'2026-04-17 16:11:44.437')
+GO
+
+
+-- ----------------------------
+-- Table structure for FormReviewRecord
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormReviewRecord]') AND type IN ('U'))
+	DROP TABLE [Form].[FormReviewRecord]
+GO
+
+CREATE TABLE [Form].[FormReviewRecord] (
+  [FormId] bigint  NOT NULL,
+  [StepId] bigint  NOT NULL,
+  [OperationStatus] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [RejectedStepId] bigint  NULL,
+  [Comment] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
+  [OperationType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [OperationAppointment] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [OperationUserId] bigint  NOT NULL,
+  [OperationDate] datetime2(3)  NOT NULL
+)
+GO
+
+ALTER TABLE [Form].[FormReviewRecord] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord',
+'COLUMN', N'FormId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord',
+'COLUMN', N'StepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作状态（签核、驳回）',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord',
+'COLUMN', N'OperationStatus'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'驳回至步骤',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord',
+'COLUMN', N'RejectedStepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'审批意见',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord',
+'COLUMN', N'Comment'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作类型（手动操作、系统自动）',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord',
+'COLUMN', N'OperationType'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'审批身份（实、兼）',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord',
+'COLUMN', N'OperationAppointment'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作员工Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord',
+'COLUMN', N'OperationUserId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord',
+'COLUMN', N'OperationDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单日志信息',
+'SCHEMA', N'Form',
+'TABLE', N'FormReviewRecord'
+GO
+
+
+-- ----------------------------
+-- Records of FormReviewRecord
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for FormSequence

@@ -3,9 +3,9 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Queries
 {
     /// <summary>
-    /// 查询职级签至最大范围请求参数
+    /// 查询签核层级上限请求参数
     /// </summary>
-    public class GetFormApprovalLimitPage : PageModel
+    public class GetFormReviewLimitPage : PageModel
     {
         /// <summary>
         /// 表单类别Id

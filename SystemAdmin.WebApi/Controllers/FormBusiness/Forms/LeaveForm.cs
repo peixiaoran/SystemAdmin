@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
+using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dtp;
 using SystemAdmin.Service.FormBusiness.Forms;
 
 namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms

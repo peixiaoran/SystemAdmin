@@ -3,10 +3,10 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 职级签至最大范围实体类
+    /// 签核层级上限实体类
     /// </summary>
-    [SugarTable("[Form].[FormApprovalLimit]")]
-    public class FormApprovalLimitEntity
+    [SugarTable("[Form].[FormReviewLimit]")]
+    public class FormReviewLimitEntity
     {
         /// <summary>
         /// 表单类型Id

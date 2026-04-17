@@ -61,6 +61,60 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         }
         
         /// <summary>
+        ///   查找类似 签核最高上限删除失败 的本地化字符串。
+        /// </summary>
+        public static string FormReviewLimitDeleteFailed {
+            get {
+                return ResourceManager.GetString("FormReviewLimitDeleteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 签核最高上限删除成功 的本地化字符串。
+        /// </summary>
+        public static string FormReviewLimitDeleteSuccess {
+            get {
+                return ResourceManager.GetString("FormReviewLimitDeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 签核最高上限新增失败 的本地化字符串。
+        /// </summary>
+        public static string FormReviewLimitInsertFailed {
+            get {
+                return ResourceManager.GetString("FormReviewLimitInsertFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 签核最高上限新增成功 的本地化字符串。
+        /// </summary>
+        public static string FormReviewLimitInsertSuccess {
+            get {
+                return ResourceManager.GetString("FormReviewLimitInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 签核最高上限修改失败 的本地化字符串。
+        /// </summary>
+        public static string FormReviewLimitUpdateFailed {
+            get {
+                return ResourceManager.GetString("FormReviewLimitUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 签核最高上限修改成功 的本地化字符串。
+        /// </summary>
+        public static string FormReviewLimitUpdateSuccess {
+            get {
+                return ResourceManager.GetString("FormReviewLimitUpdateSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 分支删除失败 的本地化字符串。
         /// </summary>
         public static string WorkflowBranchDeleteFailed {

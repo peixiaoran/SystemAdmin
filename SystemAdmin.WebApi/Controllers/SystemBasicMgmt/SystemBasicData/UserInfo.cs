@@ -123,15 +123,11 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 导出员工Excel表格")]
-        public async Task<IActionResult> ExportUserExcel([FromBody] GetUserInfoExcel getUserExcel)
+        [EndpointSummary("[员工信息] 导出Excel表格")]
+        public async Task<IActionResult> ExportUserExcel([FromBody] GetUserInfoExcel getExcel)
         {
-            var bytes = await _userInfoService.GetUserInfoExcel(getUserExcel);
-            return File(
-                bytes,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                _localization.ReturnMsg($"{_thisExcel}UserInfo") + ".xlsx"
-            );
+            var bytes = await _userInfoService.GetUserInfoExcel(getExcel);
+            return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", _localization.ReturnMsg($"{_thisExcel}UserInfo") + ".xlsx");
         }
     }
 }

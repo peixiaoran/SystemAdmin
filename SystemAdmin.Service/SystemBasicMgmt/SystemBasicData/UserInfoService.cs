@@ -470,20 +470,34 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 导出员工Excel表格
         /// </summary>
-        /// <param name="getUserExcel"></param>
+        /// <param name="getExcel"></param>
         /// <returns></returns>
-        public async Task<byte[]> GetUserInfoExcel(GetUserInfoExcel getUserExcel)
+        public async Task<byte[]> GetUserInfoExcel(GetUserInfoExcel getExcel)
         {
             try
             {
-                DataTable dt = await _userInfoRepository.GetUserInfoExcel(getUserExcel);
-
+                DataTable dt = await _userInfoRepository.GetUserInfoExcel(getExcel);
                 ExcelPackage.License.SetNonCommercialPersonal("Your Name");
 
                 using var package = new ExcelPackage();
-
                 var ws = package.Workbook.Worksheets.Add(_localization.ReturnMsg($"{_thisExcel}UserInfo"));
 
+                var columnConfigs = new Dictionary<string, ExcelColumnConfig>
+                {
+                    { "UserNo",         ExcelColumnConfig.Text },    // 工号，防前导零消失
+                    { "UserNameCn",     ExcelColumnConfig.Text },    // 姓名
+                    { "UserNameEn",     ExcelColumnConfig.Text },    // 姓名
+                    { "DepartmentName", ExcelColumnConfig.Text },    // 部门名称
+                    { "PositionName",   ExcelColumnConfig.Text },    // 职位名称
+                    { "HireDate",       ExcelColumnConfig.Date },    // 入职日期 yyyy/MM/dd
+                    { "GenderName",     ExcelColumnConfig.Text },    // 性别
+                    { "NationalityName",ExcelColumnConfig.Text },    // 国籍
+                    { "Email",          ExcelColumnConfig.Text },    // 邮箱，防 @ 被解析
+                    { "PhoneNumber",    ExcelColumnConfig.Text },    // 手机号，防科学计数
+                    { "IsEmployedName", ExcelColumnConfig.Text },    // 在职状态
+                    { "IsApprovalName", ExcelColumnConfig.Text },    // 签核状态
+                    { "IsFreezeName",   ExcelColumnConfig.Text },    // 冻结状态
+                };
                 var headers = new Dictionary<string, string>
                 {
                     { "UserNo", _localization.ReturnMsg($"{_thisExcel}UserNo") },
@@ -501,7 +515,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     { "IsFreezeName", _localization.ReturnMsg($"{_thisExcel}IsFreezeName") }
                 };
 
-                ExcelStyleHelper.ApplyStandardStyle(ws, dt, headers, true);
+                ExcelStyleHelper.ApplyStandardStyle(ws, dt, headers, true, columnConfigs);
                 package.Workbook.CalcMode = ExcelCalcMode.Manual;
 
                 return package.GetAsByteArray();

@@ -7,7 +7,7 @@ using SystemAdmin.Model.FormBusiness.FormAudit.Entity;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
-using SystemAdmin.Model.FormBusiness.Forms.PublicForm;
+using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.Workflow

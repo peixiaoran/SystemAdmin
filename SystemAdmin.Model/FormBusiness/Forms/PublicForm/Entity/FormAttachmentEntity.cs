@@ -1,6 +1,6 @@
 ﻿using SqlSugar;
 
-namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
+namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity
 {
     /// <summary>
     /// 请假表文件表

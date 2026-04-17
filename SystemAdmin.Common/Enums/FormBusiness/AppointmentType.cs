@@ -6,7 +6,7 @@
     public enum AppointmentType
     {
         /// <summary>
-        /// 本
+        /// 实
         /// </summary>
         Primary = 1,
 
@@ -22,11 +22,11 @@
 
         /// <summary>
         /// 兼 - 代
-        /// </summary
+        /// </summary>
         ConcurrentAgent = 4,
 
         /// <summary>
-        /// 自动指派 - 本
+        /// 自动指派 - 实
         /// </summary
         AutoPrimary = 5,
 

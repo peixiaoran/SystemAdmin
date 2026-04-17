@@ -7,9 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="8.5.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.4.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.5" />
+    <PackageReference Include="EPPlus" Version="8.5.3" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Hybrid" Version="10.5.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.6" />
     <PackageReference Include="SqlSugarCore" Version="5.1.4.214" />
   </ItemGroup>
 

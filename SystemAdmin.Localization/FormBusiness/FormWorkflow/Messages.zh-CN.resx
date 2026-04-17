@@ -177,4 +177,22 @@
   <data name="WorkflowBranchStepIsRepat" xml:space="preserve">
     <value>请勿重复配置分支步骤</value>
   </data>
+  <data name="FormReviewLimitInsertSuccess" xml:space="preserve">
+    <value>签核最高上限新增成功</value>
+  </data>
+  <data name="FormReviewLimitInsertFailed" xml:space="preserve">
+    <value>签核最高上限新增失败</value>
+  </data>
+  <data name="FormReviewLimitDeleteSuccess" xml:space="preserve">
+    <value>签核最高上限删除成功</value>
+  </data>
+  <data name="FormReviewLimitDeleteFailed" xml:space="preserve">
+    <value>签核最高上限删除失败</value>
+  </data>
+  <data name="FormReviewLimitUpdateFailed" xml:space="preserve">
+    <value>签核最高上限修改失败</value>
+  </data>
+  <data name="FormReviewLimitUpdateSuccess" xml:space="preserve">
+    <value>签核最高上限修改成功</value>
+  </data>
 </root>
