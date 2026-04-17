@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001000 (16.00.1000)
- Source Host           : 127.0.0.1:1433
+ Source Server Version : 17001110 (17.00.1110)
+ Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001000 (16.00.1000)
+ Target Server Version : 17001110 (17.00.1110)
  File Encoding         : 65001
 
- Date: 17/04/2026 16:59:06
+ Date: 17/04/2026 23:26:17
 */
 
 
@@ -226,6 +226,12 @@ INSERT INTO [Form].[FormAttachment] ([AttachmentId], [FormId], [AttachmentName],
 GO
 
 INSERT INTO [Form].[FormAttachment] ([AttachmentId], [FormId], [AttachmentName], [AttachmentPath], [AttachmentSize], [CreatedBy], [CreatedDate]) VALUES (N'2035456066489290752', N'2035455708547387392', N'说明.docx', N'/20260322/20260322043837846_49b596b8.docx', N'375', N'1903486709602062336', N'2026-03-22 04:38:37.853')
+GO
+
+INSERT INTO [Form].[FormAttachment] ([AttachmentId], [FormId], [AttachmentName], [AttachmentPath], [AttachmentSize], [CreatedBy], [CreatedDate]) VALUES (N'2045160911106347008', N'2041417324984143872', N'FOUpdate20260311114210.xls', N'/20260417/20260417232213061_1498d09f.xls', N'110', N'1903486709602062336', N'2026-04-17 23:22:13.120')
+GO
+
+INSERT INTO [Form].[FormAttachment] ([AttachmentId], [FormId], [AttachmentName], [AttachmentPath], [AttachmentSize], [CreatedBy], [CreatedDate]) VALUES (N'2045160992907857920', N'2041417324984143872', N'说明.docx', N'/20260417/20260417232232575_54a84ffb.docx', N'375', N'1903486709602062336', N'2026-04-17 23:22:32.620')
 GO
 
 
@@ -482,9 +488,98 @@ GO
 -- ----------------------------
 -- Records of FormInstance
 -- ----------------------------
-INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [BranchId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2041417324984143872', N'1987217256446300160', N'LVR-2026040001', N'PendingSubmission', N'1903486709602062336', N'2036711225970266112', N'2009890853346217984', N'1903486709602062336', N'2026-04-07 15:26:32.603', N'1903486709602062336', N'2026-04-07 16:11:15.253')
+INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [BranchId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2041417324984143872', N'1987217256446300160', N'LVR-2026040001', N'PendingSubmission', N'1903486709602062336', N'2036711225970266112', N'2009890853346217984', N'1903486709602062336', N'2026-04-07 15:26:32.603', N'1903486709602062336', N'2026-04-17 23:22:19.507')
 GO
 
+
+-- ----------------------------
+-- Table structure for FormLog
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormLog]') AND type IN ('U'))
+	DROP TABLE [Form].[FormLog]
+GO
+
+CREATE TABLE [Form].[FormLog] (
+  [FormId] bigint  NOT NULL,
+  [StepId] bigint  NOT NULL,
+  [OperationStatus] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [RejectedStepId] bigint  NULL,
+  [Comment] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
+  [OperationType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [OperationUserId] bigint  NOT NULL,
+  [OperationDate] datetime2(3)  NOT NULL
+)
+GO
+
+ALTER TABLE [Form].[FormLog] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'FormId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'StepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作状态（签核、驳回）',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'OperationStatus'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'驳回至步骤',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'RejectedStepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'审批意见',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'Comment'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作类型（手动操作、系统自动）',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'OperationType'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作员工Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'OperationUserId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'OperationDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单日志信息',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog'
+GO
+
+
+-- ----------------------------
+-- Records of FormLog
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for FormReviewLimit
@@ -880,11 +975,11 @@ GO
 CREATE TABLE [Form].[LeaveForm] (
   [FormId] bigint  NOT NULL,
   [ApplicantUserId] bigint  NULL,
-  [LeaveType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [Reason] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [StartTime] datetime2(7)  NULL,
-  [EndTime] datetime2(7)  NULL,
-  [Days] decimal(6,2)  NOT NULL,
+  [LeaveTypeCode] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [LeaveReason] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [LeaveStartTime] datetime2(7)  NULL,
+  [LeaveEndTime] datetime2(7)  NULL,
+  [LeaveDays] decimal(6,2)  NOT NULL,
   [AgentUserNo] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [CreatedBy] bigint  NOT NULL,
   [CreatedDate] datetime2(3)  NOT NULL,
@@ -914,35 +1009,35 @@ EXEC sp_addextendedproperty
 'MS_Description', N'请假假别编码',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'LeaveType'
+'COLUMN', N'LeaveTypeCode'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'请假事由',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'Reason'
+'COLUMN', N'LeaveReason'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'请假开始时间',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'StartTime'
+'COLUMN', N'LeaveStartTime'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'请假结束时间',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'EndTime'
+'COLUMN', N'LeaveEndTime'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'请假时数',
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
-'COLUMN', N'Days'
+'COLUMN', N'LeaveDays'
 GO
 
 EXEC sp_addextendedproperty
@@ -990,7 +1085,7 @@ GO
 -- ----------------------------
 -- Records of LeaveForm
 -- ----------------------------
-INSERT INTO [Form].[LeaveForm] ([FormId], [ApplicantUserId], [LeaveType], [Reason], [StartTime], [EndTime], [Days], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2041417324984143872', N'1903486709602062336', N'Annual', N'1', N'2026-09-29 00:00:00.0000000', N'2026-09-30 23:59:59.0000000', N'2.00', N'E347473', N'1903486709602062336', N'2026-04-07 15:26:56.487', N'1903486709602062336', N'2026-04-07 16:11:08.583')
+INSERT INTO [Form].[LeaveForm] ([FormId], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveDays], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2041417324984143872', N'1903486709602062336', N'Annual', N'1', N'2026-09-29 00:00:00.0000000', N'2026-09-30 23:59:59.0000000', N'0.00', N'E347473', N'1903486709602062336', N'2026-04-07 15:26:56.487', N'1903486709602062336', N'2026-04-17 23:22:19.427')
 GO
 
 
@@ -1161,7 +1256,7 @@ GO
 INSERT INTO [Form].[WorkflowBranch] ([BranchId], [FormTypeId], [BranchNameCn], [BranchNameEn], [HandlerKey], [IsDefault], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2035949443819376640', N'1987217256446300160', N'请假天数超过5天', N'Leave of absence exceeding 5 days', N'IsLeaveDaysOver3', N'0', NULL, N'1903486709602062336', N'2026-03-31 09:38:27.000', NULL, NULL)
 GO
 
-INSERT INTO [Form].[WorkflowBranch] ([BranchId], [FormTypeId], [BranchNameCn], [BranchNameEn], [HandlerKey], [IsDefault], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2036711225970266112', N'1987217256446300160', N'默认', N'default', NULL, N'1', NULL, N'1903486709602062336', N'2026-03-31 09:38:30.000', NULL, NULL)
+INSERT INTO [Form].[WorkflowBranch] ([BranchId], [FormTypeId], [BranchNameCn], [BranchNameEn], [HandlerKey], [IsDefault], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2036711225970266112', N'1987217256446300160', N'默认', N'default', N'', N'0', N'', N'1903486709602062336', N'2026-03-31 09:38:30.000', N'1903486709602062336', N'2026-04-17 23:26:02.460')
 GO
 
 
