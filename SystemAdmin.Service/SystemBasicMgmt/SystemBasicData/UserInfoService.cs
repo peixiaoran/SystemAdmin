@@ -43,11 +43,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 国籍下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<NationalityDropDto>>> GetNationalityDropDown()
+        public async Task<Result<List<NationalityDropDto>>> GetNationalityDrop()
         {
             try
             {
-                var drop = await _userInfoRepository.GetNationalityDropDown();
+                var drop = await _userInfoRepository.GetNationalityDrop();
                 return Result<List<NationalityDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -61,11 +61,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 职业下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
         {
             try
             {
-                var drop = await _userInfoRepository.GetLaborDropDown();
+                var drop = await _userInfoRepository.GetLaborDrop();
                 return Result<List<UserLaborDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -79,11 +79,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 部门树下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
             try
             {
-                var drop = await _userInfoRepository.GetDepartmentDropDown();
+                var drop = await _userInfoRepository.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -97,17 +97,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
         {
             try
             {
-                var drop = await _userInfoRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(drop, "");
+                var drop = await _userInfoRepository.GetPositionInfoDrop();
+                return Result<List<PositionInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
+                return Result<List<PositionInfoDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
 
@@ -115,11 +115,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 角色下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
+        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDrop()
         {
             try
             {
-                var drop = await _userInfoRepository.GetRoleDropDown();
+                var drop = await _userInfoRepository.GetRoleDrop();
                 return Result<List<RoleInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -237,7 +237,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
                 if (await _userInfoRepository.UserNoIsExist(upsert.UserNo, upsert.LoginNo))
                 {
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DuplicatejobRepeatable"));
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UserNoRepat"));
                 }
                 if (!ValidatePassword(upsert.PassWord))
                 {

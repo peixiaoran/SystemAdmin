@@ -32,11 +32,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown(string roleId)
+        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDrop(string roleId)
         {
             try
             {
-                var drop = await _roleRepository.GetRoleModuleDropDown(long.Parse(roleId));
+                var drop = await _roleRepository.GetRoleModuleDrop(long.Parse(roleId));
                 return Result<List<RoleModuleDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)

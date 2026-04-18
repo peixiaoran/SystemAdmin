@@ -168,7 +168,7 @@
   <data name="UserLaborUpdateFailed" xml:space="preserve">
     <value>职业信息修改失败</value>
   </data>
-  <data name="UserInfoDuplicatejobRepeatable" xml:space="preserve">
+  <data name="UserInfoUserNoRepat" xml:space="preserve">
     <value>工号或账号已存在，请重新输入</value>
   </data>
   <data name="UserInfoValidationPassWrodError" xml:space="preserve">
@@ -234,7 +234,7 @@
   <data name="UserInfoUploadFailed" xml:space="preserve">
     <value>上传失败</value>
   </data>
-  <data name="DeptInfoDepartmentHasUsers" xml:space="preserve">
+  <data name="DeptInfoNotDelete" xml:space="preserve">
     <value>无法删除部门，因为该部门或其子部门下存在人员</value>
   </data>
   <data name="PersonalAvatarFileNotNull" xml:space="preserve">

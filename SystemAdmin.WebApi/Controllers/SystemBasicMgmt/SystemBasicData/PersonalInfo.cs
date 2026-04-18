@@ -23,34 +23,34 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[个人信息] 职业下拉")]
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
         {
-            var ss = await _personalInfoService.GetLaborDropDown();
+            var ss = await _personalInfoService.GetLaborDrop();
             return ss;
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[个人信息] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
-            return await _personalInfoService.GetDepartmentDropDown();
+            return await _personalInfoService.GetDepartmentDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[个人信息] 职级下拉")]
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
         {
-            return await _personalInfoService.GetUserPositionDropDown();
+            return await _personalInfoService.GetPositionInfoDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[个人信息] 角色下拉")]
-        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
+        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDrop()
         {
-            return await _personalInfoService.GetRoleDropDown();
+            return await _personalInfoService.GetRoleDrop();
         }
 
         [HttpPost]

@@ -33,11 +33,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// 模块下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDrop()
         {
             try
             {
-                var drop = await _dictionaryRepository.GetModuleDropDown();
+                var drop = await _dictionaryRepository.GetModuleDrop();
                 return Result<List<ModuleDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -52,11 +52,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// </summary>
         /// <param name="moduleId"></param>
         /// <returns></returns>
-        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown(string moduleId)
+        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDrop(string moduleId)
         {
             try
             {
-                var drop = await _dictionaryRepository.GetDicTypeDropDown(long.Parse(moduleId));
+                var drop = await _dictionaryRepository.GetDicTypeDrop(long.Parse(moduleId));
                 return Result<List<DicTypeDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)

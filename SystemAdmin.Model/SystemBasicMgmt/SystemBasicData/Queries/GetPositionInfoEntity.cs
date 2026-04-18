@@ -3,7 +3,7 @@
     /// <summary>
     /// 查询职级实体请求参数
     /// </summary>
-    public class GetUserPositionEntity
+    public class GetPositionInfoEntity
     {
         /// <summary>
         /// 职级Id

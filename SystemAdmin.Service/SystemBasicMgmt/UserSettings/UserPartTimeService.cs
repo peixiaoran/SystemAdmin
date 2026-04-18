@@ -34,11 +34,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// 职业下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
         {
             try
             {
-                var drop = await _userPartTimeRepository.GetLaborDropDown();
+                var drop = await _userPartTimeRepository.GetLaborDrop();
                 return Result<List<UserLaborDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -52,11 +52,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// 部门下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
             try
             {
-                var drop = await _userPartTimeRepository.GetDepartmentDropDown();
+                var drop = await _userPartTimeRepository.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -70,17 +70,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
         {
             try
             {
-                var drop = await _userPartTimeRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(drop, "");
+                var drop = await _userPartTimeRepository.GetPositionInfoDrop();
+                return Result<List<PositionInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
+                return Result<List<PositionInfoDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
 

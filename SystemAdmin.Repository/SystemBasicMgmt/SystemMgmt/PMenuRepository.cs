@@ -1,11 +1,13 @@
 ﻿using Mapster;
 using SqlSugar;
-using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
+using SystemAdmin.Common.Enums.SystemBasicMgmt;
+using SystemAdmin.Common.Utilities;
+using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Queries;
-using SystemAdmin.CommonSetup.Options;
 
 namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
 {
@@ -24,7 +26,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// 模块下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ModuleDropDto>> GetModuleDropDown()
+        public async Task<List<ModuleDropDto>> GetModuleDrop()
         {
             return await _db.Queryable<ModuleInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -136,9 +138,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         public async Task<MenuInfoDto> GetPMenuEntity(long pmenuId)
         {
             var entity = await _db.Queryable<MenuInfoEntity>()
-                                      .With(SqlWith.NoLock)
-                                      .Where(pmenu => pmenu.MenuType == "PrimaryMenu" && pmenu.MenuId == pmenuId)
-                                      .FirstAsync();
+                                  .With(SqlWith.NoLock)
+                                  .Where(pmenu => pmenu.MenuType == MenuType.PrimaryMenu.ToEnumString() && pmenu.MenuId == pmenuId)
+                                  .FirstAsync();
             return entity.Adapt<MenuInfoDto>();
         }
 
@@ -153,7 +155,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
            var query = _db.Queryable<MenuInfoEntity>()
                           .With(SqlWith.NoLock)
                           .LeftJoin<DictionaryInfoEntity>((pmenu, dic) => dic.DicType == "MenuType" && pmenu.MenuType ==  dic.DicCode)
-                          .Where(pmenu => pmenu.MenuType == "PrimaryMenu");
+                          .Where(pmenu => pmenu.MenuType == MenuType.PrimaryMenu.ToEnumString());
 
             // 一级菜单编码
             if (!string.IsNullOrEmpty(getPage.MenuCode))

@@ -31,11 +31,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 部门下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
             try
             {
-                var drop = await _deptInfoRepository.GetDepartmentDropDown();
+                var drop = await _deptInfoRepository.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -49,11 +49,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 部门级别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
+        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDrop()
         {
             try
             {
-                var drop = await _deptInfoRepository.GetDepartmentLevelDropDown();
+                var drop = await _deptInfoRepository.GetDepartmentLevelDrop();
                 return Result<List<DepartmentLevelDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -64,7 +64,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 新增部门信息
+        /// 新增部门
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -72,38 +72,31 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                bool codeExist = await _deptInfoRepository.GetDepartCodeIsExist(upsert.DepartmentCode);
-                if (codeExist)
+                var entity = new DepartmentInfoEntity()
                 {
-                    return Result<int>.Failure(410, _localization.ReturnMsg($"{_this}DeptCodeExist"));
-                }
-                else
-                {
-                    var entity = new DepartmentInfoEntity()
-                    {
-                        DepartmentId = SnowFlakeSingle.Instance.NextId(),
-                        DepartmentCode = upsert.DepartmentCode,
-                        DepartmentNameCn = upsert.DepartmentNameCn,
-                        DepartmentNameEn = upsert.DepartmentNameEn,
-                        ParentId = long.Parse(upsert.ParentId),
-                        DepartmentLevelId = long.Parse(upsert.DepartmentLevelId),
-                        SortOrder = upsert.SortOrder,
-                        Landline = upsert.Landline,
-                        Email = upsert.Email,
-                        Address = upsert.Address,
-                        Description = upsert.Description,
-                        CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now,
-                    };
+                    DepartmentId = SnowFlakeSingle.Instance.NextId(),
+                    DepartmentCode = upsert.DepartmentCode,
+                    DepartmentNameCn = upsert.DepartmentNameCn,
+                    DepartmentNameEn = upsert.DepartmentNameEn,
+                    ParentId = long.Parse(upsert.ParentId),
+                    DepartmentLevelId = long.Parse(upsert.DepartmentLevelId),
+                    SortOrder = upsert.SortOrder,
+                    Landline = upsert.Landline,
+                    Email = upsert.Email,
+                    Address = upsert.Address,
+                    Description = upsert.Description,
+                    CreatedBy = _loginuser.UserId,
+                    CreatedDate = DateTime.Now,
+                };
 
-                    await _db.BeginTranAsync();
-                    int count = await _deptInfoRepository.InsertDepartmentInfo(entity);
-                    await _db.CommitTranAsync();
+                await _db.BeginTranAsync();
+                int count = await _deptInfoRepository.InsertDepartmentInfo(entity);
+                await _db.CommitTranAsync();
 
-                    return count >= 1
-                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
-                }
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+
             }
             catch (Exception ex)
             {
@@ -114,51 +107,21 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 删除部门信息
+        /// 删除部门
         /// </summary>
         /// <param name="deptId"></param>
         /// <returns></returns>
         public async Task<Result<int>> DeleteDepartmentInfo(string deptId)
         {
-            try
-            {
-                await _db.BeginTranAsync();
-                int count = await DeleteDepartmentWithChildrenAsync(long.Parse(deptId));
-                await _db.CommitTranAsync();
-
-                return count >= 1
-                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                        : Result<int>.Failure(410, _localization.ReturnMsg($"{_this}DepartmentHasUsers"));
-            }
-            catch (Exception ex)
-            {
-                await _db.RollbackTranAsync();
-                _logger.LogError(ex, ex.Message);
-                return Result<int>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
-        /// 删除部门及其子部门（只有当部门及子部门下没有人员时才删除）
-        /// </summary>
-        /// <param name="departmentId"></param>
-        /// <returns></returns>
-        private async Task<int> DeleteDepartmentWithChildrenAsync(long departmentId)
-        {
-            // 获取所有人员和部门信息
             var userList = await _deptInfoRepository.GetUserInfoList();
             var deptList = await _deptInfoRepository.GetDepartmentInfoList();
 
-            // 构建部门树字典，Parent -> List<Dept>
             var deptChildrenMap = deptList.GroupBy(dept => dept.ParentId).ToDictionary(g => g.Key, g => g.ToList());
 
-            // 判断部门及子部门是否可以删除
             bool CanDelete(long deptId)
             {
-                // dept 下是否有人员
                 if (userList.Any(user => user.DepartmentId == deptId)) return false;
 
-                // 递归判断子部门
                 if (deptChildrenMap.TryGetValue(deptId, out var children))
                 {
                     foreach (var child in children)
@@ -169,36 +132,35 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 return true;
             }
 
-            // 递归删除部门
             async Task<int> DeleteRecursive(long deptId)
             {
-                int deleteCount = 0;
+                int count = 0;
 
                 if (deptChildrenMap.TryGetValue(deptId, out var children))
                 {
                     foreach (var child in children)
                     {
-                        deleteCount += await DeleteRecursive(child.DepartmentId);
+                        count += await DeleteRecursive(child.DepartmentId);
                     }
                 }
 
-                // 删除当前部门
-                deleteCount += await _deptInfoRepository.DeleteDepartmentInfo(deptId);
-                return deleteCount;
+                count += await _deptInfoRepository.DeleteDepartmentInfo(deptId);
+                return count;
             }
 
-            // 判断是否可以删除
-            if (!CanDelete(departmentId))
+            if (!CanDelete(long.Parse(deptId)))
             {
-                return 0; // 有人员，不允许删除
+                return Result<int>.Failure(400, _localization.ReturnMsg($"{_this}NotDelete"));
             }
 
-            // 执行删除
-            return await DeleteRecursive(departmentId);
+            var totalCount = await DeleteRecursive(long.Parse(deptId));
+            return totalCount >= 1
+                        ? Result<int>.Ok(totalCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
         }
 
         /// <summary>
-        /// 修改部门信息
+        /// 修改部门
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
@@ -242,7 +204,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <summary>
         /// 查询部门实体
         /// </summary>
-        /// <param name="getEntity"></param>
+        /// <param name="deptId"></param>
         /// <returns></returns>
         public async Task<Result<DepartmentInfoDto>> GetDepartmentInfoEntity(string deptId)
         {

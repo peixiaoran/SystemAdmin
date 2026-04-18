@@ -21,17 +21,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 模块下拉")]
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDrop()
         {
-            return await _sMenuInfoService.GetModuleDropDown();
+            return await _sMenuInfoService.GetModuleDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[二级菜单信息] 一级菜单下拉")]
-        public async Task<Result<List<MenuDropDto>>> GetPMenuDropDown([FromForm] string moduleId)
+        public async Task<Result<List<MenuDropDto>>> GetPMenuDrop([FromForm] string moduleId)
         {
-            return await _sMenuInfoService.GetPMenuDropDown(moduleId);
+            return await _sMenuInfoService.GetPMenuDrop(moduleId);
         }
 
         [HttpPost]

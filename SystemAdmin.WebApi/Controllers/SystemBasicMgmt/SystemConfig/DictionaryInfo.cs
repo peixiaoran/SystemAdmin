@@ -23,17 +23,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[系统字典] 模块下拉")]
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDrop()
         {
-            return await _dictionaryService.GetModuleDropDown();
+            return await _dictionaryService.GetModuleDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[系统字典] 字典类型下拉")]
-        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDropDown([FromForm] string moduleId)
+        public async Task<Result<List<DicTypeDropDto>>> GetDicTypeDrop([FromForm] string moduleId)
         {
-            return await _dictionaryService.GetDicTypeDropDown(moduleId);
+            return await _dictionaryService.GetDicTypeDrop(moduleId);
         }
 
         [HttpPost]

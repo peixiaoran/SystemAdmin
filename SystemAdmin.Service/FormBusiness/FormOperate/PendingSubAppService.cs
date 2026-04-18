@@ -29,11 +29,11 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
             try
             {
-                var drop = await _PendingSubAppRepository.GetFormGroupDropDown();
+                var drop = await _PendingSubAppRepository.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -47,11 +47,11 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// 表单类别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(string formGroupId)
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDrop(string formGroupId)
         {
             try
             {
-                var drop = await _PendingSubAppRepository.GetFormTypeDropDown(long.Parse(formGroupId));
+                var drop = await _PendingSubAppRepository.GetFormTypeDrop(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -65,11 +65,11 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// 表单状态下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<FormStatusDropDto>>> GetFormStatusDropDown()
+        public async Task<Result<List<FormStatusDropDto>>> GetFormStatusDrop()
         {
             try
             {
-                var drop = await _PendingSubAppRepository.GetFormStatusDropDown();
+                var drop = await _PendingSubAppRepository.GetFormStatusDrop();
                 return Result<List<FormStatusDropDto>>.Ok(drop);
             }
             catch (Exception ex)

@@ -61,9 +61,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         public async Task<DepartmentLevelDto> GetDepartmentLevelEntity(long deptLevelId)
         {
             var entity = await _db.Queryable<DepartmentLevelEntity>()
-                                           .With(SqlWith.NoLock)
-                                           .Where(deptlevel => deptlevel.DepartmentLevelId == deptLevelId)
-                                           .FirstAsync();
+                                  .With(SqlWith.NoLock)
+                                  .Where(deptlevel => deptlevel.DepartmentLevelId == deptLevelId)
+                                  .FirstAsync();
             return entity.Adapt<DepartmentLevelDto>();
         }
 

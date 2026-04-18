@@ -32,11 +32,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// 模块下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDrop()
         {
             try
             {
-                var drop = await _sMenuRepository.GetModuleDropDown();
+                var drop = await _sMenuRepository.GetModuleDrop();
                 return Result<List<ModuleDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -51,11 +51,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// </summary>
         /// <param name="moduleId"></param>
         /// <returns></returns>
-        public async Task<Result<List<MenuDropDto>>> GetPMenuDropDown(string moduleId)
+        public async Task<Result<List<MenuDropDto>>> GetPMenuDrop(string moduleId)
         {
             try
             {
-                var drop = await _sMenuRepository.GetPMenuDropDown(long.Parse(moduleId));
+                var drop = await _sMenuRepository.GetPMenuDrop(long.Parse(moduleId));
                 return Result<List<MenuDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)

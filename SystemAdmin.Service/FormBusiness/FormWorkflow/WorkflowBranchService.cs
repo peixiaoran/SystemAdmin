@@ -31,11 +31,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
             try
             {
-                var drop = await _workflowBranchRepository.GetFormGroupDropDown();
+                var drop = await _workflowBranchRepository.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -50,11 +50,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="formGroupId"></param>
         /// <returns></returns>
-        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(string formGroupId)
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDrop(string formGroupId)
         {
             try
             {
-                var drop = await _workflowBranchRepository.GetFormTypeDropDown(long.Parse(formGroupId));
+                var drop = await _workflowBranchRepository.GetFormTypeDrop(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)

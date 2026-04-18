@@ -178,11 +178,11 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         /// 查询表单类别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
             try
             {
-                var drop = await _formTypeRepository.GetFormGroupDropDown();
+                var drop = await _formTypeRepository.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)

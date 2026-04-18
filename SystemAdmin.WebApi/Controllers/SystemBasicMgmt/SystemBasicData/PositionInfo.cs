@@ -9,10 +9,10 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
     [RoutingAuthorize]
     [Route("api/SystemBasicMgmt/SystemBasicData/[controller]/[action]")]
     [ApiController]
-    public class UserPosition : ControllerBase
+    public class PositionInfo : ControllerBase
     {
-        private readonly UserPositionService _userPositionService;
-        public UserPosition(UserPositionService userPositionService)
+        private readonly PositionInfoService _userPositionService;
+        public PositionInfo(PositionInfoService userPositionService)
         {
             _userPositionService = userPositionService;
         }
@@ -20,17 +20,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[职级信息] 查询职级实体")]
-        public async Task<Result<UserPositionDto>> GetUserPositionEntity([FromForm] string positionId)
+        public async Task<Result<PositionInfoDto>> GetPositionInfoEntity([FromForm] string positionId)
         {
-            return await _userPositionService.GetUserPositionEntity(positionId);
+            return await _userPositionService.GetPositionInfoEntity(positionId);
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[职级信息] 查询职级列表")]
-        public async Task<Result<List<UserPositionDto>>> GetUserPositionList()
+        public async Task<Result<List<PositionInfoDto>>> GetPositionInfoList()
         {
-            return await _userPositionService.GetUserPositionList();
+            return await _userPositionService.GetPositionInfoList();
         }
     }
 }

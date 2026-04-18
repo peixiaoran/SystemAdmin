@@ -32,11 +32,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// 部门下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
             try
             {
-                var drop = await _userFormBindRepository.GetDepartmentDropDown();
+                var drop = await _userFormBindRepository.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)

@@ -23,11 +23,11 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
             try
             {
-                var drop = await _applyFormRepository.GetFormGroupDropDown();
+                var drop = await _applyFormRepository.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)

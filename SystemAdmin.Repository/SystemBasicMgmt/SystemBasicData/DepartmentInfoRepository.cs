@@ -1,5 +1,4 @@
 ﻿using Mapster;
-using MapsterMapper;
 using SqlSugar;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
@@ -19,12 +18,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             _lang = lang;
         }
 
-
         /// <summary>
         /// 部门树下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        public async Task<List<DepartmentDropDto>> GetDepartmentDrop()
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -44,7 +42,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 部门级别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDropDown()
+        public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDrop()
         {
             return await _db.Queryable<DepartmentLevelEntity>()
                             .With(SqlWith.NoLock)
@@ -141,15 +139,14 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<List<DepartmentInfoDto>> GetDepartmentInfoTree(GetDepartmentTree getTree)
         {
-            var query = _db.Queryable<DepartmentInfoEntity>()
-                           .With(SqlWith.NoLock);
+            var query = _db.Queryable<DepartmentInfoEntity>().With(SqlWith.NoLock);
 
             if (!string.IsNullOrEmpty(getTree.DepartmentCode))
                 query = query.Where(dept => dept.DepartmentCode.Contains(getTree.DepartmentCode));
 
             if (!string.IsNullOrEmpty(getTree.DepartmentName))
                 query = query.Where(dept => dept.DepartmentNameCn.Contains(getTree.DepartmentName)
-                                      || dept.DepartmentNameEn.Contains(getTree.DepartmentName));
+                                         || dept.DepartmentNameEn.Contains(getTree.DepartmentName));
 
             var matchedNodes = await query.Select(dept => new DepartmentInfoEntity
             {
@@ -159,24 +156,30 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
 
             if (!matchedNodes.Any()) return new List<DepartmentInfoDto>();
 
+            // 一次性查询所有部门的 Id 和 ParentId，用于向上追溯
+            var allNodes = await _db.Queryable<DepartmentInfoEntity>()
+                                    .With(SqlWith.NoLock)
+                                    .Select(dept => new DepartmentInfoEntity
+                                    {
+                                        DepartmentId = dept.DepartmentId,
+                                        ParentId = dept.ParentId
+                                    }).ToListAsync();
+
+            var nodeMap = allNodes.ToDictionary(dept => dept.DepartmentId);
+
+            // 向上追溯所有祖先节点
             var allDeptIds = matchedNodes.Select(dept => dept.DepartmentId).ToHashSet();
-            var parentIds = matchedNodes.Select(dept => dept.ParentId).Where(pid => pid != 0).ToList();
-
-            while (parentIds.Any())
+            foreach (var node in matchedNodes)
             {
-                var parents = await _db.Queryable<DepartmentInfoEntity>()
-                                       .Where(dept => parentIds.Contains(dept.DepartmentId))
-                                       .Select(dept => new DepartmentInfoEntity { DepartmentId = dept.DepartmentId, ParentId = dept.ParentId })
-                                       .ToListAsync();
-
-                foreach (var p in parents)
+                var parentId = node.ParentId;
+                while (parentId != 0 && nodeMap.TryGetValue(parentId, out var parent))
                 {
-                    allDeptIds.Add(p.DepartmentId);
+                    if (!allDeptIds.Add(parentId)) break;
+                    parentId = parent.ParentId;
                 }
-
-                parentIds = parents.Select(p => p.ParentId).Where(pid => pid != 0).ToList();
             }
 
+            // 查询最终部门列表
             var deptList = await _db.Queryable<DepartmentInfoEntity>()
                                     .With(SqlWith.NoLock)
                                     .LeftJoin<DepartmentLevelEntity>((dept, level) => dept.DepartmentLevelId == level.DepartmentLevelId)
@@ -200,20 +203,21 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                         Address = dept.Address,
                                     }).ToListAsync();
 
-            List<DepartmentInfoDto> BuildTree(List<DepartmentInfoDto> list, long parentId = 0)
-            {
-                var result = list.Where(dept => dept.ParentId == parentId)
-                                 .OrderBy(dept => dept.SortOrder)
-                                 .ToList();
+            var deptDict = deptList.GroupBy(dept => dept.ParentId)
+                                   .ToDictionary(g => g.Key, g => g.OrderBy(d => d.SortOrder).ToList());
 
-                foreach (var item in result)
+            List<DepartmentInfoDto> BuildTree(long parentId = 0)
+            {
+                if (!deptDict.TryGetValue(parentId, out var children)) return new List<DepartmentInfoDto>();
+
+                foreach (var child in children)
                 {
-                    item.DepartmentChildList = BuildTree(list, item.DepartmentId);
+                    child.DepartmentChildList = BuildTree(child.DepartmentId);
                 }
-                return result;
+                return children;
             }
-            var deptTree = BuildTree(deptList);
-            return deptTree;
+
+            return BuildTree();
         }
 
         /// <summary>

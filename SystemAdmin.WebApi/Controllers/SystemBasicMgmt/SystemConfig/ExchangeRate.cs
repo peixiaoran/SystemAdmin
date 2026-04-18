@@ -23,9 +23,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemConfig
         [HttpPost]
         [Tags("系统基础管理-系统设定模块")]
         [EndpointSummary("[汇率对照] 币别下拉")]
-        public async Task<Result<List<CurrencyInfoDropDto>>> GetCurrencyInfoDropDown()
+        public async Task<Result<List<CurrencyInfoDropDto>>> GetCurrencyInfoDrop()
         {
-            return await _exchangeRateService.GetCurrencyInfoDropDown();
+            return await _exchangeRateService.GetCurrencyInfoDrop();
         }
 
         [HttpPost]

@@ -34,11 +34,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 职业下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
         {
             try
             {
-                var drop = await _personalInfoRepository.GetLaborDropDown();
+                var drop = await _personalInfoRepository.GetLaborDrop();
                 return Result<List<UserLaborDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -52,11 +52,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 部门下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
             try
             {
-                var drop = await _personalInfoRepository.GetDepartmentDropDown();
+                var drop = await _personalInfoRepository.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -70,11 +70,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 角色下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
+        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDrop()
         {
             try
             {
-                var drop = await _personalInfoRepository.GetRoleDropDown();
+                var drop = await _personalInfoRepository.GetRoleDrop();
                 return Result<List<RoleInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -219,17 +219,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 查询职级列表
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
         {
             try
             {
-                var drop = await _personalInfoRepository.GetUserPositionDropDown();
-                return Result<List<UserPositionDropDto>>.Ok(drop, "");
+                var drop = await _personalInfoRepository.GetPositionInfoDrop();
+                return Result<List<PositionInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<UserPositionDropDto>>.Failure(500, ex.Message.ToString());
+                return Result<List<PositionInfoDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
     }

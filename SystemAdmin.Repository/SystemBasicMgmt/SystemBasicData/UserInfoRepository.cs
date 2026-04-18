@@ -27,7 +27,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 国籍下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<NationalityDropDto>> GetNationalityDropDown()
+        public async Task<List<NationalityDropDto>> GetNationalityDrop()
         {
             return await _db.Queryable<NationalityInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -44,7 +44,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 职业下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<UserLaborDropDto>> GetLaborDropDown()
+        public async Task<List<UserLaborDropDto>> GetLaborDrop()
         {
             var query = _db.Queryable<UserLaborEntity>().With(SqlWith.NoLock);
             if (_lang.Locale == "zh-CN")
@@ -69,7 +69,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 部门树下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        public async Task<List<DepartmentDropDto>> GetDepartmentDrop()
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -89,17 +89,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
+        public async Task<List<PositionInfoDropDto>> GetPositionInfoDrop()
         {
-            return await _db.Queryable<UserPositionEntity>()
+            return await _db.Queryable<PositionInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .OrderBy(userpos => userpos.CreatedDate)
-                            .Select((userpos) => new UserPositionDropDto
+                            .OrderBy(position => position.CreatedDate)
+                            .Select((position) => new PositionInfoDropDto
                             {
-                                PositionId = userpos.PositionId,
+                                PositionId = position.PositionId,
                                 PositionName = _lang.Locale == "zh-CN"
-                                               ? userpos.PositionNameCn
-                                               : userpos.PositionNameEn
+                                               ? position.PositionNameCn
+                                               : position.PositionNameEn
                             }).ToListAsync();
         }
 
@@ -107,7 +107,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 角色下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<RoleInfoDropDto>> GetRoleDropDown()
+        public async Task<List<RoleInfoDropDto>> GetRoleDrop()
         {
             return await _db.Queryable<RoleInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -315,9 +315,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             var query = _db.Queryable<UserInfoEntity>()
                            .With(SqlWith.NoLock)
                            .InnerJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
-                           .InnerJoin<DepartmentInfoEntity>((user, userrole, deptinfo) => user.DepartmentId == deptinfo.DepartmentId)
-                           .InnerJoin<UserPositionEntity>((user, userrole, deptinfo, userposition) => user.PositionId == userposition.PositionId)
-                           .InnerJoin<NationalityInfoEntity>((user, userrole, deptinfo, userposition, nation) => user.Nationality == nation.NationId);
+                           .InnerJoin<DepartmentInfoEntity>((user, userrole, dept) => user.DepartmentId == dept.DepartmentId)
+                           .InnerJoin<PositionInfoEntity>((user, userrole, dept, position) => user.PositionId == position.PositionId)
+                           .InnerJoin<NationalityInfoEntity>((user, userrole, dept, position, nation) => user.Nationality == nation.NationId);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getPage.UserNo))
@@ -339,21 +339,21 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             }
 
             // 排序
-            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.SortOrder, user.HireDate });
+            query = query.OrderBy((user, userrole, dept, position, nation) => new { position.SortOrder, user.HireDate });
 
-            var page = await query.Select((user, userrole, deptinfo, userposition, nation) => new UserInfoPageDto
+            var page = await query.Select((user, userrole, dept, position, nation) => new UserInfoPageDto
                                   {
                                       UserId = user.UserId,
                                       DepartmentId = user.DepartmentId,
                                       DepartmentName = _lang.Locale == "zh-CN"
-                                                       ? deptinfo.DepartmentNameCn
-                                                       : deptinfo.DepartmentNameEn,
+                                                       ? dept.DepartmentNameCn
+                                                       : dept.DepartmentNameEn,
                                       UserNo = user.UserNo,
                                       UserNameCn = user.UserNameCn,
                                       UserNameEn = user.UserNameEn,
                                       PositionName = _lang.Locale == "zh-CN"
-                                                       ? userposition.PositionNameCn
-                                                       : userposition.PositionNameEn, 
+                                                       ? position.PositionNameCn
+                                                       : position.PositionNameEn, 
                                       Gender = user.Gender,
                                       IsEmployed = user.IsEmployed,
                                       IsApproval = user.IsApproval,
@@ -404,9 +404,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             var query = _db.Queryable<UserInfoEntity>()
                            .With(SqlWith.NoLock)
                            .InnerJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
-                           .InnerJoin<DepartmentInfoEntity>((user, userrole, deptinfo) => user.DepartmentId == deptinfo.DepartmentId)
-                           .InnerJoin<UserPositionEntity>((user, userrole, deptinfo, userposition) => user.PositionId == userposition.PositionId)
-                           .InnerJoin<NationalityInfoEntity>((user, userrole, deptinfo, userposition, nation) => user.Nationality == nation.NationId);
+                           .InnerJoin<DepartmentInfoEntity>((user, userrole, dept) => user.DepartmentId == dept.DepartmentId)
+                           .InnerJoin<PositionInfoEntity>((user, userrole, dept, position) => user.PositionId == position.PositionId)
+                           .InnerJoin<NationalityInfoEntity>((user, userrole, dept, position, nation) => user.Nationality == nation.NationId);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getUserExcel.UserNo))
@@ -428,20 +428,20 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             }
 
             // 排序
-            query = query.OrderBy((user, userrole, deptinfo, userposition, nation) => new { userposition.SortOrder, user.HireDate });
+            query = query.OrderBy((user, userrole, dept, position, nation) => new { position.SortOrder, user.HireDate });
 
-            return await query.Select((user, userrole, deptinfo, userposition, nation) =>
+            return await query.Select((user, userrole, dept, position, nation) =>
                                new UserInfoExcelDto
                                {
                                    DepartmentName = _lang.Locale == "zh-CN"
-                                                    ? deptinfo.DepartmentNameCn
-                                                    : deptinfo.DepartmentNameEn,
+                                                    ? dept.DepartmentNameCn
+                                                    : dept.DepartmentNameEn,
                                    UserNo = user.UserNo,
                                    UserNameCn = user.UserNameCn,
                                    UserNameEn = user.UserNameEn,
                                    PositionName = _lang.Locale == "zh-CN"
-                                                    ? userposition.PositionNameCn
-                                                    : userposition.PositionNameEn,
+                                                    ? position.PositionNameCn
+                                                    : position.PositionNameEn,
                                    HireDate = user.HireDate,
                                    GenderName = _lang.Locale == "zh-CN"
                                                     ? (user.Gender == 1 ? "男" : "女")

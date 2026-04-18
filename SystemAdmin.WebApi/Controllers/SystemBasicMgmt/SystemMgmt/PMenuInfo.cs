@@ -21,9 +21,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[一级菜单信息] 模块下拉")]
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDrop()
         {
-            return await _pMenuInfoService.GetModuleDropDown();
+            return await _pMenuInfoService.GetModuleDrop();
         }
 
         [HttpPost]

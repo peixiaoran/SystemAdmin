@@ -33,7 +33,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         public async Task<int> DeleteUserLabor(long userLaborId)
         {
             return await _db.Deleteable<UserLaborEntity>()
-                            .Where(userlabor => userlabor.LaborId == userLaborId)
+                            .Where(labor => labor.LaborId == userLaborId)
                             .ExecuteCommandAsync();
         }
 
@@ -45,12 +45,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         public async Task<int> UpdateUserLabor(UserLaborEntity entity)
         {
             return await _db.Updateable(entity)
-                            .IgnoreColumns(userlabor => new
+                            .IgnoreColumns(labor => new
                             {
-                                userlabor.LaborId,
-                                userlabor.CreatedBy,
-                                userlabor.CreatedDate,
-                            }).Where(userlabor => userlabor.LaborId == entity.LaborId)
+                                labor.LaborId,
+                                labor.CreatedBy,
+                                labor.CreatedDate,
+                            }).Where(labor => labor.LaborId == entity.LaborId)
                             .ExecuteCommandAsync();
         }
 
@@ -82,13 +82,13 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             // 职业名称
             if (!string.IsNullOrEmpty(getPage.LaborName))
             {
-                query = query.Where(userlabor =>
-                    userlabor.LaborNameCn.Contains(getPage.LaborName) ||
-                    userlabor.LaborNameEn.Contains(getPage.LaborName));
+                query = query.Where(labor =>
+                    labor.LaborNameCn.Contains(getPage.LaborName) ||
+                    labor.LaborNameEn.Contains(getPage.LaborName));
             }
 
             // 排序
-            query = query.OrderByDescending(userlabor => userlabor.CreatedDate);
+            query = query.OrderByDescending(labor => labor.CreatedDate);
 
             var page = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserLaborDto>.Ok(page.Adapt<List<UserLaborDto>>(), totalCount, "");

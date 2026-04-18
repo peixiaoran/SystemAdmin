@@ -28,37 +28,37 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<UserLogOutEntity>()
                            .With(SqlWith.NoLock)
-                           .LeftJoin<UserInfoEntity>((userloginlog, userinfo) => userloginlog.UserId == userinfo.UserId)
-                           .LeftJoin<DictionaryInfoEntity>((userloginlog, userinfo, loginbehaviordic) => userloginlog.LoginType == loginbehaviordic.DicCode && loginbehaviordic.DicType == "LoginBehavior")
-                           .OrderByDescending((userloginlog, userinfo, loginbehaviordic) => new { userloginlog.LoginDate});
+                           .LeftJoin<UserInfoEntity>((userloginlog, user) => userloginlog.UserId == user.UserId)
+                           .LeftJoin<DictionaryInfoEntity>((userloginlog, user, loginbehaviordic) => userloginlog.LoginType == loginbehaviordic.DicCode && loginbehaviordic.DicType == "LoginBehavior")
+                           .OrderByDescending((userloginlog, user, loginbehaviordic) => new { userloginlog.LoginDate});
 
             // IP
             if (!string.IsNullOrEmpty(getPage.IP))
             {
-                query = query.Where((userloginlog, userinfo, loginbehaviordic) => userloginlog.IP.Contains(getPage.IP));
+                query = query.Where((userloginlog, user, loginbehaviordic) => userloginlog.IP.Contains(getPage.IP));
             }
             // 员工工号
             if (!string.IsNullOrEmpty(getPage.UserNo))
             {
-                query = query.Where((userloginlog, userinfo, loginbehaviordic) => userinfo.UserNo.Contains(getPage.UserNo));
+                query = query.Where((userloginlog, user, loginbehaviordic) => user.UserNo.Contains(getPage.UserNo));
             }
             // 开始时间
             if (!string.IsNullOrEmpty(getPage.StartTime))
             {
-                query = query.Where((userloginlog, userinfo, loginbehaviordic) => Convert.ToDateTime(userloginlog.LoginDate) >= Convert.ToDateTime(getPage.StartTime));
+                query = query.Where((userloginlog, user, loginbehaviordic) => Convert.ToDateTime(userloginlog.LoginDate) >= Convert.ToDateTime(getPage.StartTime));
             }
             // 结束时间
             if (!string.IsNullOrEmpty(getPage.EndTime))
             {
-                query = query.Where((userloginlog, userinfo, loginbehaviordic) => Convert.ToDateTime(userloginlog.LoginDate) <= Convert.ToDateTime(getPage.EndTime));
+                query = query.Where((userloginlog, user, loginbehaviordic) => Convert.ToDateTime(userloginlog.LoginDate) <= Convert.ToDateTime(getPage.EndTime));
             }
 
-            var page = await query.Select((userloginlog, userinfo, loginbehaviordic) => new UserLogOutDto
+            var page = await query.Select((userloginlog, user, loginbehaviordic) => new UserLogOutDto
             {
-                UserNo = userinfo.UserNo,
+                UserNo = user.UserNo,
                 UserName = _lang.Locale == "zh-CN"
-                           ? userinfo.UserNameCn
-                           : userinfo.UserNameEn,
+                           ? user.UserNameCn
+                           : user.UserNameEn,
                 IP = userloginlog.IP,
                 LoginType = userloginlog.LoginType,
                 LoginTypeName = _lang.Locale == "zh-CN"

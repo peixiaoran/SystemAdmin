@@ -111,9 +111,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         public async Task<ModuleInfoDto> GetModuleEntity(long moduleId)
         {
             var entity = await _db.Queryable<ModuleInfoEntity>()
-                                        .With(SqlWith.NoLock)
-                                        .Where(module => module.ModuleId == moduleId)
-                                        .FirstAsync();
+                                  .With(SqlWith.NoLock)
+                                  .Where(module => module.ModuleId == moduleId)
+                                  .FirstAsync();
             return entity.Adapt<ModuleInfoDto>();
         }
 
@@ -142,19 +142,19 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             // 排序
             query = query.OrderBy(module => module.SortOrder);
 
-            var modulePage = await query.Select((module) => new ModuleInfoDto
-                                        {
-                                            ModuleId = module.ModuleId,
-                                            ModuleCode = module.ModuleCode,
-                                            ModuleNameCn = module.ModuleNameCn,
-                                            ModuleNameEn = module.ModuleNameEn,
-                                            ModuleIcon = module.ModuleIcon,
-                                            IsVisible = module.IsVisible,
-                                            Path = module.Path,
-                                            RemarkCh = module.RemarkCh,
-                                            RemarkEn = module.RemarkEn,
-                                        }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<ModuleInfoDto>.Ok(modulePage, totalCount, "");
+            var page = await query.Select((module) => new ModuleInfoDto
+                                  {
+                                      ModuleId = module.ModuleId,
+                                      ModuleCode = module.ModuleCode,
+                                      ModuleNameCn = module.ModuleNameCn,
+                                      ModuleNameEn = module.ModuleNameEn,
+                                      ModuleIcon = module.ModuleIcon,
+                                      IsVisible = module.IsVisible,
+                                      Path = module.Path,
+                                      RemarkCh = module.RemarkCh,
+                                      RemarkEn = module.RemarkEn,
+                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<ModuleInfoDto>.Ok(page, totalCount, "");
         }
     }
 }

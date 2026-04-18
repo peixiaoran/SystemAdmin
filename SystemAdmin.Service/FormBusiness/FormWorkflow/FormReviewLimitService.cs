@@ -31,11 +31,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
             try
             {
-                var drop = await _FormReviewLimitRepository.GetFormGroupDropDown();
+                var drop = await _FormReviewLimitRepository.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -50,11 +50,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="formGroupId"></param>
         /// <returns></returns>
-        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(string formGroupId)
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDrop(string formGroupId)
         {
             try
             {
-                var drop = await _FormReviewLimitRepository.GetFormTypeDropDown(long.Parse(formGroupId));
+                var drop = await _FormReviewLimitRepository.GetFormTypeDrop(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -73,6 +73,12 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
+                // 判断表单职级是否有配置最高上限配置
+                var isRepat = await _FormReviewLimitRepository.FormReviewLimitRepeat(upsert.FormTypeId, upsert.PositionId);
+                if (isRepat)
+                {
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}Repeat"));
+                }
                 var entity = new FormReviewLimitEntity()
                 {
                     FormTypeId = upsert.FormTypeId,

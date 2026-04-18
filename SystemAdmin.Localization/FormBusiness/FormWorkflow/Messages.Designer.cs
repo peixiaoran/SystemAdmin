@@ -97,6 +97,15 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         }
         
         /// <summary>
+        ///   查找类似 职级已有最高上限配置，请勿重复配置 的本地化字符串。
+        /// </summary>
+        public static string FormReviewLimitRepeat {
+            get {
+                return ResourceManager.GetString("FormReviewLimitRepeat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 签核最高上限修改失败 的本地化字符串。
         /// </summary>
         public static string FormReviewLimitUpdateFailed {
@@ -151,7 +160,7 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         }
         
         /// <summary>
-        ///   查找类似 分支已有对应步骤，请先删除所有对应步骤 的本地化字符串。
+        ///   查找类似 分支已配置相关步骤，请先删除所有对应步骤 的本地化字符串。
         /// </summary>
         public static string WorkflowBranchNotDelete {
             get {
@@ -196,11 +205,11 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         }
         
         /// <summary>
-        ///   查找类似 请勿重复配置分支步骤 的本地化字符串。
+        ///   查找类似 分支已有对应步骤，请勿重复配置 的本地化字符串。
         /// </summary>
-        public static string WorkflowBranchStepIsRepat {
+        public static string WorkflowBranchStepRepat {
             get {
-                return ResourceManager.GetString("WorkflowBranchStepIsRepat", resourceCulture);
+                return ResourceManager.GetString("WorkflowBranchStepRepat", resourceCulture);
             }
         }
         

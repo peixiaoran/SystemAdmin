@@ -153,7 +153,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
         public async Task<int> UnlockUserFreeze(long userId, string passWord, string salt, DateTime expirationTime)
         {
             return await _db.Updateable<UserInfoEntity>()
-                            .SetColumns(userinfo => new UserInfoEntity
+                            .SetColumns(user => new UserInfoEntity
                             {
                                 PassWord = passWord,
                                 PwdSalt = salt,

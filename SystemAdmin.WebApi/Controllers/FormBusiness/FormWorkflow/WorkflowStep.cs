@@ -23,57 +23,57 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单步骤详情] 表单组别下拉")]
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
-            return await _workflowStepService.GetFormGroupDropDown();
+            return await _workflowStepService.GetFormGroupDrop();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单步骤详情] 表单类别下拉")]
-        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown([FromForm] string formGroupId)
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDrop([FromForm] string formGroupId)
         {
-            return await _workflowStepService.GetFormTypeDropDown(formGroupId);
+            return await _workflowStepService.GetFormTypeDrop(formGroupId);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单步骤详情] 步骤指派规则下拉")]
-        public async Task<Result<List<AssignmentDropDto>>> GetAssignmentDropDown()
+        public async Task<Result<List<AssignmentDropDto>>> GetAssignmentDrop()
         {
-            return await _workflowStepService.GetAssignmentDropDown();
+            return await _workflowStepService.GetAssignmentDrop();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单步骤详情] 步骤签核方式下拉")]
-        public async Task<Result<List<ApproveModeDropDto>>> GetApproveModeDropDown()
+        public async Task<Result<List<ApproveModeDropDto>>> GetApproveModeDrop()
         {
-            return await _workflowStepService.GetApproveModeDropDown();
+            return await _workflowStepService.GetApproveModeDrop();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单步骤详情] 部门级别下拉")]
-        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
+        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDrop()
         {
-            return await _workflowStepService.GetDepartmentLevelDropDown();
+            return await _workflowStepService.GetDepartmentLevelDrop();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单步骤详情] 员工职级下拉")]
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
         {
-            return await _workflowStepService.GetUserPositionDropDown();
+            return await _workflowStepService.GetPositionInfoDrop();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单步骤详情] 部门树下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
-            return await _workflowStepService.GetDepartmentDropDown();
+            return await _workflowStepService.GetDepartmentDrop();
         }
 
 		[HttpPost]

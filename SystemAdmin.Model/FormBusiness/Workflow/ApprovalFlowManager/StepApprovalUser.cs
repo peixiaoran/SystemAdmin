@@ -18,7 +18,7 @@
         /// <summary>
         /// 签核身份
         /// </summary>
-        public string AppointmentTypeName { get; set; } = string.Empty;
+        public string AppointmentType { get; set; } = string.Empty;
 
         /// <summary>
         /// 目前状态（未审批、审批中、审批完成）

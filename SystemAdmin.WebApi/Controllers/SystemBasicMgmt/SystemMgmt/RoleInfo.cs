@@ -22,9 +22,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemMgmt
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[角色信息] 角色模块下拉")]
-        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDropDown([FromForm] string roleId)
+        public async Task<Result<List<RoleModuleDropDto>>> GetRoleModuleDrop([FromForm] string roleId)
         {
-            return await _roleService.GetRoleModuleDropDown(roleId);
+            return await _roleService.GetRoleModuleDrop(roleId);
         }
 
         [HttpPost]

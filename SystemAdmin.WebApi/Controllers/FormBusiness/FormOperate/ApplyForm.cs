@@ -21,9 +21,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
         [EndpointSummary("[申请表单作业] 表单组别下拉")]
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
-            return await _applyFormService.GetFormGroupDropDown();
+            return await _applyFormService.GetFormGroupDrop();
         }
 
         [HttpPost]

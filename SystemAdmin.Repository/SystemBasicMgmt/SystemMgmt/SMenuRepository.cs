@@ -25,7 +25,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// 模块下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ModuleDropDto>> GetModuleDropDown()
+        public async Task<List<ModuleDropDto>> GetModuleDrop()
         {
             return await _db.Queryable<ModuleInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -44,12 +44,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// </summary>
         /// <param name="moduleId"></param>
         /// <returns></returns>
-        public async Task<List<MenuDropDto>> GetPMenuDropDown(long moduleId)
+        public async Task<List<MenuDropDto>> GetPMenuDrop(long moduleId)
         {
             return await _db.Queryable<MenuInfoEntity>()
                             .With(SqlWith.NoLock)
                             .OrderBy(pmenu => pmenu.SortOrder)
-                            .Where(pmenu => pmenu.MenuType == "PrimaryMenu" && pmenu.ModuleId == moduleId)
+                            .Where(pmenu => pmenu.MenuType == MenuType.PrimaryMenu.ToEnumString() && pmenu.ModuleId == moduleId)
                             .Select(pmenu => new MenuDropDto
                             {
                                 MenuId = pmenu.MenuId,
@@ -135,7 +135,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             var query = _db.Queryable<MenuInfoEntity>()
                            .With(SqlWith.NoLock)
                            .LeftJoin<DictionaryInfoEntity>((pmenu, dic) => dic.DicType == "MenuType" && pmenu.MenuType == dic.DicCode)
-                           .Where((pmenu, dic) => pmenu.MenuType == "SecondaryMenu");
+                           .Where((pmenu, dic) => pmenu.MenuType == MenuType.SecondaryMenu.ToEnumString());
 
             // 二级菜单编码
             if (!string.IsNullOrEmpty(getPage.MenuCode))

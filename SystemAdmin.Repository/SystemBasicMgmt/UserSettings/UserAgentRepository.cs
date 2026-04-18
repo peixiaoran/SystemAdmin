@@ -24,7 +24,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// 部门树下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        public async Task<List<DepartmentDropDto>> GetDepartmentDrop()
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -51,36 +51,36 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             var query = _db.Queryable<UserInfoEntity>()
                            .With(SqlWith.NoLock)
                            .InnerJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
-                           .InnerJoin<UserPositionEntity>((user, dept, userpos) => user.PositionId == userpos.PositionId)
-                           .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
-                           .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) =>
+                           .InnerJoin<PositionInfoEntity>((user, dept, position) => user.PositionId == position.PositionId)
+                           .InnerJoin<UserLaborEntity>((user, dept, position, labor) => user.LaborId == labor.LaborId)
+                           .InnerJoin<NationalityInfoEntity>((user, dept, position, labor, nation) =>
                             user.Nationality == nation.NationId)
-                           .Where((user, dept, userpos, userlabor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
+                           .Where((user, dept, position, labor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getPage.UserNo))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation) =>
+                query = query.Where((user, dept, position, labor, nation) =>
                     user.UserNo.Contains(getPage.UserNo));
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getPage.UserName))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation) =>
+                query = query.Where((user, dept, position, labor, nation) =>
                     user.UserNameCn.Contains(getPage.UserName) ||
                     user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门Id
             if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
             {
-                query = query.Where((user, dept, userpos, userlabor, nation) =>
+                query = query.Where((user, dept, position, labor, nation) =>
                     user.DepartmentId == long.Parse(getPage.DepartmentId));
             }
 
             //排序
-            query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
+            query = query.OrderBy((user, dept, position, labor, nation) => new { position.SortOrder, user.HireDate });
 
-            var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserAgentDto
+            var page = await query.Select((user, dept, position, labor, nation) => new UserAgentDto
                                   {
                                       UserId = user.UserId,
                                       UserNo = user.UserNo,
@@ -91,11 +91,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                       PositionName = _lang.Locale == "zh-CN"
-                                                 ? userpos.PositionNameCn
-                                                 : userpos.PositionNameEn,
+                                                 ? position.PositionNameCn
+                                                 : position.PositionNameEn,
                                       LaborName = _lang.Locale == "zh-CN"
-                                                 ? userlabor.LaborNameCn
-                                                 : userlabor.LaborNameEn,
+                                                 ? labor.LaborNameCn
+                                                 : labor.LaborNameEn,
                                       NationalityName = _lang.Locale == "zh-CN"
                                                  ? nation.NationNameCn
                                                  : nation.NationNameEn,
@@ -116,35 +116,35 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             var query = _db.Queryable<UserInfoEntity>()
                            .With(SqlWith.NoLock)
                            .InnerJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
-                           .InnerJoin<UserPositionEntity>((user, dept, userpos) => user.PositionId == userpos.PositionId)
-                           .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
-                           .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) => user.Nationality == nation.NationId)
-                           .Where((user, dept, userpos, userlabor, nation) => user.IsAgent == 0 && user.UserId != long.Parse(getPage.SubstituteUserId) && user.IsFreeze == 0);
+                           .InnerJoin<PositionInfoEntity>((user, dept, position) => user.PositionId == position.PositionId)
+                           .InnerJoin<UserLaborEntity>((user, dept, position, labor) => user.LaborId == labor.LaborId)
+                           .InnerJoin<NationalityInfoEntity>((user, dept, position, labor, nation) => user.Nationality == nation.NationId)
+                           .Where((user, dept, position, labor, nation) => user.IsAgent == 0 && user.UserId != long.Parse(getPage.SubstituteUserId) && user.IsFreeze == 0);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getPage.UserNo))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation) =>
+                query = query.Where((user, dept, position, labor, nation) =>
                     user.UserNo == getPage.UserNo);
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getPage.UserName))
             {
-                query = query.Where((user, dept, userpos, userlabor, nation) =>
+                query = query.Where((user, dept, position, labor, nation) =>
                     user.UserNameCn.Contains(getPage.UserName) ||
                     user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门Id
             if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
             {
-                query = query.Where((user, dept, userpos, userlabor, nation) =>
+                query = query.Where((user, dept, position, labor, nation) =>
                     user.DepartmentId == long.Parse(getPage.DepartmentId));
             }
 
             // 排序
-            query = query.OrderBy((user, dept, userpos, userlabor, nation) => user.UserId);
+            query = query.OrderBy((user, dept, position, labor, nation) => user.UserId);
 
-            var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserAgentViewDto
+            var page = await query.Select((user, dept, position, labor, nation) => new UserAgentViewDto
                                   {
                                       UserId = user.UserId,
                                       UserNo = user.UserNo,
@@ -155,11 +155,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
                                       PositionName = _lang.Locale == "zh-CN"
-                                                 ? userpos.PositionNameCn
-                                                 : userpos.PositionNameEn,
+                                                 ? position.PositionNameCn
+                                                 : position.PositionNameEn,
                                       LaborName = _lang.Locale == "zh-CN"
-                                                 ? userlabor.LaborNameCn
-                                                 : userlabor.LaborNameEn,
+                                                 ? labor.LaborNameCn
+                                                 : labor.LaborNameEn,
                                       NationalityName = _lang.Locale == "zh-CN"
                                                  ? nation.NationNameCn
                                                  : nation.NationNameEn,
@@ -198,8 +198,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         public async Task<int> UpdateUserAgent(long userId, int isAgent)
         {
             return await _db.Updateable<UserInfoEntity>()
-                            .SetColumns(userinfo => userinfo.IsAgent == isAgent)
-                            .Where(userinfo => userinfo.UserId == userId)
+                            .SetColumns(user => user.IsAgent == isAgent)
+                            .Where(user => user.UserId == userId)
                             .ExecuteCommandAsync();
         }
 

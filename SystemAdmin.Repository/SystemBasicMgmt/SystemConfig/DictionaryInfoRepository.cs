@@ -25,7 +25,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// 字典类型下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<DicTypeDropDto>> GetDicTypeDropDown(long moduleId)
+        public async Task<List<DicTypeDropDto>> GetDicTypeDrop(long moduleId)
         {
             return await _db.Queryable<DictionaryInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -101,9 +101,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         public async Task<DictionaryInfoDto> GetDictionaryInfoEntity(long dicId)
         {
             var entity = await _db.Queryable<DictionaryInfoEntity>()
-                                     .With(SqlWith.NoLock)
-                                     .Where(dic => dic.DicId == dicId)
-                                     .FirstAsync();
+                                  .With(SqlWith.NoLock)
+                                  .Where(dic => dic.DicId == dicId)
+                                  .FirstAsync();
             return entity.Adapt<DictionaryInfoDto>();
         }
 
@@ -160,7 +160,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// 模块下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ModuleDropDto>> GetModuleDropDown()
+        public async Task<List<ModuleDropDto>> GetModuleDrop()
         {
             return await _db.Queryable<ModuleInfoEntity>()
                             .With(SqlWith.NoLock)

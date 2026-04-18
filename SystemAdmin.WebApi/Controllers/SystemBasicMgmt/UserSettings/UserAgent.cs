@@ -23,9 +23,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工信息] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
-            return await _userAgentService.GetDepartmentDropDown();
+            return await _userAgentService.GetDepartmentDrop();
         }
 
         [HttpPost]

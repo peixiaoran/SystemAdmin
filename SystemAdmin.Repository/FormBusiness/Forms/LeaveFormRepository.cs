@@ -25,7 +25,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         /// 请假类别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<LeaveTypeDropDto>> GetLeaveTypeDropDown()
+        public async Task<List<LeaveTypeDropDto>> GetLeaveTypeDrop()
         {
             return await _db.Queryable<DictionaryInfoEntity>()
                             .Where(dic => dic.DicType == "LeaveType")

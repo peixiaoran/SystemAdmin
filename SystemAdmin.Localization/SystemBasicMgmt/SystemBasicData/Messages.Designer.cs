@@ -70,15 +70,6 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 无法删除部门，因为该部门或其子部门下存在人员 的本地化字符串。
-        /// </summary>
-        internal static string DeptInfoDepartmentHasUsers {
-            get {
-                return ResourceManager.GetString("DeptInfoDepartmentHasUsers", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 部门代码已存在，请重新输入 的本地化字符串。
         /// </summary>
         internal static string DeptInfoDeptCodeExist {
@@ -102,6 +93,15 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         internal static string DeptInfoInsertSuccess {
             get {
                 return ResourceManager.GetString("DeptInfoInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 无法删除部门，因为该部门或其子部门下存在人员 的本地化字符串。
+        /// </summary>
+        internal static string DeptInfoNotDelete {
+            get {
+                return ResourceManager.GetString("DeptInfoNotDelete", resourceCulture);
             }
         }
         
@@ -475,15 +475,6 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 工号或账号已存在，请重新输入 的本地化字符串。
-        /// </summary>
-        internal static string UserInfoDuplicatejobRepeatable {
-            get {
-                return ResourceManager.GetString("UserInfoDuplicatejobRepeatable", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 员工信息新增失败 的本地化字符串。
         /// </summary>
         internal static string UserInfoInsertFailed {
@@ -534,6 +525,15 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         internal static string UserInfoUploadSuccess {
             get {
                 return ResourceManager.GetString("UserInfoUploadSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 工号或账号已存在，请重新输入 的本地化字符串。
+        /// </summary>
+        internal static string UserInfoUserNoRepat {
+            get {
+                return ResourceManager.GetString("UserInfoUserNoRepat", resourceCulture);
             }
         }
         

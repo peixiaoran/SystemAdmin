@@ -32,11 +32,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         /// 币别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<CurrencyInfoDropDto>>> GetCurrencyInfoDropDown()
+        public async Task<Result<List<CurrencyInfoDropDto>>> GetCurrencyInfoDrop()
         {
             try
             {
-                var drop = await _ExchangeRateRepository.GetCurrencyInfoDropDown();
+                var drop = await _ExchangeRateRepository.GetCurrencyInfoDrop();
                 return Result<List<CurrencyInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)

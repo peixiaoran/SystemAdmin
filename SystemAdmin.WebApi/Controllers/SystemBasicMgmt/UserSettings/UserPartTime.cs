@@ -24,25 +24,25 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 职业下拉")]
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
         {
-            return await _userPartTimeService.GetLaborDropDown();
+            return await _userPartTimeService.GetLaborDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
-            return await _userPartTimeService.GetDepartmentDropDown();
+            return await _userPartTimeService.GetDepartmentDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 职级下拉")]
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
         {
-            return await _userPartTimeService.GetUserPositionDropDown();
+            return await _userPartTimeService.GetPositionInfoDrop();
         }
 
         [HttpPost]

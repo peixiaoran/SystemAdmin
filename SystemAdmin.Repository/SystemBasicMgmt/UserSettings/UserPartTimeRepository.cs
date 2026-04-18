@@ -26,7 +26,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// 职业下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<UserLaborDropDto>> GetLaborDropDown()
+        public async Task<List<UserLaborDropDto>> GetLaborDrop()
         {
             var query = _db.Queryable<UserLaborEntity>().With(SqlWith.NoLock);
             if (_lang.Locale == "zh-CN")
@@ -51,7 +51,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// 部门树下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        public async Task<List<DepartmentDropDto>> GetDepartmentDrop()
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -71,17 +71,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
+        public async Task<List<PositionInfoDropDto>> GetPositionInfoDrop()
         {
-            return await _db.Queryable<UserPositionEntity>()
+            return await _db.Queryable<PositionInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .OrderBy(userpos => userpos.CreatedDate)
-                            .Select((userpos) => new UserPositionDropDto
+                            .OrderBy(position => position.CreatedDate)
+                            .Select((position) => new PositionInfoDropDto
                             {
-                                PositionId = userpos.PositionId,
+                                PositionId = position.PositionId,
                                 PositionName = _lang.Locale == "zh-CN"
-                                               ? userpos.PositionNameCn
-                                               : userpos.PositionNameEn
+                                               ? position.PositionNameCn
+                                               : position.PositionNameEn
                             }).ToListAsync();
         }
 
@@ -97,34 +97,34 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                            .With(SqlWith.NoLock)
                            .InnerJoin<UserPartTimeEntity>((user, userpart) => user.UserId == userpart.UserId)
                            .LeftJoin<DepartmentInfoEntity>((user, userpart, dept) => user.DepartmentId == dept.DepartmentId)
-                           .LeftJoin<UserPositionEntity>((user, userpart, dept, userpos) => user.PositionId == userpos.PositionId)
-                           .LeftJoin<DepartmentInfoEntity>((user, userpart, dept, userpos, p_userdept) => userpart.PartTimeDeptId == p_userdept.DepartmentId)
-                           .LeftJoin<UserPositionEntity>((user, userpart, dept, userpos, p_userdept, p_userpos) => userpart.PartTimePositionId == p_userpos.PositionId)
-                           .Where((user, userpart, dept, userpos, p_userdept, p_userpos) => user.IsEmployed == 1 && user.IsFreeze == 0);
+                           .LeftJoin<PositionInfoEntity>((user, userpart, dept, position) => user.PositionId == position.PositionId)
+                           .LeftJoin<DepartmentInfoEntity>((user, userpart, dept, position, p_userdept) => userpart.PartTimeDeptId == p_userdept.DepartmentId)
+                           .LeftJoin<PositionInfoEntity>((user, userpart, dept, position, p_userdept, p_userpos) => userpart.PartTimePositionId == p_userpos.PositionId)
+                           .Where((user, userpart, dept, position, p_userdept, p_userpos) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getPage.UserNo))
             {
-                query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos) =>
+                query = query.Where((user, userpart, dept, position, p_userdept, p_userpos) =>
                     user.UserNo.Contains(getPage.UserNo));
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getPage.UserName))
             {
-                query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos) =>
+                query = query.Where((user, userpart, dept, position, p_userdept, p_userpos) =>
                     user.UserNameCn.Contains(getPage.UserName) ||
                     user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门Id
             if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
             {
-                query = query.Where((user, userpart, dept, userpos, p_userdept, p_userpos) => p_userdept.DepartmentId == long.Parse(getPage.DepartmentId));
+                query = query.Where((user, userpart, dept, position, p_userdept, p_userpos) => p_userdept.DepartmentId == long.Parse(getPage.DepartmentId));
             }
 
             // 排序
-            query = query.OrderBy((user, userpart, dept, userpos, p_userdept, p_userpos) => new { UserPositionOrder = userpos.SortOrder, user.HireDate, PartTimePositionOrder = p_userpos.SortOrder });
+            query = query.OrderBy((user, userpart, dept, position, p_userdept, p_userpos) => new { PositionInfoOrder = position.SortOrder, user.HireDate, PartTimePositionOrder = p_userpos.SortOrder });
 
-            var page = await query.Select((user, userpart, dept, userpos, p_userdept, p_userpos) => new UserPartTimeDto
+            var page = await query.Select((user, userpart, dept, position, p_userdept, p_userpos) => new UserPartTimeDto
                                   {
                                       UserId = user.UserId,
                                       UserNo = user.UserNo,
@@ -138,8 +138,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                                  : dept.DepartmentNameEn,
                                       // 职级名称
                                       PositionName = _lang.Locale == "zh-CN"
-                                                 ? userpos.PositionNameCn
-                                                 : userpos.PositionNameEn,
+                                                 ? position.PositionNameCn
+                                                 : position.PositionNameEn,
                                       // 是否签核
                                       IsApproval = user.IsApproval,
                                       // 兼任部门名称
@@ -169,36 +169,36 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             var query = _db.Queryable<UserInfoEntity>()
                            .With(SqlWith.NoLock)
                            .LeftJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
-                           .LeftJoin<UserPositionEntity>((user, dept, userpos) => user.PositionId == userpos.PositionId)
-                           .LeftJoin<NationalityInfoEntity>((user, dept, userpos, nation) =>
+                           .LeftJoin<PositionInfoEntity>((user, dept, position) => user.PositionId == position.PositionId)
+                           .LeftJoin<NationalityInfoEntity>((user, dept, position, nation) =>
                             user.Nationality == nation.NationId)
-                           .LeftJoin<UserLaborEntity>((user, dept, userpos, nation, userlabor) => user.LaborId == userlabor.LaborId)
-                           .Where((user, dept, userpos, nation, userlabor) => user.IsEmployed == 1 && user.IsFreeze == 0);
+                           .LeftJoin<UserLaborEntity>((user, dept, position, nation, labor) => user.LaborId == labor.LaborId)
+                           .Where((user, dept, position, nation, labor) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
             // 员工工号
             if (!string.IsNullOrEmpty(getPage.UserNo))
             {
-                query = query.Where((user, dept, userpos, nation, userlabor) =>
+                query = query.Where((user, dept, position, nation, labor) =>
                     user.UserNo == getPage.UserNo);
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getPage.UserName))
             {
-                query = query.Where((user, dept, userpos, nation, userlabor) =>
+                query = query.Where((user, dept, position, nation, labor) =>
                     user.UserNameCn.Contains(getPage.UserName) ||
                     user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门
             if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
             {
-                query = query.Where((user, dept, userpos, nation, userlabor) =>
+                query = query.Where((user, dept, position, nation, labor) =>
                     user.DepartmentId == long.Parse(getPage.DepartmentId));
             }
 
             // 排序
-            query = query.OrderBy((user, dept, userpos, nation, userlabor) => new { userpos.SortOrder, user.HireDate });
+            query = query.OrderBy((user, dept, position, nation, labor) => new { position.SortOrder, user.HireDate });
 
-            var page = await query.Select((user, dept, userpos, nation, userlabor) => new UserPartTimeViewDto
+            var page = await query.Select((user, dept, position, nation, labor) => new UserPartTimeViewDto
                                   {
                                        UserId = user.UserId,
                                        UserNo = user.UserNo,
@@ -209,14 +209,14 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                                   ? dept.DepartmentNameCn
                                                   : dept.DepartmentNameEn,
                                        PositionName = _lang.Locale == "zh-CN"
-                                                  ? userpos.PositionNameCn
-                                                  : userpos.PositionNameEn,
+                                                  ? position.PositionNameCn
+                                                  : position.PositionNameEn,
                                        NationalityName = _lang.Locale == "zh-CN"
                                                   ? nation.NationNameCn
                                                   : nation.NationNameEn,
                                        LaborName = _lang.Locale == "zh-CN"
-                                                  ? userlabor.LaborNameCn
-                                                  : userlabor.LaborNameEn,
+                                                  ? labor.LaborNameCn
+                                                  : labor.LaborNameEn,
                                        IsApproval = user.IsApproval,
                                   }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserPartTimeViewDto>.Ok(page, totalCount, "");

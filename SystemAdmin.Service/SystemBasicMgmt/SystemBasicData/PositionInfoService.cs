@@ -4,12 +4,12 @@ using SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData;
 
 namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
 {
-    public class UserPositionService
+    public class PositionInfoService
     {
-        private readonly ILogger<UserPositionService> _logger;
-        private readonly UserPositionRepository _userPositionRepository;
+        private readonly ILogger<PositionInfoService> _logger;
+        private readonly PositionInfoRepository _userPositionRepository;
 
-        public UserPositionService(ILogger<UserPositionService> logger, UserPositionRepository userPositionRepository)
+        public PositionInfoService(ILogger<PositionInfoService> logger, PositionInfoRepository userPositionRepository)
         {
             _logger = logger;
             _userPositionRepository = userPositionRepository;
@@ -20,17 +20,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// </summary>
         /// <param name="positionId"></param>
         /// <returns></returns>
-        public async Task<Result<UserPositionDto>> GetUserPositionEntity(string positionId)
+        public async Task<Result<PositionInfoDto>> GetPositionInfoEntity(string positionId)
         {
             try
             {
-                var entity = await _userPositionRepository.GetUserPositionEntity(long.Parse(positionId));
-                return Result<UserPositionDto>.Ok(entity, "");
+                var entity = await _userPositionRepository.GetPositionInfoEntity(long.Parse(positionId));
+                return Result<PositionInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<UserPositionDto>.Failure(500, ex.Message);
+                return Result<PositionInfoDto>.Failure(500, ex.Message);
             }
         }
 
@@ -38,17 +38,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 查询职级列表
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<UserPositionDto>>> GetUserPositionList()
+        public async Task<Result<List<PositionInfoDto>>> GetPositionInfoList()
         {
             try
             {
-                var list = await _userPositionRepository.GetUserPositionList();
-                return Result<List<UserPositionDto>>.Ok(list, "");
+                var list = await _userPositionRepository.GetPositionInfoList();
+                return Result<List<PositionInfoDto>>.Ok(list, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<UserPositionDto>>.Failure(500, ex.Message);
+                return Result<List<PositionInfoDto>>.Failure(500, ex.Message);
             }
         }
     }

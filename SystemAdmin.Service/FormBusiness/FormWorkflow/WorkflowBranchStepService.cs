@@ -31,11 +31,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
             try
             {
-                var drop = await _workflowBranchStep.GetFormGroupDropDown();
+                var drop = await _workflowBranchStep.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -50,17 +50,36 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="formGroupId"></param>
         /// <returns></returns>
-        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown(string formGroupId)
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDrop(string formGroupId)
         {
             try
             {
-                var drop = await _workflowBranchStep.GetFormTypeDropDown(long.Parse(formGroupId));
+                var drop = await _workflowBranchStep.GetFormTypeDrop(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<List<FormTypeDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 分支下拉
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<WorkflowBranchDropDto>>> GetWorkflowBranchDrop(string formTypeId)
+        {
+            try
+            {
+                var drop = await _workflowBranchStep.GetWorkflowBranchDrop(long.Parse(formTypeId));
+                return Result<List<WorkflowBranchDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<WorkflowBranchDropDto>>.Failure(500, ex.Message);
             }
         }
 
@@ -77,7 +96,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 var isRepat = await _workflowBranchStep.BranchStepIsRepeat(long.Parse(upsert.BranchId), long.Parse(upsert.StepId));
                 if (isRepat)
                 {
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsRepat"));
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}Repat"));
                 }
                 else
                 {

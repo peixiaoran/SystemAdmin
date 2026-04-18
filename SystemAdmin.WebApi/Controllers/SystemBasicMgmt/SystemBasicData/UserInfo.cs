@@ -28,41 +28,41 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 国籍下拉")]
-        public async Task<Result<List<NationalityDropDto>>> GetNationalityDropDown()
+        public async Task<Result<List<NationalityDropDto>>> GetNationalityDrop()
         {
-            return await _userInfoService.GetNationalityDropDown();
+            return await _userInfoService.GetNationalityDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 职业下拉")]
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDropDown()
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
         {
-            return await _userInfoService.GetLaborDropDown();
+            return await _userInfoService.GetLaborDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
-            return await _userInfoService.GetDepartmentDropDown();
+            return await _userInfoService.GetDepartmentDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 职级下拉")]
-        public async Task<Result<List<UserPositionDropDto>>> GetUserPositionDropDown()
+        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
         {
-            return await _userInfoService.GetUserPositionDropDown();
+            return await _userInfoService.GetPositionInfoDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 角色下拉")]
-        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDropDown()
+        public async Task<Result<List<RoleInfoDropDto>>> GetRoleDrop()
         {
-            return await _userInfoService.GetRoleDropDown();
+            return await _userInfoService.GetRoleDrop();
         }
 
         [HttpPost]

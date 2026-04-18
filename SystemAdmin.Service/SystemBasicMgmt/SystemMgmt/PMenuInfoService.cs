@@ -32,11 +32,11 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         /// 模块下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<ModuleDropDto>>> GetModuleDropDown()
+        public async Task<Result<List<ModuleDropDto>>> GetModuleDrop()
         {
             try
             {
-                var drop = await _pMenuRepository.GetModuleDropDown();
+                var drop = await _pMenuRepository.GetModuleDrop();
                 return Result<List<ModuleDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)

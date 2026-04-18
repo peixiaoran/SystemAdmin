@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 17001110 (17.00.1110)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 17001110 (17.00.1110)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 17/04/2026 23:26:17
+ Date: 18/04/2026 16:57:10
 */
 
 
@@ -654,13 +654,13 @@ GO
 CREATE TABLE [Form].[FormReviewRecord] (
   [FormId] bigint  NOT NULL,
   [StepId] bigint  NOT NULL,
-  [OperationStatus] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [ReviewResult] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [RejectedStepId] bigint  NULL,
   [Comment] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [OperationType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [OperationAppointment] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [OperationUserId] bigint  NOT NULL,
-  [OperationDate] datetime2(3)  NOT NULL
+  [ReviewType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [ReviewAppointment] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [ReviewUserId] bigint  NOT NULL,
+  [ReviewDateTime] datetime2(3)  NOT NULL
 )
 GO
 
@@ -682,10 +682,10 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'操作状态（签核、驳回）',
+'MS_Description', N'审批结果（签核、驳回）',
 'SCHEMA', N'Form',
 'TABLE', N'FormReviewRecord',
-'COLUMN', N'OperationStatus'
+'COLUMN', N'ReviewResult'
 GO
 
 EXEC sp_addextendedproperty
@@ -703,31 +703,31 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'操作类型（手动操作、系统自动）',
+'MS_Description', N'审批类型（手动操作、系统自动）',
 'SCHEMA', N'Form',
 'TABLE', N'FormReviewRecord',
-'COLUMN', N'OperationType'
+'COLUMN', N'ReviewType'
 GO
 
 EXEC sp_addextendedproperty
 'MS_Description', N'审批身份（实、兼）',
 'SCHEMA', N'Form',
 'TABLE', N'FormReviewRecord',
-'COLUMN', N'OperationAppointment'
+'COLUMN', N'ReviewAppointment'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'操作员工Id',
+'MS_Description', N'审批员工Id',
 'SCHEMA', N'Form',
 'TABLE', N'FormReviewRecord',
-'COLUMN', N'OperationUserId'
+'COLUMN', N'ReviewUserId'
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'操作时间',
+'MS_Description', N'审批时间',
 'SCHEMA', N'Form',
 'TABLE', N'FormReviewRecord',
-'COLUMN', N'OperationDate'
+'COLUMN', N'ReviewDateTime'
 GO
 
 EXEC sp_addextendedproperty

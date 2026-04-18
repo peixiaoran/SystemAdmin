@@ -22,7 +22,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()
+        public async Task<List<FormGroupDropDto>> GetFormGroupDrop()
         {
             return await _db.Queryable<FormGroupEntity>()
                             .With(SqlWith.NoLock)

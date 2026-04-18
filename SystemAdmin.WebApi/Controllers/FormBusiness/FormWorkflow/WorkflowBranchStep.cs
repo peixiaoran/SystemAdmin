@@ -22,17 +22,25 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单分支步骤] 表单组别下拉")]
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
-            return await _workflowBranchStepService.GetFormGroupDropDown();
+            return await _workflowBranchStepService.GetFormGroupDrop();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单相关配置")]
         [EndpointSummary("[表单分支步骤] 表单类别下拉")]
-        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown([FromForm] string formGroupId)
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDrop([FromForm] string formGroupId)
         {
-            return await _workflowBranchStepService.GetFormTypeDropDown(formGroupId);
+            return await _workflowBranchStepService.GetFormTypeDrop(formGroupId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单相关配置")]
+        [EndpointSummary("[表单分支步骤] 分支下拉")]
+        public async Task<Result<List<WorkflowBranchDropDto>>> GetWorkflowBranchDrop([FromForm] string formTypeId)
+        {
+            return await _workflowBranchStepService.GetWorkflowBranchDrop(formTypeId);
         }
 
         [HttpPost]

@@ -43,9 +43,9 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// 请假类别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDropDown()
+        public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDrop()
         {
-            var drop = await _leaveForm.GetLeaveTypeDropDown();
+            var drop = await _leaveForm.GetLeaveTypeDrop();
             return Result<List<LeaveTypeDropDto>>.Ok(drop);
         }
         

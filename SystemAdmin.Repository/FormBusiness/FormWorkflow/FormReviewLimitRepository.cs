@@ -24,7 +24,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()
+        public async Task<List<FormGroupDropDto>> GetFormGroupDrop()
         {
             return await _db.Queryable<FormGroupEntity>()
                             .With(SqlWith.NoLock)
@@ -42,7 +42,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 表单类别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<FormTypeDropDto>> GetFormTypeDropDown(long formGroupId)
+        public async Task<List<FormTypeDropDto>> GetFormTypeDrop(long formGroupId)
         {
             return await _db.Queryable<FormTypeEntity>()
                             .With(SqlWith.NoLock)
@@ -121,10 +121,10 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         public async Task<ResultPaged<FormReviewLimitDto>> GetFormReviewLimitPage(GetFormReviewLimitPage getPage)
         {
             RefAsync<int> totalCount = 0;
-            var query = _db.Queryable<UserPositionEntity>()
+            var query = _db.Queryable<PositionInfoEntity>()
                            .With(SqlWith.NoLock)
                            .InnerJoin<FormReviewLimitEntity>((position, limit) => position.PositionId == limit.PositionId)
-                           .InnerJoin<UserPositionEntity>((position, limit, maxposition) => limit.MaxPositionId == maxposition.PositionId)
+                           .InnerJoin<PositionInfoEntity>((position, limit, maxposition) => limit.MaxPositionId == maxposition.PositionId)
                            .Where((position, limit, maxposition) => limit.FormTypeId == long.Parse(getPage.FormTypeId));
 
             var page = await query.OrderByDescending((position, limit, maxposition) => position.SortOrder)

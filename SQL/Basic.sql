@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 17001110 (17.00.1110)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Basic
 
  Target Server Type    : SQL Server
- Target Server Version : 17001110 (17.00.1110)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 17/04/2026 23:26:22
+ Date: 18/04/2026 16:56:48
 */
 
 
@@ -1647,7 +1647,7 @@ GO
 INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1929897094655643648', N'1350161679034934501', N'1917998505360756736', N'DepartmentLevel', N'部门层级维护', N'Dept Level', N'SecondaryMenu', N'systembasicmgmt/system-basicdata/departmentlevel', N'CollectionTag', N'1', N'1', N'/api/SystemBasicMgmt/SystemBasicData/DepartmentLevel', N'', N'', N'1903486709602062336', N'2025-06-03 21:44:57.000', N'1903486709602062336', N'2026-03-08 02:40:51.143')
 GO
 
-INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1930269640165036032', N'1350161679034934501', N'1917998505360756736', N'UserPositions', N'职级信息维护', N'User Positions', N'SecondaryMenu', N'systembasicmgmt/system-basicdata/userposition', N'GoldMedal', N'5', N'1', N'/api/SystemBasicMgmt/SystemBasicData/UserPosition', N'', NULL, N'1903486709602062336', N'2025-06-04 22:25:19.000', N'1903486709602062336', N'2025-08-09 10:52:23.000')
+INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1930269640165036032', N'1350161679034934501', N'1917998505360756736', N'PositionInfo', N'职级信息维护', N'Position Info', N'SecondaryMenu', N'systembasicmgmt/system-basicdata/positioninfo', N'GoldMedal', N'5', N'1', N'/api/SystemBasicMgmt/SystemBasicData/PositionInfo', N'', NULL, N'1903486709602062336', N'2025-06-04 22:25:19.000', N'1903486709602062336', N'2025-08-09 10:52:23.000')
 GO
 
 INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1932766707219304448', N'1350161679034934501', N'0', N'SystemConfig', N'系统设定模块', N'System Settings', N'PrimaryMenu', N'systembasicmgmt/system-config', N'Setting', N'4', N'1', N'', N'/systembasicmgmt/system-config', NULL, N'1903486709602062336', N'2025-06-11 19:47:46.000', N'1903486709602062336', N'2025-10-03 09:13:21.000')
@@ -1992,6 +1992,147 @@ INSERT INTO [Basic].[NationalityInfo] ([NationId], [NationNameCn], [NationNameEn
 GO
 
 INSERT INTO [Basic].[NationalityInfo] ([NationId], [NationNameCn], [NationNameEn], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1972221975216656384', N'美籍', N'American', N'', N'1903486709602062336', N'2025-09-28 16:48:55.000', NULL, NULL)
+GO
+
+
+-- ----------------------------
+-- Table structure for PositionInfo
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Basic].[PositionInfo]') AND type IN ('U'))
+	DROP TABLE [Basic].[PositionInfo]
+GO
+
+CREATE TABLE [Basic].[PositionInfo] (
+  [PositionId] bigint  NOT NULL,
+  [PositionNo] nvarchar(5) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [PositionNameCn] nvarchar(10) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [PositionNameEn] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [SortOrder] int  NULL,
+  [Description] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
+  [CreatedBy] bigint  NOT NULL,
+  [CreatedDate] datetime2(3)  NOT NULL,
+  [ModifiedBy] bigint  NULL,
+  [ModifiedDate] datetime2(3)  NULL
+)
+GO
+
+ALTER TABLE [Basic].[PositionInfo] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工职级Id',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'PositionId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工职级编码',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'PositionNo'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工职级名称（中文）',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'PositionNameCn'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工职级名称（英文）',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'PositionNameEn'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'职级排序',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'SortOrder'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'职级描述',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'Description'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建人',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'CreatedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'创建时间',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'CreatedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改人',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'ModifiedBy'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'修改时间',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo',
+'COLUMN', N'ModifiedDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'员工职级表',
+'SCHEMA', N'Basic',
+'TABLE', N'PositionInfo'
+GO
+
+
+-- ----------------------------
+-- Records of PositionInfo
+-- ----------------------------
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351581732096180224', N'S12', N'董事长', N'Chairman', N'1', N'董事长', N'1903486709602062336', N'2025-01-23 14:28:55.000', N'1903486709602062336', N'2025-01-23 14:28:55.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351582085961220096', N'S11', N'总经理', N'General Manager', N'2', N'总经理', N'1903486709602062336', N'2025-01-23 14:29:37.000', N'1903486709602062336', N'2025-01-23 14:29:37.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351583500196642816', N'S10', N'副总', N'Vice President', N'3', N'副总', N'1903486709602062336', N'2025-01-23 14:32:26.000', N'1903486709602062336', N'2025-01-23 14:32:26.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351583636813512704', N'S09', N'协理', N'Associate Vice President', N'4', N'协理', N'1903486709602062336', N'2025-01-23 14:32:42.000', N'1903486709602062336', N'2025-01-23 14:32:42.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351584014896463872', N'S08', N'厂长', N'Plant Manager', N'5', N'厂长', N'1903486709602062336', N'2025-01-23 14:33:27.000', N'1903486709602062336', N'2025-01-23 14:33:27.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351584156689104896', N'S07', N'资深经理', N'Senior Manager', N'6', N'资深经理', N'1903486709602062336', N'2025-01-23 14:33:44.000', N'1903486709602062336', N'2025-01-23 14:33:44.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351585319710883840', N'S06', N'经理', N'Manager', N'7', N'经理', N'1903486709602062336', N'2025-01-23 14:36:03.000', N'1903486709602062336', N'2025-01-23 14:36:03.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351592278136717312', N'S05', N'副理', N'Assistant Manager', N'8', N'副理', N'1903486709602062336', N'2025-01-23 14:49:52.000', N'1903486709602062336', N'2025-01-23 14:49:52.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351600746193223680', N'S04', N'课长', N'Section Manager', N'9', N'课长', N'1903486709602062336', N'2025-01-23 15:06:42.000', N'1903486709602062336', N'2025-01-23 15:06:42.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351602631784529920', N'S03', N'组长', N'Team Leader', N'10', N'组长', N'1903486709602062336', N'2025-01-23 15:10:27.000', N'1903486709602062336', N'2025-01-23 15:10:27.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351602771312246784', N'S02', N'师二', N'Engineer II', N'11', N'师二', N'1903486709602062336', N'2025-01-23 15:10:43.000', N'1903486709602062336', N'2025-01-23 15:10:43.000')
+GO
+
+INSERT INTO [Basic].[PositionInfo] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351602976027836416', N'S01', N'师一', N'Engineer I', N'12', N'师一', N'1903486709602062336', N'2025-01-23 15:11:08.000', N'1903486709602062336', N'2025-01-23 15:11:08.000')
 GO
 
 
@@ -3705,6 +3846,12 @@ GO
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-04-17 23:19:23.360')
 GO
 
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-04-18 10:16:11.180')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-04-18 13:05:09.630')
+GO
+
 
 -- ----------------------------
 -- Table structure for UserPartTime
@@ -3806,147 +3953,6 @@ INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositio
 GO
 
 INSERT INTO [Basic].[UserPartTime] ([UserId], [PartTimeDeptId], [PartTimePositionId], [StartTime], [EndTime], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1969079663670202368', N'1929535196076576812', N'1351584156689104896', N'2026-03-24 00:00:00.0000000', N'2026-03-26 00:00:00.0000000', N'1903486709602062336', N'2026-03-24 19:12:53.747', NULL, NULL)
-GO
-
-
--- ----------------------------
--- Table structure for UserPosition
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Basic].[UserPosition]') AND type IN ('U'))
-	DROP TABLE [Basic].[UserPosition]
-GO
-
-CREATE TABLE [Basic].[UserPosition] (
-  [PositionId] bigint  NOT NULL,
-  [PositionNo] nvarchar(5) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [PositionNameCn] nvarchar(10) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [PositionNameEn] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [SortOrder] int  NULL,
-  [Description] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime2(3)  NOT NULL,
-  [ModifiedBy] bigint  NULL,
-  [ModifiedDate] datetime2(3)  NULL
-)
-GO
-
-ALTER TABLE [Basic].[UserPosition] SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'员工职级Id',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'PositionId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'员工职级编码',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'PositionNo'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'员工职级名称（中文）',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'PositionNameCn'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'员工职级名称（英文）',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'PositionNameEn'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'职级排序',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'SortOrder'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'职级描述',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'Description'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建人',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'CreatedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'创建时间',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'CreatedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改人',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'ModifiedBy'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'修改时间',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition',
-'COLUMN', N'ModifiedDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'员工职级表',
-'SCHEMA', N'Basic',
-'TABLE', N'UserPosition'
-GO
-
-
--- ----------------------------
--- Records of UserPosition
--- ----------------------------
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351581732096180224', N'S12', N'董事长', N'Chairman', N'1', N'董事长', N'1903486709602062336', N'2025-01-23 14:28:55.000', N'1903486709602062336', N'2025-01-23 14:28:55.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351582085961220096', N'S11', N'总经理', N'General Manager', N'2', N'总经理', N'1903486709602062336', N'2025-01-23 14:29:37.000', N'1903486709602062336', N'2025-01-23 14:29:37.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351583500196642816', N'S10', N'副总', N'Vice President', N'3', N'副总', N'1903486709602062336', N'2025-01-23 14:32:26.000', N'1903486709602062336', N'2025-01-23 14:32:26.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351583636813512704', N'S09', N'协理', N'Associate Vice President', N'4', N'协理', N'1903486709602062336', N'2025-01-23 14:32:42.000', N'1903486709602062336', N'2025-01-23 14:32:42.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351584014896463872', N'S08', N'厂长', N'Plant Manager', N'5', N'厂长', N'1903486709602062336', N'2025-01-23 14:33:27.000', N'1903486709602062336', N'2025-01-23 14:33:27.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351584156689104896', N'S07', N'资深经理', N'Senior Manager', N'6', N'资深经理', N'1903486709602062336', N'2025-01-23 14:33:44.000', N'1903486709602062336', N'2025-01-23 14:33:44.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351585319710883840', N'S06', N'经理', N'Manager', N'7', N'经理', N'1903486709602062336', N'2025-01-23 14:36:03.000', N'1903486709602062336', N'2025-01-23 14:36:03.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351592278136717312', N'S05', N'副理', N'Assistant Manager', N'8', N'副理', N'1903486709602062336', N'2025-01-23 14:49:52.000', N'1903486709602062336', N'2025-01-23 14:49:52.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351600746193223680', N'S04', N'课长', N'Section Manager', N'9', N'课长', N'1903486709602062336', N'2025-01-23 15:06:42.000', N'1903486709602062336', N'2025-01-23 15:06:42.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351602631784529920', N'S03', N'组长', N'Team Leader', N'10', N'组长', N'1903486709602062336', N'2025-01-23 15:10:27.000', N'1903486709602062336', N'2025-01-23 15:10:27.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351602771312246784', N'S02', N'师二', N'Engineer II', N'11', N'师二', N'1903486709602062336', N'2025-01-23 15:10:43.000', N'1903486709602062336', N'2025-01-23 15:10:43.000')
-GO
-
-INSERT INTO [Basic].[UserPosition] ([PositionId], [PositionNo], [PositionNameCn], [PositionNameEn], [SortOrder], [Description], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1351602976027836416', N'S01', N'师一', N'Engineer I', N'12', N'师一', N'1903486709602062336', N'2025-01-23 15:11:08.000', N'1903486709602062336', N'2025-01-23 15:11:08.000')
 GO
 
 
@@ -4081,6 +4087,15 @@ GO
 
 
 -- ----------------------------
+-- Primary Key structure for table PositionInfo
+-- ----------------------------
+ALTER TABLE [Basic].[PositionInfo] ADD CONSTRAINT [PK__UserPosi__60BB9A7952FCAD62] PRIMARY KEY CLUSTERED ([PositionId])
+WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
+ON [PRIMARY]
+GO
+
+
+-- ----------------------------
 -- Primary Key structure for table RoleInfo
 -- ----------------------------
 ALTER TABLE [Basic].[RoleInfo] ADD CONSTRAINT [PK__RoleInfo__8AFACE1A81A70B73] PRIMARY KEY CLUSTERED ([RoleId])
@@ -4102,15 +4117,6 @@ GO
 -- Primary Key structure for table UserLabor
 -- ----------------------------
 ALTER TABLE [Basic].[UserLabor] ADD CONSTRAINT [PK__UserLazy__369CEBB6063C3DE7] PRIMARY KEY CLUSTERED ([LaborId])
-WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
-ON [PRIMARY]
-GO
-
-
--- ----------------------------
--- Primary Key structure for table UserPosition
--- ----------------------------
-ALTER TABLE [Basic].[UserPosition] ADD CONSTRAINT [PK__UserPosi__60BB9A7952FCAD62] PRIMARY KEY CLUSTERED ([PositionId])
 WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)  
 ON [PRIMARY]
 GO

@@ -26,7 +26,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()
+        public async Task<List<FormGroupDropDto>> GetFormGroupDrop()
         {
             return await _db.Queryable<FormGroupEntity>()
                             .With(SqlWith.NoLock)
@@ -45,7 +45,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// </summary>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public async Task<List<FormTypeDropDto>> GetFormTypeDropDown(long groupId)
+        public async Task<List<FormTypeDropDto>> GetFormTypeDrop(long groupId)
         {
             return await _db.Queryable<FormTypeEntity>()
                             .With(SqlWith.NoLock)
@@ -64,7 +64,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 步骤指派规则下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<AssignmentDropDto>> GetAssignmentDropDown()
+        public async Task<List<AssignmentDropDto>> GetAssignmentDrop()
         {
             return await _db.Queryable<DictionaryInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -82,7 +82,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 步骤签核方式下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ApproveModeDropDto>> GetApproveModeDropDown()
+        public async Task<List<ApproveModeDropDto>> GetApproveModeDrop()
         {
             return await _db.Queryable<DictionaryInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -101,7 +101,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 部门树下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        public async Task<List<DepartmentDropDto>> GetDepartmentDrop()
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -121,7 +121,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 部门级别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDropDown()
+        public async Task<List<DepartmentLevelDropDto>> GetDepartmentLevelDrop()
         {
             return await _db.Queryable<DepartmentLevelEntity>()
                             .With(SqlWith.NoLock)
@@ -139,36 +139,17 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
+        public async Task<List<PositionInfoDropDto>> GetPositionInfoDrop()
         {
-            return await _db.Queryable<UserPositionEntity>()
+            return await _db.Queryable<PositionInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .OrderBy(userpos => userpos.SortOrder)
-                            .Select((userpos) => new UserPositionDropDto
+                            .OrderBy(position => position.SortOrder)
+                            .Select((position) => new PositionInfoDropDto
                             {
-                                PositionId = userpos.PositionId,
+                                PositionId = position.PositionId,
                                 PositionName = _lang.Locale == "zh-CN"
-                                               ? userpos.PositionNameCn
-                                               : userpos.PositionNameEn
-                            }).ToListAsync();
-        }
-
-        /// <summary>
-        /// 分支下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<WorkflowBranchDropDto>> GetWorkflowBranchDropDown(long formTypeId)
-        {
-            return await _db.Queryable<WorkflowBranchEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(branch => branch.CreatedDate)
-                            .Where(branch => branch.FormTypeId == formTypeId)
-                            .Select(branch => new WorkflowBranchDropDto
-                            {
-                                BranchId = branch.BranchId,
-                                BranchName = _lang.Locale == "zh-CN"
-                                                ? branch.BranchNameCn
-                                                : branch.BranchNameEn,
+                                               ? position.PositionNameCn
+                                               : position.PositionNameEn
                             }).ToListAsync();
         }
 
@@ -183,36 +164,36 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
 			var query = _db.Queryable<UserInfoEntity>()
 						   .With(SqlWith.NoLock)
 						   .InnerJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
-						   .InnerJoin<UserPositionEntity>((user, dept, userpos) => user.PositionId == userpos.PositionId)
-						   .InnerJoin<UserLaborEntity>((user, dept, userpos, userlabor) => user.LaborId == userlabor.LaborId)
-						   .InnerJoin<NationalityInfoEntity>((user, dept, userpos, userlabor, nation) =>
+						   .InnerJoin<PositionInfoEntity>((user, dept, position) => user.PositionId == position.PositionId)
+						   .InnerJoin<UserLaborEntity>((user, dept, position, labor) => user.LaborId == labor.LaborId)
+						   .InnerJoin<NationalityInfoEntity>((user, dept, position, labor, nation) =>
 							user.Nationality == nation.NationId)
-						   .Where((user, dept, userpos, userlabor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
+						   .Where((user, dept, position, labor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
 			// 员工工号
 			if (!string.IsNullOrEmpty(getPage.UserNo))
 			{
-				query = query.Where((user, dept, userpos, userlabor, nation) =>
+				query = query.Where((user, dept, position, labor, nation) =>
 					user.UserNo.Contains(getPage.UserNo));
 			}
 			// 员工姓名
 			if (!string.IsNullOrEmpty(getPage.UserName))
 			{
-				query = query.Where((user, dept, userpos, userlabor, nation) =>
+				query = query.Where((user, dept, position, labor, nation) =>
 					user.UserNameCn.Contains(getPage.UserName) ||
 					user.UserNameEn.Contains(getPage.UserName));
 			}
 			// 部门Id
 			if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
 			{
-				query = query.Where((user, dept, userpos, userlabor, nation) =>
+				query = query.Where((user, dept, position, labor, nation) =>
 					user.DepartmentId == long.Parse(getPage.DepartmentId));
 			}
 
 			// 排序
-			query = query.OrderBy((user, dept, userpos, userlabor, nation) => new { userpos.SortOrder, user.HireDate });
+			query = query.OrderBy((user, dept, position, labor, nation) => new { position.SortOrder, user.HireDate });
 
-			var page = await query.Select((user, dept, userpos, userlabor, nation) => new UserInfoDto
+			var page = await query.Select((user, dept, position, labor, nation) => new UserInfoDto
 			{
 				UserId = user.UserId,
 				UserNo = user.UserNo,
@@ -223,11 +204,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
 												? dept.DepartmentNameCn
 												: dept.DepartmentNameEn,
 				PositionName = _lang.Locale == "zh-CN"
-												? userpos.PositionNameCn
-												: userpos.PositionNameEn,
+												? position.PositionNameCn
+												: position.PositionNameEn,
 				LaborName = _lang.Locale == "zh-CN"
-												? userlabor.LaborNameCn
-												: userlabor.LaborNameEn,
+												? labor.LaborNameCn
+												: labor.LaborNameEn,
 				NationalityName = _lang.Locale == "zh-CN"
 												? nation.NationNameCn
 												: nation.NationNameEn,

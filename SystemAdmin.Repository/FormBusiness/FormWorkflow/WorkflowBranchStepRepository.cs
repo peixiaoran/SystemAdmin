@@ -23,7 +23,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 表单组别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<FormGroupDropDto>> GetFormGroupDropDown()
+        public async Task<List<FormGroupDropDto>> GetFormGroupDrop()
         {
             return await _db.Queryable<FormGroupEntity>()
                             .With(SqlWith.NoLock)
@@ -41,7 +41,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 表单类别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<FormTypeDropDto>> GetFormTypeDropDown(long formGroupId)
+        public async Task<List<FormTypeDropDto>> GetFormTypeDrop(long formGroupId)
         {
             return await _db.Queryable<FormTypeEntity>()
                             .With(SqlWith.NoLock)
@@ -53,6 +53,25 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                 FormTypeName = _lang.Locale == "zh-CN"
                                                ? formgroup.FormTypeNameCn
                                                : formgroup.FormTypeNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
+        /// 分支下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<WorkflowBranchDropDto>> GetWorkflowBranchDrop(long formTypeId)
+        {
+            return await _db.Queryable<WorkflowBranchEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(branch => branch.CreatedDate)
+                            .Where(branch => branch.FormTypeId == formTypeId)
+                            .Select(branch => new WorkflowBranchDropDto
+                            {
+                                BranchId = branch.BranchId,
+                                BranchName = _lang.Locale == "zh-CN"
+                                                ? branch.BranchNameCn
+                                                : branch.BranchNameEn,
                             }).ToListAsync();
         }
 

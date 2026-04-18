@@ -4,8 +4,8 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
 {
     /// 职级实体
     /// </summary>
-    [SugarTable("[Basic].[UserPosition]")]
-    public class UserPositionEntity
+    [SugarTable("[Basic].[PositionInfo]")]
+    public class PositionInfoEntity
     {
         /// <summary>
         /// 职级Id

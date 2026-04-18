@@ -22,17 +22,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 部门下拉")]
-        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDropDown()
+        public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
-            return await _departmentInfoService.GetDepartmentDropDown();
+            return await _departmentInfoService.GetDepartmentDrop();
         }
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[部门信息] 部门级别下拉")]
-        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDropDown()
+        public async Task<Result<List<DepartmentLevelDropDto>>> GetDepartmentLevelDrop()
         {
-            return await _departmentInfoService.GetDepartmentLevelDropDown();
+            return await _departmentInfoService.GetDepartmentLevelDrop();
         }
 
         [HttpPost]

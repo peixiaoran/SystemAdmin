@@ -26,7 +26,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 职业下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<UserLaborDropDto>> GetLaborDropDown()
+        public async Task<List<UserLaborDropDto>> GetLaborDrop()
         {
             var query = _db.Queryable<UserLaborEntity>().With(SqlWith.NoLock);
             if (_lang.Locale == "zh-CN")
@@ -51,7 +51,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 部门树下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<DepartmentDropDto>> GetDepartmentDropDown()
+        public async Task<List<DepartmentDropDto>> GetDepartmentDrop()
         {
             return await _db.Queryable<DepartmentInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -71,17 +71,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<UserPositionDropDto>> GetUserPositionDropDown()
+        public async Task<List<PositionInfoDropDto>> GetPositionInfoDrop()
         {
-            return await _db.Queryable<UserPositionEntity>()
+            return await _db.Queryable<PositionInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .OrderBy(userpos => userpos.CreatedDate)
-                            .Select((userpos) => new UserPositionDropDto
+                            .OrderBy(position => position.CreatedDate)
+                            .Select((position) => new PositionInfoDropDto
                             {
-                                PositionId = userpos.PositionId,
+                                PositionId = position.PositionId,
                                 PositionName = _lang.Locale == "zh-CN"
-                                               ? userpos.PositionNameCn
-                                               : userpos.PositionNameEn
+                                               ? position.PositionNameCn
+                                               : position.PositionNameEn
                             }).ToListAsync();
         }
 
@@ -89,7 +89,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 角色下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<RoleInfoDropDto>> GetRoleDropDown()
+        public async Task<List<RoleInfoDropDto>> GetRoleDrop()
         {
             return await _db.Queryable<RoleInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -111,38 +111,38 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         {
             return await _db.Queryable<UserInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .InnerJoin<UserRoleEntity>((userinfo, userrole) => userinfo.UserId == userrole.UserId)
-                            .InnerJoin<RoleInfoEntity>((userinfo, userrole, roleinfo) => userrole.RoleId == roleinfo.RoleId)
-                            .InnerJoin<DepartmentInfoEntity>((userinfo, userrole, roleinfo, deptinfo) => userinfo.DepartmentId == deptinfo.DepartmentId)
-                            .InnerJoin<DepartmentLevelEntity>((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo) => deptinfo.DepartmentLevelId == deptlevelinfo.DepartmentLevelId)
-                            .InnerJoin<UserPositionEntity>((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition) => userinfo.PositionId == userposition.PositionId).InnerJoin<UserLaborEntity>((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor) => userinfo.LaborId == userlabor.LaborId)
-                            .InnerJoin<NationalityInfoEntity>((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) => userinfo.Nationality == nation.NationId)
-                            .Where((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) => userinfo.UserId == loginUserId)
-                             .Select((userinfo, userrole, roleinfo, deptinfo, deptlevelinfo, userposition, userlabor, nation) => new PersonalInfoDto
+                            .InnerJoin<UserRoleEntity>((user, userrole) => user.UserId == userrole.UserId)
+                            .InnerJoin<RoleInfoEntity>((user, userrole, role) => userrole.RoleId == role.RoleId)
+                            .InnerJoin<DepartmentInfoEntity>((user, userrole, role, dept) => user.DepartmentId == dept.DepartmentId)
+                            .InnerJoin<DepartmentLevelEntity>((user, userrole, role, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                            .InnerJoin<PositionInfoEntity>((user, userrole, role, dept, deptlevel, position) => user.PositionId == position.PositionId).InnerJoin<UserLaborEntity>((user, userrole, role, dept, deptlevel, position, labor) => user.LaborId == labor.LaborId)
+                            .InnerJoin<NationalityInfoEntity>((user, userrole, role, dept, deptlevel, position, labor, nation) => user.Nationality == nation.NationId)
+                            .Where((user, userrole, role, dept, deptlevel, position, labor, nation) => user.UserId == loginUserId)
+                             .Select((user, userrole, role, dept, deptlevel, position, labor, nation) => new PersonalInfoDto
                              {
-                                 UserId = userinfo.UserId,
-                                 UserNo = userinfo.UserNo,
-                                 UserNameCn = userinfo.UserNameCn,
-                                 UserNameEn = userinfo.UserNameEn,
-                                 Email = userinfo.Email,
-                                 PhoneNumber = userinfo.PhoneNumber,
-                                 LoginNo = userinfo.LoginNo,
-                                 DepartmentId = userinfo.DepartmentId,
-                                 DepartmentLevelId = deptlevelinfo.DepartmentLevelId,
-                                 RoleId = roleinfo.RoleId,
-                                 PositionId = userposition.PositionId,
-                                 Gender = userinfo.Gender,
-                                 LaborId = userlabor.LaborId,
-                                 HireDate = Convert.ToDateTime(userinfo.HireDate).ToString("yyyy-MM-dd"),
-                                 AvatarAddress = userinfo.AvatarAddress,
-                                 IsEmployed = userinfo.IsEmployed,
-                                 IsApproval = userinfo.IsApproval,
-                                 IsRealtimeNotification = userinfo.IsRealtimeNotification,
-                                 IsScheduledNotification = userinfo.IsScheduledNotification,
-                                 IsAgent = userinfo.IsAgent,
-                                 IsPartTime = userinfo.IsPartTime,
-                                 IsFreeze = userinfo.IsFreeze,
-                                 Remark = userinfo.Remark,
+                                 UserId = user.UserId,
+                                 UserNo = user.UserNo,
+                                 UserNameCn = user.UserNameCn,
+                                 UserNameEn = user.UserNameEn,
+                                 Email = user.Email,
+                                 PhoneNumber = user.PhoneNumber,
+                                 LoginNo = user.LoginNo,
+                                 DepartmentId = user.DepartmentId,
+                                 DepartmentLevelId = deptlevel.DepartmentLevelId,
+                                 RoleId = role.RoleId,
+                                 PositionId = position.PositionId,
+                                 Gender = user.Gender,
+                                 LaborId = labor.LaborId,
+                                 HireDate = Convert.ToDateTime(user.HireDate).ToString("yyyy-MM-dd"),
+                                 AvatarAddress = user.AvatarAddress,
+                                 IsEmployed = user.IsEmployed,
+                                 IsApproval = user.IsApproval,
+                                 IsRealtimeNotification = user.IsRealtimeNotification,
+                                 IsScheduledNotification = user.IsScheduledNotification,
+                                 IsAgent = user.IsAgent,
+                                 IsPartTime = user.IsPartTime,
+                                 IsFreeze = user.IsFreeze,
+                                 Remark = user.Remark,
                              }).FirstAsync();
         }
 
@@ -177,7 +177,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         public async Task<int> UpdateUserAvatar(long userId, string userAvatar)
         {
             return await _db.Updateable<UserInfoEntity>()
-                            .SetColumns(userinfo => new UserInfoEntity
+                            .SetColumns(user => new UserInfoEntity
                             {
                                 AvatarAddress = userAvatar,
                                 ModifiedBy = userId,

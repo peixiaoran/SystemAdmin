@@ -23,25 +23,25 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
         [EndpointSummary("[待签表单列表] 表单组别下拉")]
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
-            return await _PendingSubAppService.GetFormGroupDropDown();
+            return await _PendingSubAppService.GetFormGroupDrop();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
         [EndpointSummary("[待签表单列表] 表单类别下拉")]
-        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDropDown([FromForm] string formGroupId)
+        public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDrop([FromForm] string formGroupId)
         {
-            return await _PendingSubAppService.GetFormTypeDropDown(formGroupId);
+            return await _PendingSubAppService.GetFormTypeDrop(formGroupId);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
         [EndpointSummary("[待签表单列表] 表单状态下拉")]
-        public async Task<Result<List<FormStatusDropDto>>> GetFormStatusDropDown()
+        public async Task<Result<List<FormStatusDropDto>>> GetFormStatusDrop()
         {
-            return await _PendingSubAppService.GetFormStatusDropDown();
+            return await _PendingSubAppService.GetFormStatusDrop();
         }
 
         [HttpPost]

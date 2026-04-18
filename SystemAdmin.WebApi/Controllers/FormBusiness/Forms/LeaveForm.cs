@@ -20,9 +20,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 请假类别下拉")]
-        public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDropDown()
+        public async Task<Result<List<LeaveTypeDropDto>>> GetLeaveTypeDrop()
         {
-            return await _leaveFormService.GetLeaveTypeDropDown();
+            return await _leaveFormService.GetLeaveTypeDrop();
         }
 
         [HttpPost]
@@ -51,7 +51,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 查询请假单明细")]
+        [EndpointSummary("[请假单] 查询请假单流程")]
         public async Task<Result<LeaveFormDto>> Workflow([FromForm] string formId)
         {
             return await _leaveFormService.GetLeaveForm(formId);
@@ -59,7 +59,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 上传附件")]
+        [EndpointSummary("[请假单] 请假单上传附件")]
         public async Task<Result<List<FormAttachmentDto>>> UploadAttachment([FromForm] string formId, List<IFormFile> files)
         {
             return await _leaveFormService.UploadAttachment(formId, files);
@@ -67,7 +67,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 删除附件")]
+        [EndpointSummary("[请假单] 请假单删除附件")]
         public async Task<Result<int>> DeleteAttachment([FromForm] string attachmentId, [FromForm] string attachmentPath)
         {
             return await _leaveFormService.DeleteAttachment(attachmentId, attachmentPath);

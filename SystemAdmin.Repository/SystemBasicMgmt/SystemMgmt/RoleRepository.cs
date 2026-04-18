@@ -235,7 +235,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         /// </summary>
         /// <param name="roleId"></param>
         /// <returns></returns>
-        public async Task<List<RoleModuleDropDto>> GetRoleModuleDropDown(long roleId)
+        public async Task<List<RoleModuleDropDto>> GetRoleModuleDrop(long roleId)
         {
             return await _db.Queryable<RoleModuleEntity>()
                             .With(SqlWith.NoLock)

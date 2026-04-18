@@ -62,9 +62,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormBasicInfo
         [HttpPost]
         [Tags("表单业务管理-表单基础信息")]
         [EndpointSummary("[表单类别] 表单组别下拉")]
-        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDropDown()
+        public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
-            return await _formTypeService.GetFormGroupDropDown();
+            return await _formTypeService.GetFormGroupDrop();
         }
     }
 }

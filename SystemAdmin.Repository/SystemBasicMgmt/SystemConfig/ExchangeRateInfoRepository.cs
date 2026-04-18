@@ -24,7 +24,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         /// 币别下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<CurrencyInfoDropDto>> GetCurrencyInfoDropDown()
+        public async Task<List<CurrencyInfoDropDto>> GetCurrencyInfoDrop()
         {
             return await _db.Queryable<CurrencyInfoEntity>()
                             .With(SqlWith.NoLock)
@@ -103,8 +103,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
             // 排序
             query = query.OrderByDescending(exchangerate => exchangerate.CreatedDate);
 
-            var exchangeratePage = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<ExchangeRateDto>.Ok(exchangeratePage.Adapt<List<ExchangeRateDto>>(), totalCount, "");
+            var page = await query.ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<ExchangeRateDto>.Ok(page.Adapt<List<ExchangeRateDto>>(), totalCount, "");
         }
 
         /// <summary>
@@ -115,9 +115,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
         public async Task<ExchangeRateDto> GetExchangeRateEntity(GetExchangeRateEntity getEntity)
         {
             var entity = await _db.Queryable<ExchangeRateEntity>()
-                                              .With(SqlWith.NoLock)
-                                              .Where(rate => rate.CurrencyCode == getEntity.CurrencyCode && rate.ExchangeCurrencyCode == getEntity.ExchangeCurrencyCode && getEntity.YearMonth == getEntity.YearMonth)
-                                              .FirstAsync();
+                                  .With(SqlWith.NoLock)
+                                  .Where(rate => rate.CurrencyCode == getEntity.CurrencyCode && rate.ExchangeCurrencyCode == getEntity.ExchangeCurrencyCode && getEntity.YearMonth == getEntity.YearMonth)
+                                  .FirstAsync();
             return entity.Adapt<ExchangeRateDto>();
         }
 
