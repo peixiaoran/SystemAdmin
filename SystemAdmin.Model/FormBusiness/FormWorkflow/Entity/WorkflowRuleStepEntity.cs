@@ -3,25 +3,30 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 签核层级上限实体类
+    /// 流程规则实体类
     /// </summary>
-    [SugarTable("[Form].[FormReviewLimit]")]
-    public class FormReviewLimitEntity
+    [SugarTable("[Form].[WorkflowRuleStep]")]
+    public class WorkflowRuleStepEntity
     {
         /// <summary>
-        /// 表单类型Id
+        /// 规则Id
         /// </summary>
-        public long FormTypeId { get; set; }
+        public long RuleId { get; set; }
 
         /// <summary>
-        /// 职级Id
+        /// 当前步骤Id
         /// </summary>
-        public long PositionId { get; set; }
+        public long CurrentStepId { get; set; }
 
         /// <summary>
-        /// 签核最高职级Id
+        /// 下一步骤Id
         /// </summary>
-        public long MaxPositionId { get; set; }
+        public long NextStepId { get; set; }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int SortOrder { get; set; }
 
         /// <summary>
         /// 创建人
@@ -39,7 +44,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public long? ModifiedBy { get; set; }
 
         /// <summary>
-        /// 修改时间
+        /// 修改日期
         /// </summary>
         public DateTime? ModifiedDate { get; set; }
     }

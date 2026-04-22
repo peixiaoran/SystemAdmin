@@ -71,12 +71,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<PositionInfoDropDto>> GetPositionInfoDrop()
+        public async Task<List<PositionDropDto>> GetPositionDrop()
         {
             return await _db.Queryable<PositionInfoEntity>()
                             .With(SqlWith.NoLock)
                             .OrderBy(position => position.CreatedDate)
-                            .Select((position) => new PositionInfoDropDto
+                            .Select((position) => new PositionDropDto
                             {
                                 PositionId = position.PositionId,
                                 PositionName = _lang.Locale == "zh-CN"
@@ -116,7 +116,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                     user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门Id
-            if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
+            if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > 0)
             {
                 query = query.Where((user, userpart, dept, position, p_userdept, p_userpos) => p_userdept.DepartmentId == long.Parse(getPage.DepartmentId));
             }
@@ -189,7 +189,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                     user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门
-            if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
+            if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > 0)
             {
                 query = query.Where((user, dept, position, nation, labor) =>
                     user.DepartmentId == long.Parse(getPage.DepartmentId));

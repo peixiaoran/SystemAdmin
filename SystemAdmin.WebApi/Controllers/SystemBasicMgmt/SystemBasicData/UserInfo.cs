@@ -35,14 +35,6 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
 
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
-        [EndpointSummary("[员工信息] 职业下拉")]
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
-        {
-            return await _userInfoService.GetLaborDrop();
-        }
-
-        [HttpPost]
-        [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 部门下拉")]
         public async Task<Result<List<DepartmentDropDto>>> GetDepartmentDrop()
         {
@@ -52,9 +44,17 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-基本信息模块")]
         [EndpointSummary("[员工信息] 职级下拉")]
-        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
+        public async Task<Result<List<PositionDropDto>>> GetPositionDrop()
         {
-            return await _userInfoService.GetPositionInfoDrop();
+            return await _userInfoService.GetPositionDrop();
+        }
+
+        [HttpPost]
+        [Tags("系统基础管理-基本信息模块")]
+        [EndpointSummary("[员工信息] 职业下拉")]
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
+        {
+            return await _userInfoService.GetLaborDrop();
         }
 
         [HttpPost]

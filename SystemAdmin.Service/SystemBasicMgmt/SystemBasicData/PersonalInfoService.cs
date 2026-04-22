@@ -219,17 +219,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 查询职级列表
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
+        public async Task<Result<List<PositionDropDto>>> GetPositionDrop()
         {
             try
             {
-                var drop = await _personalInfoRepository.GetPositionInfoDrop();
-                return Result<List<PositionInfoDropDto>>.Ok(drop, "");
+                var drop = await _personalInfoRepository.GetPositionDrop();
+                return Result<List<PositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<PositionInfoDropDto>>.Failure(500, ex.Message.ToString());
+                return Result<List<PositionDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
     }

@@ -6,7 +6,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
     /// <summary>
     /// 职级下拉Dto
     /// </summary>
-    public class PositionInfoDropDto
+    public class PositionDropDto
     {
         /// <summary>
         /// 职级Id

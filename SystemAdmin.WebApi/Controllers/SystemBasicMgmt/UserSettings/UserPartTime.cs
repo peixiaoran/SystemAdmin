@@ -40,9 +40,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.UserSettings
         [HttpPost]
         [Tags("系统基础管理-员工相关配置")]
         [EndpointSummary("[员工兼任] 职级下拉")]
-        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
+        public async Task<Result<List<PositionDropDto>>> GetPositionDrop()
         {
-            return await _userPartTimeService.GetPositionInfoDrop();
+            return await _userPartTimeService.GetPositionDrop();
         }
 
         [HttpPost]

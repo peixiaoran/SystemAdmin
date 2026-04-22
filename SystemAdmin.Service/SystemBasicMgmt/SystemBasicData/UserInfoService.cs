@@ -58,24 +58,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 职业下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
-        {
-            try
-            {
-                var drop = await _userInfoRepository.GetLaborDrop();
-                return Result<List<UserLaborDropDto>>.Ok(drop, "");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<List<UserLaborDropDto>>.Failure(500, ex.Message.ToString());
-            }
-        }
-
-        /// <summary>
         /// 部门树下拉
         /// </summary>
         /// <returns></returns>
@@ -97,17 +79,36 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
+        public async Task<Result<List<PositionDropDto>>> GetPositionDrop()
         {
             try
             {
-                var drop = await _userInfoRepository.GetPositionInfoDrop();
-                return Result<List<PositionInfoDropDto>>.Ok(drop, "");
+                var drop = await _userInfoRepository.GetPositionDrop();
+                return Result<List<PositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<PositionInfoDropDto>>.Failure(500, ex.Message.ToString());
+                return Result<List<PositionDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+
+        /// <summary>
+        /// 职业下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<UserLaborDropDto>>> GetLaborDrop()
+        {
+            try
+            {
+                var drop = await _userInfoRepository.GetLaborDrop();
+                return Result<List<UserLaborDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<UserLaborDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
 

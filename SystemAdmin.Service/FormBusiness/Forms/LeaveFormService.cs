@@ -59,7 +59,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             try
             {
                 await _db.BeginTranAsync();
-                var formId = await _formRepository.InitializeFormInstance(formTypeId);
+                var formId = await _formRepository.InitializeFormInstance(long.Parse(formTypeId));
                 if (string.IsNullOrEmpty(formId))
                 {
                     await _db.RollbackTranAsync();

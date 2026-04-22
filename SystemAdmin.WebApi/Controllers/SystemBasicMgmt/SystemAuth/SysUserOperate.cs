@@ -19,7 +19,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         }
 
         [HttpPost]
-        [Tags("系统基础管理-系统接口")]
+        [Tags("系统基础管理-身份验证接口")]
         [EndpointSummary("[系统接口] 员工登录")]
         [AllowAnonymous]
         public async Task<Result<SysUserLoginReturnDto>> UserLogin([FromBody] UserLogin sysLogin)
@@ -28,7 +28,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         }
 
         [HttpPost]
-        [Tags("系统基础管理-系统接口")]
+        [Tags("系统基础管理-身份验证接口")]
         [EndpointSummary("[系统接口] 解锁账号发送验证码")]
         [AllowAnonymous]
         public async Task<Result<string>> UnLockSendVcCode([FromForm] string userNo)
@@ -37,7 +37,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         }
 
         [HttpPost]
-        [Tags("系统基础管理-系统接口")]
+        [Tags("系统基础管理-身份验证接口")]
         [EndpointSummary("[系统接口] 解锁账号（重置密码）")]
         [AllowAnonymous]
         public async Task<Result<int>> UserUnlock([FromBody] UserUnlock userUnlock)
@@ -46,7 +46,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         }
 
         [HttpPost]
-        [Tags("系统基础管理-系统接口")]
+        [Tags("系统基础管理-身份验证接口")]
         [EndpointSummary("[系统接口] 密码过期发送验证码")]
         [AllowAnonymous]
         public async Task<Result<string>> UnExpirationSendVcCode([FromForm] string userNo)
@@ -55,7 +55,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         }
 
         [HttpPost]
-        [Tags("系统基础管理-系统接口")]
+        [Tags("系统基础管理-身份验证接口")]
         [EndpointSummary("[系统接口] 密码过期（重置密码）")]
         [AllowAnonymous]
         public async Task<Result<int>> UserPwdExpiration([FromBody] PwdExpiration upsert)
@@ -64,7 +64,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         }
 
         [HttpPost]
-        [Tags("系统基础管理-系统接口")]
+        [Tags("系统基础管理-身份验证接口")]
         [EndpointSummary("[系统接口] 员工登出")]
         public async Task<Result<int>> UserLogOut()
         {

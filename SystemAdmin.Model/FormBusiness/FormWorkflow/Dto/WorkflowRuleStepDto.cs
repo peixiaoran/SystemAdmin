@@ -4,26 +4,31 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 步骤分支Dto
+    /// 流程规则步骤Dto类
     /// </summary>
-    public class WorkflowBranchStepDto
+    public class WorkflowRuleStepDto
     {
         /// <summary>
-        /// 分支Id
+        /// 规则Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
-        public long BranchId { get; set; }
+        public long RuleId { get; set; }
 
         /// <summary>
-        /// 步骤Id
+        /// 规则名称
+        /// </summary>
+        public string RuleName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 当前步骤Id
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
-        public long StepId { get; set; }
+        public long CurrentStepId { get; set; }
 
         /// <summary>
-        /// 步骤Id
+        /// 当前步骤名称
         /// </summary>
-        public string StepName { get; set; } = string.Empty;
+        public string CurrentStepName { get; set; } = string.Empty;
 
         /// <summary>
         /// 下一步骤Id
@@ -34,6 +39,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// <summary>
         /// 下一步骤名称
         /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
         public string NextStepName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public int SortOrder { get; set; }
     }
 }

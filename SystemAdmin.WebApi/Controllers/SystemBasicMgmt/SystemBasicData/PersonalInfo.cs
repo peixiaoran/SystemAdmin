@@ -40,9 +40,9 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemBasicData
         [HttpPost]
         [Tags("系统基础管理-系统管理模块")]
         [EndpointSummary("[个人信息] 职级下拉")]
-        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
+        public async Task<Result<List<PositionDropDto>>> GetPositionDrop()
         {
-            return await _personalInfoService.GetPositionInfoDrop();
+            return await _personalInfoService.GetPositionDrop();
         }
 
         [HttpPost]

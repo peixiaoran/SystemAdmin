@@ -71,12 +71,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<PositionInfoDropDto>> GetPositionInfoDrop()
+        public async Task<List<PositionDropDto>> GetPositionDrop()
         {
             return await _db.Queryable<PositionInfoEntity>()
                             .With(SqlWith.NoLock)
                             .OrderBy(position => position.CreatedDate)
-                            .Select((position) => new PositionInfoDropDto
+                            .Select((position) => new PositionDropDto
                             {
                                 PositionId = position.PositionId,
                                 PositionName = _lang.Locale == "zh-CN"

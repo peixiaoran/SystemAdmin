@@ -1,9 +1,9 @@
-﻿namespace SystemAdmin.Model.FormBusiness.Workflow.ApprovalFlowManager
+﻿namespace SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager
 {
     /// <summary>
     /// 步骤签核人员
     /// </summary>
-    public class StepApprovalUser
+    public class StepReviewUser
     {
         /// <summary>
         /// 签核人员姓名 - 实或兼

@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Commands
 {
     /// <summary>
-    /// 审批步骤新增/修改类
+    /// 流程步骤新增/修改类
     /// </summary>
     public class WorkflowStepUpsert
     {

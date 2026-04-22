@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 18/04/2026 16:56:48
+ Date: 22/04/2026 17:02:47
 */
 
 
@@ -1723,10 +1723,7 @@ GO
 INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1988928242475732994', N'1968271760889614336', N'1988927293837414400', N'PendingSubApp', N'待审表单列表', N'Pending SubApp', N'SecondaryMenu', N'formbusiness/form-operate/pendingsubapp', N'Check', N'2', N'1', N'/api/FormBusiness/FormOperate/PendingSubApp', N'', N'', N'1903486709602062336', N'2025-11-13 19:13:40.000', N'1903486709602062336', N'2026-03-21 14:12:27.190')
 GO
 
-INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1988928242475732995', N'1968271760889614336', N'1988927293837414401', N'WorkflowBranch', N'流程分支信息', N'Workflow Branch', N'SecondaryMenu', N'formbusiness/form-workflow/workflowbranch', N'Rank', N'2', N'1', N'/api/FormBusiness/FormWorkFlow/WorkflowBranch', N'', N'', N'1903486709602062336', N'2025-11-13 19:13:40.000', N'1903486709602062336', N'2026-03-26 18:29:25.390')
-GO
-
-INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1988928242475732996', N'1968271760889614336', N'1988927293837414401', N'BranchStep', N'分支步骤配置', N'Branch Step', N'SecondaryMenu', N'formbusiness/form-workflow/workflowbranchstep', N'Promotion', N'3', N'1', N'/api/FormBusiness/FormWorkFlow/WorkflowBranchStep', N'', N'', N'1903486709602062336', N'2025-11-13 19:13:40.000', N'1903486709602062336', N'2026-03-26 18:29:25.390')
+INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1988928242475732996', N'1968271760889614336', N'1988927293837414401', N'WorkflowRule', N'流程规则维护', N'Workflow Rule', N'SecondaryMenu', N'formbusiness/form-workflow/workflowrule', N'Promotion', N'3', N'1', N'/api/FormBusiness/FormWorkFlow/WorkflowRule', N'', N'', N'1903486709602062336', N'2025-11-13 19:13:40.000', N'1903486709602062336', N'2026-03-26 18:29:25.390')
 GO
 
 INSERT INTO [Basic].[MenuInfo] ([MenuId], [ModuleId], [ParentMenuId], [MenuCode], [MenuNameCn], [MenuNameEn], [MenuType], [Path], [MenuIcon], [SortOrder], [IsVisible], [RoutePath], [Redirect], [Remark], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1988928242475732997', N'1968271760889614336', N'1988927293837414401', N'FormReviewLimit', N'审批最高上限', N'FormReviewLimit', N'SecondaryMenu', N'formbusiness/form-workflow/formreviewlimit', N'Notification', N'4', N'1', N'/api/FormBusiness/FormWorkFlow/FormReviewLimit', N'', N'', N'1903486709602062336', N'2025-11-13 19:13:40.000', N'1903486709602062336', N'2026-03-26 18:29:25.390')
@@ -2443,9 +2440,6 @@ INSERT INTO [Basic].[RoleMenu] ([RoleId], [MenuId], [CreatedBy], [CreatedDate], 
 GO
 
 INSERT INTO [Basic].[RoleMenu] ([RoleId], [MenuId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1905670034215276544', N'1988928242475732994', N'1903486709602062336', N'2025-11-13 19:14:19.000', N'1903486709602062336', N'2025-11-13 19:14:19.000')
-GO
-
-INSERT INTO [Basic].[RoleMenu] ([RoleId], [MenuId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1905670034215276544', N'1988928242475732995', N'1903486709602062336', N'2025-11-13 19:14:19.000', N'1903486709602062336', N'2025-11-13 19:14:19.000')
 GO
 
 INSERT INTO [Basic].[RoleMenu] ([RoleId], [MenuId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1905670034215276544', N'1988928242475732996', N'1903486709602062336', N'2025-11-13 19:14:19.000', N'1903486709602062336', N'2025-11-13 19:14:19.000')
@@ -3850,6 +3844,12 @@ INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALU
 GO
 
 INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-04-18 13:05:09.630')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-04-21 14:42:17.030')
+GO
+
+INSERT INTO [Basic].[UserLogOut] ([UserId], [IP], [LoginType], [LoginDate]) VALUES (N'1903486709602062336', N'::1', N'LoginSuccessful', N'2026-04-22 14:02:11.437')
 GO
 
 

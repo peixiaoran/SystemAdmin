@@ -5,25 +5,26 @@ using SystemAdmin.Model.FormBusiness.FormWorkflow.Commands;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Dto;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Queries;
+using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Repository.FormBusiness.FormWorkflow;
 
 namespace SystemAdmin.Service.FormBusiness.FormWorkflow
 {
-    public class FormReviewLimitService
+    public class WorkflowRuleService
     {
         private readonly CurrentUser _loginuser;
-        private readonly ILogger<FormReviewLimitService> _logger;
+        private readonly ILogger<WorkflowRuleService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly FormReviewLimitRepository _FormReviewLimitRepository;
+        private readonly WorkflowRuleRepository _workflowRule;
         private readonly LocalizationService _localization;
-        private readonly string _this = "FormBusiness.FormWorkflow.FormReviewLimit";
+        private readonly string _this = "FormBusiness.FormWorkflow.WorkflowRule";
 
-        public FormReviewLimitService(CurrentUser loginuser, ILogger<FormReviewLimitService> logger, SqlSugarScope db, FormReviewLimitRepository FormReviewLimitRepository, LocalizationService localization)
+        public WorkflowRuleService(CurrentUser loginuser, ILogger<WorkflowRuleService> logger, SqlSugarScope db, WorkflowRuleRepository workflowRule, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _FormReviewLimitRepository = FormReviewLimitRepository;
+            _workflowRule = workflowRule;
             _localization = localization;
         }
 
@@ -35,7 +36,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _FormReviewLimitRepository.GetFormGroupDrop();
+                var drop = await _workflowRule.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -54,7 +55,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _FormReviewLimitRepository.GetFormTypeDrop(long.Parse(formGroupId));
+                var drop = await _workflowRule.GetFormTypeDrop(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -65,36 +66,61 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 新增签核层级上限
+        /// 职级下拉
         /// </summary>
-        /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> InsertFormReviewLimit(FormReviewLimitUpsert upsert)
+        public async Task<Result<List<PositionDropDto>>> GetPositionDrop()
         {
             try
             {
-                // 判断表单职级是否有配置最高上限配置
-                var isRepat = await _FormReviewLimitRepository.FormReviewLimitRepeat(upsert.FormTypeId, upsert.PositionId);
+                var drop = await _workflowRule.GetPositionDrop();
+                return Result<List<PositionDropDto>>.Ok(drop, "");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<PositionDropDto>>.Failure(500, ex.Message.ToString());
+            }
+        }
+
+        /// <summary>
+        /// 新增规则
+        /// </summary>
+        /// <param name="upsert"></param>
+        /// <returns></returns>
+        public async Task<Result<int>> InsertWorkflowRule(WorkflowRuleUpsert upsert)
+        {
+            try
+            {
+                // 规则是否重复配置
+                var isRepat = await _workflowRule.RuleIsRepeat(long.Parse(upsert.FormTypeId), long.Parse(upsert.PositionId), upsert.Guidance);
                 if (isRepat)
                 {
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}Repeat"));
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}Repat"));
                 }
-                var entity = new FormReviewLimitEntity()
+                else
                 {
-                    FormTypeId = upsert.FormTypeId,
-                    PositionId = upsert.PositionId,
-                    MaxPositionId = upsert.MaxPositionId,
-                    CreatedBy = _loginuser.UserId,
-                    CreatedDate = DateTime.Now
-                };
+                    var entity = new WorkflowRuleEntity()
+                    {
+                        RuleId = SnowFlakeSingle.Instance.NextId(),
+                        FormTypeId = long.Parse(upsert.FormTypeId),
+                        RuleNameCn = upsert.RuleNameCn,
+                        RuleNameEn = upsert.RuleNameEn,
+                        PositionId = long.Parse(upsert.PositionId),
+                        Guidance = upsert.Guidance,
+                        SortOrder = upsert.SortOrder,
+                        CreatedBy = _loginuser.UserId,
+                        CreatedDate = DateTime.Now,
+                    };
 
-                await _db.BeginTranAsync();
-                var count = await _FormReviewLimitRepository.InsertFormReviewLimit(entity);
-                await _db.CommitTranAsync();
+                    await _db.BeginTranAsync();
+                    var count = await _workflowRule.InsertWorkflowRule(entity);
+                    await _db.CommitTranAsync();
 
-                return count >= 1
-                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                    return count >= 1
+                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}InsertFailed"));
+                }
             }
             catch (Exception ex)
             {
@@ -105,17 +131,16 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 删除签核层级上限
+        /// 删除规则
         /// </summary>
-        /// <param name="formTypeId"></param>
-        /// <param name="positionId"></param>
+        /// <param name="ruleId"></param>
         /// <returns></returns>
-        public async Task<Result<int>> DeleteFormReviewLimit(string formTypeId, string positionId)
+        public async Task<Result<int>> DeleteWorkflowRule(string ruleId)
         {
             try
             {
                 await _db.BeginTranAsync();
-                var count = await _FormReviewLimitRepository.DeleteFormReviewLimit(long.Parse(formTypeId), long.Parse(positionId));
+                var count = await _workflowRule.DeleteWorkflowRule(long.Parse(ruleId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -131,25 +156,28 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 修改签核层级上限
+        /// 修改规则
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>
-        public async Task<Result<int>> UpdateFormReviewLimit(FormReviewLimitUpsert upsert)
+        public async Task<Result<int>> UpdateWorkflowRule(WorkflowRuleUpsert upsert)
         {
             try
             {
-                var entity = new FormReviewLimitEntity()
+                var entity = new WorkflowRuleEntity()
                 {
-                    FormTypeId = upsert.FormTypeId,
-                    PositionId = upsert.PositionId,
-                    MaxPositionId = upsert.MaxPositionId,
+                    RuleId = long.Parse(upsert.RuleId),
+                    FormTypeId = long.Parse(upsert.FormTypeId),
+                    RuleNameCn = upsert.RuleNameCn,
+                    RuleNameEn = upsert.RuleNameEn,
+                    PositionId = long.Parse(upsert.PositionId),
+                    Guidance = upsert.Guidance,
                     ModifiedBy = _loginuser.UserId,
-                    ModifiedDate = DateTime.Now
+                    ModifiedDate = DateTime.Now,
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _FormReviewLimitRepository.UpdateFormReviewLimit(entity);
+                var count = await _workflowRule.UpdateWorkflowRule(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -165,42 +193,40 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询签核层级上限实体
+        /// 查询规则实体
         /// </summary>
-        /// <param name="formTypeId"></param>
-        /// <param name="positionId"></param>
+        /// <param name="ruleId"></param>
         /// <returns></returns>
-        public async Task<Result<FormReviewLimitDto>> GetFormReviewLimitEntity(string formTypeId, string positionId)
+        public async Task<Result<WorkflowRuleDto>> GetWorkflowRuleEntity(string ruleId)
         {
             try
             {
-                var entity = await _FormReviewLimitRepository.GetFormReviewLimitEntity(long.Parse(formTypeId), long.Parse(positionId));
-                return Result<FormReviewLimitDto>.Ok(entity);
+                var entity = await _workflowRule.GetWorkflowRuleEntity(long.Parse(ruleId));
+                return Result<WorkflowRuleDto>.Ok(entity);
             }
             catch (Exception ex)
             {
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
-                return Result<FormReviewLimitDto>.Failure(500, ex.Message);
+                return Result<WorkflowRuleDto>.Failure(500, ex.Message);
             }
         }
 
         /// <summary>
-        /// 查询签核层级上限分页
+        /// 查询规则分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<FormReviewLimitDto>> GetFormReviewLimitPage(GetFormReviewLimitPage getPage)
+        public async Task<ResultPaged<WorkflowRuleDto>> GetWorkflowRulePage(GetWorkflowRulePage getPage)
         {
             try
             {
-                return await _FormReviewLimitRepository.GetFormReviewLimitPage(getPage);
+                return await _workflowRule.GetWorkflowRulePage(getPage);
             }
             catch (Exception ex)
             {
-                await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<FormReviewLimitDto>.Failure(500, ex.Message);
+                return ResultPaged<WorkflowRuleDto>.Failure(500, ex.Message);
             }
         }
     }

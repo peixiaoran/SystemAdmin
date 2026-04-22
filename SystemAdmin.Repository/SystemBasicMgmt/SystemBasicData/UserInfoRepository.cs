@@ -41,6 +41,24 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
+        /// 职级下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<List<PositionDropDto>> GetPositionDrop()
+        {
+            return await _db.Queryable<PositionInfoEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(position => position.CreatedDate)
+                            .Select((position) => new PositionDropDto
+                            {
+                                PositionId = position.PositionId,
+                                PositionName = _lang.Locale == "zh-CN"
+                                               ? position.PositionNameCn
+                                               : position.PositionNameEn
+                            }).ToListAsync();
+        }
+
+        /// <summary>
         /// 职业下拉
         /// </summary>
         /// <returns></returns>
@@ -83,24 +101,6 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                  : dept.DepartmentNameEn,
                                 ParentId = dept.ParentId,
                             }).ToTreeAsync(menu => menu.DepartmentChildList, menu => menu.ParentId, 0);
-        }
-
-        /// <summary>
-        /// 职级下拉
-        /// </summary>
-        /// <returns></returns>
-        public async Task<List<PositionInfoDropDto>> GetPositionInfoDrop()
-        {
-            return await _db.Queryable<PositionInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .OrderBy(position => position.CreatedDate)
-                            .Select((position) => new PositionInfoDropDto
-                            {
-                                PositionId = position.PositionId,
-                                PositionName = _lang.Locale == "zh-CN"
-                                               ? position.PositionNameCn
-                                               : position.PositionNameEn
-                            }).ToListAsync();
         }
 
         /// <summary>

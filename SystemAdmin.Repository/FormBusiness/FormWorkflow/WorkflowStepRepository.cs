@@ -139,12 +139,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<PositionInfoDropDto>> GetPositionInfoDrop()
+        public async Task<List<Model.SystemBasicMgmt.SystemBasicData.Dto.PositionDropDto>> GetPositionDrop()
         {
             return await _db.Queryable<PositionInfoEntity>()
                             .With(SqlWith.NoLock)
                             .OrderBy(position => position.SortOrder)
-                            .Select((position) => new PositionInfoDropDto
+                            .Select((position) => new Model.SystemBasicMgmt.SystemBasicData.Dto.PositionDropDto
                             {
                                 PositionId = position.PositionId,
                                 PositionName = _lang.Locale == "zh-CN"
@@ -325,31 +325,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         {
             return await _db.Deleteable<WorkflowStepOrgEntity>()
                             .Where(stepcustom => stepcustom.StepId == stepId)
-                            .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 删除步骤分支
-        /// </summary>
-        /// <param name="branChId"></param>
-        /// <returns></returns>
-        public async Task<int> DeleteWorkflowStepBranch(long branChId)
-        {
-            return await _db.Deleteable<WorkflowBranchStepEntity>()
-                            .Where(stepbranch => stepbranch.BranchId == branChId)
-                            .ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 修改下一步骤为此步骤 -1
-        /// </summary>
-        /// <param name="stepId"></param>
-        /// <returns></returns>
-        public async Task<int> UpdateWorkflowStepBranch(long stepId)
-        {
-            return await _db.Updateable<WorkflowBranchStepEntity>()
-                            .SetColumns(stepbranch => stepbranch.NextStepId == -1)
-                            .Where(stepbranch => stepbranch.NextStepId == stepId)
                             .ExecuteCommandAsync();
         }
 

@@ -135,23 +135,23 @@
   <data name="WorkflowStepUpdateSuccess" xml:space="preserve">
     <value>步骤修改成功</value>
   </data>
-  <data name="WorkflowBranchStepInsertSuccess" xml:space="preserve">
-    <value>分支步骤新增成功</value>
+  <data name="WorkflowRuleInsertSuccess" xml:space="preserve">
+    <value>规则新增成功</value>
   </data>
-  <data name="WorkflowBranchStepInsertFailed" xml:space="preserve">
-    <value>分支步骤新增失败</value>
+  <data name="WorkflowRuleInsertFailed" xml:space="preserve">
+    <value>规则新增失败</value>
   </data>
-  <data name="WorkflowBranchStepDeleteSuccess" xml:space="preserve">
-    <value>分支步骤删除成功</value>
+  <data name="WorkflowRuleDeleteSuccess" xml:space="preserve">
+    <value>规则删除成功</value>
   </data>
-  <data name="WorkflowBranchStepDeleteFailed" xml:space="preserve">
-    <value>分支步骤删除失败</value>
+  <data name="WorkflowRuleDeleteFailed" xml:space="preserve">
+    <value>规则删除失败</value>
   </data>
-  <data name="WorkflowBranchStepUpdateFailed" xml:space="preserve">
-    <value>分支步骤修改失败</value>
+  <data name="WorkflowRuleUpdateFailed" xml:space="preserve">
+    <value>规则修改失败</value>
   </data>
-  <data name="WorkflowBranchStepUpdateSuccess" xml:space="preserve">
-    <value>分支步骤修改成功</value>
+  <data name="WorkflowRuleUpdateSuccess" xml:space="preserve">
+    <value>规则修改成功</value>
   </data>
   <data name="WorkflowBranchInsertSuccess" xml:space="preserve">
     <value>分支新增成功</value>
@@ -174,8 +174,8 @@
   <data name="WorkflowBranchUpdateFailed" xml:space="preserve">
     <value>分支修改失败</value>
   </data>
-  <data name="WorkflowBranchStepRepat" xml:space="preserve">
-    <value>分支已有对应步骤，请勿重复配置</value>
+  <data name="WorkflowRuleRepat" xml:space="preserve">
+    <value>已有对应条件的规则，请勿重复配置</value>
   </data>
   <data name="FormReviewLimitInsertSuccess" xml:space="preserve">
     <value>签核最高上限新增成功</value>

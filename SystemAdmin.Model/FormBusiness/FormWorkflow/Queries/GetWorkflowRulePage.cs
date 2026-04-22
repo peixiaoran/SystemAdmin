@@ -1,14 +1,13 @@
 ﻿using SqlSugar;
-
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Queries
 {
     /// <summary>
-    /// 查询分支请求参数
+    /// 查询规则步骤请求参数
     /// </summary>
-    public class GetWorkflowBranchPage : PageModel
+    public class GetWorkflowRulePage : PageModel
     {
         /// <summary>
-        /// 表单类型Id
+        /// 表单类别Id
         /// </summary>
         public string FormTypeId { get; set; } = string.Empty;
     }

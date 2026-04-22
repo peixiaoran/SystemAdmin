@@ -88,12 +88,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         {
             RefAsync<int> totalCount = 0;
 
-            var query = _db.Queryable<PendingApprovalEntity>()
+            var query = _db.Queryable<PendingReviewEntity>()
                            .With(SqlWith.NoLock)
                            .InnerJoin<FormInstanceEntity>((pendapp, forminfo) => pendapp.FormId == forminfo.FormId)
                            .InnerJoin<FormTypeEntity>((pendapp, forminfo, formtype) => forminfo.FormTypeId == formtype.FormTypeId)
                            .InnerJoin<DictionaryInfoEntity>((pendapp, forminfo, formtype, dic) => dic.DicType == "FormStatus" && dic.DicCode == FormStatus.PendingSubmission.ToEnumString() && forminfo.FormStatus == dic.DicCode)
-                           .InnerJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser) => pendapp.ApproveUserId == penduser.UserId)
+                           .InnerJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser) => pendapp.ReviewUserId == penduser.UserId)
                            .LeftJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser) => forminfo.CreatedBy == appuser.UserId)
                            .LeftJoin<DepartmentInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => appuser.DepartmentId == appuserdept.DepartmentId)
                            .Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => forminfo.CreatedBy == loginUserId);
@@ -154,15 +154,15 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         {
             RefAsync<int> totalCount = 0;
 
-            var query = _db.Queryable<PendingApprovalEntity>()
+            var query = _db.Queryable<PendingReviewEntity>()
                            .With(SqlWith.NoLock)
                            .InnerJoin<FormInstanceEntity>((pendapp, forminfo) => pendapp.FormId == forminfo.FormId)
                            .InnerJoin<FormTypeEntity>((pendapp, forminfo, formtype) => forminfo.FormTypeId == formtype.FormTypeId)
                            .InnerJoin<DictionaryInfoEntity>((pendapp, forminfo, formtype, dic) => dic.DicType == "FormStatus" && forminfo.FormStatus == dic.DicCode)
-                           .InnerJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser) => pendapp.ApproveUserId == penduser.UserId)
+                           .InnerJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser) => pendapp.ReviewUserId == penduser.UserId)
                            .LeftJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser) => forminfo.CreatedBy == appuser.UserId)
                            .LeftJoin<DepartmentInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => appuser.DepartmentId == appuserdept.DepartmentId)
-                           .Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => pendapp.ApproveUserId == loginUserId && forminfo.CreatedBy != loginUserId);
+                           .Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => pendapp.ReviewUserId == loginUserId && forminfo.CreatedBy != loginUserId);
 
             // 表单组别Id
             if (!string.IsNullOrEmpty(getPage.FormGroupId) && long.Parse(getPage.FormGroupId) > 0)

@@ -135,23 +135,23 @@
   <data name="WorkflowStepUpdateSuccess" xml:space="preserve">
     <value>Step modification successful</value>
   </data>
-  <data name="WorkflowBranchStepInsertSuccess" xml:space="preserve">
-    <value>Branch creation successful</value>
+  <data name="WorkflowRuleInsertSuccess" xml:space="preserve">
+    <value>Rule creation successful</value>
   </data>
-  <data name="WorkflowBranchStepInsertFailed" xml:space="preserve">
-    <value>Failed to add branch step</value>
+  <data name="WorkflowRuleInsertFailed" xml:space="preserve">
+    <value>Failed to add rule</value>
   </data>
-  <data name="WorkflowBranchStepDeleteSuccess" xml:space="preserve">
-    <value>Branch deletion successful</value>
+  <data name="WorkflowRuleDeleteSuccess" xml:space="preserve">
+    <value>Rule deletion successful</value>
   </data>
-  <data name="WorkflowBranchStepDeleteFailed" xml:space="preserve">
-    <value>Failed to delete branch</value>
+  <data name="WorkflowRuleDeleteFailed" xml:space="preserve">
+    <value>Failed to delete rule</value>
   </data>
-  <data name="WorkflowBranchStepUpdateFailed" xml:space="preserve">
-    <value>Failed to modify branch steps</value>
+  <data name="WorkflowRuleUpdateFailed" xml:space="preserve">
+    <value>Failed to modify rule</value>
   </data>
-  <data name="WorkflowBranchStepUpdateSuccess" xml:space="preserve">
-    <value>Branch modification successful</value>
+  <data name="WorkflowRuleUpdateSuccess" xml:space="preserve">
+    <value>Rule modification successful</value>
   </data>
   <data name="WorkflowBranchInsertSuccess" xml:space="preserve">
     <value>Branch added successfully</value>
@@ -174,8 +174,8 @@
   <data name="WorkflowBranchUpdateFailed" xml:space="preserve">
     <value>Failed to modify branchs</value>
   </data>
-  <data name="WorkflowBranchStepRepat" xml:space="preserve">
-    <value>This branch already has the corresponding steps; please do not configure them again</value>
+  <data name="WorkflowRuleRepat" xml:space="preserve">
+    <value>A rule matching these criteria already exists; please do not configure it again</value>
   </data>
   <data name="FormReviewLimitInsertSuccess" xml:space="preserve">
     <value>New approval limit successfully added</value>

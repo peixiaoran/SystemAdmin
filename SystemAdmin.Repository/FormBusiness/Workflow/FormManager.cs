@@ -9,6 +9,7 @@ using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.Workflow
 {
@@ -31,119 +32,169 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// </summary>
         /// <param name="formTypeId"></param>
         /// <returns></returns>
-        public async Task<string> InitializeFormInstance(string formTypeId)
+        public async Task<string> InitializeFormInstance(long formTypeId)
         {
-            var now = DateTime.Now; var ym = now.ToString("yyyyMM");
-            var formTypeIdLong = long.Parse(formTypeId);
+            var now = DateTime.Now;
+            var ym = now.ToString("yyyyMM");
+            // 1. 生成表单编号
+            var (formNo, prefix) = await GenerateFormNoAsync(formTypeId, ym, now);
+            var formId = SnowFlakeSingle.Instance.NextId();
+
+            // 2. 匹配工作流规则
+            var ruleId = await MatchWorkflowRuleAsync(formTypeId, formId);
+
+            // 3. 创建表单实例
+            var startStepId = await _db.Queryable<WorkflowStepEntity>()
+                                       .Where(step => step.FormTypeId == formTypeId && step.IsStartStep == 1)
+                                       .Select(step => step.StepId)
+                                       .FirstAsync();
+
+            await _db.Insertable(new FormInstanceEntity
+            {
+                FormId = formId,
+                FormTypeId = formTypeId,
+                FormNo = formNo,
+                FormStatus = FormStatus.PendingSubmission.ToEnumString(),
+                ApplicantUserId = _loginuser.UserId,
+                RuleId = ruleId,
+                CurrentStepId = startStepId,
+                CreatedBy = _loginuser.UserId,
+                CreatedDate = now
+            }).ExecuteCommandAsync();
+
+            await _db.Insertable(new PendingReviewEntity
+            {
+                FormId = formId,
+                CurrentStepId = startStepId,
+                ReviewUserId = _loginuser.UserId
+            }).ExecuteCommandAsync();
+
+            return formId.ToString();
+        }
+
+        /// <summary>
+        /// 生成单号
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <param name="ym"></param>
+        /// <param name="now"></param>
+        /// <returns></returns>
+        private async Task<(string formNo, string prefix)> GenerateFormNoAsync(long formTypeId, string ym, DateTime now)
+        {
             var prefix = await _db.Queryable<FormTypeEntity>()
                                   .With(SqlWith.NoLock)
-                                  .Where(formtype => formtype.FormTypeId == long.Parse(formTypeId))
-                                  .Select(formtype => formtype.Prefix)
+                                  .Where(ft => ft.FormTypeId == formTypeId)
+                                  .Select(ft => ft.Prefix)
                                   .FirstAsync();
 
-            // 1. 对当前表单类别 + 年月加应用锁，防止并发重复取号
-            var lockKey = $"FormNo_{formTypeIdLong}_{ym}";
-            await _db.Ado.ExecuteCommandAsync(@" 
-                    EXEC sp_getapplock 
-                    @Resource = @lockKey, 
-                    @LockMode = 'Exclusive', 
-                    @LockOwner = 'Transaction', 
-                    @LockTimeout = 10000", new { lockKey });
+            // 应用锁防止并发
+            var lockKey = $"FormNo_{formTypeId}_{ym}";
+            await _db.Ado.ExecuteCommandAsync(
+                "EXEC sp_getapplock @Resource = @lockKey, @LockMode = 'Exclusive', @LockOwner = 'Transaction', @LockTimeout = 10000",
+                new { lockKey });
 
-            // 2. 查询当前流水（此时已被锁保护）
-            var autoEntity = await _db.Queryable<FormSequenceEntity>()
-                                      .With(SqlWith.NoLock)
-                                      .Where(sequence => sequence.FormTypeId == formTypeIdLong && sequence.Ym == ym)
-                                      .FirstAsync();
+            // 获取或创建流水号
+            var sequence = await _db.Queryable<FormSequenceEntity>()
+                                    .With(SqlWith.NoLock)
+                                    .Where(s => s.FormTypeId == formTypeId && s.Ym == ym)
+                                    .FirstAsync();
+
             int nextNo;
-            if (autoEntity == null)
+            if (sequence == null)
             {
                 nextNo = 1;
-                var entity = new FormSequenceEntity
+                await _db.Insertable(new FormSequenceEntity
                 {
-                    FormTypeId = formTypeIdLong,
+                    FormTypeId = formTypeId,
                     Ym = ym,
                     Total = nextNo,
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = now
-                };
-                await _db.Insertable(entity).ExecuteCommandAsync();
+                }).ExecuteCommandAsync();
             }
             else
             {
-                nextNo = autoEntity.Total + 1;
-                autoEntity.Total = nextNo;
-                autoEntity.ModifiedBy = _loginuser.UserId;
-                autoEntity.ModifiedDate = now;
-                await _db.Updateable(autoEntity)
-                         .UpdateColumns(sequence => new 
-                         { 
-                             sequence.Total, 
-                             sequence.ModifiedBy, 
-                             sequence.ModifiedDate 
-                         }).ExecuteCommandAsync();
+                nextNo = sequence.Total + 1;
+                sequence.Total = nextNo;
+                sequence.ModifiedBy = _loginuser.UserId;
+                sequence.ModifiedDate = now;
+                await _db.Updateable(sequence)
+                         .UpdateColumns(s => new { s.Total, s.ModifiedBy, s.ModifiedDate })
+                         .ExecuteCommandAsync();
             }
-            // 3. 生成单号
-            var formNo = $"{prefix}-{ym}{nextNo:D4}"; 
-            var formId = SnowFlakeSingle.Instance.NextId();
 
-            // 4. 定位表单分支
-            long branchId = -1;
-            var branch = _db.Queryable<WorkflowBranchEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(branch => branch.FormTypeId == long.Parse(formTypeId));
-            foreach (var item in await branch.ToListAsync())
+            return ($"{prefix}-{ym}{nextNo:D4}", prefix);
+        }
+
+        /// <summary>
+        /// 匹配工作流规则
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        private async Task<long> MatchWorkflowRuleAsync(long formTypeId, long formId)
+        {
+            var appPositionId = await _db.Queryable<UserInfoEntity>()
+                                         .With(SqlWith.NoLock)
+                                         .Where(u => u.UserId == _loginuser.UserId)
+                                         .Select(u => u.PositionId)
+                                         .FirstAsync();
+
+            var ruleList = await _db.Queryable<WorkflowRuleEntity>()
+                                    .With(SqlWith.NoLock)
+                                    .Where(r => r.FormTypeId == formTypeId)
+                                    .ToListAsync();
+
+            long ruleId = 0;
+            foreach (var rule in ruleList)
             {
-                if (!string.IsNullOrEmpty(item.HandlerKey))
+                bool positionMatch = rule.PositionId == appPositionId;
+                bool guidanceMatch = await CheckGuidanceAsync(rule.Guidance, formId);
+
+                // 优先级1：Position匹配且(Guidance为空或匹配)
+                if (positionMatch && (string.IsNullOrEmpty(rule.Guidance) || guidanceMatch))
                 {
-                    var method = GetType().GetMethod(item.HandlerKey, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                    return rule.RuleId;
+                }
 
-                    if (method != null)
-                    {
-                        var result = method.Invoke(this, new object[] { formId });
+                // 优先级2：仅Guidance匹配
+                if (ruleId == 0 && !positionMatch && guidanceMatch)
+                {
+                    ruleId = rule.RuleId;
+                }
 
-                        if (result is Task<bool> taskResult)
-                        {
-                            var isMatch = await taskResult;
-                            if (isMatch)
-                            {
-                                branchId = item.BranchId;
-                            }
-                        }
-                    }
+                // 优先级3：Position和Guidance都为空
+                if (ruleId == 0 && rule.PositionId == 0 && string.IsNullOrEmpty(rule.Guidance))
+                {
+                    ruleId = rule.RuleId;
                 }
             }
-            if (branchId == -1)
+
+            return ruleId;
+        }
+
+        /// <summary>
+        /// 规则检查匹配
+        /// </summary>
+        /// <param name="guidance"></param>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        private async Task<bool> CheckGuidanceAsync(string guidance, long formId)
+        {
+            if (string.IsNullOrEmpty(guidance)) return false;
+
+            try
             {
-                branchId = await branch.Where(branch => branch.IsDefault == 1).Select(branch => branch.BranchId).FirstAsync();
+                var method = GetType().GetMethod(guidance, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                if (method == null) return false;
+
+                var task = method.Invoke(this, new object[] { formId }) as Task<bool>;
+                return task != null && await task;
             }
-
-            // 5. 表单开始步骤Id
-            var startStepId = await _db.Queryable<WorkflowStepEntity>().Where(step => step.IsStartStep == 1).Select(step => step.StepId).FirstAsync();
-
-            // 6. 插入表单实例
-            var formInstance = new FormInstanceEntity
+            catch
             {
-                FormId = formId,
-                FormTypeId = formTypeIdLong,
-                FormNo = formNo,
-                FormStatus = FormStatus.PendingSubmission.ToEnumString(),
-                ApplicantUserId = _loginuser.UserId,
-                BranchId = branchId,
-                CurrentStepId = startStepId,
-                CreatedBy = _loginuser.UserId,
-                CreatedDate = now
-            };
-            await _db.Insertable(formInstance).ExecuteCommandAsync();
-
-            var pendingApproval = new PendingApprovalEntity
-            {
-                FormId = formId,
-                CurrentStepId = startStepId,
-                ApproveUserId = _loginuser.UserId,
-            };
-            await _db.Insertable(pendingApproval).ExecuteCommandAsync();
-            return formId.ToString();
+                return false;
+            }
         }
 
         /// <summary>
@@ -152,48 +203,23 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// <returns></returns>
         public async Task<int> SaveFormInstance(long formId)
         {
-            // 1. 查询表单类型
             var formTypeId = await _db.Queryable<FormInstanceEntity>()
-                                      .With(SqlWith.NoLock)
-                                      .Where(form => form.FormId == formId)
-                                      .Select(form => form.FormTypeId)
-                                      .FirstAsync();
+                               .With(SqlWith.NoLock)
+                               .Where(f => f.FormId == formId)
+                               .Select(f => f.FormTypeId)
+                               .FirstAsync();
 
-            // 2. 定位表单分支
-            var branch = _db.Queryable<WorkflowBranchEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(branch => branch.FormTypeId == formTypeId);
-            long branchId = await branch.Where(branch => branch.IsDefault == 1).Select(branch => branch.BranchId).FirstAsync();
-            foreach (var item in await branch.ToListAsync())
-            {
-                if (!string.IsNullOrEmpty(item.HandlerKey))
-                {
-                    var method = GetType().GetMethod(item.HandlerKey, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            // 匹配工作流规则
+            var ruleId = await MatchWorkflowRuleAsync(formTypeId, formId);
 
-                    if (method != null)
-                    {
-                        var result = method.Invoke(this, new object[] { formId });
-
-                        if (result is Task<bool> taskResult)
-                        {
-                            var isMatch = await taskResult;
-                            if (isMatch)
-                            {
-                                branchId = item.BranchId;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 3. 修改表单实例
+            // 更新表单实例
             return await _db.Updateable<FormInstanceEntity>()
-                            .SetColumns(forminfo => new FormInstanceEntity
+                            .SetColumns(f => new FormInstanceEntity
                             {
-                                BranchId = branchId,
+                                RuleId = ruleId,
                                 ModifiedBy = _loginuser.UserId,
                                 ModifiedDate = DateTime.Now
-                            }).Where(forminfo => forminfo.FormId == formId)
+                            }).Where(f => f.FormId == formId)
                             .ExecuteCommandAsync();
         }
 
@@ -205,13 +231,13 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<bool> IsLeaveDaysOver3(long formId)
+        public async Task<bool> IsLeaveDaysOver2(long formId)
         {
             var leave = await _db.Queryable<LeaveFormEntity>()
                                  .With(SqlWith.NoLock)
-                                 .FirstAsync(x => x.FormId == formId);
+                                 .FirstAsync(leave => leave.FormId == formId);
 
-            return leave != null && leave.LeaveDays > 3;
+            return leave != null && leave.LeaveDays <= 2;
         }
         #endregion
     }

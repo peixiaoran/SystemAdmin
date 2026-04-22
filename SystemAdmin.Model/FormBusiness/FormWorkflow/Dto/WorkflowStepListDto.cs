@@ -4,7 +4,7 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
 {
     /// <summary>
-    /// 步骤Dto
+    /// 流程步骤Dto
     /// </summary>
     public class WorkflowStepListDto
     {
@@ -15,12 +15,12 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public long StepId { get; set; }
 
         /// <summary>
-        /// 步骤名称
+        /// 步骤名称（中文）
         /// </summary>
         public string StepNameCn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 步骤名称
+        /// 步骤名称（英文）
         /// </summary>
         public string StepNameEn { get; set; } = string.Empty;
 

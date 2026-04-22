@@ -70,17 +70,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<PositionInfoDropDto>>> GetPositionInfoDrop()
+        public async Task<Result<List<PositionDropDto>>> GetPositionDrop()
         {
             try
             {
-                var drop = await _userPartTimeRepository.GetPositionInfoDrop();
-                return Result<List<PositionInfoDropDto>>.Ok(drop, "");
+                var drop = await _userPartTimeRepository.GetPositionDrop();
+                return Result<List<PositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<PositionInfoDropDto>>.Failure(500, ex.Message.ToString());
+                return Result<List<PositionDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
 

@@ -3,25 +3,41 @@
 namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
 {
     /// <summary>
-    /// 分支步骤表
+    /// 流程规则实体类
     /// </summary>
-    [SugarTable("[Form].[WorkflowBranchStep]")]
-    public class WorkflowBranchStepEntity
+    [SugarTable("[Form].[WorkflowRule]")]
+    public class WorkflowRuleEntity
     {
         /// <summary>
-        /// 分支Id
+        /// 规则Id
         /// </summary>
-        public long BranchId { get; set; }
+        public long RuleId { get; set; }
 
         /// <summary>
-        /// 步骤Id
+        /// 表单类别Id
         /// </summary>
-        public long StepId { get; set; }
+        public long FormTypeId { get; set; }
 
         /// <summary>
-        /// 下一步骤Id
+        /// 规则名称（中文）
         /// </summary>
-        public long NextStepId { get; set; }
+        public string RuleNameCn { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 规则名称（英文）
+        /// </summary>
+        /// </summary>
+        public string RuleNameEn { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 职级Id
+        /// </summary>
+        public long PositionId { get; set; }
+
+        /// <summary>
+        /// 导向
+        /// </summary>
+        public string Guidance { get; set; } = string.Empty;
 
         /// <summary>
         /// 排序
