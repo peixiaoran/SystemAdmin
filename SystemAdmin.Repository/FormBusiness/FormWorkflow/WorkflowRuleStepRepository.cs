@@ -59,15 +59,49 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
+        /// 规则下拉
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <returns></returns>
+        public async Task<List<WorkflowRuleDropDto>> GetWorkflowRuleDrop(long formTypeId)
+        {
+            return await _db.Queryable<WorkflowRuleEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(rule => rule.FormTypeId == formTypeId)
+                            .OrderBy(rule => rule.SortOrder)
+                            .Select(rule => new WorkflowRuleDropDto
+                            {
+                                RuleId = rule.RuleId,
+                                RuleName = _lang.Locale == "zh-CN"
+                                           ? rule.RuleNameCn
+                                           : rule.RuleNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
         /// 规则步骤是否重复配置
         /// </summary>
+        /// <param name="ruleId"></param>
         /// <param name="currentStepId"></param>
         /// <param name="nextStepId"></param>
         /// <returns></returns>
-        public async Task<bool> RuleStepIsRepeat(long currentStepId, long nextStepId)
+        public async Task<bool> RuleStepIsRepeat(long ruleId, long currentStepId, long nextStepId)
         {
             return await _db.Queryable<WorkflowRuleStepEntity>()
-                            .Where(rulestep => rulestep.CurrentStepId == currentStepId || rulestep.NextStepId == nextStepId)
+                            .Where(rulestep => rulestep.RuleId == ruleId && (rulestep.CurrentStepId == currentStepId || rulestep.NextStepId == nextStepId))
+                            .AnyAsync();
+        }
+
+        /// <summary>
+        /// 规则步骤是否重复配置
+        /// </summary>
+        /// <param name="ruleId"></param>
+        /// <param name="nextStepId"></param>
+        /// <returns></returns>
+        public async Task<bool> RuleStepIsRepeat(long ruleId, long nextStepId)
+        {
+            return await _db.Queryable<WorkflowRuleStepEntity>()
+                            .Where(rulestep => rulestep.RuleId == ruleId && rulestep.NextStepId == nextStepId)
                             .AnyAsync();
         }
 
@@ -113,12 +147,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 查询规则步骤实体
         /// </summary>
         /// <param name="ruleId"></param>
+        /// <param name="currentStepId"></param>
         /// <returns></returns>
-        public async Task<WorkflowRuleDto> GetWorkflowRuleStepEntity(long ruleId)
+        public async Task<WorkflowRuleDto> GetWorkflowRuleStepEntity(long ruleId, long currentStepId)
         {
             var entity = await _db.Queryable<WorkflowRuleStepEntity>()
                                   .With(SqlWith.NoLock)
-                                  .Where(rulestep => rulestep.RuleId == ruleId)
+                                  .Where(rulestep => rulestep.RuleId == ruleId && rulestep.CurrentStepId == currentStepId)
                                   .FirstAsync();
             return entity.Adapt<WorkflowRuleDto>();
         }
@@ -126,16 +161,15 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 查询规则步骤分页
         /// </summary>
-        /// <param name="getPage"></param>
+        /// <param name="ruleId"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<WorkflowRuleStepDto>> GetWorkflowRulePage(GetWorkflowRulePage getPage)
+        public async Task<Result<List<WorkflowRuleStepDto>>> GetWorkflowRuleStepList(long ruleId)
         {
-            RefAsync<int> totalCount = 0;
-            var page = await _db.Queryable<WorkflowRuleStepEntity>()
+            var list = await _db.Queryable<WorkflowRuleStepEntity>()
                                 .With(SqlWith.NoLock)
                                 .InnerJoin<WorkflowStepEntity>((rulestep, currentstep) => rulestep.CurrentStepId == currentstep.StepId)
-                                .InnerJoin<WorkflowStepEntity>((rulestep, currentstep, nextstep) => rulestep.NextStepId == nextstep.StepId)
-                                .Where((rulestep, currentstep, nextstep) => rulestep.RuleId == long.Parse(getPage.FormTypeId))
+                                .LeftJoin<WorkflowStepEntity>((rulestep, currentstep, nextstep) => rulestep.NextStepId == nextstep.StepId)
+                                .Where((rulestep, currentstep, nextstep) => rulestep.RuleId == ruleId)
                                 .Select((rulestep, currentstep, nextstep) => new WorkflowRuleStepDto
                                 {
                                     RuleId = rulestep.RuleId,
@@ -148,8 +182,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                                       ? nextstep.StepNameCn
                                                       : nextstep.StepNameEn,
                                     SortOrder = rulestep.SortOrder,
-                                }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<WorkflowRuleStepDto>.Ok(page, totalCount);
+                                }).ToListAsync();
+            return Result<List<WorkflowRuleStepDto>>.Ok(list);
         }
     }
 }

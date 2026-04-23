@@ -20,7 +20,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
 
         [HttpPost]
         [Tags("系统基础管理-身份验证接口")]
-        [EndpointSummary("[系统接口] 员工登录")]
+        [EndpointSummary("[身份验证] 员工登录")]
         [AllowAnonymous]
         public async Task<Result<SysUserLoginReturnDto>> UserLogin([FromBody] UserLogin sysLogin)
         {
@@ -29,16 +29,16 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
 
         [HttpPost]
         [Tags("系统基础管理-身份验证接口")]
-        [EndpointSummary("[系统接口] 解锁账号发送验证码")]
+        [EndpointSummary("[身份验证] 解锁账号发送验证码")]
         [AllowAnonymous]
-        public async Task<Result<string>> UnLockSendVcCode([FromForm] string userNo)
+        public async Task<Result<string>> UnLockSendCode([FromForm] string userNo)
         {
-            return await _sysUserOperateService.UnLockSendVcCode(userNo);
+            return await _sysUserOperateService.UnLockSendCode(userNo);
         }
 
         [HttpPost]
         [Tags("系统基础管理-身份验证接口")]
-        [EndpointSummary("[系统接口] 解锁账号（重置密码）")]
+        [EndpointSummary("[身份验证] 账号解锁")]
         [AllowAnonymous]
         public async Task<Result<int>> UserUnlock([FromBody] UserUnlock userUnlock)
         {
@@ -47,16 +47,16 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
 
         [HttpPost]
         [Tags("系统基础管理-身份验证接口")]
-        [EndpointSummary("[系统接口] 密码过期发送验证码")]
+        [EndpointSummary("[身份验证] 密码过期发送验证码")]
         [AllowAnonymous]
-        public async Task<Result<string>> UnExpirationSendVcCode([FromForm] string userNo)
+        public async Task<Result<string>> UnExpirationSendCode([FromForm] string userNo)
         {
-            return await _sysUserOperateService.UnExpirationSendVcCode(userNo);
+            return await _sysUserOperateService.UnExpirationSendCode(userNo);
         }
 
         [HttpPost]
         [Tags("系统基础管理-身份验证接口")]
-        [EndpointSummary("[系统接口] 密码过期（重置密码）")]
+        [EndpointSummary("[身份验证] 密码过期重置")]
         [AllowAnonymous]
         public async Task<Result<int>> UserPwdExpiration([FromBody] PwdExpiration upsert)
         {
@@ -65,7 +65,7 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
 
         [HttpPost]
         [Tags("系统基础管理-身份验证接口")]
-        [EndpointSummary("[系统接口] 员工登出")]
+        [EndpointSummary("[身份验证] 员工登出")]
         public async Task<Result<int>> UserLogOut()
         {
             return await _sysUserOperateService.UserLogOut();

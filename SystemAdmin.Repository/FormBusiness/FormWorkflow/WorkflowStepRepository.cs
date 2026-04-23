@@ -43,13 +43,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 表单类型下拉
         /// </summary>
-        /// <param name="groupId"></param>
+        /// <param name="fromGroupId"></param>
         /// <returns></returns>
-        public async Task<List<FormTypeDropDto>> GetFormTypeDrop(long groupId)
+        public async Task<List<FormTypeDropDto>> GetFormTypeDrop(long fromGroupId)
         {
             return await _db.Queryable<FormTypeEntity>()
                             .With(SqlWith.NoLock)
-                            .Where(formtype => formtype.FormGroupId == groupId)
+                            .Where(formtype => formtype.FormGroupId == fromGroupId)
                             .OrderBy(formtype => formtype.SortOrder)
                             .Select(formtype => new FormTypeDropDto
                             {
@@ -153,77 +153,76 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                             }).ToListAsync();
         }
 
-		/// <summary>
-		/// 查询员工分页
-		/// </summary>
-		/// <param name="getPage"></param>
-		/// <returns></returns>
-		public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
-		{
-			RefAsync<int> totalCount = 0;
-			var query = _db.Queryable<UserInfoEntity>()
-						   .With(SqlWith.NoLock)
-						   .InnerJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
-						   .InnerJoin<PositionInfoEntity>((user, dept, position) => user.PositionId == position.PositionId)
-						   .InnerJoin<UserLaborEntity>((user, dept, position, labor) => user.LaborId == labor.LaborId)
-						   .InnerJoin<NationalityInfoEntity>((user, dept, position, labor, nation) =>
-							user.Nationality == nation.NationId)
-						   .Where((user, dept, position, labor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
+        /// <summary>
+        /// 查询员工分页
+        /// </summary>
+        /// <param name="getPage"></param>
+        /// <returns></returns>
+        public async Task<ResultPaged<UserInfoDto>> GetUserInfoPage(GetUserInfoPage getPage)
+        {
+            RefAsync<int> totalCount = 0;
+            var query = _db.Queryable<UserInfoEntity>()
+                           .With(SqlWith.NoLock)
+                           .InnerJoin<DepartmentInfoEntity>((user, dept) => user.DepartmentId == dept.DepartmentId)
+                           .InnerJoin<PositionInfoEntity>((user, dept, position) => user.PositionId == position.PositionId)
+                           .InnerJoin<UserLaborEntity>((user, dept, position, labor) => user.LaborId == labor.LaborId)
+                           .InnerJoin<NationalityInfoEntity>((user, dept, position, labor, nation) =>
+                            user.Nationality == nation.NationId)
+                           .Where((user, dept, position, labor, nation) => user.IsEmployed == 1 && user.IsFreeze == 0);
 
-			// 员工工号
-			if (!string.IsNullOrEmpty(getPage.UserNo))
-			{
-				query = query.Where((user, dept, position, labor, nation) =>
-					user.UserNo.Contains(getPage.UserNo));
-			}
-			// 员工姓名
-			if (!string.IsNullOrEmpty(getPage.UserName))
-			{
-				query = query.Where((user, dept, position, labor, nation) =>
-					user.UserNameCn.Contains(getPage.UserName) ||
-					user.UserNameEn.Contains(getPage.UserName));
-			}
-			// 部门Id
-			if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
-			{
-				query = query.Where((user, dept, position, labor, nation) =>
-					user.DepartmentId == long.Parse(getPage.DepartmentId));
-			}
+            // 员工工号
+            if (!string.IsNullOrEmpty(getPage.UserNo))
+            {
+                query = query.Where((user, dept, position, labor, nation) => user.UserNo.Contains(getPage.UserNo));
+            }
+            // 员工姓名
+            if (!string.IsNullOrEmpty(getPage.UserName))
+            {
+                query = query.Where((user, dept, position, labor, nation) =>
+                    user.UserNameCn.Contains(getPage.UserName) ||
+                    user.UserNameEn.Contains(getPage.UserName));
+            }
+            // 部门Id
+            if (!string.IsNullOrEmpty(getPage.DepartmentId) && long.Parse(getPage.DepartmentId) > -1)
+            {
+                query = query.Where((user, dept, position, labor, nation) =>
+                    user.DepartmentId == long.Parse(getPage.DepartmentId));
+            }
 
-			// 排序
-			query = query.OrderBy((user, dept, position, labor, nation) => new { position.SortOrder, user.HireDate });
+            // 排序
+            query = query.OrderBy((user, dept, position, labor, nation) => new { position.SortOrder, user.HireDate });
 
-			var page = await query.Select((user, dept, position, labor, nation) => new UserInfoDto
-			{
-				UserId = user.UserId,
-				UserNo = user.UserNo,
-				UserName = _lang.Locale == "zh-CN"
-												? user.UserNameCn
-												: user.UserNameEn,
-				DepartmentName = _lang.Locale == "zh-CN"
-												? dept.DepartmentNameCn
-												: dept.DepartmentNameEn,
-				PositionName = _lang.Locale == "zh-CN"
-												? position.PositionNameCn
-												: position.PositionNameEn,
-				LaborName = _lang.Locale == "zh-CN"
-												? labor.LaborNameCn
-												: labor.LaborNameEn,
-				NationalityName = _lang.Locale == "zh-CN"
-												? nation.NationNameCn
-												: nation.NationNameEn,
-				IsAgent = user.IsAgent,
-				IsApproval = user.IsApproval,
-			}).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-			return ResultPaged<UserInfoDto>.Ok(page, totalCount, "");
-		}
+            var page = await query.Select((user, dept, position, labor, nation) => new UserInfoDto
+            {
+                UserId = user.UserId,
+                UserNo = user.UserNo,
+                UserName = _lang.Locale == "zh-CN"
+                           ? user.UserNameCn
+                           : user.UserNameEn,
+                DepartmentName = _lang.Locale == "zh-CN"
+                           ? dept.DepartmentNameCn
+                           : dept.DepartmentNameEn,
+                PositionName = _lang.Locale == "zh-CN"
+                           ? position.PositionNameCn
+                           : position.PositionNameEn,
+                LaborName = _lang.Locale == "zh-CN"
+                           ? labor.LaborNameCn
+                           : labor.LaborNameEn,
+                NationalityName = _lang.Locale == "zh-CN"
+                           ? nation.NationNameCn
+                           : nation.NationNameEn,
+                IsAgent = user.IsAgent,
+                IsApproval = user.IsApproval,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<UserInfoDto>.Ok(page, totalCount, "");
+        }
 
-		/// <summary>
-		/// 新增步骤
-		/// </summary>
-		/// <param name="entity"></param>
-		/// <returns></returns>
-		public async Task<int> InsertWorkflowStep(WorkflowStepEntity entity)
+        /// <summary>
+        /// 新增步骤
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<int> InsertWorkflowStep(WorkflowStepEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
@@ -266,6 +265,18 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         public async Task<int> InsertWorkflowStepCustom(WorkflowStepCustomEntity entity)
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
+        }
+
+        /// <summary>
+        /// 查询步骤是否有规则配置
+        /// </summary>
+        /// <param name="stepId"></param>
+        /// <returns></returns>
+        public async Task<bool> GetWorkflowRuleStepIsExist(long stepId)
+        {
+            return await _db.Queryable<WorkflowRuleStepEntity>()
+                            .Where(rule => rule.CurrentStepId == stepId || rule.NextStepId == stepId)
+                            .AnyAsync();
         }
 
         /// <summary>

@@ -216,7 +216,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         /// </summary>
         /// <param name="userNo"></param>
         /// <returns></returns>
-        public async Task<Result<string>> UnLockSendVcCode(string userNo)
+        public async Task<Result<string>> UnLockSendCode(string userNo)
         {
             try
             {
@@ -260,7 +260,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         }
 
         /// <summary>
-        /// 解锁账号（重置密码）
+        /// 账号解锁
         /// </summary>
         /// <param name="userUnlock"></param>
         /// <returns></returns>
@@ -332,7 +332,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         /// </summary>
         /// <param name="userNo"></param>
         /// <returns></returns>
-        public async Task<Result<string>> UnExpirationSendVcCode(string userNo)
+        public async Task<Result<string>> UnExpirationSendCode(string userNo)
         {
             try
             {
@@ -375,7 +375,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         }
 
         /// <summary>
-        /// 密码过期（重置密码）
+        /// 密码过期重置
         /// </summary>
         /// <param name="upsert"></param>
         /// <returns></returns>

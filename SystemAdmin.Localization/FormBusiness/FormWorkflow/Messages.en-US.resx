@@ -153,27 +153,6 @@
   <data name="WorkflowRuleUpdateSuccess" xml:space="preserve">
     <value>Rule modification successful</value>
   </data>
-  <data name="WorkflowBranchInsertSuccess" xml:space="preserve">
-    <value>Branch added successfully</value>
-  </data>
-  <data name="WorkflowBranchInsertFailed" xml:space="preserve">
-    <value>Failed to add branch</value>
-  </data>
-  <data name="WorkflowBranchNotDelete" xml:space="preserve">
-    <value>There are already corresponding steps in this branch. Please delete all of them first</value>
-  </data>
-  <data name="WorkflowBranchDeleteSuccess" xml:space="preserve">
-    <value>Branchal deletion successful</value>
-  </data>
-  <data name="WorkflowBranchDeleteFailed" xml:space="preserve">
-    <value>Branchal deletion failed</value>
-  </data>
-  <data name="WorkflowBranchUpdateSuccess" xml:space="preserve">
-    <value>Branch modified successfully</value>
-  </data>
-  <data name="WorkflowBranchUpdateFailed" xml:space="preserve">
-    <value>Failed to modify branchs</value>
-  </data>
   <data name="WorkflowRuleRepat" xml:space="preserve">
     <value>A rule matching these criteria already exists; please do not configure it again</value>
   </data>
@@ -197,5 +176,32 @@
   </data>
   <data name="FormReviewLimitRepeat" xml:space="preserve">
     <value>Position level has already reached its maximum limit; please do not configure it again</value>
+  </data>
+  <data name="WorkflowRuleStepInsertSuccess" xml:space="preserve">
+    <value>Rule step added successfully</value>
+  </data>
+  <data name="WorkflowRuleStepInsertFailed" xml:space="preserve">
+    <value>Rule step creation failed</value>
+  </data>
+  <data name="WorkflowRuleStepDeleteFailed" xml:space="preserve">
+    <value>Rule step deletion failed</value>
+  </data>
+  <data name="WorkflowRuleStepDeleteSuccess" xml:space="preserve">
+    <value>Rule step deletion successful</value>
+  </data>
+  <data name="WorkflowRuleStepUpdateSuccess" xml:space="preserve">
+    <value>Rule step modification successful</value>
+  </data>
+  <data name="WorkflowRuleStepUpdateFailed" xml:space="preserve">
+    <value>Failed to modify rule steps</value>
+  </data>
+  <data name="WorkflowRuleStepRepat" xml:space="preserve">
+    <value>The rule already includes the corresponding steps and next steps; please do not configure them again</value>
+  </data>
+  <data name="WorkflowRuleExist" xml:space="preserve">
+    <value>The rule already has a configuration. Please delete the corresponding configuration first</value>
+  </data>
+  <data name="WorkflowStepExist" xml:space="preserve">
+    <value>There is already a rule configured for this step. Please delete the corresponding rule step first</value>
   </data>
 </root>

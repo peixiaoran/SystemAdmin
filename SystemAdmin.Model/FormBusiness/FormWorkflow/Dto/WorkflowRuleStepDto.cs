@@ -39,7 +39,6 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// <summary>
         /// 下一步骤名称
         /// </summary>
-        [JsonConverter(typeof(LongToStringConverter))]
         public string NextStepName { get; set; } = string.Empty;
 
         /// <summary>

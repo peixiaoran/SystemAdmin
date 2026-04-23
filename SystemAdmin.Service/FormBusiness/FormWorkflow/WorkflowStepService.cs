@@ -125,17 +125,17 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<Model.SystemBasicMgmt.SystemBasicData.Dto.PositionDropDto>>> GetPositionDrop()
+        public async Task<Result<List<PositionDropDto>>> GetPositionDrop()
         {
             try
             {
                 var drop = await _workflowStep.GetPositionDrop();
-                return Result<List<Model.SystemBasicMgmt.SystemBasicData.Dto.PositionDropDto>>.Ok(drop, "");
+                return Result<List<PositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<Model.SystemBasicMgmt.SystemBasicData.Dto.PositionDropDto>>.Failure(500, ex.Message.ToString());
+                return Result<List<PositionDropDto>>.Failure(500, ex.Message.ToString());
             }
         }
 
@@ -194,7 +194,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 var stepEntity = new WorkflowStepEntity
                 {
                     StepId = stepId,
-                    FormGroupId = long.Parse(upsert.FormGroupId),
                     FormTypeId = long.Parse(upsert.FormTypeId),
                     StepNameCn = upsert.StepNameCn,
                     StepNameEn = upsert.StepNameEn,
@@ -295,16 +294,24 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                // 删除所有步骤的配置
-                int delStepCount = await _workflowStep.DeleteWorkflowStep(long.Parse(stepId));
-                int delOrgCount = await _workflowStep.DeleteWorkflowStepOrg(long.Parse(stepId));
-                int delDeptUserCount = await _workflowStep.DeleteWorkflowStepDeptUser(long.Parse(stepId));
-                int delUserCount = await _workflowStep.DeleteWorkflowStepUser(long.Parse(stepId));
-                int delCustomCount = await _workflowStep.DeleteWorkflowStepCustom(long.Parse(stepId));
+                var isExist = await _workflowStep.GetWorkflowRuleStepIsExist(long.Parse(stepId));
+                if (isExist)
+                {
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}Exist"));
+                }
+                else
+                {
+                    // 删除所有步骤的配置
+                    int delStepCount = await _workflowStep.DeleteWorkflowStep(long.Parse(stepId));
+                    int delOrgCount = await _workflowStep.DeleteWorkflowStepOrg(long.Parse(stepId));
+                    int delDeptUserCount = await _workflowStep.DeleteWorkflowStepDeptUser(long.Parse(stepId));
+                    int delUserCount = await _workflowStep.DeleteWorkflowStepUser(long.Parse(stepId));
+                    int delCustomCount = await _workflowStep.DeleteWorkflowStepCustom(long.Parse(stepId));
 
-                return delStepCount >= 1 && (delOrgCount >= 1 || delDeptUserCount >= 1 || delUserCount >= 1 || delCustomCount >= 1)
-                        ? Result<int>.Ok(delStepCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                    return delStepCount >= 1 && (delOrgCount >= 1 || delDeptUserCount >= 1 || delUserCount >= 1 || delCustomCount >= 1)
+                            ? Result<int>.Ok(delStepCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                }
             }
             catch (Exception ex)
             {
@@ -332,7 +339,6 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 var stepEntity = new WorkflowStepEntity
                 {
                     StepId = long.Parse(upsert.StepId),
-                    FormGroupId = long.Parse(upsert.FormGroupId),
                     FormTypeId = long.Parse(upsert.FormTypeId),
                     StepNameCn = upsert.StepNameCn,
                     StepNameEn = upsert.StepNameEn,

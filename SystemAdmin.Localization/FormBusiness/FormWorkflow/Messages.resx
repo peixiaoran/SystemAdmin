@@ -153,27 +153,6 @@
   <data name="WorkflowRuleUpdateSuccess" xml:space="preserve">
     <value>规则修改成功</value>
   </data>
-  <data name="WorkflowBranchInsertSuccess" xml:space="preserve">
-    <value>分支新增成功</value>
-  </data>
-  <data name="WorkflowBranchInsertFailed" xml:space="preserve">
-    <value>分支新增失败</value>
-  </data>
-  <data name="WorkflowBranchNotDelete" xml:space="preserve">
-    <value>分支已配置相关步骤，请先删除所有对应步骤</value>
-  </data>
-  <data name="WorkflowBranchDeleteSuccess" xml:space="preserve">
-    <value>分支删除成功</value>
-  </data>
-  <data name="WorkflowBranchDeleteFailed" xml:space="preserve">
-    <value>分支删除失败</value>
-  </data>
-  <data name="WorkflowBranchUpdateSuccess" xml:space="preserve">
-    <value>分支修改成功</value>
-  </data>
-  <data name="WorkflowBranchUpdateFailed" xml:space="preserve">
-    <value>分支修改失败</value>
-  </data>
   <data name="WorkflowRuleRepat" xml:space="preserve">
     <value>已有对应条件的规则，请勿重复配置</value>
   </data>
@@ -197,5 +176,32 @@
   </data>
   <data name="FormReviewLimitRepeat" xml:space="preserve">
     <value>职级已有最高上限配置，请勿重复配置</value>
+  </data>
+  <data name="WorkflowRuleStepInsertSuccess" xml:space="preserve">
+    <value>规则步骤新增成功</value>
+  </data>
+  <data name="WorkflowRuleStepInsertFailed" xml:space="preserve">
+    <value>规则步骤新增失败</value>
+  </data>
+  <data name="WorkflowRuleStepDeleteFailed" xml:space="preserve">
+    <value>规则步骤删除失败</value>
+  </data>
+  <data name="WorkflowRuleStepDeleteSuccess" xml:space="preserve">
+    <value>规则步骤删除成功</value>
+  </data>
+  <data name="WorkflowRuleStepUpdateSuccess" xml:space="preserve">
+    <value>规则步骤修改成功</value>
+  </data>
+  <data name="WorkflowRuleStepUpdateFailed" xml:space="preserve">
+    <value>规则步骤修改失败</value>
+  </data>
+  <data name="WorkflowRuleStepRepat" xml:space="preserve">
+    <value>规则已有对应的步骤及下一步骤，请勿重复配置</value>
+  </data>
+  <data name="WorkflowRuleExist" xml:space="preserve">
+    <value>规则已有步骤配置，请先删除对应配置</value>
+  </data>
+  <data name="WorkflowStepExist" xml:space="preserve">
+    <value>步骤已有对应规则配置，请先删除对应的规则步骤</value>
   </data>
 </root>

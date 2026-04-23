@@ -139,13 +139,21 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                await _db.BeginTranAsync();
-                var count = await _workflowRule.DeleteWorkflowRule(long.Parse(ruleId));
-                await _db.CommitTranAsync();
+                var isExistStep = await _workflowRule.GetWorkflowRuleStepIsExist(long.Parse(ruleId));
+                if (isExistStep)
+                {
+                    return Result<int>.Failure(400, _localization.ReturnMsg($"{_this}Exist"));
+                }
+                else
+                {
+                    await _db.BeginTranAsync();
+                    var count = await _workflowRule.DeleteWorkflowRule(long.Parse(ruleId));
+                    await _db.CommitTranAsync();
 
-                return count >= 1
-                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
-                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                    return count >= 1
+                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}DeleteSuccess"))
+                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DeleteFailed"));
+                }
             }
             catch (Exception ex)
             {

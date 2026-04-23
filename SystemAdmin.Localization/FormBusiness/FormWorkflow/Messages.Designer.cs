@@ -124,69 +124,6 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         }
         
         /// <summary>
-        ///   查找类似 分支删除失败 的本地化字符串。
-        /// </summary>
-        public static string WorkflowBranchDeleteFailed {
-            get {
-                return ResourceManager.GetString("WorkflowBranchDeleteFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 分支删除成功 的本地化字符串。
-        /// </summary>
-        public static string WorkflowBranchDeleteSuccess {
-            get {
-                return ResourceManager.GetString("WorkflowBranchDeleteSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 分支新增失败 的本地化字符串。
-        /// </summary>
-        public static string WorkflowBranchInsertFailed {
-            get {
-                return ResourceManager.GetString("WorkflowBranchInsertFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 分支新增成功 的本地化字符串。
-        /// </summary>
-        public static string WorkflowBranchInsertSuccess {
-            get {
-                return ResourceManager.GetString("WorkflowBranchInsertSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 分支已配置相关步骤，请先删除所有对应步骤 的本地化字符串。
-        /// </summary>
-        public static string WorkflowBranchNotDelete {
-            get {
-                return ResourceManager.GetString("WorkflowBranchNotDelete", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 分支修改失败 的本地化字符串。
-        /// </summary>
-        public static string WorkflowBranchUpdateFailed {
-            get {
-                return ResourceManager.GetString("WorkflowBranchUpdateFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 分支修改成功 的本地化字符串。
-        /// </summary>
-        public static string WorkflowBranchUpdateSuccess {
-            get {
-                return ResourceManager.GetString("WorkflowBranchUpdateSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   查找类似 规则删除失败 的本地化字符串。
         /// </summary>
         public static string WorkflowRuleDeleteFailed {
@@ -201,6 +138,15 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         public static string WorkflowRuleDeleteSuccess {
             get {
                 return ResourceManager.GetString("WorkflowRuleDeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则已有步骤配置，请先删除对应配置 的本地化字符串。
+        /// </summary>
+        public static string WorkflowRuleExist {
+            get {
+                return ResourceManager.GetString("WorkflowRuleExist", resourceCulture);
             }
         }
         
@@ -228,6 +174,69 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         public static string WorkflowRuleRepat {
             get {
                 return ResourceManager.GetString("WorkflowRuleRepat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则步骤删除失败 的本地化字符串。
+        /// </summary>
+        public static string WorkflowRuleStepDeleteFailed {
+            get {
+                return ResourceManager.GetString("WorkflowRuleStepDeleteFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则步骤删除成功 的本地化字符串。
+        /// </summary>
+        public static string WorkflowRuleStepDeleteSuccess {
+            get {
+                return ResourceManager.GetString("WorkflowRuleStepDeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则步骤新增失败 的本地化字符串。
+        /// </summary>
+        public static string WorkflowRuleStepInsertFailed {
+            get {
+                return ResourceManager.GetString("WorkflowRuleStepInsertFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则步骤新增成功 的本地化字符串。
+        /// </summary>
+        public static string WorkflowRuleStepInsertSuccess {
+            get {
+                return ResourceManager.GetString("WorkflowRuleStepInsertSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则已有对应的步骤及下一步骤，请勿重复配置 的本地化字符串。
+        /// </summary>
+        public static string WorkflowRuleStepRepat {
+            get {
+                return ResourceManager.GetString("WorkflowRuleStepRepat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则步骤修改失败 的本地化字符串。
+        /// </summary>
+        public static string WorkflowRuleStepUpdateFailed {
+            get {
+                return ResourceManager.GetString("WorkflowRuleStepUpdateFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 规则步骤修改成功 的本地化字符串。
+        /// </summary>
+        public static string WorkflowRuleStepUpdateSuccess {
+            get {
+                return ResourceManager.GetString("WorkflowRuleStepUpdateSuccess", resourceCulture);
             }
         }
         
@@ -264,6 +273,15 @@ namespace SystemAdmin.Localization.FormBusiness.FormWorkflow {
         public static string WorkflowStepDeleteSuccess {
             get {
                 return ResourceManager.GetString("WorkflowStepDeleteSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 步骤已有对应规则配置，请先删除对应的规则步骤 的本地化字符串。
+        /// </summary>
+        public static string WorkflowStepExist {
+            get {
+                return ResourceManager.GetString("WorkflowStepExist", resourceCulture);
             }
         }
         

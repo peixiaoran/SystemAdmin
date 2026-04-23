@@ -149,52 +149,34 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             foreach (var rule in ruleList)
             {
                 bool positionMatch = rule.PositionId == appPositionId;
-                bool guidanceMatch = await CheckGuidanceAsync(rule.Guidance, formId);
+
+                // 内联 Guidance 检查逻辑
+                bool guidanceMatch = false;
+                if (!string.IsNullOrEmpty(rule.Guidance))
+                {
+                    try
+                    {
+                        var method = GetType().GetMethod(rule.Guidance, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                        if (method?.Invoke(this, new object[] { formId }) is Task<bool> task)
+                            guidanceMatch = await task;
+                    }
+                    catch { /* 反射调用失败视为不匹配 */ }
+                }
 
                 // 优先级1：Position匹配且(Guidance为空或匹配)
                 if (positionMatch && (string.IsNullOrEmpty(rule.Guidance) || guidanceMatch))
-                {
                     return rule.RuleId;
-                }
 
                 // 优先级2：仅Guidance匹配
                 if (ruleId == 0 && !positionMatch && guidanceMatch)
-                {
                     ruleId = rule.RuleId;
-                }
 
                 // 优先级3：Position和Guidance都为空
                 if (ruleId == 0 && rule.PositionId == 0 && string.IsNullOrEmpty(rule.Guidance))
-                {
                     ruleId = rule.RuleId;
-                }
             }
 
             return ruleId;
-        }
-
-        /// <summary>
-        /// 规则检查匹配
-        /// </summary>
-        /// <param name="guidance"></param>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        private async Task<bool> CheckGuidanceAsync(string guidance, long formId)
-        {
-            if (string.IsNullOrEmpty(guidance)) return false;
-
-            try
-            {
-                var method = GetType().GetMethod(guidance, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
-                if (method == null) return false;
-
-                var task = method.Invoke(this, new object[] { formId }) as Task<bool>;
-                return task != null && await task;
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         /// <summary>
@@ -204,10 +186,10 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         public async Task<int> SaveFormInstance(long formId)
         {
             var formTypeId = await _db.Queryable<FormInstanceEntity>()
-                               .With(SqlWith.NoLock)
-                               .Where(f => f.FormId == formId)
-                               .Select(f => f.FormTypeId)
-                               .FirstAsync();
+                                      .With(SqlWith.NoLock)
+                                      .Where(f => f.FormId == formId)
+                                      .Select(f => f.FormTypeId)
+                                      .FirstAsync();
 
             // 匹配工作流规则
             var ruleId = await MatchWorkflowRuleAsync(formTypeId, formId);

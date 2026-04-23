@@ -42,13 +42,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <summary>
         /// 表单类型下拉
         /// </summary>
-        /// <param name="groupId"></param>
+        /// <param name="formGroupId"></param>
         /// <returns></returns>
-        public async Task<List<FormTypeDropDto>> GetFormTypeDrop(long groupId)
+        public async Task<List<FormTypeDropDto>> GetFormTypeDrop(long formGroupId)
         {
             return await _db.Queryable<FormTypeEntity>()
                             .With(SqlWith.NoLock)
-                            .Where(formtype => formtype.FormGroupId == groupId)
+                            .Where(formtype => formtype.FormGroupId == formGroupId)
                             .OrderBy(formtype => formtype.SortOrder)
                             .Select(formtype => new FormTypeDropDto
                             {
@@ -100,7 +100,19 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         {
             return await _db.Insertable(entity).ExecuteCommandAsync();
         }
-       
+
+        /// <summary>
+        /// 查询规则是否有步骤配置
+        /// </summary>
+        /// <param name="ruleId"></param>
+        /// <returns></returns>
+        public async Task<bool> GetWorkflowRuleStepIsExist(long ruleId)
+        {
+            return await _db.Queryable<WorkflowRuleStepEntity>()
+                            .Where(rule => rule.RuleId == ruleId)
+                            .AnyAsync();
+        }
+
         /// <summary>
         /// 删除规则
         /// </summary>

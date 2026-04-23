@@ -37,16 +37,15 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
         //    var formDetail = await _db.Queryable<FormInstanceEntity>()
         //                            .With(SqlWith.NoLock)
-        //                            .InnerJoin<FormTypeEntity>((instance, formType) => instance.FormTypeId == formType.FormTypeId)
-        //                            .InnerJoin<UserInfoEntity>((instance, formType, user) => instance.ApplicantUserId == user.UserId)
-        //                            .InnerJoin<DepartmentInfoEntity>((instance, formType, user, dept) => user.DepartmentId == dept.DepartmentId)
-        //                            .InnerJoin<DepartmentLevelEntity>((instance, formType, user, dept, deptLevel) => dept.DepartmentLevelId == deptLevel.DepartmentLevelId)
-        //                            .InnerJoin<PositionInfoEntity>((instance, formType, user, dept, deptLevel, position) => user.PositionId == position.PositionId)
-        //                            .LeftJoin<UserAgentEntity>((instance, formType, user, dept, deptLevel, position, agent) => user.UserId == agent.SubstituteUserId)
-        //                            .LeftJoin<UserInfoEntity>((instance, formType, user, dept, deptLevel, position, agent, agentUser) => agent.AgentUserId == agentUser.UserId)
-        //                            .LeftJoin<FormReviewLimitEntity>((instance, formType, user, dept, deptLevel, position, agent, agentUser, reviewLimit) => formType.FormTypeId == reviewLimit.FormTypeId && position.PositionId == reviewLimit.PositionId)
-        //                            .Where((instance, formType, user, dept, deptLevel, position, agent, agentUser, reviewLimit) => instance.FormId == formId)
-        //                            .Select((instance, formType, user, dept, deptLevel, position, agent, agentUser, reviewLimit) => new
+        //                            .InnerJoin<FormTypeEntity>((instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
+        //                            .InnerJoin<UserInfoEntity>((instance, formtype, user) => instance.ApplicantUserId == user.UserId)
+        //                            .InnerJoin<DepartmentInfoEntity>((instance, formtype, user, dept) => user.DepartmentId == dept.DepartmentId)
+        //                            .InnerJoin<DepartmentLevelEntity>((instance, formtype, user, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+        //                            .InnerJoin<PositionInfoEntity>((instance, formtype, user, dept, deptlevel, position) => user.PositionId == position.PositionId)
+        //                            .LeftJoin<UserAgentEntity>((instance, formtype, user, dept, deptlevel, position, agent) => user.UserId == agent.SubstituteUserId)
+        //                            .LeftJoin<UserInfoEntity>((instance, formtype, user, dept, deptlevel, position, agent, agentUser) => agent.AgentUserId == agentUser.UserId)
+        //                            .Where((instance, formtype, user, dept, deptlevel, position, agent, agentUser) => instance.FormId == formId && agent.StartTime <= DateTime.Now && agent.EndTime >= DateTime.Now)
+        //                            .Select((instance, formtype, user, dept, deptlevel, position, agent, agentUser) => new
         //                            {
         //                                instance.FormId,
         //                                instance.FormTypeId,
@@ -56,45 +55,39 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         //                                ApplicantUserName = _lang.Locale == "zh-CN"
         //                                    ? user.UserNameCn
         //                                    : user.UserNameEn,
-        //                                DeptLevelSort = deptLevel.SortOrder,
+        //                                DeptLevelSort = deptlevel.SortOrder,
         //                                PositionSort = position.SortOrder,
         //                                IsSubstitute = agent.SubstituteUserId,
         //                                AgentUserId = agent.AgentUserId,
         //                                AgentUserName = _lang.Locale == "zh-CN"
         //                                    ? agentUser.UserNameCn
         //                                    : agentUser.UserNameEn,
-        //                                MaxPositionId = reviewLimit.MaxPositionId,
         //                            }).FirstAsync();
 
         //    // 所属分支初始步骤
-        //    var branchStep = await _db.Queryable<WorkflowRuleEntity>()
+        //    var branchStep = await _db.Queryable<WorkflowStepEntity>()
         //                              .With(SqlWith.NoLock)
-        //                              .Where(rule => rule.RuleId == formDetail.RuleId && rule.SortOrder == 1)
+        //                              .Where(rule => rule.FormTypeId == formDetail.RuleId && rule.SortOrder == 1)
         //                              .FirstAsync();
         //    var currentStep = branchStep.StepId;
         //    while (currentStep != -1)
         //    {
         //        var formReviewFlow = new FormReviewFlow();
-
-        //        var stepInfo = await _db.Queryable<WorkflowStepEntity>()
+        //        var stepInfo = await _db.Queryable<WorkflowRuleStepEntity>()
         //                                .With(SqlWith.NoLock)
-        //                                .Where(step => step.StepId == currentStep)
+        //                                .Where(step => step.RuleId == currentStep)
         //                                .FirstAsync();
 
-        //        if (stepInfo.Assignment == Assignment.Org.ToEnumString())
+        //        if (stepInfo.IsStartStep == 1)
+        //        {
+
+        //        }
+        //        else if (stepInfo.Assignment == Assignment.Org.ToEnumString())
         //        {
         //            var orgInfo = await _db.Queryable<WorkflowStepOrgEntity>()
         //                                   .With(SqlWith.NoLock)
         //                                   .Where(step => step.StepId == currentStep)
         //                                   .FirstAsync();
-
-        //            if (stepInfo.IsStartStep == 1)
-        //            {
-        //                //await GetStepReviewUser(orgInfo.DeptLeaveId, orgInfo.PositionId, formDetail.ApplicantUserId, formDetail.ApplicantDeptId, formDetail.DeptLevelSort, formDetail.PositionSort);
-        //            }
-
-        //            // 查找符合部门级别的部门信息
-                   
         //        }
         //    }
         //}

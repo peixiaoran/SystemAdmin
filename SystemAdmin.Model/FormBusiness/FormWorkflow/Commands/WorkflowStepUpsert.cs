@@ -11,11 +11,6 @@
         public string StepId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 表单组别Id
-        /// </summary>
-        public string FormGroupId { get; set; } = string.Empty;
-
-        /// <summary>
         /// 表单类型Id
         /// </summary>
         public string FormTypeId { get; set; } = string.Empty;

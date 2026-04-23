@@ -73,8 +73,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         public async Task<List<long>> GetFormTypeIds(long formGroupId)
         {
             return await _db.Queryable<FormTypeEntity>()
-                            .Where(x => x.FormGroupId == formGroupId)
-                            .Select(x => x.FormTypeId)
+                            .Where(formtype => formtype.FormGroupId == formGroupId)
+                            .Select(formtype => formtype.FormTypeId)
                             .ToListAsync();
         }
 
@@ -85,7 +85,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
         /// <returns></returns>
         public async Task<int> DeleteUserFromType(List<long> formTypeIds)
         {
-            return await _db.Deleteable<UserFormEntity>()
+            return await _db.Updateable<UserFormEntity>()
                             .Where(formtype => formTypeIds.Contains(formtype.FormGroupTypeId))
                             .ExecuteCommandAsync();
         }

@@ -203,8 +203,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                         Address = dept.Address,
                                     }).ToListAsync();
 
-            var deptDict = deptList.GroupBy(dept => dept.ParentId)
-                                   .ToDictionary(g => g.Key, g => g.OrderBy(d => d.SortOrder).ToList());
+            var deptDict = deptList.GroupBy(dept => dept.ParentId).ToDictionary(g => g.Key, g => g.OrderBy(d => d.SortOrder).ToList());
 
             List<DepartmentInfoDto> BuildTree(long parentId = 0)
             {

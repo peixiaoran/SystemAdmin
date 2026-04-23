@@ -46,11 +46,6 @@
         public int SortOrder { get; set; }
 
         /// <summary>
-        /// 是否启用（1、是 0、否）
-        /// </summary>
-        public int IsEnabled { get; set; }
-
-        /// <summary>
         /// 表单类型描述（中文）
         /// </summary>
         public string DescriptionCn { get; set; } = string.Empty;

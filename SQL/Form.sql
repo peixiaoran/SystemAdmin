@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 22/04/2026 17:03:34
+ Date: 23/04/2026 17:04:20
 */
 
 
@@ -219,8 +219,8 @@ CREATE TABLE [Form].[FormGroup] (
   [SortOrder] int  NOT NULL,
   [DescriptionCn] nvarchar(300) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
   [DescriptionEn] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [CreatedBy] bigint  NOT NULL,
-  [CreatedDate] datetime DEFAULT getdate() NOT NULL,
+  [CreatedBy] bigint  NULL,
+  [CreatedDate] datetime DEFAULT getdate() NULL,
   [ModifiedBy] bigint  NULL,
   [ModifiedDate] datetime  NULL
 )
@@ -792,7 +792,6 @@ GO
 
 CREATE TABLE [Form].[LeaveForm] (
   [FormId] bigint  NOT NULL,
-  [ApplicantUserId] bigint  NULL,
   [LeaveTypeCode] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [LeaveReason] nvarchar(150) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
   [LeaveStartTime] datetime2(7)  NULL,
@@ -814,13 +813,6 @@ EXEC sp_addextendedproperty
 'SCHEMA', N'Form',
 'TABLE', N'LeaveForm',
 'COLUMN', N'FormId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'申请人Id',
-'SCHEMA', N'Form',
-'TABLE', N'LeaveForm',
-'COLUMN', N'ApplicantUserId'
 GO
 
 EXEC sp_addextendedproperty
@@ -903,7 +895,7 @@ GO
 -- ----------------------------
 -- Records of LeaveForm
 -- ----------------------------
-INSERT INTO [Form].[LeaveForm] ([FormId], [ApplicantUserId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveDays], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860347188580352', N'1903486709602062336', N'Marriage', N'', N'2026-04-22 00:00:00.0000000', N'2026-04-25 00:00:00.0000000', N'2.00', N'', N'1903486709602062336', N'2026-04-22 15:55:10.333', N'1903486709602062336', N'2026-04-22 15:59:25.697')
+INSERT INTO [Form].[LeaveForm] ([FormId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveDays], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860347188580352', N'Marriage', N'', N'2026-04-22 00:00:00.0000000', N'2026-04-25 00:00:00.0000000', N'2.00', N'', N'1903486709602062336', N'2026-04-22 15:55:10.333', N'1903486709602062336', N'2026-04-22 15:59:25.697')
 GO
 
 
@@ -1166,6 +1158,21 @@ GO
 -- ----------------------------
 -- Records of WorkflowRuleStep
 -- ----------------------------
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'2009890853346217984', N'2009892923604340736', N'1', N'1903486709602062336', N'2026-04-23 11:39:44.170', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'1987215338470772736', N'2009897830268932096', N'2', N'1903486709602062336', N'2026-04-23 11:40:04.650', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'2009897830268932096', N'2009898117243211776', N'3', N'1903486709602062336', N'2026-04-23 11:57:27.710', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'2009898117243211776', N'2032353104544010240', N'0', N'1903486709602062336', N'2026-04-23 11:57:46.400', N'1903486709602062336', N'2026-04-23 13:15:17.947')
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'2032353104544010240', N'0', N'5', N'1903486709602062336', N'2026-04-23 11:58:54.023', NULL, NULL)
+GO
+
 
 -- ----------------------------
 -- Table structure for WorkflowStep
