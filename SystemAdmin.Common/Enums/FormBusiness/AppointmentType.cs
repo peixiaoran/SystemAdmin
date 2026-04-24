@@ -8,7 +8,7 @@
         /// <summary>
         /// 实
         /// </summary>
-        Primary = 1,
+        Actual = 1,
 
         /// <summary>
         /// 兼
@@ -28,7 +28,7 @@
         /// <summary>
         /// 自动指派 - 实
         /// </summary
-        AutoPrimary = 5,
+        AutoActual = 5,
 
         /// <summary>
         /// 自动指派 - 兼

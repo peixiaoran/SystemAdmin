@@ -10,6 +10,7 @@ using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dtp;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
+using SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager;
 using SystemAdmin.Repository.FormBusiness.Forms;
 using SystemAdmin.Repository.FormBusiness.Workflow;
 
@@ -20,23 +21,25 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly CurrentUser _loginuser;
         private readonly ILogger<LeaveFormService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly FileUploadOptions _attachmentUploadOptions;
+        private readonly FileUploadOptions _attachmentUpload;
         private readonly MinioService _minioService;
         private readonly FormManager _formRepository;
         private readonly LeaveFormRepository _leaveForm;
         private readonly LocalizationService _localization;
+        private readonly ReviewFlowManager _reviewFlow;
         private readonly string _form = "FormBusiness.Forms.";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> attachmentUploadOptions, MinioService minioService, FormManager formRepository, LeaveFormRepository leaveForm, LocalizationService localization)
+        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> attachmentUpload, MinioService minioService, FormManager formRepository, LeaveFormRepository leaveForm, LocalizationService localization, ReviewFlowManager reviewFlow)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _attachmentUploadOptions = attachmentUploadOptions.Value;
+            _attachmentUpload = attachmentUpload.Value;
             _minioService = minioService;
             _formRepository = formRepository;
             _leaveForm = leaveForm;
             _localization = localization;
+            _reviewFlow = reviewFlow;
         }
 
         /// <summary>
@@ -88,7 +91,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                     return Result<LeaveFormDto>.Ok(leaveFormDto);
                 }
-                
             }
             catch (Exception ex)
             {
@@ -156,26 +158,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 return Result<LeaveFormDto>.Failure(500, ex.Message);
             }
         }
-
-        /// <summary>
-        /// 查询完整签核流程
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        public async Task<Result<LeaveFormDto>> GetFullApprovalFlow(string formId)
-        {
-            try
-            {
-                var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
-                dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
-                return Result<LeaveFormDto>.Ok(dto);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<LeaveFormDto>.Failure(500, ex.Message);
-            }
-        }
         
         /// <summary>
         /// 上传附件
@@ -192,7 +174,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentNotNull"));
                 }
 
-                long maxAttachmentSize = _attachmentUploadOptions.MaxSizeMB * 1024L * 1024L;
+                long maxAttachmentSize = _attachmentUpload.MaxSizeMB * 1024L * 1024L;
 
                 var formAttachmentList = new List<FormAttachmentDto>();
 
@@ -203,21 +185,18 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     {
                         return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentNotNull"));
                     }
-
                     if (attachment.Length > maxAttachmentSize)
                     {
                         return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentSizeLimit"));
                     }
 
                     var attachmentExt = Path.GetExtension(attachment.FileName)?.ToLowerInvariant();
-
-                    if (string.IsNullOrWhiteSpace(attachmentExt) || !_attachmentUploadOptions.AllowExtensions.Contains(attachmentExt))
+                    if (string.IsNullOrWhiteSpace(attachmentExt) || !_attachmentUpload.AllowExtensions.Contains(attachmentExt))
                     {
                         return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentExtensionNotAllow"));
                     }
 
                     using var stream = attachment.OpenReadStream();
-
                     var avatarUrl = await _minioService.UploadAsync(attachment.FileName, stream, attachment.ContentType);
 
                     int attachmentSizeKb = (int)(attachment.Length / 1024);
@@ -232,9 +211,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
-
                     var attachmentItemDto = attachmentItem.Adapt<FormAttachmentDto>();
-
                     var count = await _leaveForm.InsertAttachment(attachmentItem);
                     formAttachmentList.Add(attachmentItemDto);
                 }
@@ -277,6 +254,25 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
                 return Result<int>.Failure(500, _localization.ReturnMsg($"{_form}DeleteAttachmentFailed"));
+            }
+        }
+
+        /// <summary>
+        /// 查询完整签核流程
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public async Task<Result<List<FormReviewFlow>>> GetFullReviewFlow(string formId)
+        {
+            try
+            {
+                var reviewFlow = await _reviewFlow.GetFullReviewFlow(long.Parse(formId));
+                return Result<List<FormReviewFlow>>.Ok(reviewFlow);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<FormReviewFlow>>.Failure(500, ex.Message);
             }
         }
     }

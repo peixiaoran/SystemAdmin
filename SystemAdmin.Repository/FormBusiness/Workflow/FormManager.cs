@@ -43,12 +43,12 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             // 2. 匹配工作流规则
             var ruleId = await MatchWorkflowRuleAsync(formTypeId, formId);
 
-            // 3. 创建表单实例
+            // 3. 查询起始步骤
             var startStepId = await _db.Queryable<WorkflowStepEntity>()
                                        .Where(step => step.FormTypeId == formTypeId && step.IsStartStep == 1)
                                        .Select(step => step.StepId)
                                        .FirstAsync();
-
+            // 4. 创建表单实例
             await _db.Insertable(new FormInstanceEntity
             {
                 FormId = formId,
