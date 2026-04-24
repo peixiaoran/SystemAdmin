@@ -8,12 +8,12 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
     public class UserLoginLogService
     {
         private readonly ILogger<UserLoginLogService> _logger;
-        private readonly UserLoginLogRepository _userLoginLogRepository;
+        private readonly UserLoginLogRepository _userLoginLogRepo;
 
-        public UserLoginLogService(ILogger<UserLoginLogService> logger, UserLoginLogRepository userLoginLogRepository)
+        public UserLoginLogService(ILogger<UserLoginLogService> logger, UserLoginLogRepository userLoginLogRepo)
         {
             _logger = logger;
-            _userLoginLogRepository = userLoginLogRepository;
+            _userLoginLogRepo = userLoginLogRepo;
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var page = await _userLoginLogRepository.GetUserLoginLogPage(getPage);
+                var page = await _userLoginLogRepo.GetUserLoginLogPage(getPage);
                 return page;
             }
             catch (Exception ex)

@@ -14,16 +14,16 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         private readonly CurrentUser _loginuser;
         private readonly ILogger<FormGroupService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly FormGroupRepository _formGroupRepository;
+        private readonly FormGroupRepository _formGroupRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormBasicInfo.FormGroup";
 
-        public FormGroupService(CurrentUser loginuser, ILogger<FormGroupService> logger, SqlSugarScope db, FormGroupRepository formGroupRepository, LocalizationService localization)
+        public FormGroupService(CurrentUser loginuser, ILogger<FormGroupService> logger, SqlSugarScope db, FormGroupRepository formGroupRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _formGroupRepository = formGroupRepository;
+            _formGroupRepo = formGroupRepo;
             _localization = localization;
         }
 
@@ -49,7 +49,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _formGroupRepository.InsertFormGroupInfo(entity);
+                int count = await _formGroupRepo.InsertFormGroupInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -75,15 +75,15 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
             {
                 await _db.BeginTranAsync();
                 // 删除表单组别
-                int delFormGroupCount = await _formGroupRepository.DeleteFormGroupInfo(long.Parse(formGroupId));
+                int delFormGroupCount = await _formGroupRepo.DeleteFormGroupInfo(long.Parse(formGroupId));
                 // 删除员工表单组别绑定
-                int delUserGroupBindCount = await _formGroupRepository.DeleteUserFormTypeBind(long.Parse(formGroupId));
+                int delUserGroupBindCount = await _formGroupRepo.DeleteUserFormTypeBind(long.Parse(formGroupId));
                 // 删除表单组别下的表单类别
-                int delFormTypeCount = await _formGroupRepository.DeleteFormTypeInfo(long.Parse(formGroupId));
+                int delFormTypeCount = await _formGroupRepo.DeleteFormTypeInfo(long.Parse(formGroupId));
                 // 获取被删除表单组别下的表单类别Id
-                var delformTypeList = await _formGroupRepository.GetFormTypeIds(long.Parse(formGroupId));
+                var delformTypeList = await _formGroupRepo.GetFormTypeIds(long.Parse(formGroupId));
                 // 删除员工组别下的员工表单类别绑定
-                int delFormTypeBindCount = await _formGroupRepository.DeleteUserFromType(delformTypeList);
+                int delFormTypeBindCount = await _formGroupRepo.DeleteUserFromType(delformTypeList);
                 await _db.CommitTranAsync();
 
                 return delFormGroupCount >= 1
@@ -120,7 +120,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _formGroupRepository.UpdateFormGroupInfo(entity);
+                int count = await _formGroupRepo.UpdateFormGroupInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -144,7 +144,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                var entity = await _formGroupRepository.GetFormGroupEntity(long.Parse(formGroupId));
+                var entity = await _formGroupRepo.GetFormGroupEntity(long.Parse(formGroupId));
                 return Result<FormGroupDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -163,7 +163,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                return await _formGroupRepository.GetFormGroupPage(getPage);
+                return await _formGroupRepo.GetFormGroupPage(getPage);
             }
             catch (Exception ex)
             {

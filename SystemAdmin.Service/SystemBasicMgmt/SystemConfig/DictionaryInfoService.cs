@@ -15,16 +15,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         private readonly CurrentUser _loginuser;
         private readonly ILogger<DictionaryInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly DictionaryInfoRepository _dictionaryRepository;
+        private readonly DictionaryInfoRepository _dictionaryRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemConfig.DictionaryInfo";
 
-        public DictionaryInfoService(CurrentUser loginuser, ILogger<DictionaryInfoService> logger, SqlSugarScope db, DictionaryInfoRepository dictionaryRepository, LocalizationService localization)
+        public DictionaryInfoService(CurrentUser loginuser, ILogger<DictionaryInfoService> logger, SqlSugarScope db, DictionaryInfoRepository dictionaryRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _dictionaryRepository = dictionaryRepository;
+            _dictionaryRepo = dictionaryRepo;
             _localization = localization;
         }
 
@@ -37,7 +37,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var drop = await _dictionaryRepository.GetModuleDrop();
+                var drop = await _dictionaryRepo.GetModuleDrop();
                 return Result<List<ModuleDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -56,7 +56,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var drop = await _dictionaryRepository.GetDicTypeDrop(long.Parse(moduleId));
+                var drop = await _dictionaryRepo.GetDicTypeDrop(long.Parse(moduleId));
                 return Result<List<DicTypeDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var dicTypeCodeExist = await _dictionaryRepository.GetDictionaryInfoIsExist(upsert.DicType, upsert.DicCode);
+                var dicTypeCodeExist = await _dictionaryRepo.GetDictionaryInfoIsExist(upsert.DicType, upsert.DicCode);
                 if (dicTypeCodeExist)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}DicTypeCodeIsExist"));
@@ -96,7 +96,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                     };
 
                     await _db.BeginTranAsync();
-                    var count = await _dictionaryRepository.InsertDictionaryInfo(entity);
+                    var count = await _dictionaryRepo.InsertDictionaryInfo(entity);
                     await _db.CommitTranAsync();
 
                     return count >= 1
@@ -122,7 +122,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
             try
             {
                 await _db.BeginTranAsync();
-                var count = await _dictionaryRepository.DeleteDictionaryInfo(upsert);
+                var count = await _dictionaryRepo.DeleteDictionaryInfo(upsert);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -160,7 +160,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _dictionaryRepository.UpdateDictionaryInfo(entity);
+                var count = await _dictionaryRepo.UpdateDictionaryInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -184,7 +184,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var entity = await _dictionaryRepository.GetDictionaryInfoEntity(long.Parse(getEntity.DicId));
+                var entity = await _dictionaryRepo.GetDictionaryInfoEntity(long.Parse(getEntity.DicId));
                 return Result<DictionaryInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -203,7 +203,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var page = await _dictionaryRepository.GetDictionaryInfoPage(getPage);
+                var page = await _dictionaryRepo.GetDictionaryInfoPage(getPage);
                 return page;
             }
             catch (Exception ex)

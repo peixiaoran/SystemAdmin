@@ -24,18 +24,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly ILogger<UserInfoService> _logger;
         private readonly SqlSugarScope _db;
         private readonly MinioService _minioService;
-        private readonly UserInfoRepository _userInfoRepository;
+        private readonly UserInfoRepository _userInfoRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.UserInfo";
         private readonly string _thisExcel = "SystemBasicMgmt.SystemBasicData.UserExcel_";
 
-        public UserInfoService(CurrentUser loginuser, ILogger<UserInfoService> logger, SqlSugarScope db, MinioService minioService, UserInfoRepository userInfoRepository, LocalizationService localization)
+        public UserInfoService(CurrentUser loginuser, ILogger<UserInfoService> logger, SqlSugarScope db, MinioService minioService, UserInfoRepository userInfoRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
             _minioService = minioService;
-            _userInfoRepository = userInfoRepository;
+            _userInfoRepo = userInfoRepo;
             _localization = localization;
         }
 
@@ -47,7 +47,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _userInfoRepository.GetNationalityDrop();
+                var drop = await _userInfoRepo.GetNationalityDrop();
                 return Result<List<NationalityDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -65,7 +65,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _userInfoRepository.GetDepartmentDrop();
+                var drop = await _userInfoRepo.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -83,7 +83,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _userInfoRepository.GetPositionDrop();
+                var drop = await _userInfoRepo.GetPositionDrop();
                 return Result<List<PositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -102,7 +102,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _userInfoRepository.GetLaborDrop();
+                var drop = await _userInfoRepo.GetLaborDrop();
                 return Result<List<UserLaborDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -120,7 +120,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _userInfoRepository.GetRoleDrop();
+                var drop = await _userInfoRepo.GetRoleDrop();
                 return Result<List<RoleInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -162,7 +162,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
 
                 // 4. 上传到 MinIO
-                var avatarUrl = await _minioService.UploadAsync(file.FileName, file.OpenReadStream(), file.ContentType);
+                var avatarUrl = await _minioService.UploadFile(file.FileName, file.OpenReadStream(), file.ContentType);
 
                 return Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"));
             }
@@ -206,9 +206,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
 
                 // 4. 上传到 MinIO
-                var avatarUrl = await _minioService.UploadAsync(file.FileName, file.OpenReadStream(), file.ContentType);
+                var avatarUrl = await _minioService.UploadFile(file.FileName, file.OpenReadStream(), file.ContentType);
 
-                var updateAvatarCount = await _userInfoRepository.UpdateUserAvatar(long.Parse(userId), avatarUrl);
+                var updateAvatarCount = await _userInfoRepo.UpdateUserAvatar(long.Parse(userId), avatarUrl);
                 await _db.CommitTranAsync();
 
                 return updateAvatarCount >= 1
@@ -236,7 +236,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}ValidationLoginNoPassWrodNotNull"));
                 }
-                if (await _userInfoRepository.UserNoIsExist(upsert.UserNo, upsert.LoginNo))
+                if (await _userInfoRepo.UserNoIsExist(upsert.UserNo, upsert.LoginNo))
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UserNoRepat"));
                 }
@@ -280,7 +280,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int insertUserCount = await _userInfoRepository.InsertUserInfo(entity);
+                int insertUserCount = await _userInfoRepo.InsertUserInfo(entity);
 
                 // 新增员工权限
                 var insertUserRole = new UserRoleEntity()
@@ -290,7 +290,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     CreatedBy = _loginuser.UserId,
                     CreatedDate = DateTime.Now
                 };
-                int insertUserRoleCount = await _userInfoRepository.InsertUserRole(insertUserRole);
+                int insertUserRoleCount = await _userInfoRepo.InsertUserRole(insertUserRole);
                 await _db.CommitTranAsync();
 
                 return insertUserCount >= 1 && insertUserRoleCount >= 1
@@ -316,17 +316,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             {
                 await _db.BeginTranAsync();
                 // 删除员工信息
-                int delUserCount = await _userInfoRepository.DeleteUserInfo(long.Parse(userId));
+                int delUserCount = await _userInfoRepo.DeleteUserInfo(long.Parse(userId));
                 // 删除员工权限
-                int delUserRoleCount = await _userInfoRepository.DeleteUserRoleInfo(long.Parse(userId));
+                int delUserRoleCount = await _userInfoRepo.DeleteUserRoleInfo(long.Parse(userId));
                 // 删除员工代理
-                int delUserAgentCount = await _userInfoRepository.DeleteUserAgent(long.Parse(userId));
+                int delUserAgentCount = await _userInfoRepo.DeleteUserAgent(long.Parse(userId));
                 // 删除员工兼任
-                int delUserPartTimeCount = await _userInfoRepository.DeleteUserPartTime(long.Parse(userId));
+                int delUserPartTimeCount = await _userInfoRepo.DeleteUserPartTime(long.Parse(userId));
                 // 删除员工表单绑定
-                int delUserFormCount = await _userInfoRepository.DeleteUserForm(long.Parse(userId));
+                int delUserFormCount = await _userInfoRepo.DeleteUserForm(long.Parse(userId));
                 // 删除员工账号锁定记录
-                int delUserLockCount = await _userInfoRepository.DeleteUserLock(long.Parse(userId));
+                int delUserLockCount = await _userInfoRepo.DeleteUserLock(long.Parse(userId));
                 await _db.CommitTranAsync();
 
                 return delUserCount >= 1 && delUserRoleCount >= 1
@@ -369,7 +369,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
                 else
                 {
-                    UserInfoEntity user = await _userInfoRepository.GetUserPasswordAndSalt(long.Parse(upsert.UserId));
+                    UserInfoEntity user = await _userInfoRepo.GetUserPasswordAndSalt(long.Parse(upsert.UserId));
                     updateSaltString = user.PwdSalt;
                     updatePassWord = user.PassWord;
                 }
@@ -406,7 +406,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int updateUserCount = await _userInfoRepository.UpdateUserInfo(entity);
+                int updateUserCount = await _userInfoRepo.UpdateUserInfo(entity);
 
                 // 修改员工角色
                 var updateUserRole = new UserRoleEntity()
@@ -416,7 +416,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
-                int updateUserRoleCount = await _userInfoRepository.UpdateUserRoleInfo(updateUserRole);
+                int updateUserRoleCount = await _userInfoRepo.UpdateUserRoleInfo(updateUserRole);
                 await _db.CommitTranAsync();
 
                 return updateUserCount >= 1 || updateUserRoleCount >= 1
@@ -440,7 +440,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var entity = await _userInfoRepository.GetUserInfoEntity(long.Parse(userId));
+                var entity = await _userInfoRepo.GetUserInfoEntity(long.Parse(userId));
                 return Result<UserInfoEntityDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -459,7 +459,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                return await _userInfoRepository.GetUserInfoPage(getPage);
+                return await _userInfoRepo.GetUserInfoPage(getPage);
             }
             catch (Exception ex)
             {
@@ -477,7 +477,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                DataTable dt = await _userInfoRepository.GetUserInfoExcel(getExcel);
+                DataTable dt = await _userInfoRepo.GetUserInfoExcel(getExcel);
                 ExcelPackage.License.SetNonCommercialPersonal("Your Name");
 
                 using var package = new ExcelPackage();

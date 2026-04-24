@@ -14,16 +14,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         private readonly CurrentUser _loginuser;
         private readonly ILogger<CurrencyInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly CurrencyInfoRepository _currencyInfoRepository;
+        private readonly CurrencyInfoRepository _currencyInfoRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemConfig.CurrencyInfo";
 
-        public CurrencyInfoService(CurrentUser loginuser, ILogger<CurrencyInfoService> logger, SqlSugarScope db, CurrencyInfoRepository currencyInfoRepository, LocalizationService localization)
+        public CurrencyInfoService(CurrentUser loginuser, ILogger<CurrencyInfoService> logger, SqlSugarScope db, CurrencyInfoRepository currencyInfoRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _currencyInfoRepository = currencyInfoRepository;
+            _currencyInfoRepo = currencyInfoRepo;
             _localization = localization;
         }
 
@@ -48,7 +48,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _currencyInfoRepository.InsertCurrencyInfo(entity);
+                var count = await _currencyInfoRepo.InsertCurrencyInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -73,7 +73,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
             try
             {
                 await _db.BeginTranAsync();
-                var count = await _currencyInfoRepository.DeleteCurrencyInfo(long.Parse(upsert.CurrencyId));
+                var count = await _currencyInfoRepo.DeleteCurrencyInfo(long.Parse(upsert.CurrencyId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -109,7 +109,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _currencyInfoRepository.UpdateCurrencyInfo(entity);
+                var count = await _currencyInfoRepo.UpdateCurrencyInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -133,7 +133,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var entity = await _currencyInfoRepository.GetCurrencyInfoEntity(long.Parse(getEntity.CurrencyId));
+                var entity = await _currencyInfoRepo.GetCurrencyInfoEntity(long.Parse(getEntity.CurrencyId));
                 return Result<CurrencyInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -152,7 +152,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var page = await _currencyInfoRepository.GetCurrencyInfoPage(getPage);
+                var page = await _currencyInfoRepo.GetCurrencyInfoPage(getPage);
                 return page;
             }
             catch (Exception ex)

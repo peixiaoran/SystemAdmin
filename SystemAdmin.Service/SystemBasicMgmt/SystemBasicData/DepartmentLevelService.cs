@@ -13,16 +13,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly CurrentUser _loginuser;
         private readonly ILogger<DepartmentLevelService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly DepartmentLevelRepository _deptLevelRepository;
+        private readonly DepartmentLevelRepository _deptLevelRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.DeptLevel";
 
-        public DepartmentLevelService(CurrentUser loginuser, ILogger<DepartmentLevelService> logger, SqlSugarScope db, DepartmentLevelRepository deptLevelRepository, LocalizationService localization)
+        public DepartmentLevelService(CurrentUser loginuser, ILogger<DepartmentLevelService> logger, SqlSugarScope db, DepartmentLevelRepository deptLevelRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _deptLevelRepository = deptLevelRepository;
+            _deptLevelRepo = deptLevelRepo;
             _localization = localization;
         }
 
@@ -48,7 +48,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _deptLevelRepository.InsertDepartmentLevel(entity);
+                int count = await _deptLevelRepo.InsertDepartmentLevel(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -73,7 +73,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                int count = await _deptLevelRepository.DeleteDepartmentLevel(long.Parse(deptlevelId));
+                int count = await _deptLevelRepo.DeleteDepartmentLevel(long.Parse(deptlevelId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -110,7 +110,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _deptLevelRepository.UpdateDepartmentLevel(entity);
+                int count = await _deptLevelRepo.UpdateDepartmentLevel(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -134,7 +134,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var entity = await _deptLevelRepository.GetDepartmentLevelEntity(long.Parse(deptlevelId));
+                var entity = await _deptLevelRepo.GetDepartmentLevelEntity(long.Parse(deptlevelId));
                 return Result<DepartmentLevelDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -152,7 +152,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var list = await _deptLevelRepository.GetDepartmentLevelList();
+                var list = await _deptLevelRepo.GetDepartmentLevelList();
                 return Result<List<DepartmentLevelDto>>.Ok(list, "");
             }
             catch (Exception ex)

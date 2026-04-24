@@ -15,16 +15,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         private readonly CurrentUser _loginuser;
         private readonly ILogger<PMenuInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly PMenuRepository _pMenuRepository;
+        private readonly PMenuRepository _pMenuRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemMgmt.PMenu";
 
-        public PMenuInfoService(CurrentUser loginuser, ILogger<PMenuInfoService> logger, SqlSugarScope db, PMenuRepository pMenuRepository, LocalizationService localization)
+        public PMenuInfoService(CurrentUser loginuser, ILogger<PMenuInfoService> logger, SqlSugarScope db, PMenuRepository pMenuRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _pMenuRepository = pMenuRepository;
+            _pMenuRepo = pMenuRepo;
             _localization = localization;
         }
 
@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                var drop = await _pMenuRepository.GetModuleDrop();
+                var drop = await _pMenuRepo.GetModuleDrop();
                 return Result<List<ModuleDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _pMenuRepository.InsertPMenu(entity);
+                int count = await _pMenuRepo.InsertPMenu(entity);
                 await _db.CommitTranAsync();
 
                 return Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"));
@@ -99,15 +99,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             {
                 await _db.BeginTranAsync();
                 // 删除一级菜单
-                var delPMenuCount = await _pMenuRepository.DeletePMenu(long.Parse(menuId));
+                var delPMenuCount = await _pMenuRepo.DeletePMenu(long.Parse(menuId));
                 // 删除角色一级菜单
-                var delRolePMenuCount = await _pMenuRepository.DeleteRolePMenu(long.Parse(menuId));
+                var delRolePMenuCount = await _pMenuRepo.DeleteRolePMenu(long.Parse(menuId));
                 // 查询二级菜单Ids
-                var sMenuIds = await _pMenuRepository.GetSMenuIds(long.Parse(menuId));
+                var sMenuIds = await _pMenuRepo.GetSMenuIds(long.Parse(menuId));
                 // 删除二级菜单
-                var delSMenuCount = await _pMenuRepository.DeleteSMenu(long.Parse(menuId));
+                var delSMenuCount = await _pMenuRepo.DeleteSMenu(long.Parse(menuId));
                 // 删除角色二级菜单
-                var delRoleSMenuCount = await _pMenuRepository.DeleteRoleSMenu(sMenuIds);
+                var delRoleSMenuCount = await _pMenuRepo.DeleteRoleSMenu(sMenuIds);
                 await _db.CommitTranAsync();
 
                 return Result<int>.Ok(delPMenuCount, _localization.ReturnMsg($"{_this}DeleteSuccess"));
@@ -147,7 +147,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _pMenuRepository.UpdatePMenu(entity);
+                int count = await _pMenuRepo.UpdatePMenu(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -171,7 +171,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                var entity = await _pMenuRepository.GetPMenuEntity(long.Parse(menuId));
+                var entity = await _pMenuRepo.GetPMenuEntity(long.Parse(menuId));
                 return Result<MenuInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -190,7 +190,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                var page = await _pMenuRepository.GetPMenuPage(getPage);
+                var page = await _pMenuRepo.GetPMenuPage(getPage);
                 return page;
             }
             catch (Exception ex)

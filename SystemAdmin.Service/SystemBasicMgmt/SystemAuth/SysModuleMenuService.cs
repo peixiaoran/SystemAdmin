@@ -10,13 +10,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
     {
         private readonly CurrentUser _loginuser;
         private readonly ILogger<SysModuleMenuService> _logger;
-        private readonly SysModuleMenuRepository _sysModuleMenuRepository;
+        private readonly SysModuleMenuRepository _sysModuleMenuRepo;
 
-        public SysModuleMenuService(CurrentUser loginuser, ILogger<SysModuleMenuService> logger, SysModuleMenuRepository sysModuleMenuRepository)
+        public SysModuleMenuService(CurrentUser loginuser, ILogger<SysModuleMenuService> logger, SysModuleMenuRepository sysModuleMenuRepo)
         {
             _loginuser = loginuser;
             _logger = logger;
-            _sysModuleMenuRepository = sysModuleMenuRepository;
+            _sysModuleMenuRepo = sysModuleMenuRepo;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         {
             try
             {
-                List<SysModuleInfoDto> moduleList = await _sysModuleMenuRepository.GetModuleList(_loginuser.UserId);
+                List<SysModuleInfoDto> moduleList = await _sysModuleMenuRepo.GetModuleList(_loginuser.UserId);
                 return Result<List<SysModuleInfoDto>>.Ok(moduleList, "");
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         {
             try
             {
-                List<SysMenuInfoDto> menuTree = await _sysModuleMenuRepository.GetMenuTreeList(long.Parse(moduleId), _loginuser.UserId);
+                List<SysMenuInfoDto> menuTree = await _sysModuleMenuRepo.GetMenuTreeList(long.Parse(moduleId), _loginuser.UserId);
                 return Result<List<SysMenuInfoDto>>.Ok(menuTree, "");
             }
             catch (Exception ex)

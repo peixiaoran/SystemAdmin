@@ -14,19 +14,18 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         private readonly CurrentUser _loginuser;
         private readonly ILogger<ExchangeRateService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly ExchangeRateRepository _ExchangeRateRepository;
+        private readonly ExchangeRateRepository _exchangeRateRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemConfig.ExchangeRate";
 
-        public ExchangeRateService(CurrentUser loginuser, ILogger<ExchangeRateService> logger, SqlSugarScope db, ExchangeRateRepository ExchangeRateRepository, LocalizationService localization)
+        public ExchangeRateService(CurrentUser loginuser, ILogger<ExchangeRateService> logger, SqlSugarScope db, ExchangeRateRepository ExchangeRateRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _ExchangeRateRepository = ExchangeRateRepository;
+            _exchangeRateRepo = ExchangeRateRepo;
             _localization = localization;
         }
-
 
         /// <summary>
         /// 币别下拉
@@ -36,7 +35,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var drop = await _ExchangeRateRepository.GetCurrencyInfoDrop();
+                var drop = await _exchangeRateRepo.GetCurrencyInfoDrop();
                 return Result<List<CurrencyInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -61,7 +60,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                 }
                 else
                 {
-                    bool isExist = await _ExchangeRateRepository.GetExchangeRateIsExist(upsert.CurrencyCode, upsert.ExchangeCurrencyCode, upsert.YearMonth);
+                    bool isExist = await _exchangeRateRepo.GetExchangeRateIsExist(upsert.CurrencyCode, upsert.ExchangeCurrencyCode, upsert.YearMonth);
                     if (isExist)
                     {
                         return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}IsExist"));
@@ -80,7 +79,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                         };
 
                         await _db.BeginTranAsync();
-                        var count = await _ExchangeRateRepository.InsertExchangeRate(entity);
+                        var count = await _exchangeRateRepo.InsertExchangeRate(entity);
                         await _db.CommitTranAsync();
 
                         return count >= 1
@@ -107,7 +106,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
             try
             {
                 await _db.BeginTranAsync();
-                var count = await _ExchangeRateRepository.DeleteExchangeRate(upsert.CurrencyCode, upsert.ExchangeCurrencyCode, upsert.YearMonth);
+                var count = await _exchangeRateRepo.DeleteExchangeRate(upsert.CurrencyCode, upsert.ExchangeCurrencyCode, upsert.YearMonth);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -149,7 +148,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
                     };
 
                     await _db.BeginTranAsync();
-                    var count = await _ExchangeRateRepository.UpdateExchangeRate(entity);
+                    var count = await _exchangeRateRepo.UpdateExchangeRate(entity);
                     await _db.CommitTranAsync();
 
                     return count >= 1
@@ -174,7 +173,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var page = await _ExchangeRateRepository.GetExchangeRatePage(getPage);
+                var page = await _exchangeRateRepo.GetExchangeRatePage(getPage);
                 return page;
             }
             catch (Exception ex)
@@ -193,7 +192,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
         {
             try
             {
-                var entity = await _ExchangeRateRepository.GetExchangeRateEntity(getEntity);
+                var entity = await _exchangeRateRepo.GetExchangeRateEntity(getEntity);
                 return Result<ExchangeRateDto>.Ok(entity, "");
             }
             catch (Exception ex)

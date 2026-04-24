@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SysUserOperateLoginSuccess" xml:space="preserve">
+  <data name="SysUserOperateLoginSuccessful" xml:space="preserve">
     <value>登录成功</value>
   </data>
   <data name="SysUserOperateLoginFailedRemainTimes" xml:space="preserve">
     <value>账号或密码错误，还剩余 {0} 次尝试机会</value>
   </data>
-  <data name="SysUserOperateLoginLock" xml:space="preserve">
-    <value>该账号已被锁定，请前往首页进行解锁操作</value>
+  <data name="SysUserOperateLoginFreeze" xml:space="preserve">
+    <value>该账号已被冻结，请前往首页进行解锁或联系系统管理员</value>
   </data>
   <data name="SysUserOperatePasswordExpiration" xml:space="preserve">
     <value>账号密码已过期，请及时修改密码</value>

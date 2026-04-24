@@ -73,10 +73,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<List<DepartmentLevelDto>> GetDepartmentLevelList()
         {
-            var deptLevelList = await _db.Queryable<DepartmentLevelEntity>()
-                                         .With(SqlWith.NoLock)
-                                         .OrderBy(deptlevel => deptlevel.SortOrder).ToListAsync();
-            return deptLevelList.Adapt<List<DepartmentLevelDto>>();
+            var list = await _db.Queryable<DepartmentLevelEntity>()
+                                .With(SqlWith.NoLock)
+                                .OrderBy(deptlevel => deptlevel.SortOrder).ToListAsync();
+            return list.Adapt<List<DepartmentLevelDto>>();
         }
     }
 }

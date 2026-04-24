@@ -97,20 +97,20 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemAuth {
         }
         
         /// <summary>
-        ///   查找类似 该账号已被锁定，请前往首页进行解锁操作 的本地化字符串。
+        ///   查找类似 该账号已被冻结，请前往首页进行解锁或联系系统管理员 的本地化字符串。
         /// </summary>
-        public static string SysUserOperateLoginLock {
+        public static string SysUserOperateLoginFreeze {
             get {
-                return ResourceManager.GetString("SysUserOperateLoginLock", resourceCulture);
+                return ResourceManager.GetString("SysUserOperateLoginFreeze", resourceCulture);
             }
         }
         
         /// <summary>
         ///   查找类似 登录成功 的本地化字符串。
         /// </summary>
-        public static string SysUserOperateLoginSuccess {
+        public static string SysUserOperateLoginSuccessful {
             get {
-                return ResourceManager.GetString("SysUserOperateLoginSuccess", resourceCulture);
+                return ResourceManager.GetString("SysUserOperateLoginSuccessful", resourceCulture);
             }
         }
         

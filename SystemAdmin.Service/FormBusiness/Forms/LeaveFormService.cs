@@ -197,7 +197,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     }
 
                     using var stream = attachment.OpenReadStream();
-                    var avatarUrl = await _minioService.UploadAsync(attachment.FileName, stream, attachment.ContentType);
+                    var avatarUrl = await _minioService.UploadFile(attachment.FileName, stream, attachment.ContentType);
 
                     int attachmentSizeKb = (int)(attachment.Length / 1024);
 
@@ -246,7 +246,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 var count = await _leaveForm.DeleteAttachment(long.Parse(attachmentId));
                 await _db.CommitTranAsync();
 
-                await _minioService.DeleteAsync(attachmentPath);
+                await _minioService.DeleteFile(attachmentPath);
                 return Result<int>.Ok(count, "");
             }
             catch (Exception ex)

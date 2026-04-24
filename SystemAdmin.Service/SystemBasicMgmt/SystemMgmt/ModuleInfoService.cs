@@ -13,16 +13,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         private readonly CurrentUser _loginuser;
         private readonly ILogger<ModuleInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly ModuleRepository _moduleRepository;
+        private readonly ModuleRepository _moduleRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemMgmt.Module";
 
-        public ModuleInfoService(CurrentUser loginuser, ILogger<ModuleInfoService> logger, SqlSugarScope db, ModuleRepository moduleRepository, LocalizationService localization)
+        public ModuleInfoService(CurrentUser loginuser, ILogger<ModuleInfoService> logger, SqlSugarScope db, ModuleRepository moduleRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _moduleRepository = moduleRepository;
+            _moduleRepo = moduleRepo;
             _localization = localization;
         }
 
@@ -52,7 +52,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _moduleRepository.InsertModule(entity);
+                int count = await _moduleRepo.InsertModule(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -78,15 +78,15 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             {
                 await _db.BeginTranAsync();
                 // 删除模块
-                var delModuleCount = await _moduleRepository.DeleteModule(long.Parse(moduleId));
+                var delModuleCount = await _moduleRepo.DeleteModule(long.Parse(moduleId));
                 // 删除角色模块
-                var delRoleModuleCount = await _moduleRepository.DeleteRoleModule(long.Parse(moduleId));
+                var delRoleModuleCount = await _moduleRepo.DeleteRoleModule(long.Parse(moduleId));
                 // 获取删除菜单Ids
-                var delMenuIds = await _moduleRepository.GetModuleMenusIds(long.Parse(moduleId));
+                var delMenuIds = await _moduleRepo.GetModuleMenusIds(long.Parse(moduleId));
                 // 删除模块下的菜单
-                var delMenuCount = await _moduleRepository.DeleteMenu(long.Parse(moduleId));
+                var delMenuCount = await _moduleRepo.DeleteMenu(long.Parse(moduleId));
                 // 删除角色菜单绑定
-                var delRoleMenuCount = await _moduleRepository.DeleteRoleMenuId(delMenuIds);
+                var delRoleMenuCount = await _moduleRepo.DeleteRoleMenuId(delMenuIds);
                 await _db.CommitTranAsync();
 
                 return delModuleCount >= 1
@@ -126,7 +126,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _moduleRepository.UpdateModule(entity);
+                int count = await _moduleRepo.UpdateModule(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -150,7 +150,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                ModuleInfoDto entity = await _moduleRepository.GetModuleEntity(long.Parse(moduleId));
+                ModuleInfoDto entity = await _moduleRepo.GetModuleEntity(long.Parse(moduleId));
                 return Result<ModuleInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -169,7 +169,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                return await _moduleRepository.GetModulePage(getPage);
+                return await _moduleRepo.GetModulePage(getPage);
             }
             catch (Exception ex)
             {

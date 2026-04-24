@@ -169,7 +169,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
         }
 
         /// <summary>
-        /// 修改员工头像
+        /// 修改头像
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="userAvatar"></param>

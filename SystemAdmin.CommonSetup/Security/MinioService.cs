@@ -18,7 +18,7 @@ namespace SystemAdmin.CommonSetup.Security
 
         #region 上传 Upload
 
-        public async Task<string> UploadAsync(string objectName, Stream data, string contentType = "application/octet-stream")
+        public async Task<string> UploadFile(string objectName, Stream data, string contentType = "application/octet-stream")
         {
             var bucket = _settings.DefaultBucket;
 
@@ -47,7 +47,7 @@ namespace SystemAdmin.CommonSetup.Security
         #region 下载 Download
 
         // 下载为流（推荐 WebAPI 使用）
-        public async Task<MemoryStream> DownloadAsync(string objectName)
+        public async Task<MemoryStream> DownloadFile(string objectName)
         {
             var ms = new MemoryStream();
 
@@ -89,7 +89,7 @@ namespace SystemAdmin.CommonSetup.Security
 
         #region 删除 Delete
 
-        public async Task DeleteAsync(string objectName)
+        public async Task DeleteFile(string objectName)
         {
             await _client.RemoveObjectAsync(new RemoveObjectArgs()
                          .WithBucket(_settings.DefaultBucket)
@@ -97,11 +97,11 @@ namespace SystemAdmin.CommonSetup.Security
         }
 
         // 批量删除
-        public async Task DeleteManyAsync(IEnumerable<string> objectNames)
+        public async Task DeleteManyFile(IEnumerable<string> objectNames)
         {
             foreach (var name in objectNames)
             {
-                await DeleteAsync(name);
+                await DeleteFile(name);
             }
         }
 

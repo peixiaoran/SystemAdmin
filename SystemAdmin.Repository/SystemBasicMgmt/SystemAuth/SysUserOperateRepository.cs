@@ -1,8 +1,4 @@
-﻿using Konscious.Security.Cryptography;
-using SqlSugar;
-using System.Security.Cryptography;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using SqlSugar;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Queries;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemMgmt.Entity;

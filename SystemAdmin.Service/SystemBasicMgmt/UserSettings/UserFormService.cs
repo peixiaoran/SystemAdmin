@@ -15,16 +15,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         private readonly CurrentUser _loginuser;
         private readonly ILogger<UserFormService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly UserFormRepository _userFormBindRepository;
+        private readonly UserFormRepository _userFormBindRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.UserSettings.UserForm";
 
-        public UserFormService(CurrentUser loginuser, ILogger<UserFormService> logger, SqlSugarScope db, UserFormRepository userFormBindRepository, LocalizationService localization)
+        public UserFormService(CurrentUser loginuser, ILogger<UserFormService> logger, SqlSugarScope db, UserFormRepository userFormBindRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _userFormBindRepository = userFormBindRepository;
+            _userFormBindRepo = userFormBindRepo;
             _localization = localization;
         }
 
@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var drop = await _userFormBindRepository.GetDepartmentDrop();
+                var drop = await _userFormBindRepo.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                return await _userFormBindRepository.GetUserInfoPage(getPage);
+                return await _userFormBindRepo.GetUserInfoPage(getPage);
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var treeList = await _userFormBindRepository.GetUserFormViewTree(long.Parse(userId));
+                var treeList = await _userFormBindRepo.GetUserFormViewTree(long.Parse(userId));
                 return Result<List<UserFormViewTreeDto>>.Ok(treeList, "");
             }
             catch (Exception ex)
@@ -93,7 +93,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
             try
             {
                 await _db.BeginTranAsync();
-                var delCount = await _userFormBindRepository.DeleteUserForm(long.Parse(upsert.UserId));
+                var delCount = await _userFormBindRepo.DeleteUserForm(long.Parse(upsert.UserId));
                 var entity = upsert.FormGroupTypeId
                                               .Select(id => new UserFormEntity
                                               {
@@ -110,7 +110,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     userform.ModifiedBy = _loginuser.UserId;
                     userform.ModifiedDate = DateTime.Now;
                 });
-                var count = await _userFormBindRepository.InsertUserForm(entity);
+                var count = await _userFormBindRepo.InsertUserForm(entity);
                 await _db.CommitTranAsync();
 
                 return Result<int>.Ok(count, _localization.ReturnMsg($"{_this}InsertSuccess"));

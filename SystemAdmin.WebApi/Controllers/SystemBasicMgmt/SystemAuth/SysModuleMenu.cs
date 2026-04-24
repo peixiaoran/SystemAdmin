@@ -18,8 +18,8 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         }
 
         [HttpPost]
-        [Tags("系统基础管理-身份验证接口")]
-        [EndpointSummary("[初始模块菜单] 查询模块")]
+        [Tags("系统基础管理-Auth接口")]
+        [EndpointSummary("[模块菜单] 查询模块")]
         [AllowAnonymous]
         public async Task<Result<List<SysModuleInfoDto>>> GetModuleList()
         {
@@ -27,8 +27,8 @@ namespace SystemAdmin.WebApi.Controllers.SystemBasicMgmt.SystemAuth
         }
 
         [HttpPost]
-        [Tags("系统基础管理-身份验证接口")]
-        [EndpointSummary("[初始模块菜单] 查询菜单树")]
+        [Tags("系统基础管理-Auth接口")]
+        [EndpointSummary("[模块菜单] 查询菜单树")]
         [AllowAnonymous]
         public async Task<Result<List<SysMenuInfoDto>>> GetMenuTreeList([FromForm] string moduleId)
         {

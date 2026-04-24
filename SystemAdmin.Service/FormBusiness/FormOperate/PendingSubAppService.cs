@@ -12,7 +12,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         private readonly CurrentUser _loginuser;
         private readonly ILogger<PendingSubAppService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly PendingSubAppRepository _PendingSubAppRepository;
+        private readonly PendingSubAppRepository _pendingSubReviewRepository;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormOperate.PendingSubApp";
 
@@ -21,7 +21,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _PendingSubAppRepository = PendingSubAppRepository;
+            _pendingSubReviewRepository = PendingSubAppRepository;
             _localization = localization;
         }
 
@@ -33,7 +33,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         {
             try
             {
-                var drop = await _PendingSubAppRepository.GetFormGroupDrop();
+                var drop = await _pendingSubReviewRepository.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -51,7 +51,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         {
             try
             {
-                var drop = await _PendingSubAppRepository.GetFormTypeDrop(long.Parse(formGroupId));
+                var drop = await _pendingSubReviewRepository.GetFormTypeDrop(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -69,7 +69,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         {
             try
             {
-                var drop = await _PendingSubAppRepository.GetFormStatusDrop();
+                var drop = await _pendingSubReviewRepository.GetFormStatusDrop();
                 return Result<List<FormStatusDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -87,7 +87,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         {
             try
             {
-                return await _PendingSubAppRepository.GetPendingSubmissionPage(getpage, _loginuser.UserId);
+                return await _pendingSubReviewRepository.GetPendingSubmissionPage(getpage, _loginuser.UserId);
             }
             catch (Exception ex)
             {
@@ -104,7 +104,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         {
             try
             {
-                return await _PendingSubAppRepository.GetPendingApprovalPage(getpage, _loginuser.UserId);
+                return await _pendingSubReviewRepository.GetPendingApprovalPage(getpage, _loginuser.UserId);
             }
             catch (Exception ex)
             {
@@ -122,12 +122,12 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
             try
             {
                 await _db.BeginTranAsync();
-                var isCan = await _PendingSubAppRepository.IsVoidedForm(long.Parse(formId));
+                var isCan = await _pendingSubReviewRepository.IsVoidedForm(long.Parse(formId));
                 if (!isCan)
                 {
                     return Result<int>.Ok(500, _localization.ReturnMsg($"{_this}NotVoided"));
                 }
-                var count = await _PendingSubAppRepository.VoidedForm(long.Parse(formId), _loginuser.UserId);
+                var count = await _pendingSubReviewRepository.VoidedForm(long.Parse(formId), _loginuser.UserId);
                 await _db.CommitTranAsync();
 
                 return count >= 1

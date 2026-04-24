@@ -218,18 +218,5 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
 
             return BuildTree();
         }
-
-        /// <summary>
-        /// 查询部门编码是否存在
-        /// </summary>
-        /// <param name="deptCode"></param>
-        /// <returns></returns>
-        public async Task<bool> GetDepartCodeIsExist(string deptCode)
-        {
-            return await _db.Queryable<DepartmentInfoEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(dept => dept.DepartmentCode == deptCode)
-                            .AnyAsync();
-        }
     }
 }

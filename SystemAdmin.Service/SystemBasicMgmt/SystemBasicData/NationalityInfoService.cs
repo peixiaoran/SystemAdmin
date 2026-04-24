@@ -13,16 +13,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly CurrentUser _loginuser;
         private readonly ILogger<NationalityInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly NationalityInfoRepository _nationRepository;
+        private readonly NationalityInfoRepository _nationRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.NationalityInfo";
 
-        public NationalityInfoService(CurrentUser loginuser, ILogger<NationalityInfoService> logger, SqlSugarScope db, NationalityInfoRepository nationRepository, LocalizationService localization)
+        public NationalityInfoService(CurrentUser loginuser, ILogger<NationalityInfoService> logger, SqlSugarScope db, NationalityInfoRepository nationRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _nationRepository = nationRepository;
+            _nationRepo = nationRepo;
             _localization = localization;
         }
 
@@ -46,7 +46,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _nationRepository.InsertNationalityInfo(entity);
+                int count = await _nationRepo.InsertNationalityInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -71,7 +71,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                int count = await _nationRepository.DeleteNationalityInfo(long.Parse(nationId));
+                int count = await _nationRepo.DeleteNationalityInfo(long.Parse(nationId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -107,7 +107,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _nationRepository.UpdateNationalityInfo(entity);
+                int count = await _nationRepo.UpdateNationalityInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -131,7 +131,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var entity = await _nationRepository.GetNationalityEntity(long.Parse(nationId));
+                var entity = await _nationRepo.GetNationalityEntity(long.Parse(nationId));
                 return Result<NationalityInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -149,7 +149,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var list = await _nationRepository.GetNationalityInfoList();
+                var list = await _nationRepo.GetNationalityInfoList();
                 return Result<List<NationalityInfoDto>>.Ok(list, "");
             }
             catch (Exception ex)

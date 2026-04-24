@@ -7,12 +7,12 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
     public class PositionInfoService
     {
         private readonly ILogger<PositionInfoService> _logger;
-        private readonly PositionInfoRepository _userPositionRepository;
+        private readonly PositionInfoRepository _userPositionRepo;
 
-        public PositionInfoService(ILogger<PositionInfoService> logger, PositionInfoRepository userPositionRepository)
+        public PositionInfoService(ILogger<PositionInfoService> logger, PositionInfoRepository userPositionRepo)
         {
             _logger = logger;
-            _userPositionRepository = userPositionRepository;
+            _userPositionRepo = userPositionRepo;
         }
 
         /// <summary>
@@ -24,7 +24,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var entity = await _userPositionRepository.GetPositionInfoEntity(long.Parse(positionId));
+                var entity = await _userPositionRepo.GetPositionInfoEntity(long.Parse(positionId));
                 return Result<PositionInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -42,7 +42,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var list = await _userPositionRepository.GetPositionInfoList();
+                var list = await _userPositionRepo.GetPositionInfoList();
                 return Result<List<PositionInfoDto>>.Ok(list, "");
             }
             catch (Exception ex)

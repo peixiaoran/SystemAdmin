@@ -14,16 +14,16 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         private readonly CurrentUser _loginuser;
         private readonly ILogger<FormTypeService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly FormTypeRepository _formTypeRepository;
+        private readonly FormTypeRepository _formTypeRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormBasicInfo.FormType";
 
-        public FormTypeService(CurrentUser loginuser, ILogger<FormTypeService> logger, SqlSugarScope db, FormTypeRepository formTypeRepository, LocalizationService localization)
+        public FormTypeService(CurrentUser loginuser, ILogger<FormTypeService> logger, SqlSugarScope db, FormTypeRepository formTypeRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _formTypeRepository = formTypeRepository;
+            _formTypeRepo = formTypeRepo;
             _localization = localization;
         }
 
@@ -53,7 +53,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _formTypeRepository.InsertFormTypeInfo(entity);
+                int count = await _formTypeRepo.InsertFormTypeInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -79,9 +79,9 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
             {
                 await _db.BeginTranAsync();
                 // 删除表单类别
-                int delFormTypeCount = await _formTypeRepository.DeleteFormTypeInfo(long.Parse(fromTypeId));
+                int delFormTypeCount = await _formTypeRepo.DeleteFormTypeInfo(long.Parse(fromTypeId));
                 // 删除员工表单绑定
-                int delUserTypeBindCount = await _formTypeRepository.DeleteUserFormTypeBind(long.Parse(fromTypeId));
+                int delUserTypeBindCount = await _formTypeRepo.DeleteUserFormTypeBind(long.Parse(fromTypeId));
                 await _db.CommitTranAsync();
 
                 return delFormTypeCount >= 1
@@ -122,7 +122,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _formTypeRepository.UpdateFormTypeInfo(entity);
+                int count = await _formTypeRepo.UpdateFormTypeInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -146,7 +146,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                var entity = await _formTypeRepository.GetFormTypeEntity(long.Parse(fromTypeId));
+                var entity = await _formTypeRepo.GetFormTypeEntity(long.Parse(fromTypeId));
                 return Result<FormTypeDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -165,7 +165,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                return await _formTypeRepository.GetFormTypePage(getPage);
+                return await _formTypeRepo.GetFormTypePage(getPage);
             }
             catch (Exception ex)
             {
@@ -182,7 +182,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                var drop = await _formTypeRepository.GetFormGroupDrop();
+                var drop = await _formTypeRepo.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)

@@ -14,16 +14,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly CurrentUser _loginuser;
         private readonly ILogger<UserLaborService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly UserLaborRepository _userLaborRepository;
+        private readonly UserLaborRepository _userLaborRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.UserLabor";
 
-        public UserLaborService(CurrentUser loginuser, ILogger<UserLaborService> logger, SqlSugarScope db, UserLaborRepository userLaborRepository, LocalizationService localization)
+        public UserLaborService(CurrentUser loginuser, ILogger<UserLaborService> logger, SqlSugarScope db, UserLaborRepository userLaborRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _userLaborRepository = userLaborRepository;
+            _userLaborRepo = userLaborRepo;
             _localization = localization;
         }
 
@@ -47,7 +47,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _userLaborRepository.InsertUserLabor(entity);
+                var count = await _userLaborRepo.InsertUserLabor(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -72,7 +72,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
             try
             {
                 await _db.BeginTranAsync();
-                var count = await _userLaborRepository.DeleteUserLabor(long.Parse(laborId));
+                var count = await _userLaborRepo.DeleteUserLabor(long.Parse(laborId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -107,7 +107,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _userLaborRepository.UpdateUserLabor(entity);
+                var count = await _userLaborRepo.UpdateUserLabor(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -131,7 +131,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var entity = await _userLaborRepository.GetUserLaborEntity(long.Parse(laborId));
+                var entity = await _userLaborRepo.GetUserLaborEntity(long.Parse(laborId));
                 return Result<UserLaborDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -150,7 +150,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                return await _userLaborRepository.GetUserLaborPage(getPage);
+                return await _userLaborRepo.GetUserLaborPage(getPage);
             }
             catch (Exception ex)
             {

@@ -11,12 +11,12 @@ namespace SystemAdmin.Service.FormBusiness.FormAudit
     public class FormSequenceService
     {
         private readonly ILogger<FormTypeService> _logger;
-        private readonly FormSequenceRepository _formCountingRepository;
+        private readonly FormSequenceRepository _formSequenceRepo;
 
-        public FormSequenceService(CurrentUser loginuser, ILogger<FormTypeService> logger, SqlSugarScope db, FormSequenceRepository formTypeRepository, LocalizationService localization)
+        public FormSequenceService(CurrentUser loginuser, ILogger<FormTypeService> logger, SqlSugarScope db, FormSequenceRepository formSequenceRepo, LocalizationService localization)
         {
             _logger = logger;
-            _formCountingRepository = formTypeRepository;
+            _formSequenceRepo = formSequenceRepo;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace SystemAdmin.Service.FormBusiness.FormAudit
         {
             try
             {
-                return await _formCountingRepository.GetFormCountingPage(getPage);
+                return await _formSequenceRepo.GetFormCountingPage(getPage);
             }
             catch (Exception ex)
             {

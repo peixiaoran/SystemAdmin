@@ -15,16 +15,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         private readonly CurrentUser _loginuser;
         private readonly ILogger<SMenuInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly SMenuRepository _sMenuRepository;
+        private readonly SMenuRepository _sMenuRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemMgmt.SMenu";
 
-        public SMenuInfoService(CurrentUser loginuser, ILogger<SMenuInfoService> logger, SqlSugarScope db, SMenuRepository sMenuRepository, LocalizationService localization)
+        public SMenuInfoService(CurrentUser loginuser, ILogger<SMenuInfoService> logger, SqlSugarScope db, SMenuRepository sMenuRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _sMenuRepository = sMenuRepository;
+            _sMenuRepo = sMenuRepo;
             _localization = localization;
         }
 
@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                var drop = await _sMenuRepository.GetModuleDrop();
+                var drop = await _sMenuRepo.GetModuleDrop();
                 return Result<List<ModuleDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                var drop = await _sMenuRepository.GetPMenuDrop(long.Parse(moduleId));
+                var drop = await _sMenuRepo.GetPMenuDrop(long.Parse(moduleId));
                 return Result<List<MenuDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -95,7 +95,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _sMenuRepository.InsertSMenu(entity);
+                int count = await _sMenuRepo.InsertSMenu(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -121,9 +121,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
             {
                 await _db.BeginTranAsync();
                 // 删除二级菜单
-                var delSMenuCount = await _sMenuRepository.DeleteSMenu(long.Parse(menuId));
+                var delSMenuCount = await _sMenuRepo.DeleteSMenu(long.Parse(menuId));
                 // 删除角色二级菜单
-                var delRoleSMenuCount = await _sMenuRepository.DeleteRoleSMenu(long.Parse(menuId));
+                var delRoleSMenuCount = await _sMenuRepo.DeleteRoleSMenu(long.Parse(menuId));
 
                 await _db.CommitTranAsync();
 
@@ -168,7 +168,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _sMenuRepository.UpdateSMenu(entity);
+                int count = await _sMenuRepo.UpdateSMenu(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -192,7 +192,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                var entity = await _sMenuRepository.GetSMenuEntity(long.Parse(menuId));
+                var entity = await _sMenuRepo.GetSMenuEntity(long.Parse(menuId));
                 return Result<MenuInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -211,7 +211,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
         {
             try
             {
-                var page = await _sMenuRepository.GetSMenuPage(getPage);
+                var page = await _sMenuRepo.GetSMenuPage(getPage);
                 return page;
             }
             catch (Exception ex)

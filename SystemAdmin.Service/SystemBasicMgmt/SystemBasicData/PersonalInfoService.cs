@@ -16,17 +16,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly MinioService _minioService;
         private readonly ILogger<PersonalInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly PersonalInfoRepository _personalInfoRepository;
+        private readonly PersonalInfoRepository _personalInfoRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.Personal";
 
-        public PersonalInfoService(CurrentUser loginuser, MinioService minioService, ILogger<PersonalInfoService> logger, SqlSugarScope db, PersonalInfoRepository personalInfoRepository, LocalizationService localization)
+        public PersonalInfoService(CurrentUser loginuser, MinioService minioService, ILogger<PersonalInfoService> logger, SqlSugarScope db, PersonalInfoRepository personalInfoRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _minioService = minioService;
             _logger = logger;
             _db = db;
-            _personalInfoRepository = personalInfoRepository;
+            _personalInfoRepo = personalInfoRepo;
             _localization = localization;
         }
 
@@ -38,7 +38,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _personalInfoRepository.GetLaborDrop();
+                var drop = await _personalInfoRepo.GetLaborDrop();
                 return Result<List<UserLaborDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -56,7 +56,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _personalInfoRepository.GetDepartmentDrop();
+                var drop = await _personalInfoRepo.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -74,7 +74,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _personalInfoRepository.GetRoleDrop();
+                var drop = await _personalInfoRepo.GetRoleDrop();
                 return Result<List<RoleInfoDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -117,10 +117,10 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 }
 
                 // 4. 上传到 MinIO
-                var avatarUrl = await _minioService.UploadAsync(file.FileName, file.OpenReadStream(), file.ContentType);
+                var avatarUrl = await _minioService.UploadFile(file.FileName, file.OpenReadStream(), file.ContentType);
 
-                // 5. 更新员工头像地址
-                var count = await _personalInfoRepository.UpdateUserAvatar(long.Parse(userId), avatarUrl);
+                // 5. 更新头像地址
+                var count = await _personalInfoRepo.UpdateUserAvatar(long.Parse(userId), avatarUrl);
 
                 return count >= 1
                         ? Result<string>.Ok(avatarUrl, _localization.ReturnMsg($"{_this}UploadSuccess"))
@@ -141,7 +141,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var entity = await _personalInfoRepository.GetPersonalInfoEntity(_loginuser.UserId);
+                var entity = await _personalInfoRepo.GetPersonalInfoEntity(_loginuser.UserId);
                 return Result<PersonalInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -160,7 +160,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                UserInfoEntity user = await _personalInfoRepository.GetUserPasswordAndSalt(_loginuser.UserId);
+                UserInfoEntity user = await _personalInfoRepo.GetUserPasswordAndSalt(_loginuser.UserId);
 
                 string updatePassWord = string.Empty;
                 string updateSaltString = string.Empty;
@@ -168,16 +168,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 if (!string.IsNullOrEmpty(upsert.PassWord))
                 {
                     //验证密码是否符合规范（必须为8-16位、包含小写、大写字母和数字）
-                    if (!_personalInfoRepository.ValidatePassword(upsert.PassWord))
+                    if (!_personalInfoRepo.ValidatePassword(upsert.PassWord))
                     {
                         await _db.RollbackTranAsync();
                         return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}ValidationPassWrodError"));
                     }
                     else
                     {
-                        byte[] salt = _personalInfoRepository.GenerateSalt();
+                        byte[] salt = _personalInfoRepo.GenerateSalt();
                         updateSaltString = Convert.ToBase64String(salt);
-                        updatePassWord = _personalInfoRepository.HashPasswordWithArgon2id(upsert.PassWord, salt);
+                        updatePassWord = _personalInfoRepo.HashPasswordWithArgon2id(upsert.PassWord, salt);
                     }
                 }
                 else
@@ -200,7 +200,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _personalInfoRepository.UpdatePersonalInfo(_loginuser.UserId, entity);
+                var count = await _personalInfoRepo.UpdatePersonalInfo(_loginuser.UserId, entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -223,7 +223,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _personalInfoRepository.GetPositionDrop();
+                var drop = await _personalInfoRepo.GetPositionDrop();
                 return Result<List<PositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)

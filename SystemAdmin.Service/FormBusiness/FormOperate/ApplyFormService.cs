@@ -10,13 +10,13 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
     {
         private readonly CurrentUser _loginuser;
         private readonly ILogger<ApplyFormService> _logger;
-        private readonly ApplyFormRepository _applyFormRepository;
+        private readonly ApplyFormRepository applyFormRepo;
 
-        public ApplyFormService(CurrentUser loginuser, ILogger<ApplyFormService> logger, ApplyFormRepository applyFormRepository)
+        public ApplyFormService(CurrentUser loginuser, ILogger<ApplyFormService> logger, ApplyFormRepository applyFormRepo)
         {
             _loginuser = loginuser;
             _logger = logger;
-            _applyFormRepository = applyFormRepository;
+            this.applyFormRepo = applyFormRepo;
         }
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         {
             try
             {
-                var drop = await _applyFormRepository.GetFormGroupDrop();
+                var drop = await applyFormRepo.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -46,7 +46,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         {
             try
             {
-                return await _applyFormRepository.GetApplyFormPage(getPage, _loginuser.UserId);
+                return await applyFormRepo.GetApplyFormPage(getPage, _loginuser.UserId);
             }
             catch (Exception ex)
             {

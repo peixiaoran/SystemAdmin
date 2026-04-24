@@ -14,16 +14,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         private readonly CurrentUser _loginuser;
         private readonly ILogger<DepartmentInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly DepartmentInfoRepository _deptInfoRepository;
+        private readonly DepartmentInfoRepository _deptInfoRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.SystemBasicData.DeptInfo";
 
-        public DepartmentInfoService(CurrentUser loginuser, ILogger<DepartmentInfoService> logger, SqlSugarScope db, DepartmentInfoRepository deptInfoRepository, LocalizationService localization)
+        public DepartmentInfoService(CurrentUser loginuser, ILogger<DepartmentInfoService> logger, SqlSugarScope db, DepartmentInfoRepository deptInfoRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _deptInfoRepository = deptInfoRepository;
+            _deptInfoRepo = deptInfoRepo;
             _localization = localization;
         }
 
@@ -35,7 +35,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _deptInfoRepository.GetDepartmentDrop();
+                var drop = await _deptInfoRepo.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -53,7 +53,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var drop = await _deptInfoRepository.GetDepartmentLevelDrop();
+                var drop = await _deptInfoRepo.GetDepartmentLevelDrop();
                 return Result<List<DepartmentLevelDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -90,7 +90,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _deptInfoRepository.InsertDepartmentInfo(entity);
+                int count = await _deptInfoRepo.InsertDepartmentInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -113,8 +113,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         /// <returns></returns>
         public async Task<Result<int>> DeleteDepartmentInfo(string deptId)
         {
-            var userList = await _deptInfoRepository.GetUserInfoList();
-            var deptList = await _deptInfoRepository.GetDepartmentInfoList();
+            var userList = await _deptInfoRepo.GetUserInfoList();
+            var deptList = await _deptInfoRepo.GetDepartmentInfoList();
 
             var deptChildrenMap = deptList.GroupBy(dept => dept.ParentId).ToDictionary(g => g.Key, g => g.ToList());
 
@@ -144,7 +144,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     }
                 }
 
-                count += await _deptInfoRepository.DeleteDepartmentInfo(deptId);
+                count += await _deptInfoRepo.DeleteDepartmentInfo(deptId);
                 return count;
             }
 
@@ -186,7 +186,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _deptInfoRepository.UpdateDepartmentInfo(entity);
+                int count = await _deptInfoRepo.UpdateDepartmentInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -210,7 +210,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var entity = await _deptInfoRepository.GetDepartmentInfoEntity(long.Parse(deptId));
+                var entity = await _deptInfoRepo.GetDepartmentInfoEntity(long.Parse(deptId));
                 return Result<DepartmentInfoDto>.Ok(entity, "");
             }
             catch (Exception ex)
@@ -229,7 +229,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
         {
             try
             {
-                var tree = await _deptInfoRepository.GetDepartmentInfoTree(getTree);
+                var tree = await _deptInfoRepo.GetDepartmentInfoTree(getTree);
                 return Result<List<DepartmentInfoDto>>.Ok(tree, "");
             }
             catch (Exception ex)

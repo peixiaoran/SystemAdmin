@@ -15,16 +15,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         private readonly CurrentUser _loginuser;
         private readonly ILogger<UserAgentService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly UserAgentRepository _userAgentRepository;
+        private readonly UserAgentRepository _userAgentRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "SystemBasicMgmt.UserSettings.UserAgent";
 
-        public UserAgentService(CurrentUser loginuser, ILogger<UserAgentService> logger, SqlSugarScope db, UserAgentRepository userAgentRepository, LocalizationService localization)
+        public UserAgentService(CurrentUser loginuser, ILogger<UserAgentService> logger, SqlSugarScope db, UserAgentRepository userAgentRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _userAgentRepository = userAgentRepository;
+            _userAgentRepo = userAgentRepo;
             _localization = localization;
         }
 
@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var drop = await _userAgentRepository.GetDepartmentDrop();
+                var drop = await _userAgentRepo.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                return await _userAgentRepository.GetUserInfoPage(getPage);
+                return await _userAgentRepo.GetUserInfoPage(getPage);
             }
             catch (Exception ex)
             {
@@ -73,7 +73,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                return await _userAgentRepository.GetUserInfoAgentView(getPage);
+                return await _userAgentRepo.GetUserInfoAgentView(getPage);
             }
             catch (Exception ex)
             {
@@ -99,7 +99,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 }
 
                 // 查询被代理员工已代理其他员工
-                bool subAgentIsAgent = await _userAgentRepository.GetSubAgentIsAgent(long.Parse(upsert.SubstituteUserId));
+                bool subAgentIsAgent = await _userAgentRepo.GetSubAgentIsAgent(long.Parse(upsert.SubstituteUserId));
                 if (subAgentIsAgent)
                 {
                     // 被代理员工已代理其他员工，不能嵌套代理
@@ -107,7 +107,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 }
 
                 // 查询被代理员工已被其他员工代理
-                bool subAgentIsSubAgent = await _userAgentRepository.GetSubAgentIsSubAgent(long.Parse(upsert.SubstituteUserId));
+                bool subAgentIsSubAgent = await _userAgentRepo.GetSubAgentIsSubAgent(long.Parse(upsert.SubstituteUserId));
                 if (subAgentIsSubAgent)
                 {
                     // 被代理员工已被其他员工代理，不可多人员代理
@@ -115,14 +115,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 }
 
                 // 查询代理员工已被其他员工代理
-                bool agentIsSubAgent = await _userAgentRepository.GetAgentIsSubAgent(long.Parse(upsert.AgentUserId));
+                bool agentIsSubAgent = await _userAgentRepo.GetAgentIsSubAgent(long.Parse(upsert.AgentUserId));
                 if (agentIsSubAgent)
                 {
                     // 代理员工已被其他员工代理，不能作为代理员工
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentAlreadyAgented"));
                 }
                 // 查询代理员工已代理其他员工
-                bool agentIsAgent = await _userAgentRepository.GetAgentIsAgent(long.Parse(upsert.AgentUserId));
+                bool agentIsAgent = await _userAgentRepo.GetAgentIsAgent(long.Parse(upsert.AgentUserId));
                 if (agentIsAgent)
                 {
                     // 代理员工已代理其他员工，不可多人员代理
@@ -143,9 +143,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
 
                     await _db.BeginTranAsync();
                     // 新增员工代理人配置
-                    int insertUserAgentCount = await _userAgentRepository.InsertUserAgent(insertUserAgent);
+                    int insertUserAgentCount = await _userAgentRepo.InsertUserAgent(insertUserAgent);
                     // 更新员工代理状态
-                    var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(upsert.AgentUserId), 1);
+                    var updateUserAgentCount = await _userAgentRepo.UpdateUserAgent(long.Parse(upsert.AgentUserId), 1);
                     await _db.CommitTranAsync();
 
                     return insertUserAgentCount >= 1 && updateUserAgentCount >= 1
@@ -172,8 +172,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
             {
                 await _db.BeginTranAsync();
                 // 删除员工代理配置
-                var delSubAgentCount = await _userAgentRepository.DeleteUserAgent(long.Parse(agentUserId));
-                var updateUserAgentCount = await _userAgentRepository.UpdateUserAgent(long.Parse(agentUserId), 0);
+                var delSubAgentCount = await _userAgentRepo.DeleteUserAgent(long.Parse(agentUserId));
+                var updateUserAgentCount = await _userAgentRepo.UpdateUserAgent(long.Parse(agentUserId), 0);
                 await _db.CommitTranAsync();
 
                 return delSubAgentCount >= 1 && updateUserAgentCount >= 1
@@ -197,7 +197,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                return await _userAgentRepository.GetUserAgentProactiveList(getList);
+                return await _userAgentRepo.GetUserAgentProactiveList(getList);
             }
             catch (Exception ex)
             {
@@ -215,7 +215,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                return await _userAgentRepository.GetUserAgentPassiveList(long.Parse(substituteUserId));
+                return await _userAgentRepo.GetUserAgentPassiveList(long.Parse(substituteUserId));
             }
             catch (Exception ex)
             {

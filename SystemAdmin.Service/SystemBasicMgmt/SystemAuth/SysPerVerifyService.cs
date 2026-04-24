@@ -7,12 +7,12 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
     public class SysPerVerifyService
     {
         private readonly ILogger<SysPerVerifyService> _logger;
-        private readonly SysPerVerifyRepository _sysPerVerifyRepository;
+        private readonly SysPerVerifyRepository _sysPerVerifyRepo;
 
-        public SysPerVerifyService(ILogger<SysPerVerifyService> logger, SqlSugarScope db, SysPerVerifyRepository sysPerVerifyRepository)
+        public SysPerVerifyService(ILogger<SysPerVerifyService> logger, SqlSugarScope db, SysPerVerifyRepository sysPerVerifyRepo)
         {
             _logger = logger;
-            _sysPerVerifyRepository = sysPerVerifyRepository;
+            _sysPerVerifyRepo = sysPerVerifyRepo;
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         {
             try
             {
-                return await _sysPerVerifyRepository.HasPermission(userId, routePath);
+                return await _sysPerVerifyRepo.HasPermission(userId, routePath);
             }
             catch (Exception ex)
             {

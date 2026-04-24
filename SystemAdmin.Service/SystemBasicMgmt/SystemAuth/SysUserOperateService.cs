@@ -24,7 +24,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         private readonly CurrentUser _loginuser;
         private readonly JwtTokenService _jwt;
         private readonly SqlSugarScope _db;
-        private readonly SysUserOperateRepository _sysUserOperateRepository;
+        private readonly SysUserOperateRepository _sysUserOperateRepo;
         private readonly MailKitEmailSender _mailKitEmail;
         private readonly LocalizationService _localization;
         private readonly HybridCache _cache;
@@ -33,13 +33,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         private const int CodeLength = 6;
         private static readonly Random _random = new Random();
 
-        public SysUserOperateService(CurrentUser loginuser, JwtTokenService jwt, ILogger<SysUserOperateService> logger, SqlSugarScope db, SysUserOperateRepository sysUserOperateRepository, MailKitEmailSender mailKitEmail, LocalizationService localization, HybridCache cache, IHttpContextAccessor httpContextAccessor)
+        public SysUserOperateService(CurrentUser loginuser, JwtTokenService jwt, ILogger<SysUserOperateService> logger, SqlSugarScope db, SysUserOperateRepository sysUserOperateRepo, MailKitEmailSender mailKitEmail, LocalizationService localization, HybridCache cache, IHttpContextAccessor httpContextAccessor)
         {
             _loginuser = loginuser;
             _jwt = jwt;
             _logger = logger;
             _db = db;
-            _sysUserOperateRepository = sysUserOperateRepository;
+            _sysUserOperateRepo = sysUserOperateRepo;
             _mailKitEmail = mailKitEmail;
             _localization = localization;
             _cache = cache;
@@ -60,13 +60,13 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 var nowTime = DateTime.Now;
 
                 // 查询员工
-                var user = await _sysUserOperateRepository.LoginGetUserInfo(sysLogin);
+                var user = await _sysUserOperateRepo.LoginGetUserInfo(sysLogin);
 
                 if (user == null)
                 {
                     await _db.BeginTranAsync();
                     // 员工不存在
-                    await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
+                    await _sysUserOperateRepo.AddUserLoginLogInfo(new UserLogOutEntity
                     {
                         UserId = 0,
                         LoginType = LoginBehavior.AccountNotExist.ToEnumString(),
@@ -75,14 +75,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     });
                     await _db.CommitTranAsync();
 
-                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFound"));
+                    return Result<SysUserLoginReturnDto>.Failure(400, _localization.ReturnMsg($"{_this}UserNotFound"));
                 }
 
                 // 账号已冻结
                 if (user.IsFreeze != 0)
                 {
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(220, _localization.ReturnMsg($"{_this}LoginLock"));
+                    return Result<SysUserLoginReturnDto>.Failure(401, _localization.ReturnMsg($"{_this}LoginFreeze"));
                 }
 
                 // 校验密码
@@ -91,7 +91,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 if (inputHash != user.PassWord)
                 {
                     // 记录密码错误
-                    await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
+                    await _sysUserOperateRepo.AddUserLoginLogInfo(new UserLogOutEntity
                     {
                         UserId = user.UserId,
                         LoginType = LoginBehavior.IncorrectPassword.ToEnumString(),
@@ -100,12 +100,12 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     });
 
                     // 获取并累加错误次数
-                    var lockInfo = await _sysUserOperateRepository.GetUserLockErrorNumberNow(user.UserId);
+                    var lockInfo = await _sysUserOperateRepo.GetUserLockErrorNumberNow(user.UserId);
                     var newErrors = (lockInfo?.NumberErrors ?? 0) + 1;
 
                     if (lockInfo == null)
                     {
-                        await _sysUserOperateRepository.AddUserLock(new UserLockEntity
+                        await _sysUserOperateRepo.AddUserLock(new UserLockEntity
                         {
                             UserId = user.UserId,
                             NumberErrors = 1,
@@ -114,34 +114,34 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     }
                     else
                     {
-                        await _sysUserOperateRepository.AutoUserLockErrorNumber(user.UserId, newErrors);
+                        await _sysUserOperateRepo.AutoUserLockErrorNumber(user.UserId, newErrors);
                     }
 
                     // 达到阈值 → 冻结账号
                     if (newErrors >= 5)
                     {
-                        await _sysUserOperateRepository.UpdateUserFreeze(user.UserId);
+                        await _sysUserOperateRepo.UpdateUserFreeze(user.UserId);
                         await _db.CommitTranAsync();
 
-                        return Result<SysUserLoginReturnDto>.Failure(220, _localization.ReturnMsg($"{_this}LoginLock"));
+                        return Result<SysUserLoginReturnDto>.Failure(402, _localization.ReturnMsg($"{_this}LoginLock"));
                     }
 
                     // 未达阈值
                     var remain = 5 - newErrors;
                     await _db.CommitTranAsync();
 
-                    return Result<SysUserLoginReturnDto>.Failure(500, _localization.ReturnMsg($"{_this}LoginFailedRemainTimes", remain));
+                    return Result<SysUserLoginReturnDto>.Failure(403, _localization.ReturnMsg($"{_this}LoginFailedRemainTimes", remain));
                 }
 
                 // 密码是否过期
                 if (user.ExpirationTime < nowTime)
                 {
                     await _db.CommitTranAsync();
-                    return Result<SysUserLoginReturnDto>.Failure(210, _localization.ReturnMsg($"{_this}PasswordExpiration"));
+                    return Result<SysUserLoginReturnDto>.Failure(405, _localization.ReturnMsg($"{_this}PasswordExpiration"));
                 }
 
                 // 登录成功日志
-                await _sysUserOperateRepository.AddUserLoginLogInfo(new UserLogOutEntity
+                await _sysUserOperateRepo.AddUserLoginLogInfo(new UserLogOutEntity
                 {
                     UserId = user.UserId,
                     LoginType = LoginBehavior.LoginSuccessful.ToEnumString(),
@@ -150,7 +150,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                 });
 
                 // 清空锁定记录
-                await _sysUserOperateRepository.EmptyUserLock(user.UserId);
+                await _sysUserOperateRepo.EmptyUserLock(user.UserId);
                 await _db.CommitTranAsync();
 
                 _jwt.SetAuthCookie(httpResponse, userId: user.UserId, userNo: user.UserNo);
@@ -163,7 +163,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                         UserNameEn = user.UserNameEn,
                         AvatarAddress = user.AvatarAddress
                     },
-                    _localization.ReturnMsg($"{_this}LoginSuccess")
+                    _localization.ReturnMsg($"{_this}LoginSuccessful")
                 );
             }
             catch(Exception ex)
@@ -182,7 +182,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         {
             try
             {
-                var user = await _sysUserOperateRepository.GetUserInfoForUserLogOut(_loginuser.UserId);
+                var user = await _sysUserOperateRepo.GetUserInfoForUserLogOut(_loginuser.UserId);
 
                 // 判断员工是否存在
                 if (user == null)
@@ -198,7 +198,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     IP = GetLocalIPv4(),
                     LoginDate = DateTime.Now
                 };
-                var insertLogOutCount = await _sysUserOperateRepository.AddUserLogOutInfo(logOutLog);
+                var insertLogOutCount = await _sysUserOperateRepo.AddUserLogOutInfo(logOutLog);
                 await _db.CommitTranAsync();
 
                 return Result<int>.Ok(insertLogOutCount, _localization.ReturnMsg($"{_this}LogOutSuccess"));
@@ -220,7 +220,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         {
             try
             {
-                var user = await _sysUserOperateRepository.GetUserInfo(userNo);
+                var user = await _sysUserOperateRepo.GetUserInfo(userNo);
 
                 // 判断员工是否在职
                 if (user == null || string.IsNullOrWhiteSpace(user.Email))
@@ -282,7 +282,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}VcCodeError"));
                 }
 
-                var user = await _sysUserOperateRepository.GetUserInfo(userUnlock.UserNo);
+                var user = await _sysUserOperateRepo.GetUserInfo(userUnlock.UserNo);
                 if (user == null)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UserNotFound"));
@@ -308,8 +308,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     string saltString = Convert.ToBase64String(salt);
                     string passwordHash = HashPasswordWithArgon2id(userUnlock.PassWord, salt);
 
-                    int unlockFreezeCount = await _sysUserOperateRepository.UnlockUserFreeze(user.UserId, passwordHash, saltString, DateTime.Now.AddDays(user.ExpirationDays));
-                    await _sysUserOperateRepository.DeleleUserLockLog(user.UserId);
+                    int unlockFreezeCount = await _sysUserOperateRepo.UnlockUserFreeze(user.UserId, passwordHash, saltString, DateTime.Now.AddDays(user.ExpirationDays));
+                    await _sysUserOperateRepo.DeleleUserLockLog(user.UserId);
                     await _db.CommitTranAsync();
 
                     await _cache.RemoveAsync(userUnlock.UserNo); // 验证通过，清除缓存
@@ -336,7 +336,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
         {
             try
             {
-                var user = await _sysUserOperateRepository.GetUserInfo(userNo);
+                var user = await _sysUserOperateRepo.GetUserInfo(userNo);
 
                 // 判断员工是否在职
                 if (user == null || string.IsNullOrWhiteSpace(user.Email))
@@ -384,7 +384,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
             try
             {
                 // 查询员工信息
-                var user = await _sysUserOperateRepository.GetUserInfo(upsert.UserNo);
+                var user = await _sysUserOperateRepo.GetUserInfo(upsert.UserNo);
 
                 // 判断员工是否在职
                 if (user == null)
@@ -433,9 +433,9 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemAuth
                     string passwordHash = HashPasswordWithArgon2id(upsert.PassWord, salt);
 
                     // 更新员工密码
-                    int count = await _sysUserOperateRepository.PwdExpirationUpdate(user.UserId, passwordHash, saltString, DateTime.Now.AddDays(user.ExpirationDays));
+                    int count = await _sysUserOperateRepo.PwdExpirationUpdate(user.UserId, passwordHash, saltString, DateTime.Now.AddDays(user.ExpirationDays));
                     // 清空员工锁定记录
-                    await _sysUserOperateRepository.EmptyUserLock(user.UserId);
+                    await _sysUserOperateRepo.EmptyUserLock(user.UserId);
                     await _db.CommitTranAsync();
 
                     // 清除验证码缓存

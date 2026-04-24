@@ -14,16 +14,16 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         private readonly CurrentUser _loginuser;
         private readonly ILogger<ControlInfoService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly ControlInfoRepository _controlInfoRepository;
+        private readonly ControlInfoRepository _controlInfoRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormBasicInfo.ControlInfo";
 
-        public ControlInfoService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, ControlInfoRepository controlInfoRepository, LocalizationService localization)
+        public ControlInfoService(CurrentUser loginuser, ILogger<ControlInfoService> logger, SqlSugarScope db, ControlInfoRepository controlInfoRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _controlInfoRepository = controlInfoRepository;
+            _controlInfoRepo = controlInfoRepo;
             _localization = localization;
         }
 
@@ -46,7 +46,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
                 };
 
                 await _db.BeginTranAsync();
-                int count = await _controlInfoRepository.InsertControlInfo(entity);
+                int count = await _controlInfoRepo.InsertControlInfo(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -71,7 +71,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
             try
             {
                 await _db.BeginTranAsync();
-                int count = await _controlInfoRepository.DeleteControlInfo(controlCode);
+                int count = await _controlInfoRepo.DeleteControlInfo(controlCode);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -95,7 +95,7 @@ namespace SystemAdmin.Service.FormBusiness.FormBasicInfo
         {
             try
             {
-                return await _controlInfoRepository.GetControlInfoPage(getPage);
+                return await _controlInfoRepo.GetControlInfoPage(getPage);
             }
             catch (Exception ex)
             {

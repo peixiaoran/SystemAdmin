@@ -117,14 +117,14 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="SysUserOperateLoginSuccess" xml:space="preserve">
+  <data name="SysUserOperateLoginSuccessful" xml:space="preserve">
     <value>Login successful</value>
   </data>
   <data name="SysUserOperateLoginFailedRemainTimes" xml:space="preserve">
     <value>Invalid username or password. {0} attempt(s) remaining</value>
   </data>
-  <data name="SysUserOperateLoginLock" xml:space="preserve">
-    <value>This account has been locked. Please go to the homepage to unlock it</value>
+  <data name="SysUserOperateLoginFreeze" xml:space="preserve">
+    <value>This account has been suspended. Please go to the homepage to unlock it or contact the system administrator</value>
   </data>
   <data name="SysUserOperatePasswordExpiration" xml:space="preserve">
     <value>Your password has expired. Please update it</value>

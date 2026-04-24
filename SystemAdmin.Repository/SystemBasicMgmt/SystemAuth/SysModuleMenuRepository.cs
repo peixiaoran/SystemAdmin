@@ -2,7 +2,6 @@
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Entity;
-using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Queries;
 
 namespace SystemAdmin.Repository.SystemBasicMgmt.SystemAuth
 {
