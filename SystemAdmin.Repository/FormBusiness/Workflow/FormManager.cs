@@ -54,7 +54,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 FormId = formId,
                 FormTypeId = formTypeId,
                 FormNo = formNo,
-                FormStatus = FormStatus.PendingSubmission.ToEnumString(),
+                FormStatus = FormStatus.PendingSubmit.ToEnumString(),
                 ApplicantUserId = _loginuser.UserId,
                 RuleId = ruleId,
                 CurrentStepId = startStepId,

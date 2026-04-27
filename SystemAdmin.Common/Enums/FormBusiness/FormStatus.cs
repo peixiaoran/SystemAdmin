@@ -8,7 +8,7 @@
         /// <summary>
         /// 待送审
         /// </summary>
-        PendingSubmission = 1,
+        PendingSubmit = 1,
 
         /// <summary>
         /// 审批中

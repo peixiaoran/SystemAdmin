@@ -21,7 +21,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity
         /// <summary>
         /// 操作状态
         /// </summary>
-        public string ReviewStatus { get; set; } = string.Empty;
+        public string ReviewResult { get; set; } = string.Empty;
 
         /// <summary>
         /// 驳回至步骤
@@ -36,7 +36,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity
         /// <summary>
         /// 审批类型
         /// </summary>
-        public string ReviewResult { get; set; } = string.Empty;
+        public string ReviewType { get; set; } = string.Empty;
 
         /// <summary>
         /// 审批身份

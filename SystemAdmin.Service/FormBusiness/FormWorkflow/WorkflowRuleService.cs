@@ -15,16 +15,16 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         private readonly CurrentUser _loginuser;
         private readonly ILogger<WorkflowRuleService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly WorkflowRuleRepository _workflowRule;
+        private readonly WorkflowRuleRepository _workflowRuleRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormWorkflow.WorkflowRule";
 
-        public WorkflowRuleService(CurrentUser loginuser, ILogger<WorkflowRuleService> logger, SqlSugarScope db, WorkflowRuleRepository workflowRule, LocalizationService localization)
+        public WorkflowRuleService(CurrentUser loginuser, ILogger<WorkflowRuleService> logger, SqlSugarScope db, WorkflowRuleRepository workflowRuleRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _workflowRule = workflowRule;
+            _workflowRuleRepo = workflowRuleRepo;
             _localization = localization;
         }
 
@@ -36,7 +36,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowRule.GetFormGroupDrop();
+                var drop = await _workflowRuleRepo.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -55,7 +55,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowRule.GetFormTypeDrop(long.Parse(formGroupId));
+                var drop = await _workflowRuleRepo.GetFormTypeDrop(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -73,7 +73,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowRule.GetPositionDrop();
+                var drop = await _workflowRuleRepo.GetPositionDrop();
                 return Result<List<PositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -93,7 +93,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             try
             {
                 // 规则是否重复配置
-                var isRepat = await _workflowRule.RuleIsRepeat(long.Parse(upsert.FormTypeId), long.Parse(upsert.PositionId), upsert.Guidance);
+                var isRepat = await _workflowRuleRepo.RuleIsRepeat(long.Parse(upsert.FormTypeId), long.Parse(upsert.PositionId), upsert.Guidance);
                 if (isRepat)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}Repat"));
@@ -114,7 +114,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     };
 
                     await _db.BeginTranAsync();
-                    var count = await _workflowRule.InsertWorkflowRule(entity);
+                    var count = await _workflowRuleRepo.InsertWorkflowRule(entity);
                     await _db.CommitTranAsync();
 
                     return count >= 1
@@ -139,7 +139,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var isExistStep = await _workflowRule.GetWorkflowRuleStepIsExist(long.Parse(ruleId));
+                var isExistStep = await _workflowRuleRepo.GetWorkflowRuleStepIsExist(long.Parse(ruleId));
                 if (isExistStep)
                 {
                     return Result<int>.Failure(400, _localization.ReturnMsg($"{_this}Exist"));
@@ -147,7 +147,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 else
                 {
                     await _db.BeginTranAsync();
-                    var count = await _workflowRule.DeleteWorkflowRule(long.Parse(ruleId));
+                    var count = await _workflowRuleRepo.DeleteWorkflowRule(long.Parse(ruleId));
                     await _db.CommitTranAsync();
 
                     return count >= 1
@@ -185,7 +185,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 };
 
                 await _db.BeginTranAsync();
-                var count = await _workflowRule.UpdateWorkflowRule(entity);
+                var count = await _workflowRuleRepo.UpdateWorkflowRule(entity);
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -209,7 +209,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var entity = await _workflowRule.GetWorkflowRuleEntity(long.Parse(ruleId));
+                var entity = await _workflowRuleRepo.GetWorkflowRuleEntity(long.Parse(ruleId));
                 return Result<WorkflowRuleDto>.Ok(entity);
             }
             catch (Exception ex)
@@ -229,7 +229,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                return await _workflowRule.GetWorkflowRulePage(getPage);
+                return await _workflowRuleRepo.GetWorkflowRulePage(getPage);
             }
             catch (Exception ex)
             {

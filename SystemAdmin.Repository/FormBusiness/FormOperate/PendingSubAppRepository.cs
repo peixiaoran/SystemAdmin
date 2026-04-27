@@ -92,7 +92,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                            .With(SqlWith.NoLock)
                            .InnerJoin<FormInstanceEntity>((pendapp, forminfo) => pendapp.FormId == forminfo.FormId)
                            .InnerJoin<FormTypeEntity>((pendapp, forminfo, formtype) => forminfo.FormTypeId == formtype.FormTypeId)
-                           .InnerJoin<DictionaryInfoEntity>((pendapp, forminfo, formtype, dic) => dic.DicType == "FormStatus" && dic.DicCode == FormStatus.PendingSubmission.ToEnumString() && forminfo.FormStatus == dic.DicCode)
+                           .InnerJoin<DictionaryInfoEntity>((pendapp, forminfo, formtype, dic) => dic.DicType == "FormStatus" && dic.DicCode == FormStatus.PendingSubmit.ToEnumString() && forminfo.FormStatus == dic.DicCode)
                            .InnerJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser) => pendapp.ReviewUserId == penduser.UserId)
                            .LeftJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser) => forminfo.CreatedBy == appuser.UserId)
                            .LeftJoin<DepartmentInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => appuser.DepartmentId == appuserdept.DepartmentId)
@@ -218,7 +218,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         public Task<bool> IsVoidedForm(long formId)
         {
             return _db.Queryable<FormInstanceEntity>()
-                      .Where(forminfo => forminfo.FormStatus == FormStatus.PendingSubmission.ToEnumString())
+                      .Where(forminfo => forminfo.FormStatus == FormStatus.PendingSubmit.ToEnumString())
                       .AnyAsync();
         }
 

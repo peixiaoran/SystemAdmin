@@ -1,10 +1,19 @@
-﻿namespace SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager
+﻿using System.Text.Json.Serialization;
+using SystemAdmin.Model.ModelHelper.ModelConverter;
+
+namespace SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager
 {
     /// <summary>
     /// 表单签核人员
     /// </summary>
     public class FormReviewFlow
     {
+        /// <summary>
+        /// 步骤Id
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long StepId { get; set; }
+
         /// <summary>
         /// 步骤名称
         /// </summary>

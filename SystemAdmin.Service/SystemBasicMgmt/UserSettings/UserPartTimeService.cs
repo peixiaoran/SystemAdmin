@@ -25,7 +25,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _userPartTimeRepo = userPartTimeRepo
+            _userPartTimeRepo = userPartTimeRepo;
             _localization = localization;
         }
 

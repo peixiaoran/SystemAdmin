@@ -30,7 +30,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity
         public string DepartmentLevelNameEn { get; set; } = string.Empty;
 
         /// <summary>
-        /// 排序值（默认0）
+        /// 排序值
         /// </summary>
         public int SortOrder { get; set; }
 

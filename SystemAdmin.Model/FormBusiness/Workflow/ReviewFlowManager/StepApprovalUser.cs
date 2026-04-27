@@ -1,4 +1,7 @@
-﻿namespace SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager
+﻿using System.Text.Json.Serialization;
+using SystemAdmin.Model.ModelHelper.ModelConverter;
+
+namespace SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager
 {
     /// <summary>
     /// 步骤签核人员
@@ -6,9 +9,21 @@
     public class StepReviewUser
     {
         /// <summary>
+        /// 签核人员Id - 实或兼
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long UserId { get; set; }
+
+        /// <summary>
         /// 签核人员姓名 - 实或兼
         /// </summary>
         public string UserName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 签核人员Id - 代
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long AgentUserId { get; set; }
 
         /// <summary>
         /// 签核人员姓名 - 代

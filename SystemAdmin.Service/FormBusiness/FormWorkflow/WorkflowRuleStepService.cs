@@ -14,16 +14,16 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         private readonly CurrentUser _loginuser;
         private readonly ILogger<WorkflowRuleStepService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly WorkflowRuleStepRepository _workflowRuleStep;
+        private readonly WorkflowRuleStepRepository _workflowRuleStepRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormWorkflow.WorkflowRuleStep";
 
-        public WorkflowRuleStepService(CurrentUser loginuser, ILogger<WorkflowRuleStepService> logger, SqlSugarScope db, WorkflowRuleStepRepository workflowRuleStep, LocalizationService localization)
+        public WorkflowRuleStepService(CurrentUser loginuser, ILogger<WorkflowRuleStepService> logger, SqlSugarScope db, WorkflowRuleStepRepository workflowRuleStepRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _workflowRuleStep = workflowRuleStep;
+            _workflowRuleStepRepo = workflowRuleStepRepo;
             _localization = localization;
         }
 
@@ -35,7 +35,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowRuleStep.GetFormGroupDrop();
+                var drop = await _workflowRuleStepRepo.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -54,7 +54,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowRuleStep.GetFormTypeDrop(long.Parse(formGroupId));
+                var drop = await _workflowRuleStepRepo.GetFormTypeDrop(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -73,7 +73,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowRuleStep.GetWorkflowRuleDrop(long.Parse(formTypeId));
+                var drop = await _workflowRuleStepRepo.GetWorkflowRuleDrop(long.Parse(formTypeId));
                 return Result<List<WorkflowRuleDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -93,7 +93,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             try
             {
                 // 规则是否重复配置
-                var isRepat = await _workflowRuleStep.RuleStepIsRepeat(long.Parse(upsert.RuleId), long.Parse(upsert.CurrentStepId), long.Parse(upsert.NextStepId));
+                var isRepat = await _workflowRuleStepRepo.RuleStepIsRepeat(long.Parse(upsert.RuleId), long.Parse(upsert.CurrentStepId), long.Parse(upsert.NextStepId));
                 if (isRepat)
                 {
                     return Result<int>.Failure(400, _localization.ReturnMsg($"{_this}Repat"));
@@ -111,7 +111,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     };
 
                     await _db.BeginTranAsync();
-                    var count = await _workflowRuleStep.InsertWorkflowRuleStep(entity);
+                    var count = await _workflowRuleStepRepo.InsertWorkflowRuleStep(entity);
                     await _db.CommitTranAsync();
 
                     return count >= 1
@@ -138,7 +138,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
             try
             {
                 await _db.BeginTranAsync();
-                var count = await _workflowRuleStep.DeleteWorkflowRuleStep(long.Parse(ruleId), long.Parse(currentStepId));
+                var count = await _workflowRuleStepRepo.DeleteWorkflowRuleStep(long.Parse(ruleId), long.Parse(currentStepId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -162,7 +162,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var isRepat = await _workflowRuleStep.RuleStepIsRepeat(long.Parse(upsert.RuleId), long.Parse(upsert.NextStepId));
+                var isRepat = await _workflowRuleStepRepo.RuleStepIsRepeat(long.Parse(upsert.RuleId), long.Parse(upsert.NextStepId));
                 if (isRepat)
                 {
                     return Result<int>.Failure(400, _localization.ReturnMsg($"{_this}Repat"));
@@ -180,7 +180,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     };
 
                     await _db.BeginTranAsync();
-                    var count = await _workflowRuleStep.UpdateWorkflowRuleStep(entity);
+                    var count = await _workflowRuleStepRepo.UpdateWorkflowRuleStep(entity);
                     await _db.CommitTranAsync();
 
                     return count >= 1
@@ -206,7 +206,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var entity = await _workflowRuleStep.GetWorkflowRuleStepEntity(long.Parse(ruleId), long.Parse(currentStepId));
+                var entity = await _workflowRuleStepRepo.GetWorkflowRuleStepEntity(long.Parse(ruleId), long.Parse(currentStepId));
                 return Result<WorkflowRuleDto>.Ok(entity);
             }
             catch (Exception ex)
@@ -226,7 +226,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                return await _workflowRuleStep.GetWorkflowRuleStepList(long.Parse(ruleId));
+                return await _workflowRuleStepRepo.GetWorkflowRuleStepList(long.Parse(ruleId));
             }
             catch (Exception ex)
             {

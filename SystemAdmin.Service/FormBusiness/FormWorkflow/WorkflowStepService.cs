@@ -17,16 +17,16 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         private readonly CurrentUser _loginuser;
         private readonly ILogger<WorkflowStepService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly WorkflowStepRepository _workflowStep;
+        private readonly WorkflowStepRepository _workflowStepRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormWorkflow.WorkflowStep";
 
-        public WorkflowStepService(CurrentUser loginuser, ILogger<WorkflowStepService> logger, SqlSugarScope db, WorkflowStepRepository workflowStep, LocalizationService localization)
+        public WorkflowStepService(CurrentUser loginuser, ILogger<WorkflowStepService> logger, SqlSugarScope db, WorkflowStepRepository workflowStepRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _workflowStep = workflowStep;
+            _workflowStepRepo = workflowStepRepo;
             _localization = localization;
         }
 
@@ -38,7 +38,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowStep.GetFormGroupDrop();
+                var drop = await _workflowStepRepo.GetFormGroupDrop();
                 return Result<List<FormGroupDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowStep.GetFormTypeDrop(long.Parse(formGroupId));
+                var drop = await _workflowStepRepo.GetFormTypeDrop(long.Parse(formGroupId));
                 return Result<List<FormTypeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowStep.GetAssignmentDrop();
+                var drop = await _workflowStepRepo.GetAssignmentDrop();
                 return Result<List<AssignmentDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -93,7 +93,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowStep.GetApproveModeDrop();
+                var drop = await _workflowStepRepo.GetApproveModeDrop();
                 return Result<List<ApproveModeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
@@ -111,7 +111,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowStep.GetDepartmentLevelDrop();
+                var drop = await _workflowStepRepo.GetDepartmentLevelDrop();
                 return Result<List<DepartmentLevelDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -129,7 +129,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowStep.GetPositionDrop();
+                var drop = await _workflowStepRepo.GetPositionDrop();
                 return Result<List<PositionDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -147,7 +147,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var drop = await _workflowStep.GetDepartmentDrop();
+                var drop = await _workflowStepRepo.GetDepartmentDrop();
                 return Result<List<DepartmentDropDto>>.Ok(drop, "");
             }
             catch (Exception ex)
@@ -166,7 +166,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var page = await _workflowStep.GetUserInfoPage(getPage);
+                var page = await _workflowStepRepo.GetUserInfoPage(getPage);
                 return page;
             }
             catch (Exception ex)
@@ -211,7 +211,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 // 如果时起始步骤，则只新增审批步骤信息
                 if (upsert.IsStartStep == 1)
                 {
-                    int insertStepCount = await _workflowStep.InsertWorkflowStep(stepEntity);
+                    int insertStepCount = await _workflowStepRepo.InsertWorkflowStep(stepEntity);
                     await _db.CommitTranAsync();
                     return insertStepCount >= 1
                             ? Result<int>.Ok(insertStepCount, _localization.ReturnMsg($"{_this}InsertSuccess"))
@@ -220,7 +220,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 // 不是起始步骤，则新增审批步骤信息及对应的步骤指派规则
                 else
                 {
-                    int insertStepCount = await _workflowStep.InsertWorkflowStep(stepEntity);
+                    int insertStepCount = await _workflowStepRepo.InsertWorkflowStep(stepEntity);
                     // 根据不同的步骤指派规则，新增对应的步骤指派规则
                     if (upsert.Assignment.MatchEnum(Assignment.Org))
                     {
@@ -232,7 +232,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
-                        insertOrgCount = await _workflowStep.InsertWorkflowStepOrg(orgEntity);
+                        insertOrgCount = await _workflowStepRepo.InsertWorkflowStepOrg(orgEntity);
                     }
                     else if (upsert.Assignment.MatchEnum(Assignment.DeptUser))
                     {
@@ -244,7 +244,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
-                        insertDeptUserCount = await _workflowStep.InsertWorkflowStepDeptUser(stepDeptUserEntity);
+                        insertDeptUserCount = await _workflowStepRepo.InsertWorkflowStepDeptUser(stepDeptUserEntity);
                     }
                     else if (upsert.Assignment.MatchEnum(Assignment.User))
                     {
@@ -256,7 +256,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
-                        insertUserCount = await _workflowStep.InsertWorkflowStepUser(userEntity);
+                        insertUserCount = await _workflowStepRepo.InsertWorkflowStepUser(userEntity);
                     }
                     else if (upsert.Assignment.MatchEnum(Assignment.Custom))
                     {
@@ -268,7 +268,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                             CreatedBy = _loginuser.UserId,
                             CreatedDate = DateTime.Now
                         };
-                        insertCustomCount = await _workflowStep.InsertWorkflowStepCustom(customEntity);
+                        insertCustomCount = await _workflowStepRepo.InsertWorkflowStepCustom(customEntity);
                     }
                     await _db.CommitTranAsync();
 
@@ -294,7 +294,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var isExist = await _workflowStep.GetWorkflowRuleStepIsExist(long.Parse(stepId));
+                var isExist = await _workflowStepRepo.GetWorkflowRuleStepIsExist(long.Parse(stepId));
                 if (isExist)
                 {
                     return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}Exist"));
@@ -302,11 +302,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 else
                 {
                     // 删除所有步骤的配置
-                    int delStepCount = await _workflowStep.DeleteWorkflowStep(long.Parse(stepId));
-                    int delOrgCount = await _workflowStep.DeleteWorkflowStepOrg(long.Parse(stepId));
-                    int delDeptUserCount = await _workflowStep.DeleteWorkflowStepDeptUser(long.Parse(stepId));
-                    int delUserCount = await _workflowStep.DeleteWorkflowStepUser(long.Parse(stepId));
-                    int delCustomCount = await _workflowStep.DeleteWorkflowStepCustom(long.Parse(stepId));
+                    int delStepCount = await _workflowStepRepo.DeleteWorkflowStep(long.Parse(stepId));
+                    int delOrgCount = await _workflowStepRepo.DeleteWorkflowStepOrg(long.Parse(stepId));
+                    int delDeptUserCount = await _workflowStepRepo.DeleteWorkflowStepDeptUser(long.Parse(stepId));
+                    int delUserCount = await _workflowStepRepo.DeleteWorkflowStepUser(long.Parse(stepId));
+                    int delCustomCount = await _workflowStepRepo.DeleteWorkflowStepCustom(long.Parse(stepId));
 
                     return delStepCount >= 1 && (delOrgCount >= 1 || delDeptUserCount >= 1 || delUserCount >= 1 || delCustomCount >= 1)
                             ? Result<int>.Ok(delStepCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
@@ -353,11 +353,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                 };
 
                 await _db.BeginTranAsync();
-                updateStepCount = await _workflowStep.UpdateWorkflowStep(stepEntity);
-                await _workflowStep.DeleteWorkflowStepDeptUser(long.Parse(upsert.StepId));
-                await _workflowStep.DeleteWorkflowStepUser(long.Parse(upsert.StepId));
-                await _workflowStep.DeleteWorkflowStepCustom(long.Parse(upsert.StepId));
-                await _workflowStep.DeleteWorkflowStepOrg(long.Parse(upsert.StepId));
+                updateStepCount = await _workflowStepRepo.UpdateWorkflowStep(stepEntity);
+                await _workflowStepRepo.DeleteWorkflowStepDeptUser(long.Parse(upsert.StepId));
+                await _workflowStepRepo.DeleteWorkflowStepUser(long.Parse(upsert.StepId));
+                await _workflowStepRepo.DeleteWorkflowStepCustom(long.Parse(upsert.StepId));
+                await _workflowStepRepo.DeleteWorkflowStepOrg(long.Parse(upsert.StepId));
                 // 如果时开始步骤，则只修改步骤信息
                 if (upsert.IsStartStep == 1)
                 {
@@ -378,7 +378,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
-                    insertStepOrgCount = await _workflowStep.InsertWorkflowStepOrg(stepOrgEntity);
+                    insertStepOrgCount = await _workflowStepRepo.InsertWorkflowStepOrg(stepOrgEntity);
                 }
                 else if (upsert.Assignment.MatchEnum(Assignment.DeptUser))
                 {
@@ -390,7 +390,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
-                    insertStepDeptUserCount = await _workflowStep.InsertWorkflowStepDeptUser(stepDeptUserEntity);
+                    insertStepDeptUserCount = await _workflowStepRepo.InsertWorkflowStepDeptUser(stepDeptUserEntity);
                 }
                 else if (upsert.Assignment.MatchEnum(Assignment.User))
                 {
@@ -402,7 +402,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
-                    insertStepUserCount = await _workflowStep.InsertWorkflowStepUser(stepUserEntity);
+                    insertStepUserCount = await _workflowStepRepo.InsertWorkflowStepUser(stepUserEntity);
                 }
                 else if (upsert.Assignment.MatchEnum(Assignment.Custom))
                 {
@@ -414,7 +414,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                         CreatedBy = _loginuser.UserId,
                         CreatedDate = DateTime.Now
                     };
-                    insertStepCustomCount = await _workflowStep.InsertWorkflowStepCustom(stepCustomEntity);
+                    insertStepCustomCount = await _workflowStepRepo.InsertWorkflowStepCustom(stepCustomEntity);
                 }
                 await _db.CommitTranAsync();
 
@@ -439,7 +439,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                return await _workflowStep.GetWorkflowStepList(formTypeId);
+                return await _workflowStepRepo.GetWorkflowStepList(formTypeId);
             }
             catch (Exception ex)
             {
@@ -457,12 +457,12 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var entity = await _workflowStep.GetWorkflowStepEntity(long.Parse(stepId));
+                var entity = await _workflowStepRepo.GetWorkflowStepEntity(long.Parse(stepId));
 
-                entity.workflowStepOrgDto = await _workflowStep.GetWorkflowStepOrgEntity(long.Parse(stepId));
-                entity.workflowStepDeptUserDto = await _workflowStep.GetWorkflowStepDeptUserEntity(long.Parse(stepId));
-                entity.workflowStepUserDto = await _workflowStep.GetWorkflowStepUserEntity(long.Parse(stepId));
-                entity.workflowStepCustomDto = await _workflowStep.GetWorkflowStepCustomEntity(long.Parse(stepId));
+                entity.workflowStepOrgDto = await _workflowStepRepo.GetWorkflowStepOrgEntity(long.Parse(stepId));
+                entity.workflowStepDeptUserDto = await _workflowStepRepo.GetWorkflowStepDeptUserEntity(long.Parse(stepId));
+                entity.workflowStepUserDto = await _workflowStepRepo.GetWorkflowStepUserEntity(long.Parse(stepId));
+                entity.workflowStepCustomDto = await _workflowStepRepo.GetWorkflowStepCustomEntity(long.Parse(stepId));
 
                 return Result<WorkflowStepDto>.Ok(entity);
             }
