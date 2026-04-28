@@ -12,11 +12,10 @@ namespace SystemAdmin.CommonSetup.Security
         private readonly EmailOptions _options;
 
         /// <summary>
-        /// 构造函数，由依赖注入框架调用。
-        /// IOptions&lt;EmailOptions&gt; 会从配置系统中自动绑定 EmailSettings 节点。
+        /// 构造函数，由依赖注入框架调用，EmailSettings 节点。
         /// </summary>
-        /// <param name="options">邮件发送配置，来源于配置系统（appsettings + 环境变量）</param>
-        /// <param name="logger">日志记录器</param>
+        /// <param name="options"></param>
+        /// <param name="logger"></param>
         public MailKitEmailSender(IOptions<EmailOptions> options, ILogger<MailKitEmailSender> logger)
         {
             _options = options.Value;

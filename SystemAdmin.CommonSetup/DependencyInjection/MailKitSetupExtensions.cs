@@ -13,9 +13,7 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
         /// </summary>
         /// <param name="services">依赖注入服务集合</param>
         /// <param name="configuration">配置对象，内含 appsettings.json + 环境变量 等多个配置源</param>
-        public static IServiceCollection AddMailKitSetup(
-            this IServiceCollection services,
-            IConfiguration configuration)
+        public static IServiceCollection AddMailKitSetup(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<EmailOptions>(configuration.GetSection("EmailSettings"));
             services.PostConfigure<EmailOptions>(options =>

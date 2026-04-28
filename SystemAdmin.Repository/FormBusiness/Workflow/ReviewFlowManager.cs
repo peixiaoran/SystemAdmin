@@ -37,24 +37,24 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             var formReviewFlowList = new List<FormReviewFlow>();
 
             var formDetail = await _db.Queryable<FormInstanceEntity>()
-                                    .With(SqlWith.NoLock)
-                                    .InnerJoin<FormTypeEntity>((instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
-                                    .InnerJoin<UserInfoEntity>((instance, formtype, user) => instance.ApplicantUserId == user.UserId)
-                                    .InnerJoin<DepartmentInfoEntity>((instance, formtype, user, dept) => user.DepartmentId == dept.DepartmentId)
-                                    .InnerJoin<DepartmentLevelEntity>((instance, formtype, user, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
-                                    .InnerJoin<PositionInfoEntity>((instance, formtype, user, dept, deptlevel, position) => user.PositionId == position.PositionId)
-                                    .Where((instance, formtype, user, dept, deptlevel, position) => instance.FormId == formId)
-                                    .Select((instance, formtype, user, dept, deptlevel, position) => new ApplicantFormDetail
-                                    {
-                                        FormId = instance.FormId,
-                                        FormTypeId = instance.FormTypeId,
-                                        RuleId = instance.RuleId,
-                                        CurrentStepId = instance.CurrentStepId,
-                                        ApplicantUserId = user.UserId,
-                                        ApplicantDeptId = dept.DepartmentId,
-                                        DeptLevelSort = deptlevel.SortOrder,
-                                        PositionSort = position.SortOrder
-                                    }).FirstAsync();
+                                      .With(SqlWith.NoLock)
+                                      .InnerJoin<FormTypeEntity>((instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
+                                      .InnerJoin<UserInfoEntity>((instance, formtype, user) => instance.ApplicantUserId == user.UserId)
+                                      .InnerJoin<DepartmentInfoEntity>((instance, formtype, user, dept) => user.DepartmentId == dept.DepartmentId)
+                                      .InnerJoin<DepartmentLevelEntity>((instance, formtype, user, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                                      .InnerJoin<PositionInfoEntity>((instance, formtype, user, dept, deptlevel, position) => user.PositionId == position.PositionId)
+                                      .Where((instance, formtype, user, dept, deptlevel, position) => instance.FormId == formId)
+                                      .Select((instance, formtype, user, dept, deptlevel, position) => new ApplicantFormDetail
+                                      {
+                                          FormId = instance.FormId,
+                                          FormTypeId = instance.FormTypeId,
+                                          RuleId = instance.RuleId,
+                                          CurrentStepId = instance.CurrentStepId,
+                                          ApplicantUserId = user.UserId,
+                                          ApplicantDeptId = dept.DepartmentId,
+                                          DeptLevelSort = deptlevel.SortOrder,
+                                          PositionSort = position.SortOrder
+                                      }).FirstAsync();
 
             // 申请人上级部门列表（包含申请人所在部门）
             var applicantDept = await _db.Queryable<DepartmentInfoEntity>()
@@ -99,15 +99,14 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
                     // 查询部门级别信息和职位信息
                     var deptInfo = await _db.Queryable<DepartmentLevelEntity>()
-                                      .With(SqlWith.NoLock)
-                                      .Where(dept => dept.DepartmentLevelId == orgInfo.DeptLeaveId)
-                                      .FirstAsync();
-                    var positionInfo = await _db.Queryable<PositionInfoEntity>()
-                                         .With(SqlWith.NoLock)
-                                         .Where(pos => pos.PositionId == orgInfo.PositionId)
-                                         .FirstAsync();
-
-                    if (formDetail.DeptLevelSort < deptInfo.SortOrder || formDetail.PositionSort <= positionInfo.SortOrder)
+                                            .With(SqlWith.NoLock)
+                                            .Where(dept => dept.DepartmentLevelId == orgInfo.DeptLeaveId)
+                                            .FirstAsync();
+                    var posInfo = await _db.Queryable<PositionInfoEntity>()
+                                           .With(SqlWith.NoLock)
+                                           .Where(pos => pos.PositionId == orgInfo.PositionId)
+                                           .FirstAsync();
+                    if (formDetail.DeptLevelSort < deptInfo.SortOrder || formDetail.PositionSort <= posInfo.SortOrder)
                     {
                         formReviewFlow.Skip = 1;
                     }
@@ -119,17 +118,17 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 else if (stepInfo.Assignment == Assignment.DeptUser.ToEnumString())
                 {
                     var deptUserInfo = await _db.Queryable<WorkflowStepDeptUserEntity>()
-                                           .With(SqlWith.NoLock)
-                                           .Where(step => step.StepId == currentStepId)
-                                           .FirstAsync();
+                                                .With(SqlWith.NoLock)
+                                                .Where(step => step.StepId == currentStepId)
+                                                .FirstAsync();
                     stepReviewUser = await GetDeptUserStepReviewUser(deptUserInfo.DepartmentId, deptUserInfo.PositionId, stepInfo.ApproveMode);
                 }
                 else if (stepInfo.Assignment == Assignment.User.ToEnumString())
                 {
                     var userInfo = await _db.Queryable<WorkflowStepUserEntity>()
-                                           .With(SqlWith.NoLock)
-                                           .Where(step => step.StepId == currentStepId)
-                                           .FirstAsync();
+                                            .With(SqlWith.NoLock)
+                                            .Where(step => step.StepId == currentStepId)
+                                            .FirstAsync();
                     stepReviewUser = await GetUserStepReviewUser(userInfo.UserId, stepInfo.ApproveMode);
                 }
 
@@ -145,7 +144,6 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             // 获取审批结果
             formReviewFlowList = await GetFormReviewResult(formId, formDetail.CurrentStepId, formReviewFlowList);
-
             return formReviewFlowList;
         }
 
@@ -446,15 +444,15 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             var posInfo = await _db.Queryable<PositionInfoEntity>()
                                    .With(SqlWith.NoLock)
-                                   .Where(p => p.PositionId == positionId)
+                                   .Where(position => position.PositionId == positionId)
                                    .FirstAsync();
             var deptInfo = await _db.Queryable<DepartmentInfoEntity>()
                                     .With(SqlWith.NoLock)
-                                    .Where(d => d.DepartmentId == departmentId)
+                                    .Where(dept => dept.DepartmentId == departmentId)
                                     .FirstAsync();
             var deptlevel = await _db.Queryable<DepartmentLevelEntity>()
                                      .With(SqlWith.NoLock)
-                                     .Where(d => d.DepartmentLevelId == deptInfo.DepartmentLevelId)
+                                     .Where(deptlevel => deptlevel.DepartmentLevelId == deptInfo.DepartmentLevelId)
                                      .FirstAsync();
 
             bool isSingle = mode == ApproveMode.Single.ToEnumString();
@@ -903,8 +901,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         {
             var reviewRecord = await _db.Queryable<FormReviewRecordEntity>()
                                         .With(SqlWith.NoLock)
-                                        .Where(r => r.FormId == formId)
-                                        .OrderBy(r => r.ReviewDateTime)
+                                        .Where(record => record.FormId == formId)
+                                        .OrderBy(record => record.ReviewDateTime)
                                         .ToListAsync();
 
             int lastRejectedIndex = -1;

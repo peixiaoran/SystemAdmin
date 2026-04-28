@@ -12,12 +12,12 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.FormOperate
 {
-    public class PendingSubAppRepository
+    public class PendingReviewRepository
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
 
-        public PendingSubAppRepository(SqlSugarScope db, Language lang)
+        public PendingReviewRepository(SqlSugarScope db, Language lang)
         {
             _db = db;
             _lang = lang;
