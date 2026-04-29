@@ -106,11 +106,29 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 表单不是待送审阶段，不可作废 的本地化字符串。
+        ///   查找类似 无权申请此类单据 的本地化字符串。
         /// </summary>
-        internal static string NotVoided {
+        internal static string NotCanApply {
             get {
-                return ResourceManager.GetString("NotVoided", resourceCulture);
+                return ResourceManager.GetString("NotCanApply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 无权审批此单据 的本地化字符串。
+        /// </summary>
+        internal static string NotCanReview {
+            get {
+                return ResourceManager.GetString("NotCanReview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 无权作废此单据 的本地化字符串。
+        /// </summary>
+        internal static string NotCanVoided {
+            get {
+                return ResourceManager.GetString("NotCanVoided", resourceCulture);
             }
         }
         

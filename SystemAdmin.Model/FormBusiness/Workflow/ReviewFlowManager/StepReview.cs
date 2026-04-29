@@ -4,9 +4,9 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager
 {
     /// <summary>
-    /// 表单签核人员
+    /// 表单审批人员
     /// </summary>
-    public class FormReviewFlow
+    public class StepReview
     {
         /// <summary>
         /// 步骤Id
@@ -25,13 +25,8 @@ namespace SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager
         public int Skip { get; set; }
 
         /// <summary>
-        /// 步骤签核人员
+        /// 步骤审批人员列表
         /// </summary>
-        public List<StepReviewUser> stepReviewUser { get; set; } = new List<StepReviewUser>();
-
-        /// <summary>
-        /// 目前状态（未审批、审批中、审批完成）
-        /// </summary>
-        public string Result { get; set; } = string.Empty;
+        public List<UserReview> stepReviewUser { get; set; } = new List<UserReview>();
     }
 }

@@ -93,23 +93,17 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
             try
             {
                 await _db.BeginTranAsync();
-                var delCount = await _userFormBindRepo.DeleteUserForm(long.Parse(upsert.UserId));
-                var entity = upsert.FormGroupTypeId
-                                              .Select(id => new UserFormEntity
-                                              {
-                                                  UserId = long.Parse(upsert.UserId),
-                                                  FormGroupTypeId = long.Parse(id),
-                                                  CreatedBy = _loginuser.UserId,
-                                                  CreatedDate = DateTime.Now
-                                              }).ToList();
-
-                entity.ForEach(userform =>
+                await _userFormBindRepo.DeleteUserForm(long.Parse(upsert.UserId));
+                var entity = upsert.FormGroupTypeId.Select(id => new UserFormEntity
                 {
-                    userform.CreatedBy = _loginuser.UserId;
-                    userform.CreatedDate = DateTime.Now;
-                    userform.ModifiedBy = _loginuser.UserId;
-                    userform.ModifiedDate = DateTime.Now;
-                });
+                    UserId = long.Parse(upsert.UserId),
+                    FormGroupTypeId = long.Parse(id),
+                    CreatedBy = _loginuser.UserId,
+                    CreatedDate = DateTime.Now,
+                    ModifiedBy = _loginuser.UserId,
+                    ModifiedDate = DateTime.Now
+                }).ToList();
+                await _userFormBindRepo.InsertUserForm(entity);
                 var count = await _userFormBindRepo.InsertUserForm(entity);
                 await _db.CommitTranAsync();
 

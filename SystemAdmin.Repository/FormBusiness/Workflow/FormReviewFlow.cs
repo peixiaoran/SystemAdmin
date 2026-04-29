@@ -12,14 +12,14 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.Workflow
 {
-    public class ReviewFlowManager
+    public class FormReviewFlow
     {
         private readonly CurrentUser _loginuser;
         private readonly SqlSugarScope _db;
         private readonly LocalizationService _localization;
         private readonly Language _lang;
 
-        public ReviewFlowManager(CurrentUser loginuser, SqlSugarScope db, LocalizationService localization, Language lang)
+        public FormReviewFlow(CurrentUser loginuser, SqlSugarScope db, LocalizationService localization, Language lang)
         {
             _loginuser = loginuser;
             _db = db;
@@ -32,9 +32,11 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<List<FormReviewFlow>> GetFullReviewFlow(long formId)
+        public async Task<FormReview> GetFullReviewFlow(long formId)
         {
-            var formReviewFlowList = new List<FormReviewFlow>();
+            var formReview = new FormReview();
+            var stepReviewList = new List<StepReview>();
+            formReview.FormId = formId;
 
             var formDetail = await _db.Queryable<FormInstanceEntity>()
                                       .With(SqlWith.NoLock)
@@ -68,8 +70,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             var currentStepId = ruleStep.CurrentStepId;
             while (currentStepId != 0)
             {
-                var formReviewFlow = new FormReviewFlow();
-                var stepReviewUser = new List<StepReviewUser>();
+                var stepReview = new StepReview();
+                var userReview = new List<UserReview>();
 
                 var stepInfo = await _db.Queryable<WorkflowStepEntity>()
                                         .With(SqlWith.NoLock)
@@ -84,11 +86,11 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                             step.ApproveMode,
                                         }).FirstAsync();
 
-                formReviewFlow.StepId = currentStepId;
-                formReviewFlow.StepName = stepInfo.StepName;
+                stepReview.StepId = currentStepId;
+                stepReview.StepName = stepInfo.StepName;
                 if (stepInfo.IsStartStep == 1)
                 {
-                    stepReviewUser = await GetStartStepReviewUser(formDetail.ApplicantUserId);
+                    userReview = await GetStartStepReviewUser(formDetail.ApplicantUserId);
                 }
                 else if (stepInfo.Assignment == Assignment.Org.ToEnumString())
                 {
@@ -108,11 +110,11 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                            .FirstAsync();
                     if (formDetail.DeptLevelSort < deptInfo.SortOrder || formDetail.PositionSort <= posInfo.SortOrder)
                     {
-                        formReviewFlow.Skip = 1;
+                        stepReview.Skip = 1;
                     }
                     else
                     {
-                        stepReviewUser = await GetOrgStepReviewUser(applicantDept, orgInfo.DeptLeaveId, orgInfo.PositionId, stepInfo.ApproveMode);
+                        userReview = await GetOrgStepReviewUser(applicantDept, orgInfo.DeptLeaveId, orgInfo.PositionId, stepInfo.ApproveMode);
                     }
                 }
                 else if (stepInfo.Assignment == Assignment.DeptUser.ToEnumString())
@@ -121,7 +123,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                                 .With(SqlWith.NoLock)
                                                 .Where(step => step.StepId == currentStepId)
                                                 .FirstAsync();
-                    stepReviewUser = await GetDeptUserStepReviewUser(deptUserInfo.DepartmentId, deptUserInfo.PositionId, stepInfo.ApproveMode);
+                    userReview = await GetDeptUserStepReviewUser(deptUserInfo.DepartmentId, deptUserInfo.PositionId, stepInfo.ApproveMode);
                 }
                 else if (stepInfo.Assignment == Assignment.User.ToEnumString())
                 {
@@ -129,11 +131,11 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                             .With(SqlWith.NoLock)
                                             .Where(step => step.StepId == currentStepId)
                                             .FirstAsync();
-                    stepReviewUser = await GetUserStepReviewUser(userInfo.UserId, stepInfo.ApproveMode);
+                    userReview = await GetUserStepReviewUser(userInfo.UserId, stepInfo.ApproveMode);
                 }
 
-                formReviewFlow.stepReviewUser.AddRange(stepReviewUser);
-                formReviewFlowList.Add(formReviewFlow);
+                stepReview.stepReviewUser.AddRange(userReview);
+                stepReviewList.Add(stepReview);
 
                 currentStepId = await _db.Queryable<WorkflowRuleStepEntity>()
                                          .With(SqlWith.NoLock)
@@ -143,8 +145,9 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             }
 
             // 获取审批结果
-            formReviewFlowList = await GetFormReviewResult(formId, formDetail.CurrentStepId, formReviewFlowList);
-            return formReviewFlowList;
+            formReview.stepReviewFlowList = await GetFormReviewResult(formId, formDetail.CurrentStepId, stepReviewList);
+            formReview.RejectCount = await GetRejectCount(formId);
+            return formReview;
         }
 
         /// <summary>
@@ -152,9 +155,9 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// </summary>
         /// <param name="applicantUserId"></param>
         /// <returns></returns>
-        public async Task<List<StepReviewUser>> GetStartStepReviewUser(long applicantUserId)
+        public async Task<List<UserReview>> GetStartStepReviewUser(long applicantUserId)
         {
-            var stepReviewUser = new List<StepReviewUser>();
+            var stepReviewUser = new List<UserReview>();
 
             bool isChinese = _lang.Locale == "zh-CN";
             string userNameCol = isChinese ? "users.UserNameCn" : "users.UserNameEn";
@@ -192,9 +195,9 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 new SugarParameter("@Now", DateTime.Now),
             };
 
-            var result = await _db.Ado.SqlQueryAsync<StepReviewUser>(sql, parameters);
+            var result = await _db.Ado.SqlQueryAsync<UserReview>(sql, parameters);
 
-            return result ?? new List<StepReviewUser>();
+            return result ?? new List<UserReview>();
         }
 
         /// <summary>
@@ -205,7 +208,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// <param name="positionId"></param>
         /// <param name="mode"></param>
         /// <returns></returns>
-        public async Task<List<StepReviewUser>> GetOrgStepReviewUser(List<DepartmentInfoEntity> applicantParentDept, long deptLeaveId, long positionId, string mode)
+        public async Task<List<UserReview>> GetOrgStepReviewUser(List<DepartmentInfoEntity> applicantParentDept, long deptLeaveId, long positionId, string mode)
         {
             bool isChinese = _lang.Locale == "zh-CN";
             string userNameCol = isChinese ? "users.UserNameCn" : "users.UserNameEn";
@@ -246,7 +249,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             // ────────────────────────────────────────────────
             // 第一次：精确匹配 deptlevel.SortOrder + position.SortOrder
             // ────────────────────────────────────────────────
-            var exactResult = await _db.Ado.SqlQueryAsync<StepReviewUser>($@"
+            var exactResult = await _db.Ado.SqlQueryAsync<UserReview>($@"
                 SELECT {topN}
                     UserId, UserName, AgentUserId, AgentUserName, AppointmentTypeName, AppointmentTypeCode,
                     DeptLevelSort, PositionSort, HireDate
@@ -338,7 +341,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             {
                 while (currentDeptLevelSort >= 1)
                 {
-                    var autoResult = await _db.Ado.SqlQueryAsync<StepReviewUser>($@"
+                    var autoResult = await _db.Ado.SqlQueryAsync<UserReview>($@"
                         SELECT {topN}
                              UserId, UserName, AgentUserId, AgentUserName, AppointmentTypeName, AppointmentTypeCode,
                             DeptLevelSort, PositionSort, HireDate
@@ -425,7 +428,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 currentDeptLevelSort = deptlevel.SortOrder;
             }
 
-            return new List<StepReviewUser>();
+            return new List<UserReview>();
         }
 
         /// <summary>
@@ -435,7 +438,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// <param name="positionId"></param>
         /// <param name="mode"></param>
         /// <returns></returns>
-        public async Task<List<StepReviewUser>> GetDeptUserStepReviewUser(long departmentId, long positionId, string mode)
+        public async Task<List<UserReview>> GetDeptUserStepReviewUser(long departmentId, long positionId, string mode)
         {
             bool isChinese = _lang.Locale == "zh-CN";
             string userNameCol = isChinese ? "users.UserNameCn" : "users.UserNameEn";
@@ -477,7 +480,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             // ────────────────────────────────────────────────
             // 第一次：精确匹配，按签核方式返回笔数
             // ────────────────────────────────────────────────
-            var exactResult = await _db.Ado.SqlQueryAsync<StepReviewUser>($@"
+            var exactResult = await _db.Ado.SqlQueryAsync<UserReview>($@"
                 SELECT {topN}
                     UserId, UserName, AgentUserId, AgentUserName, AppointmentTypeName, AppointmentTypeCode,
                     DeptLevelSort, PositionSort, HireDate
@@ -567,7 +570,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             {
                 while (currentDeptLevelSort >= 1)
                 {
-                    var autoResult = await _db.Ado.SqlQueryAsync<StepReviewUser>($@"
+                    var autoResult = await _db.Ado.SqlQueryAsync<UserReview>($@"
                         SELECT {topN}
                             UserId, UserName, AgentUserId, AgentUserName, AppointmentTypeName, AppointmentTypeCode,
                             DeptLevelSort, PositionSort, HireDate
@@ -656,7 +659,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 currentDeptLevelSort = deptlevel.SortOrder;
             }
 
-            return new List<StepReviewUser>();
+            return new List<UserReview>();
         }
 
         /// <summary>
@@ -665,7 +668,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// <param name="userId"></param>
         /// <param name="mode"></param>
         /// <returns></returns>
-        public async Task<List<StepReviewUser>> GetUserStepReviewUser(long userId, string mode)
+        public async Task<List<UserReview>> GetUserStepReviewUser(long userId, string mode)
         {
             bool isChinese = _lang.Locale == "zh-CN";
             string userNameCol = isChinese ? "users.UserNameCn" : "users.UserNameEn";
@@ -714,7 +717,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             // ────────────────────────────────────────────────
             // 第一次：精确匹配指定用户
             // ────────────────────────────────────────────────
-            var exactResult = await _db.Ado.SqlQueryAsync<StepReviewUser>($@"
+            var exactResult = await _db.Ado.SqlQueryAsync<UserReview>($@"
                 SELECT {topN}
                     UserId, UserName, AgentUserId, AgentUserName, AppointmentTypeName, AppointmentTypeCode,
                     DeptLevelSort, PositionSort, HireDate
@@ -802,7 +805,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             {
                 while (currentDeptLevelSort >= 1)
                 {
-                    var autoResult = await _db.Ado.SqlQueryAsync<StepReviewUser>($@"
+                    var autoResult = await _db.Ado.SqlQueryAsync<UserReview>($@"
                         SELECT {topN}
                             UserId, UserName, AgentUserId, AgentUserName, AppointmentTypeName, AppointmentTypeCode,
                             DeptLevelSort, PositionSort, HireDate
@@ -891,7 +894,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 currentDeptLevelSort = deptlevel.SortOrder;
             }
 
-            return new List<StepReviewUser>();
+            return new List<UserReview>();
         }
 
         /// <summary>
@@ -908,7 +911,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             int lastRejectedIndex = -1;
             for (int i = reviewRecord.Count - 1; i >= 0; i--)
             {
-                if (reviewRecord[i].ReviewResult == ReviewResult.Rejected.ToEnumString())
+                if (reviewRecord[i].ReviewResult == ReviewResult.Reject.ToEnumString())
                 {
                     lastRejectedIndex = i;
                     break;
@@ -923,11 +926,10 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// <summary>
         /// 获取表单签核结果，填充每个步骤及每位签核人员的状态
         /// </summary>
-        public async Task<List<FormReviewFlow>> GetFormReviewResult(long formId, long currentStepId, List<FormReviewFlow> reviewFlow)
+        public async Task<List<StepReview>> GetFormReviewResult(long formId, long currentStepId, List<StepReview> reviewFlow)
         {
             var validRecords = await GetValidReviewRecords(formId);
 
-            // 查询签核状态字典
             var dicList = await _db.Queryable<DictionaryInfoEntity>()
                                    .With(SqlWith.NoLock)
                                    .Where(d => d.DicType == "FormReviewResult")
@@ -944,24 +946,17 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             foreach (var flow in reviewFlow)
             {
-                // 跳过的步骤不处理
                 if (flow.Skip == 1)
                     continue;
 
-                // 当前步骤与该步骤不符，尚未轮到该步骤签核
-                if (currentStepId != flow.StepId)
-                {
-                    flow.Result = GetDicName(FormReviewResult.Unsigned.ToEnumString());
-                    foreach (var user in flow.stepReviewUser)
-                        user.Result = GetDicName(FormReviewResult.Unsigned.ToEnumString());
-
-                    continue;
-                }
-
-                // 当前步骤符合，逐一判断每位签核人员的状态
-                // 实或代其中一个 UserId 符合记录即视为已签核
                 foreach (var user in flow.stepReviewUser)
                 {
+                    if (currentStepId != flow.StepId)
+                    {
+                        user.Result = GetDicName(FormReviewResult.Unsigned.ToEnumString());
+                        continue;
+                    }
+
                     bool hasSigned = validRecords.Any(r =>
                         r.StepId == flow.StepId &&
                         (r.ReviewUserId == user.UserId || r.ReviewUserId == user.AgentUserId));
@@ -970,16 +965,20 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                         ? GetDicName(FormReviewResult.Signed.ToEnumString())
                         : GetDicName(FormReviewResult.UnderReview.ToEnumString());
                 }
-
-                // 步骤内所有人都已签核则步骤完成，否则审批中
-                bool allSigned = flow.stepReviewUser.All(u => u.Result == GetDicName(FormReviewResult.Signed.ToEnumString()));
-
-                flow.Result = allSigned
-                    ? GetDicName(FormReviewResult.Signed.ToEnumString())
-                    : GetDicName(FormReviewResult.UnderReview.ToEnumString());
             }
-
             return reviewFlow;
+        }
+
+        /// <summary>
+        /// 查询表单总计驳回次数
+        /// </summary>
+        private async Task<int> GetRejectCount(long formId)
+        {
+            return await _db.Queryable<FormReviewRecordEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(record => record.FormId == formId &&
+                                   record.ReviewResult == ReviewResult.Reject.ToEnumString())
+                            .CountAsync();
         }
     }
 }

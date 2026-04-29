@@ -12,7 +12,7 @@
  Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 28/04/2026 16:50:30
+ Date: 29/04/2026 17:21:13
 */
 
 
@@ -630,7 +630,7 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'表单审计信息表',
+'MS_Description', N'表单审计表',
 'SCHEMA', N'Form',
 'TABLE', N'FormSequence'
 GO
@@ -1149,7 +1149,7 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'流程规则步骤表',
+'MS_Description', N'规则步骤表',
 'SCHEMA', N'Form',
 'TABLE', N'WorkflowRuleStep'
 GO

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
-    public static class CacheServiceCollectionExtensions
+    public static class CacheStepExtensions
     {
         public static IServiceCollection AddCache(this IServiceCollection services)
         {

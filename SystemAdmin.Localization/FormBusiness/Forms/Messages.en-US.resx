@@ -138,10 +138,16 @@
   <data name="DeleteAttachmentFailed" xml:space="preserve">
     <value>Failed to delete attachment</value>
   </data>
-  <data name="NotVoided" xml:space="preserve">
-    <value>This form cannot be voided because it is not in the Pending Submission stage</value>
-  </data>
   <data name="AttachmentExtensionNotAllow" xml:space="preserve">
     <value>The file extension does not comply with the specifications</value>
+  </data>
+  <data name="NotCanApply" xml:space="preserve">
+    <value>Not authorized to submit this form type</value>
+  </data>
+  <data name="NotCanReview" xml:space="preserve">
+    <value>You do not have permission to approve this document</value>
+  </data>
+  <data name="NotCanVoided" xml:space="preserve">
+    <value>I am not authorized to void this document</value>
   </data>
 </root>

@@ -6,7 +6,7 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
     /// <summary>
     /// 多语言相关的依赖注入（只负责注册）
     /// </summary>
-    public static class LocalizationSetupExtensions
+    public static class LocalizationExtensions
     {
         /// <summary>
         /// 注册 MessageService + HttpContextAccessor

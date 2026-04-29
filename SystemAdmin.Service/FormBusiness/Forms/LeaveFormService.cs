@@ -23,20 +23,22 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly SqlSugarScope _db;
         private readonly FileUploadOptions _attachmentUpload;
         private readonly MinioService _minioService;
-        private readonly FormManager _formRepository;
+        private readonly FormPermissionChecker _formChecker;
+        private readonly FormManager _formRepo;
         private readonly LeaveFormRepository _leaveForm;
         private readonly LocalizationService _localization;
-        private readonly ReviewFlowManager _reviewFlow;
+        private readonly FormReviewFlow _reviewFlow;
         private readonly string _form = "FormBusiness.Forms.";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> attachmentUpload, MinioService minioService, FormManager formRepository, LeaveFormRepository leaveForm, LocalizationService localization, ReviewFlowManager reviewFlow)
+        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> attachmentUpload, MinioService minioService, FormPermissionChecker formChecker, FormManager formRepo, LeaveFormRepository leaveForm, LocalizationService localization, FormReviewFlow reviewFlow)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
             _attachmentUpload = attachmentUpload.Value;
             _minioService = minioService;
-            _formRepository = formRepository;
+            _formChecker = formChecker;
+            _formRepo = formRepo;
             _leaveForm = leaveForm;
             _localization = localization;
             _reviewFlow = reviewFlow;
@@ -51,7 +53,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             var drop = await _leaveForm.GetLeaveTypeDrop();
             return Result<List<LeaveTypeDropDto>>.Ok(drop);
         }
-        
+
         /// <summary>
         /// 初始化表单
         /// </summary>
@@ -61,15 +63,15 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                await _db.BeginTranAsync();
-                var formId = await _formRepository.InitializeFormInstance(long.Parse(formTypeId));
-                if (string.IsNullOrEmpty(formId))
+                var isCanApp = await _formChecker.CanApply(long.Parse(formTypeId));
+                if (!isCanApp)
                 {
-                    await _db.RollbackTranAsync();
-                    return Result<LeaveFormDto>.Failure(500, _localization.ReturnMsg($"{_form}InitializeFailed"));
+                    return Result<LeaveFormDto>.Failure(400, _localization.ReturnMsg($"{_form}NotCanApply"));
                 }
                 else
                 {
+                    await _db.BeginTranAsync();
+                    var formId = await _formRepo.InitializeFormInstance(long.Parse(formTypeId));
                     var leaveForm = new LeaveFormEntity()
                     {
                         FormId = long.Parse(formId),
@@ -88,7 +90,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                     var leaveFormDto = await _leaveForm.GetLeaveForm(long.Parse(formId));
                     leaveFormDto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
-
                     return Result<LeaveFormDto>.Ok(leaveFormDto);
                 }
             }
@@ -124,7 +125,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     ModifiedDate = DateTime.Now
                 };
                 var count = await _leaveForm.SaveLeaveForm(entity);
-                await _formRepository.SaveFormInstance(long.Parse(save.FormId));
+                await _formRepo.SaveFormInstance(long.Parse(save.FormId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -148,9 +149,17 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
-                dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
-                return Result<LeaveFormDto>.Ok(dto);
+                var isCanApp = await _formChecker.CanView(long.Parse(formId));
+                if (!isCanApp)
+                {
+                    return Result<LeaveFormDto>.Failure(400, _localization.ReturnMsg($"{_form}NotCanReview"));
+                }
+                else
+                {
+                    var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
+                    dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
+                    return Result<LeaveFormDto>.Ok(dto);
+                }
             }
             catch (Exception ex)
             {
@@ -158,7 +167,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 return Result<LeaveFormDto>.Failure(500, ex.Message);
             }
         }
-        
+
         /// <summary>
         /// 上传附件
         /// </summary>
@@ -262,17 +271,17 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<Result<List<FormReviewFlow>>> GetFullReviewFlow(string formId)
+        public async Task<Result<FormReview>> GetFullReviewFlow(string formId)
         {
             try
             {
                 var reviewFlow = await _reviewFlow.GetFullReviewFlow(long.Parse(formId));
-                return Result<List<FormReviewFlow>>.Ok(reviewFlow);
+                return Result<FormReview>.Ok(reviewFlow);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<FormReviewFlow>>.Failure(500, ex.Message);
+                return Result<FormReview>.Failure(500, ex.Message);
             }
         }
     }

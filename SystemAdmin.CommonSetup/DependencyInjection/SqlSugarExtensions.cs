@@ -4,7 +4,7 @@ using SqlSugar;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
-    public static class SqlSugarScopeSetupExtensions
+    public static class SqlSugarExtensions
     {
         /// <summary>
         /// 注册 SqlSugarScope 到 IServiceCollection

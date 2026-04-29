@@ -5,7 +5,7 @@ using SystemAdmin.CommonSetup.Security;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
-    public static class MailKitSetupExtensions
+    public static class MailKitExtensions
     {
         /// <summary>
         /// 注册基于 MailKit 的邮件发送组件。
