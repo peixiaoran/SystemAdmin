@@ -10,5 +10,10 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Queries
         /// 表单类别Id
         /// </summary>
         public string FormTypeId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 职级Id
+        /// </summary>
+        public string PositionId { get; set; } = string.Empty;
     }
 }

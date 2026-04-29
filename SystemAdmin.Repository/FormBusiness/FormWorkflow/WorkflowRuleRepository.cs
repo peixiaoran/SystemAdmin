@@ -167,7 +167,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
             var page = await _db.Queryable<WorkflowRuleEntity>()
                                 .With(SqlWith.NoLock)
                                 .InnerJoin<PositionInfoEntity>((rule, position) => rule.PositionId == position.PositionId)
-                                .Where((rule, position) => rule.FormTypeId == long.Parse(getPage.FormTypeId))
+                                .Where((rule, position) => rule.FormTypeId == long.Parse(getPage.FormTypeId) && rule.PositionId == long.Parse(getPage.PositionId))
                                 .Select((rule, position) => new WorkflowRuleDto
                                 {
                                     RuleId = rule.RuleId,
