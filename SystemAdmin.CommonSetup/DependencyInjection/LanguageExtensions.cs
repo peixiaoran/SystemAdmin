@@ -3,7 +3,7 @@ using SystemAdmin.CommonSetup.Security;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
-    public static class LanguageSetupExtensions
+    public static class LanguageExtensions
     {
         public static IServiceCollection AddLanguage(this IServiceCollection services)
         {

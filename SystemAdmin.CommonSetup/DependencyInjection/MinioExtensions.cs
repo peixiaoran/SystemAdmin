@@ -7,7 +7,7 @@ using SystemAdmin.CommonSetup.Security;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
-    public static class MinioSetupExtensions
+    public static class MinioExtensions
     {
         /// <summary>
         /// 注册 Minio 相关依赖：MinioSettings、IMinioClient、MinioService

@@ -7,7 +7,7 @@ using SystemAdmin.CommonSetup.Security;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
-    public static class JwtSetupExtensions
+    public static class JwtExtensions
     {
         /// <summary>
         /// Jwt 全量依赖注入：

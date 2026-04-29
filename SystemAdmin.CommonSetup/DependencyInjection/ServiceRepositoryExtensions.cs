@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
-    public static class ServiceRepositorySetupExtensions
+    public static class ServiceRepositoryExtensions
     {
         public static IServiceCollection AddProjectClasses(this IServiceCollection services)
         {

@@ -138,10 +138,16 @@
   <data name="DeleteAttachmentFailed" xml:space="preserve">
     <value>附件删除失败</value>
   </data>
-  <data name="NotVoided" xml:space="preserve">
-    <value>表单不是待送审阶段，不可作废</value>
-  </data>
   <data name="AttachmentExtensionNotAllow" xml:space="preserve">
     <value>文件后缀不符合规范</value>
+  </data>
+  <data name="NotCanApply" xml:space="preserve">
+    <value>无权申请此类单据</value>
+  </data>
+  <data name="NotCanReview" xml:space="preserve">
+    <value>无权审批此单据</value>
+  </data>
+  <data name="NotCanVoided" xml:space="preserve">
+    <value>无权作废此单据</value>
   </data>
 </root>

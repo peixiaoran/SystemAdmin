@@ -88,6 +88,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         public async Task<bool> RuleStepIsRepeat(long ruleId, long currentStepId, long nextStepId)
         {
             return await _db.Queryable<WorkflowRuleStepEntity>()
+                            .With(SqlWith.NoLock)
                             .Where(rulestep => rulestep.RuleId == ruleId && (rulestep.CurrentStepId == currentStepId || rulestep.NextStepId == nextStepId))
                             .AnyAsync();
         }
@@ -101,6 +102,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         public async Task<bool> RuleStepIsRepeat(long ruleId, long nextStepId)
         {
             return await _db.Queryable<WorkflowRuleStepEntity>()
+                            .With(SqlWith.NoLock)
                             .Where(rulestep => rulestep.RuleId == ruleId && rulestep.NextStepId == nextStepId)
                             .AnyAsync();
         }
@@ -119,6 +121,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 删除规则步骤
         /// </summary>
         /// <param name="ruleId"></param>
+        /// <param name="currentStepId"></param>
         /// <returns></returns>
         public async Task<int> DeleteWorkflowRuleStep(long ruleId, long currentStepId)
         {
@@ -159,7 +162,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询规则步骤分页
+        /// 查询规则步骤列表
         /// </summary>
         /// <param name="ruleId"></param>
         /// <returns></returns>

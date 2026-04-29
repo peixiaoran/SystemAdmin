@@ -69,7 +69,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[请假单] 查询请假单流程")]
-        public async Task<Result<List<FormReviewFlow>>> GetFullReviewFlow([FromForm] string formId)
+        public async Task<Result<FormReview>> GetFullReviewFlow([FromForm] string formId)
         {
             return await _leaveFormService.GetFullReviewFlow(formId);
         }

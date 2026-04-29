@@ -4,6 +4,7 @@ using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
 using SystemAdmin.Model.FormBusiness.FormOperate.Queries;
 using SystemAdmin.Repository.FormBusiness.FormOperate;
+using SystemAdmin.Repository.FormBusiness.Workflow;
 
 namespace SystemAdmin.Service.FormBusiness.FormOperate
 {
@@ -12,15 +13,17 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         private readonly CurrentUser _loginuser;
         private readonly ILogger<PendingSubAppService> _logger;
         private readonly SqlSugarScope _db;
+        private readonly FormPermissionChecker _formChecker;
         private readonly PendingReviewRepository _pendingReviewRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormOperate.PendingSubApp";
 
-        public PendingSubAppService(CurrentUser loginuser, ILogger<PendingSubAppService> logger, SqlSugarScope db, PendingReviewRepository pendingReviewRepo, LocalizationService localization)
+        public PendingSubAppService(CurrentUser loginuser, ILogger<PendingSubAppService> logger, SqlSugarScope db, FormPermissionChecker formChecker, PendingReviewRepository pendingReviewRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
+            _formChecker = formChecker;
             _pendingReviewRepo = pendingReviewRepo;
             _localization = localization;
         }
@@ -122,10 +125,10 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
             try
             {
                 await _db.BeginTranAsync();
-                var isCan = await _pendingReviewRepo.IsVoidedForm(long.Parse(formId));
+                var isCan = await _formChecker.CanVoided(long.Parse(formId));
                 if (!isCan)
                 {
-                    return Result<int>.Ok(500, _localization.ReturnMsg($"{_this}NotVoided"));
+                    return Result<int>.Ok(500, _localization.ReturnMsg($"{_this}NotCanVoided"));
                 }
                 var count = await _pendingReviewRepo.VoidedForm(long.Parse(formId), _loginuser.UserId);
                 await _db.CommitTranAsync();

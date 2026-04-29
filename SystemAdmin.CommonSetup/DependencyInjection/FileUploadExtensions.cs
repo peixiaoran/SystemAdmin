@@ -5,11 +5,9 @@ using SystemAdmin.CommonSetup.Options;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
-    public static class FileUploadSetupExtensions
+    public static class FileUploadExtensions
     {
-        public static IServiceCollection AddFileUploadSetup(
-        this IServiceCollection services,
-        IConfiguration configuration)
+        public static IServiceCollection AddFileUploadSetup(this IServiceCollection services, IConfiguration configuration)
         {
             // 绑定配置
             services.Configure<FileUploadOptions>(

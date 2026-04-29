@@ -5,7 +5,7 @@ using SystemAdmin.CommonSetup.Options;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
-    public static class CorsSetupExtensions
+    public static class CorsExtensions
     {
         private const string SectionName = "Cors";
 

@@ -83,8 +83,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         {
             var prefix = await _db.Queryable<FormTypeEntity>()
                                   .With(SqlWith.NoLock)
-                                  .Where(ft => ft.FormTypeId == formTypeId)
-                                  .Select(ft => ft.Prefix)
+                                  .Where(formtype => formtype.FormTypeId == formTypeId)
+                                  .Select(formtype => formtype.Prefix)
                                   .FirstAsync();
 
             // 应用锁防止并发

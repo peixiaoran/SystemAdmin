@@ -17,6 +17,6 @@ namespace SystemAdmin.Common.Enums.FormBusiness
         /// <summary>
         /// 驳回
         /// </summary>
-        Rejected = 2,
+        Reject = 2,
     }
 }

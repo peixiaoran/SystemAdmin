@@ -87,60 +87,59 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         public async Task<ResultPaged<PendingSubAppDto>> GetPendingSubmissionPage(GetPendingSubAppPage getPage, long loginUserId)
         {
             RefAsync<int> totalCount = 0;
-
             var query = _db.Queryable<PendingReviewEntity>()
                            .With(SqlWith.NoLock)
-                           .InnerJoin<FormInstanceEntity>((pendapp, forminfo) => pendapp.FormId == forminfo.FormId)
-                           .InnerJoin<FormTypeEntity>((pendapp, forminfo, formtype) => forminfo.FormTypeId == formtype.FormTypeId)
-                           .InnerJoin<DictionaryInfoEntity>((pendapp, forminfo, formtype, dic) => dic.DicType == "FormStatus" && dic.DicCode == FormStatus.PendingSubmit.ToEnumString() && forminfo.FormStatus == dic.DicCode)
-                           .InnerJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser) => pendapp.ReviewUserId == penduser.UserId)
-                           .LeftJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser) => forminfo.CreatedBy == appuser.UserId)
-                           .LeftJoin<DepartmentInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => appuser.DepartmentId == appuserdept.DepartmentId)
-                           .Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => forminfo.CreatedBy == loginUserId);
+                           .InnerJoin<FormInstanceEntity>((pendreview, instance) => pendreview.FormId == instance.FormId)
+                           .InnerJoin<FormTypeEntity>((pendreview, instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
+                           .InnerJoin<DictionaryInfoEntity>((pendreview, instance, formtype, dic) => dic.DicType == "FormStatus" && dic.DicCode == FormStatus.PendingSubmit.ToEnumString() && instance.FormStatus == dic.DicCode)
+                           .InnerJoin<UserInfoEntity>((pendreview, instance, formtype, dic, penduser) => pendreview.ReviewUserId == penduser.UserId)
+                           .LeftJoin<UserInfoEntity>((pendreview, instance, formtype, dic, penduser, reviewuser) => instance.CreatedBy == reviewuser.UserId)
+                           .LeftJoin<DepartmentInfoEntity>((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => reviewuser.DepartmentId == reviewuserdept.DepartmentId)
+                           .Where((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => instance.ApplicantUserId == loginUserId);
 
             // 表单组别Id
             if (!string.IsNullOrEmpty(getPage.FormGroupId) && long.Parse(getPage.FormGroupId) > 0)
             {
-                query = query.Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) =>
+                query = query.Where((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) =>
                     formtype.FormGroupId == long.Parse(getPage.FormGroupId));
             }
             // 表单类别Id
             if (!string.IsNullOrEmpty(getPage.FormTypeId) && long.Parse(getPage.FormTypeId) > 0)
             {
-                query = query.Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) =>
+                query = query.Where((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) =>
                     formtype.FormTypeId == long.Parse(getPage.FormTypeId));
             }
             // 表单状态
             if (!string.IsNullOrEmpty(getPage.FormStatus))
             {
-                query = query.Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => forminfo.FormStatus == getPage.FormStatus);
+                query = query.Where((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => instance.FormStatus == getPage.FormStatus);
             }
 
             // 排序
-            query = query.OrderBy((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => new { forminfo.CreatedDate });
+            query = query.OrderBy((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => new { instance.CreatedDate });
 
-            var page = await query.Select((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => new PendingSubAppDto
+            var page = await query.Select((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => new PendingSubAppDto
                                   {
-                                      FormId = forminfo.FormId,
-                                      FormNo = forminfo.FormNo,
+                                      FormId = instance.FormId,
+                                      FormNo = instance.FormNo,
                                       FormTypeId = formtype.FormTypeId,
                                       FormTypeName = _lang.Locale == "zh-CN"
                                                      ? formtype.FormTypeNameCn
                                                      : formtype.FormTypeNameEn,
-                                      FormStatus = forminfo.FormStatus,
+                                      FormStatus = instance.FormStatus,
                                       FormStatusName = _lang.Locale == "zh-CN"
                                                      ? dic.DicNameCn
                                                      : dic.DicNameEn,
                                       ApplyUserName = _lang.Locale == "zh-CN"
-                                                     ? appuser.UserNameCn
-                                                     : appuser.UserNameEn,
+                                                     ? reviewuser.UserNameCn
+                                                     : reviewuser.UserNameEn,
                                       ApplyUserDeptName = _lang.Locale == "zh-CN"
-                                                     ? appuserdept.DepartmentNameCn
-                                                     : appuserdept.DepartmentNameEn,
+                                                     ? reviewuserdept.DepartmentNameCn
+                                                     : reviewuserdept.DepartmentNameEn,
                                       ApprovalPath = formtype.ApprovalPath,
                                       ViewPath = formtype.ViewPath,
-                                      isDelete = (appuser.CreatedBy == loginUserId
-                                                  && forminfo.FormStatus != FormStatus.Voided.ToEnumString()) ? 1 : 0
+                                      isDelete = (reviewuser.CreatedBy == loginUserId
+                                                  && instance.FormStatus != FormStatus.Voided.ToEnumString()) ? 1 : 0
                                   }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<PendingSubAppDto>.Ok(page, totalCount, "");
         }
@@ -153,73 +152,59 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         public async Task<ResultPaged<PendingSubAppDto>> GetPendingApprovalPage(GetPendingSubAppPage getPage, long loginUserId)
         {
             RefAsync<int> totalCount = 0;
-
             var query = _db.Queryable<PendingReviewEntity>()
                            .With(SqlWith.NoLock)
-                           .InnerJoin<FormInstanceEntity>((pendapp, forminfo) => pendapp.FormId == forminfo.FormId)
-                           .InnerJoin<FormTypeEntity>((pendapp, forminfo, formtype) => forminfo.FormTypeId == formtype.FormTypeId)
-                           .InnerJoin<DictionaryInfoEntity>((pendapp, forminfo, formtype, dic) => dic.DicType == "FormStatus" && forminfo.FormStatus == dic.DicCode)
-                           .InnerJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser) => pendapp.ReviewUserId == penduser.UserId)
-                           .LeftJoin<UserInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser) => forminfo.CreatedBy == appuser.UserId)
-                           .LeftJoin<DepartmentInfoEntity>((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => appuser.DepartmentId == appuserdept.DepartmentId)
-                           .Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => pendapp.ReviewUserId == loginUserId && forminfo.CreatedBy != loginUserId);
+                           .InnerJoin<FormInstanceEntity>((pendreview, instance) => pendreview.FormId == instance.FormId)
+                           .InnerJoin<FormTypeEntity>((pendreview, instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
+                           .InnerJoin<DictionaryInfoEntity>((pendreview, instance, formtype, dic) => dic.DicType == "FormStatus" && instance.FormStatus == dic.DicCode)
+                           .LeftJoin<UserInfoEntity>((pendreview, instance, formtype, dic, reviewuser) => instance.ApplicantUserId == reviewuser.UserId)
+                           .LeftJoin<DepartmentInfoEntity>((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => reviewuser.DepartmentId == reviewuserdept.DepartmentId)
+                           .Where((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => pendreview.ReviewUserId == loginUserId && instance.ApplicantUserId != loginUserId);
 
             // 表单组别Id
             if (!string.IsNullOrEmpty(getPage.FormGroupId) && long.Parse(getPage.FormGroupId) > 0)
             {
-                query = query.Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) =>
+                query = query.Where((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) =>
                     formtype.FormGroupId == long.Parse(getPage.FormGroupId));
             }
             // 表单类别Id
             if (!string.IsNullOrEmpty(getPage.FormTypeId) && long.Parse(getPage.FormTypeId) > 0)
             {
-                query = query.Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) =>
+                query = query.Where((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) =>
                     formtype.FormTypeId == long.Parse(getPage.FormTypeId));
             }
             // 表单状态
             if (!string.IsNullOrEmpty(getPage.FormStatus))
             {
-                query = query.Where((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => forminfo.FormStatus == getPage.FormStatus);
+                query = query.Where((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => instance.FormStatus == getPage.FormStatus);
             }
 
             // 排序
-            query = query.OrderBy((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => new { forminfo.CreatedDate });
+            query = query.OrderBy((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => new { instance.CreatedDate });
 
-            var page = await query.Select((pendapp, forminfo, formtype, dic, penduser, appuser, appuserdept) => new PendingSubAppDto
+            var page = await query.Select((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => new PendingSubAppDto
                                   {
-                                      FormId = forminfo.FormId,
-                                      FormNo = forminfo.FormNo,
+                                      FormId = instance.FormId,
+                                      FormNo = instance.FormNo,
                                       FormTypeId = formtype.FormTypeId,
                                       FormTypeName = _lang.Locale == "zh-CN"
                                                      ? formtype.FormTypeNameCn
                                                      : formtype.FormTypeNameEn,
-                                      FormStatus = forminfo.FormStatus,
+                                      FormStatus = instance.FormStatus,
                                       FormStatusName = _lang.Locale == "zh-CN"
                                                      ? dic.DicNameCn
                                                      : dic.DicNameEn,
                                       ApplyUserName = _lang.Locale == "zh-CN"
-                                                     ? appuser.UserNameCn
-                                                     : appuser.UserNameEn,
+                                                     ? reviewuser.UserNameCn
+                                                     : reviewuser.UserNameEn,
                                       ApplyUserDeptName = _lang.Locale == "zh-CN"
-                                                     ? appuserdept.DepartmentNameCn
-                                                     : appuserdept.DepartmentNameEn,
+                                                     ? reviewuserdept.DepartmentNameCn
+                                                     : reviewuserdept.DepartmentNameEn,
                                       ApprovalPath = formtype.ApprovalPath,
                                       ViewPath = formtype.ViewPath,
                                       isDelete = 0
                                   }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<PendingSubAppDto>.Ok(page, totalCount, "");
-        }
-
-        /// <summary>
-        /// 是否可以作废表单
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        public Task<bool> IsVoidedForm(long formId)
-        {
-            return _db.Queryable<FormInstanceEntity>()
-                      .Where(forminfo => forminfo.FormStatus == FormStatus.PendingSubmit.ToEnumString())
-                      .AnyAsync();
         }
 
         /// <summary>
@@ -231,12 +216,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         public Task<int> VoidedForm(long formId,long loginUserId)
         {
             return _db.Updateable<FormInstanceEntity>()
-                      .SetColumns(forminfo => new FormInstanceEntity
+                      .SetColumns(instance => new FormInstanceEntity
                       {
                           FormStatus = FormStatus.Voided.ToEnumString(),
                           ModifiedBy = loginUserId,
                           ModifiedDate = DateTime.Now,
-                      }).Where(forminfo => forminfo.FormId == formId)
+                      }).Where(instance => instance.FormId == formId)
                       .ExecuteCommandAsync();
         }
     }
