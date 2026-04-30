@@ -82,13 +82,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 步骤签核方式下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ApproveModeDropDto>> GetApproveModeDrop()
+        public async Task<List<ReviewModeDropDto>> GetApproveModeDrop()
         {
             return await _db.Queryable<DictionaryInfoEntity>()
                             .With(SqlWith.NoLock)
                             .OrderByDescending(dic => dic.CreatedDate)
                             .Where(dic => dic.DicType == "ApproveMode")
-                            .Select(dic => new ApproveModeDropDto
+                            .Select(dic => new ReviewModeDropDto
                             {
                                 ApproveModeCode = dic.DicCode,
                                 ApproveModeName = _lang.Locale == "zh-CN"

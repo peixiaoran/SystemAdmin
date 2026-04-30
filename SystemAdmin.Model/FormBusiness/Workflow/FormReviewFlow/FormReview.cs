@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager
+namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow
 {
     /// <summary>
     /// 表单流程

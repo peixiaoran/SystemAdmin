@@ -89,17 +89,17 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 步骤签核方式下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<ApproveModeDropDto>>> GetApproveModeDrop()
+        public async Task<Result<List<ReviewModeDropDto>>> GetApproveModeDrop()
         {
             try
             {
                 var drop = await _workflowStepRepo.GetApproveModeDrop();
-                return Result<List<ApproveModeDropDto>>.Ok(drop);
+                return Result<List<ReviewModeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return Result<List<ApproveModeDropDto>>.Failure(500, ex.Message);
+                return Result<List<ReviewModeDropDto>>.Failure(500, ex.Message);
             }
         }
 
@@ -199,7 +199,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     StepNameEn = upsert.StepNameEn,
                     IsStartStep = upsert.IsStartStep,
                     Assignment = upsert.Assignment,
-                    ApproveMode = upsert.ApproveMode,
+                    ReviewMode = upsert.ApproveMode,
                     IsReminderEnabled = upsert.IsReminderEnabled,
                     ReminderIntervalMinutes = upsert.ReminderIntervalMinutes,
                     SortOrder = upsert.SortOrder,
@@ -344,7 +344,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     StepNameEn = upsert.StepNameEn,
                     IsStartStep = upsert.IsStartStep,
                     Assignment = upsert.Assignment,
-                    ApproveMode = upsert.ApproveMode,
+                    ReviewMode = upsert.ApproveMode,
                     IsReminderEnabled = upsert.IsReminderEnabled,
                     ReminderIntervalMinutes = upsert.ReminderIntervalMinutes,
                     SortOrder = upsert.SortOrder,

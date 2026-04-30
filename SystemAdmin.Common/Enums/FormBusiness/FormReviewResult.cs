@@ -22,6 +22,6 @@ namespace SystemAdmin.Common.Enums.FormBusiness
         /// <summary>
         /// 已签核
         /// </summary>
-        Signed,
+        Approve,
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager
+﻿namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow
 {
     /// <summary>
     /// 申请人表单详情

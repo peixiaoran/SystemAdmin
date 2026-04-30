@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
-using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dtp;
-using SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager;
+using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto;
+using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Upsert;
+using SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow;
 using SystemAdmin.Service.FormBusiness.Forms;
 
 namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
@@ -72,6 +73,14 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         public async Task<Result<FormReview>> GetFullReviewFlow([FromForm] string formId)
         {
             return await _leaveFormService.GetFullReviewFlow(formId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单Forms")]
+        [EndpointSummary("[请假单] 请假单签核")]
+        public async Task<Result<bool>> LeaveFromApprove([FromBody] ReviewForm reviewForm)
+        {
+            return await _leaveFormService.LeaveFromApprove(reviewForm);
         }
     }
 }

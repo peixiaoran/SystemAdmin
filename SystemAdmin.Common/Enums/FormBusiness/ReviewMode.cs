@@ -1,6 +1,9 @@
 ﻿namespace SystemAdmin.Common.Enums.FormBusiness
 {
-    public enum ApproveMode
+    /// <summary>
+    /// 审批方式
+    /// </summary>
+    public enum ReviewMode
     {
         /// <summary>
         /// 单签

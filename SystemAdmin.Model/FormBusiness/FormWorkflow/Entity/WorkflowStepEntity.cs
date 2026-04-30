@@ -42,7 +42,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         /// <summary>
         /// 签核方式（单签、会签、或签）
         /// </summary>
-        public string ApproveMode { get; set; } = string.Empty;
+        public string ReviewMode { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否催签

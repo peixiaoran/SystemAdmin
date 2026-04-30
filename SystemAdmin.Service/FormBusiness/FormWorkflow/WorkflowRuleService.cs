@@ -180,6 +180,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
                     RuleNameEn = upsert.RuleNameEn,
                     PositionId = long.Parse(upsert.PositionId),
                     Guidance = upsert.Guidance,
+                    SortOrder = upsert.SortOrder,
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now,
                 };

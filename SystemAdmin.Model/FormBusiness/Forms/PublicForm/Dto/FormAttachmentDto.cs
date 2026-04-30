@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dtp
+namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto
 {
     /// <summary>
     /// 表单附件表Dto

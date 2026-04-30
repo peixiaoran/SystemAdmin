@@ -87,6 +87,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         public async Task<bool> RuleIsRepeat(long formTypeId, long positionId, string guidance)
         {
             return await _db.Queryable<WorkflowRuleEntity>()
+                            .With(SqlWith.NoLock)
                             .Where(branch => branch.FormTypeId == formTypeId && branch.PositionId == positionId && branch.Guidance == guidance)
                             .AnyAsync();
         }
@@ -109,6 +110,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         public async Task<bool> GetWorkflowRuleStepIsExist(long ruleId)
         {
             return await _db.Queryable<WorkflowRuleStepEntity>()
+                            .With(SqlWith.NoLock)
                             .Where(rule => rule.RuleId == ruleId)
                             .AnyAsync();
         }

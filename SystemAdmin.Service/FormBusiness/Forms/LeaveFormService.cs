@@ -8,9 +8,10 @@ using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
-using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dtp;
+using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
-using SystemAdmin.Model.FormBusiness.Workflow.ReviewFlowManager;
+using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Upsert;
+using SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow;
 using SystemAdmin.Repository.FormBusiness.Forms;
 using SystemAdmin.Repository.FormBusiness.Workflow;
 
@@ -28,9 +29,10 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly LeaveFormRepository _leaveForm;
         private readonly LocalizationService _localization;
         private readonly FormReviewFlow _reviewFlow;
+        private readonly FormReviewAction _reviewAction;
         private readonly string _form = "FormBusiness.Forms.";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> attachmentUpload, MinioService minioService, FormPermissionChecker formChecker, FormManager formRepo, LeaveFormRepository leaveForm, LocalizationService localization, FormReviewFlow reviewFlow)
+        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> attachmentUpload, MinioService minioService, FormPermissionChecker formChecker, FormManager formRepo, LeaveFormRepository leaveForm, LocalizationService localization, FormReviewFlow reviewFlow, FormReviewAction reviewAction)
         {
             _loginuser = loginuser;
             _logger = logger;
@@ -42,6 +44,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             _leaveForm = leaveForm;
             _localization = localization;
             _reviewFlow = reviewFlow;
+            _reviewAction = reviewAction;
         }
 
         /// <summary>
@@ -282,6 +285,29 @@ namespace SystemAdmin.Service.FormBusiness.Forms
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<FormReview>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 请假单签核
+        /// </summary>
+        /// <param name="reviewForm"></param>
+        /// <returns></returns>
+        public async Task<Result<bool>> LeaveFromApprove(ReviewForm reviewForm)
+        {
+            try
+            {
+                await _db.BeginTranAsync();
+                var result = await _reviewAction.FromApprove(reviewForm);
+                await _db.CommitTranAsync();
+
+                return Result<bool>.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                await _db.RollbackTranAsync();
+                _logger.LogError(ex, ex.Message);
+                return Result<bool>.Failure(500, ex.Message);
             }
         }
     }

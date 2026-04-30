@@ -26,7 +26,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity
         /// <summary>
         /// 驳回至步骤
         /// </summary>
-        public long RejectedStepId { get; set; }
+        public long? RejectStepId { get; set; }
 
         /// <summary>
         /// 审批意见

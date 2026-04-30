@@ -1,18 +1,18 @@
 ﻿namespace SystemAdmin.Common.Enums.FormBusiness
 {
     /// <summary>
-    /// 审批结果
+    /// 审批类型（手动操作、系统自动）
     /// </summary>
-    public enum ReviewResult
+    public enum ReviewType
     {
         /// <summary>
-        /// 通过
+        /// 手动操作
         /// </summary>
-        Approve = 1,
+        Manual = 1,
 
         /// <summary>
-        /// 驳回
+        /// 自动操作
         /// </summary>
-        Reject = 2,
+        Automatic = 2
     }
 }
