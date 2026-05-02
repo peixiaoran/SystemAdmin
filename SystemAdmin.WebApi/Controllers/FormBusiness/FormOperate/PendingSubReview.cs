@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
 using SystemAdmin.Model.FormBusiness.FormOperate.Queries;
-using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Service.FormBusiness.FormOperate;
-using SystemAdmin.Service.FormBusiness.Forms;
 using SystemAdmin.WebApi.Attributes;
 
 namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
@@ -12,12 +10,12 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
     [RoutingAuthorize]
     [Route("api/FormBusiness/FormOperate/[controller]/[action]")]
     [ApiController]
-    public class PendingSubApp : ControllerBase
+    public class PendingSubReview : ControllerBase
     {
-        private readonly PendingSubAppService _PendingSubAppService;
-        public PendingSubApp(PendingSubAppService PendingSubAppService)
+        private readonly PendingSubReviewService _pendingReviewService;
+        public PendingSubReview(PendingSubReviewService PendingSubAppService)
         {
-            _PendingSubAppService = PendingSubAppService;
+            _pendingReviewService = PendingSubAppService;
         }
 
         [HttpPost]
@@ -25,7 +23,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
         [EndpointSummary("[待签表单列表] 表单组别下拉")]
         public async Task<Result<List<FormGroupDropDto>>> GetFormGroupDrop()
         {
-            return await _PendingSubAppService.GetFormGroupDrop();
+            return await _pendingReviewService.GetFormGroupDrop();
         }
 
         [HttpPost]
@@ -33,7 +31,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
         [EndpointSummary("[待签表单列表] 表单类别下拉")]
         public async Task<Result<List<FormTypeDropDto>>> GetFormTypeDrop([FromForm] string formGroupId)
         {
-            return await _PendingSubAppService.GetFormTypeDrop(formGroupId);
+            return await _pendingReviewService.GetFormTypeDrop(formGroupId);
         }
 
         [HttpPost]
@@ -41,23 +39,23 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
         [EndpointSummary("[待签表单列表] 表单状态下拉")]
         public async Task<Result<List<FormStatusDropDto>>> GetFormStatusDrop()
         {
-            return await _PendingSubAppService.GetFormStatusDrop();
+            return await _pendingReviewService.GetFormStatusDrop();
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
         [EndpointSummary("[待签表单列表] 查询待送审分页")]
-        public async Task<ResultPaged<PendingSubAppDto>> GetPendingSubmissionPage(GetPendingSubAppPage getpage)
+        public async Task<ResultPaged<PendingSubReviewDto>> GetPendingSubmissionPage(GetPendingSubAppPage getpage)
         {
-            return await _PendingSubAppService.GetPendingSubmissionPage(getpage);
+            return await _pendingReviewService.GetPendingSubmissionPage(getpage);
         }
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
         [EndpointSummary("[待签表单列表] 查询待签核分页")]
-        public async Task<ResultPaged<PendingSubAppDto>> GetPendingApprovalPage(GetPendingSubAppPage getpage)
+        public async Task<ResultPaged<PendingSubReviewDto>> GetPendingReviewPage(GetPendingSubAppPage getpage)
         {
-            return await _PendingSubAppService.GetPendingApprovalPage(getpage);
+            return await _pendingReviewService.GetPendingReviewPage(getpage);
         }
 
         [HttpPost]
@@ -65,7 +63,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
         [EndpointSummary("[待签表单列表] 作废表单")]
         public async Task<Result<int>> VoidedForm([FromForm] string formId)
         {
-            return await _PendingSubAppService.VoidedForm(formId);
+            return await _pendingReviewService.VoidedForm(formId);
         }
     }
 }

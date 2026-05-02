@@ -82,16 +82,16 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 步骤签核方式下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<ReviewModeDropDto>> GetApproveModeDrop()
+        public async Task<List<ReviewModeDropDto>> GetReviewModeDrop()
         {
             return await _db.Queryable<DictionaryInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .OrderByDescending(dic => dic.CreatedDate)
-                            .Where(dic => dic.DicType == "ApproveMode")
+                            .OrderBy(dic => dic.SortOrder)
+                            .Where(dic => dic.DicType == "ReviewMode")
                             .Select(dic => new ReviewModeDropDto
                             {
-                                ApproveModeCode = dic.DicCode,
-                                ApproveModeName = _lang.Locale == "zh-CN"
+                                ReviewModeCode = dic.DicCode,
+                                ReviewModeName = _lang.Locale == "zh-CN"
                                                   ? dic.DicNameCn
                                                   : dic.DicNameEn,
                             }).ToListAsync();
@@ -139,12 +139,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// 职级下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<List<Model.SystemBasicMgmt.SystemBasicData.Dto.PositionDropDto>> GetPositionDrop()
+        public async Task<List<PositionDropDto>> GetPositionDrop()
         {
             return await _db.Queryable<PositionInfoEntity>()
                             .With(SqlWith.NoLock)
                             .OrderBy(position => position.SortOrder)
-                            .Select((position) => new Model.SystemBasicMgmt.SystemBasicData.Dto.PositionDropDto
+                            .Select((position) => new PositionDropDto
                             {
                                 PositionId = position.PositionId,
                                 PositionName = _lang.Locale == "zh-CN"
@@ -275,6 +275,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         public async Task<bool> GetWorkflowRuleStepIsExist(long stepId)
         {
             return await _db.Queryable<WorkflowRuleStepEntity>()
+                            .With(SqlWith.NoLock)
                             .Where(rule => rule.CurrentStepId == stepId || rule.NextStepId == stepId)
                             .AnyAsync();
         }
@@ -358,7 +359,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 查询步骤及分支列表
+        /// 查询步骤列表
         /// </summary>
         /// <param name="formTypeId"></param>
         /// <returns></returns>
@@ -378,6 +379,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                     AssignmentName = _lang.Locale == "zh-CN"
                                                      ? dic.DicNameCn
                                                      : dic.DicNameEn,
+                                    IsStartStep = stepinfo.IsStartStep,
                                 }).ToListAsync();
             return Result<List<WorkflowStepListDto>>.Ok(list.Adapt<List<WorkflowStepListDto>>());
         }

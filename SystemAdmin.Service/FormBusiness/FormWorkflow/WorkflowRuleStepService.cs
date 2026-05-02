@@ -83,6 +83,24 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
+        /// 步骤下拉
+        /// </summary>
+        /// <returns></returns>
+        public async Task<Result<List<WorkflowStepDropDto>>> GetWorkflowStepDrop()
+        {
+            try
+            {
+                var drop = await _workflowRuleStepRepo.GetWorkflowStepDrop();
+                return Result<List<WorkflowStepDropDto>>.Ok(drop);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return Result<List<WorkflowStepDropDto>>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
         /// 新增规则步骤
         /// </summary>
         /// <param name="upsert"></param>
@@ -161,31 +179,23 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         {
             try
             {
-                var isRepat = await _workflowRuleStepRepo.RuleStepIsRepeat(long.Parse(upsert.RuleId), long.Parse(upsert.NextStepId));
-                if (isRepat)
+                var entity = new WorkflowRuleStepEntity()
                 {
-                    return Result<int>.Failure(400, _localization.ReturnMsg($"{_this}Repat"));
-                }
-                else
-                {
-                    var entity = new WorkflowRuleStepEntity()
-                    {
-                        RuleId = long.Parse(upsert.RuleId),
-                        CurrentStepId = long.Parse(upsert.CurrentStepId),
-                        NextStepId = long.Parse(upsert.NextStepId),
-                        SortOrder = upsert.SortOrder,
-                        ModifiedBy = _loginuser.UserId,
-                        ModifiedDate = DateTime.Now,
-                    };
+                    RuleId = long.Parse(upsert.RuleId),
+                    CurrentStepId = long.Parse(upsert.CurrentStepId),
+                    NextStepId = long.Parse(upsert.NextStepId),
+                    SortOrder = upsert.SortOrder,
+                    ModifiedBy = _loginuser.UserId,
+                    ModifiedDate = DateTime.Now,
+                };
 
-                    await _db.BeginTranAsync();
-                    var count = await _workflowRuleStepRepo.UpdateWorkflowRuleStep(entity);
-                    await _db.CommitTranAsync();
+                await _db.BeginTranAsync();
+                var count = await _workflowRuleStepRepo.UpdateWorkflowRuleStep(entity);
+                await _db.CommitTranAsync();
 
-                    return count >= 1
-                            ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
-                            : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
-                }
+                return count >= 1
+                        ? Result<int>.Ok(count, _localization.ReturnMsg($"{_this}UpdateSuccess"))
+                        : Result<int>.Failure(500, _localization.ReturnMsg($"{_this}UpdateFailed"));
             }
             catch (Exception ex)
             {
@@ -201,18 +211,18 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// <param name="ruleId"></param>
         /// <param name="currentStepId"></param>
         /// <returns></returns>
-        public async Task<Result<WorkflowRuleDto>> GetWorkflowRuleStepEntity(string ruleId, string currentStepId)
+        public async Task<Result<WorkflowRuleStepDto>> GetWorkflowRuleStepEntity(string ruleId, string currentStepId)
         {
             try
             {
                 var entity = await _workflowRuleStepRepo.GetWorkflowRuleStepEntity(long.Parse(ruleId), long.Parse(currentStepId));
-                return Result<WorkflowRuleDto>.Ok(entity);
+                return Result<WorkflowRuleStepDto>.Ok(entity);
             }
             catch (Exception ex)
             {
                 await _db.RollbackTranAsync();
                 _logger.LogError(ex, ex.Message);
-                return Result<WorkflowRuleDto>.Failure(500, ex.Message);
+                return Result<WorkflowRuleStepDto>.Failure(500, ex.Message);
             }
         }
 

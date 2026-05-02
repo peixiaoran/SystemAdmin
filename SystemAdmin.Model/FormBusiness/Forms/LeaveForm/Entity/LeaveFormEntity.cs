@@ -15,11 +15,6 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity
         public long FormId { get; set; }
 
         /// <summary>
-        /// 申请人Id
-        /// </summary>
-        public long ApplicantUserId { get; set; }
-
-        /// <summary>
         /// 假别
         /// </summary>
         public string LeaveTypeCode { get; set; } = string.Empty;

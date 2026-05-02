@@ -75,7 +75,7 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
             return await _db.Queryable<FormInstanceEntity>()
                             .With(SqlWith.NoLock)
                             .InnerJoin<LeaveFormEntity>((form, leave) => form.FormId == leave.FormId)
-                            .InnerJoin<UserInfoEntity>((form, leave, user) => leave.ApplicantUserId == user.UserId)
+                            .InnerJoin<UserInfoEntity>((form, leave, user) => form.ApplicantUserId == user.UserId)
                             .InnerJoin<DepartmentInfoEntity>((form, leave, user, dept) => user.DepartmentId == dept.DepartmentId)
                             .InnerJoin<DictionaryInfoEntity>((form, leave, user, dept, dic) => dic.DicType == "FormStatus" && form.FormStatus == dic.DicCode)
                             .Where((form, leave, user, dept, dic) => form.FormId == formId)

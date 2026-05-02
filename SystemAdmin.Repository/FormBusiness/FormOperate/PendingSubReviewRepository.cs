@@ -12,12 +12,12 @@ using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.FormOperate
 {
-    public class PendingReviewRepository
+    public class PendingSubReviewRepository
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
 
-        public PendingReviewRepository(SqlSugarScope db, Language lang)
+        public PendingSubReviewRepository(SqlSugarScope db, Language lang)
         {
             _db = db;
             _lang = lang;
@@ -84,7 +84,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<PendingSubAppDto>> GetPendingSubmissionPage(GetPendingSubAppPage getPage, long loginUserId)
+        public async Task<ResultPaged<PendingSubReviewDto>> GetPendingSubmissionPage(GetPendingSubAppPage getPage, long loginUserId)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<PendingReviewEntity>()
@@ -118,7 +118,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
             // 排序
             query = query.OrderBy((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => new { instance.CreatedDate });
 
-            var page = await query.Select((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => new PendingSubAppDto
+            var page = await query.Select((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => new PendingSubReviewDto
                                   {
                                       FormId = instance.FormId,
                                       FormNo = instance.FormNo,
@@ -141,7 +141,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                                       isDelete = (reviewuser.CreatedBy == loginUserId
                                                   && instance.FormStatus != FormStatus.Voided.ToEnumString()) ? 1 : 0
                                   }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<PendingSubAppDto>.Ok(page, totalCount, "");
+            return ResultPaged<PendingSubReviewDto>.Ok(page, totalCount, "");
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<PendingSubAppDto>> GetPendingApprovalPage(GetPendingSubAppPage getPage, long loginUserId)
+        public async Task<ResultPaged<PendingSubReviewDto>> GetPendingReviewPage(GetPendingSubAppPage getPage, long loginUserId)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<PendingReviewEntity>()
@@ -182,7 +182,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
             // 排序
             query = query.OrderBy((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => new { instance.CreatedDate });
 
-            var page = await query.Select((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => new PendingSubAppDto
+            var page = await query.Select((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => new PendingSubReviewDto
                                   {
                                       FormId = instance.FormId,
                                       FormNo = instance.FormNo,
@@ -204,7 +204,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                                       ViewPath = formtype.ViewPath,
                                       isDelete = 0
                                   }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<PendingSubAppDto>.Ok(page, totalCount, "");
+            return ResultPaged<PendingSubReviewDto>.Ok(page, totalCount, "");
         }
 
         /// <summary>

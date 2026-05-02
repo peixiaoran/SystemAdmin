@@ -33,5 +33,10 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         /// 步骤指派规则名称
         /// </summary>
         public string AssignmentName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 是否为起始步骤
+        /// </summary>
+        public int IsStartStep { get; set; }
     }
 }

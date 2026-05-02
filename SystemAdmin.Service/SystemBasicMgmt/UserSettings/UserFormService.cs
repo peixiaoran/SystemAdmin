@@ -103,7 +103,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 }).ToList();
-                await _userFormBindRepo.InsertUserForm(entity);
                 var count = await _userFormBindRepo.InsertUserForm(entity);
                 await _db.CommitTranAsync();
 

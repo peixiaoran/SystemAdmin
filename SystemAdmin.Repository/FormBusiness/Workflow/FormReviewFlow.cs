@@ -1200,20 +1200,6 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         {
             var validRecords = await GetValidReviewRecords(formId);
 
-            var dicList = await _db.Queryable<DictionaryInfoEntity>()
-                                   .With(SqlWith.NoLock)
-                                   .Where(dic => dic.DicType == "FormReviewResult")
-                                   .ToListAsync();
-
-            bool isChinese = _lang.Locale == "zh-CN";
-
-            string GetDicName(string dicCode)
-            {
-                var dic = dicList.FirstOrDefault(d => d.DicCode == dicCode);
-                if (dic == null) return dicCode;
-                return isChinese ? dic.DicNameCn : dic.DicNameEn;
-            }
-
             foreach (var flow in reviewFlow)
             {
                 if (flow.Skip == 1)
@@ -1223,7 +1209,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 {
                     if (currentStepId != flow.StepId)
                     {
-                        user.Result = GetDicName(FormReviewResult.Unsigned.ToEnumString());
+                        user.Result = FormReviewResult.Unsigned.ToEnumString();
                         continue;
                     }
 
@@ -1232,8 +1218,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                         (r.ReviewUserId == user.UserId || r.ReviewUserId == user.AgentUserId));
 
                     user.Result = hasSigned
-                        ? GetDicName(FormReviewResult.Approve.ToEnumString())
-                        : GetDicName(FormReviewResult.UnderReview.ToEnumString());
+                        ? FormReviewResult.Approve.ToEnumString()
+                        : FormReviewResult.UnderReview.ToEnumString();
                 }
             }
             return reviewFlow;

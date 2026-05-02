@@ -4,9 +4,9 @@ using SystemAdmin.Model.ModelHelper.ModelConverter;
 namespace SystemAdmin.Model.FormBusiness.FormOperate.Dto
 {
     /// <summary>
-    /// 待送审 & 签核表单Dto
+    /// 待送审 & 审批表单Dto
     /// </summary>
-    public class PendingSubAppDto
+    public class PendingSubReviewDto
     {
         /// <summary>
         /// 表单Id

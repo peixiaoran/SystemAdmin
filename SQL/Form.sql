@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 16001000 (16.00.1000)
- Source Host           : 127.0.0.1:1433
+ Source Server Version : 17001110 (17.00.1110)
+ Source Host           : localhost:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 16001000 (16.00.1000)
+ Target Server Version : 17001110 (17.00.1110)
  File Encoding         : 65001
 
- Date: 30/04/2026 17:02:05
+ Date: 03/05/2026 00:26:49
 */
 
 
@@ -458,9 +458,98 @@ GO
 -- ----------------------------
 -- Records of FormInstance
 -- ----------------------------
-INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [RuleId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860347188580352', N'1987217256446300160', N'LVR-2026040001', N'PendingSubmission', N'1903486709602062336', N'2046850267772751872', N'2009890853346217984', N'1903486709602062336', N'2026-04-22 15:55:10.153', N'1903486709602062336', N'2026-04-22 15:59:25.777')
+INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [RuleId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860347188580352', N'1987217256446300160', N'LVR-2026040001', N'Voided', N'1903486709602062336', N'2046850267772751872', N'2009890853346217984', N'1903486709602062336', N'2026-04-22 15:55:10.153', N'1903486709602062336', N'2026-05-03 00:07:08.193')
 GO
 
+
+-- ----------------------------
+-- Table structure for FormLog
+-- ----------------------------
+IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormLog]') AND type IN ('U'))
+	DROP TABLE [Form].[FormLog]
+GO
+
+CREATE TABLE [Form].[FormLog] (
+  [FormId] bigint  NOT NULL,
+  [StepId] bigint  NOT NULL,
+  [OperationStatus] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [RejectedStepId] bigint  NULL,
+  [Comment] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
+  [OperationType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
+  [OperationUserId] bigint  NOT NULL,
+  [OperationDate] datetime2(3)  NOT NULL
+)
+GO
+
+ALTER TABLE [Form].[FormLog] SET (LOCK_ESCALATION = TABLE)
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'FormId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'步骤Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'StepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作状态（签核、驳回）',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'OperationStatus'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'驳回至步骤',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'RejectedStepId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'审批意见',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'Comment'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作类型（手动操作、系统自动）',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'OperationType'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作员工Id',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'OperationUserId'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'操作时间',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog',
+'COLUMN', N'OperationDate'
+GO
+
+EXEC sp_addextendedproperty
+'MS_Description', N'表单日志信息',
+'SCHEMA', N'Form',
+'TABLE', N'FormLog'
+GO
+
+
+-- ----------------------------
+-- Records of FormLog
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for FormReviewRecord
@@ -898,7 +987,7 @@ GO
 -- ----------------------------
 -- Records of LeaveForm
 -- ----------------------------
-INSERT INTO [Form].[LeaveForm] ([FormId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveDays], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860347188580352', N'Marriage', N'', N'2026-04-22 00:00:00.0000000', N'2026-04-25 00:00:00.0000000', N'2.00', N'', N'1903486709602062336', N'2026-04-22 15:55:10.333', N'1903486709602062336', N'2026-04-22 15:59:25.697')
+INSERT INTO [Form].[LeaveForm] ([FormId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveDays], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860347188580352', N'Marriage', N'1', N'2026-04-22 00:00:00.0000000', N'2026-04-25 00:00:00.0000000', N'0.00', N'342306', N'1903486709602062336', N'2026-04-22 15:55:10.333', N'1903486709602062336', N'2026-05-01 22:09:24.117')
 GO
 
 
@@ -950,6 +1039,9 @@ GO
 -- ----------------------------
 -- Records of PendingReview
 -- ----------------------------
+INSERT INTO [Form].[PendingReview] ([FormId], [CurrentStepId], [ReviewUserId]) VALUES (N'2046860347188580352', N'2009890853346217984', N'1903486709602062336')
+GO
+
 
 -- ----------------------------
 -- Table structure for WorkflowRule
@@ -1063,7 +1155,7 @@ GO
 -- ----------------------------
 -- Records of WorkflowRule
 -- ----------------------------
-INSERT INTO [Form].[WorkflowRule] ([RuleId], [RuleNameCn], [RuleNameEn], [FormTypeId], [PositionId], [Guidance], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'组长请假小于2天', N'Team leaders requesting leave for less than 2 days', N'1987217256446300160', N'1351600746193223680', N'IsLeaveDaysOver2', N'3', N'1903486709602062336', N'2026-04-22 15:15:07.133', NULL, NULL)
+INSERT INTO [Form].[WorkflowRule] ([RuleId], [RuleNameCn], [RuleNameEn], [FormTypeId], [PositionId], [Guidance], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'组长请假小于2天', N'Team leaders requesting leave for less than 2 days', N'1987217256446300160', N'1351600746193223680', N'IsLeaveDaysOver2', N'3', N'1903486709602062336', N'2026-04-22 15:15:07.133', N'1903486709602062336', N'2026-05-01 21:30:08.540')
 GO
 
 INSERT INTO [Form].[WorkflowRule] ([RuleId], [RuleNameCn], [RuleNameEn], [FormTypeId], [PositionId], [Guidance], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860073602519040', N'其他', N'Other', N'1987217256446300160', N'0', N'', N'4', N'1903486709602062336', N'2026-04-22 15:54:05.027', NULL, NULL)
@@ -1158,7 +1250,7 @@ GO
 -- ----------------------------
 -- Records of WorkflowRuleStep
 -- ----------------------------
-INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'2009890853346217984', N'2009892923604340736', N'1', N'1903486709602062336', N'2026-04-23 11:39:44.170', NULL, NULL)
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'2009890853346217984', N'2009892923604340736', N'1', N'1903486709602062336', N'2026-04-23 11:39:44.170', N'1903486709602062336', N'2026-05-02 23:20:36.180')
 GO
 
 INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'2009892923604340736', N'2009897830268932096', N'2', N'1903486709602062336', N'2026-04-23 11:40:04.650', NULL, NULL)

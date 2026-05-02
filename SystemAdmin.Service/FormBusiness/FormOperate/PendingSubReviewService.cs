@@ -8,17 +8,17 @@ using SystemAdmin.Repository.FormBusiness.Workflow;
 
 namespace SystemAdmin.Service.FormBusiness.FormOperate
 {
-    public class PendingSubAppService
+    public class PendingSubReviewService
     {
         private readonly CurrentUser _loginuser;
-        private readonly ILogger<PendingSubAppService> _logger;
+        private readonly ILogger<PendingSubReviewService> _logger;
         private readonly SqlSugarScope _db;
         private readonly FormPermissionChecker _formChecker;
-        private readonly PendingReviewRepository _pendingReviewRepo;
+        private readonly PendingSubReviewRepository _pendingReviewRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormOperate.PendingSubApp";
 
-        public PendingSubAppService(CurrentUser loginuser, ILogger<PendingSubAppService> logger, SqlSugarScope db, FormPermissionChecker formChecker, PendingReviewRepository pendingReviewRepo, LocalizationService localization)
+        public PendingSubReviewService(CurrentUser loginuser, ILogger<PendingSubReviewService> logger, SqlSugarScope db, FormPermissionChecker formChecker, PendingSubReviewRepository pendingReviewRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
@@ -86,7 +86,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// 查询待送审分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<PendingSubAppDto>> GetPendingSubmissionPage(GetPendingSubAppPage getpage)
+        public async Task<ResultPaged<PendingSubReviewDto>> GetPendingSubmissionPage(GetPendingSubAppPage getpage)
         {
             try
             {
@@ -95,7 +95,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<PendingSubAppDto>.Failure(500, ex.Message);
+                return ResultPaged<PendingSubReviewDto>.Failure(500, ex.Message);
             }
         }
 
@@ -103,16 +103,16 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         /// 查询待签核分页
         /// </summary>
         /// <returns></returns>
-        public async Task<ResultPaged<PendingSubAppDto>> GetPendingApprovalPage(GetPendingSubAppPage getpage)
+        public async Task<ResultPaged<PendingSubReviewDto>> GetPendingReviewPage(GetPendingSubAppPage getpage)
         {
             try
             {
-                return await _pendingReviewRepo.GetPendingApprovalPage(getpage, _loginuser.UserId);
+                return await _pendingReviewRepo.GetPendingReviewPage(getpage, _loginuser.UserId);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                return ResultPaged<PendingSubAppDto>.Failure(500, ex.Message);
+                return ResultPaged<PendingSubReviewDto>.Failure(500, ex.Message);
             }
         }
 

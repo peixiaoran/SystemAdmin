@@ -78,7 +78,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     var leaveForm = new LeaveFormEntity()
                     {
                         FormId = long.Parse(formId),
-                        ApplicantUserId = _loginuser.UserId,
                         LeaveTypeCode = "",
                         LeaveReason = "",
                         LeaveStartTime = null,
@@ -117,7 +116,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 var entity = new LeaveFormEntity()
                 {
                     FormId = long.Parse(save.FormId),
-                    ApplicantUserId = _loginuser.UserId,
                     LeaveTypeCode = save.LeaveTypeCode,
                     LeaveReason = save.LeaveReason,
                     LeaveStartTime = save.LeaveStartTime,

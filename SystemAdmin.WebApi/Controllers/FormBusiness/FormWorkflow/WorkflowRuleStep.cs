@@ -46,6 +46,14 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单流程配置")]
+        [EndpointSummary("[流程规则步骤] 步骤下拉")]
+        public async Task<Result<List<WorkflowStepDropDto>>> GetWorkflowStepDrop()
+        {
+            return await _workflowRuleStepService.GetWorkflowStepDrop();
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单流程配置")]
         [EndpointSummary("[流程规则步骤] 新增规则步骤")]
         public async Task<Result<int>> InsertWorkflowRuleStep([FromBody] WorkflowRuleStepUpsert upsert)
         {
@@ -70,7 +78,15 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单流程配置")]
-        [EndpointSummary("[流程规则详情] 查询规则步骤列表")]
+        [EndpointSummary("[流程规则步骤] 查询规则步骤实体")]
+        public async Task<Result<WorkflowRuleStepDto>> GetWorkflowRuleStepEntity([FromForm] string ruleId, [FromForm] string currentStepId)
+        {
+            return await _workflowRuleStepService.GetWorkflowRuleStepEntity(ruleId, currentStepId);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单流程配置")]
+        [EndpointSummary("[流程规则步骤] 查询规则步骤列表")]
         public async Task<Result<List<WorkflowRuleStepDto>>> GetWorkflowRuleStepList([FromForm] string ruleId)
         {
             return await _workflowRuleStepService.GetWorkflowRuleStepList(ruleId);

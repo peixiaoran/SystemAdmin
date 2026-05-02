@@ -77,6 +77,25 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
+        /// 规则下拉
+        /// </summary>
+        /// <param name="formTypeId"></param>
+        /// <returns></returns>
+        public async Task<List<WorkflowStepDropDto>> GetWorkflowStepDrop()
+        {
+            return await _db.Queryable<WorkflowStepEntity>()
+                            .With(SqlWith.NoLock)
+                            .OrderBy(rule => rule.SortOrder)
+                            .Select(rule => new WorkflowStepDropDto
+                            {
+                                StepId = rule.StepId,
+                                StepName = _lang.Locale == "zh-CN"
+                                           ? rule.StepNameCn
+                                           : rule.StepNameEn,
+                            }).ToListAsync();
+        }
+
+        /// <summary>
         /// 规则步骤是否重复配置
         /// </summary>
         /// <param name="ruleId"></param>
@@ -150,13 +169,13 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         /// <param name="ruleId"></param>
         /// <param name="currentStepId"></param>
         /// <returns></returns>
-        public async Task<WorkflowRuleDto> GetWorkflowRuleStepEntity(long ruleId, long currentStepId)
+        public async Task<WorkflowRuleStepDto> GetWorkflowRuleStepEntity(long ruleId, long currentStepId)
         {
             var entity = await _db.Queryable<WorkflowRuleStepEntity>()
                                   .With(SqlWith.NoLock)
                                   .Where(rulestep => rulestep.RuleId == ruleId && rulestep.CurrentStepId == currentStepId)
                                   .FirstAsync();
-            return entity.Adapt<WorkflowRuleDto>();
+            return entity.Adapt<WorkflowRuleStepDto>();
         }
 
         /// <summary>

@@ -8,11 +8,11 @@
         /// <summary>
         /// 审批方式编码
         /// </summary>
-        public string ApproveModeCode { get; set; } = string.Empty;
+        public string ReviewModeCode { get; set; } = string.Empty;
 
         /// <summary>
         /// 审批方式名称
         /// </summary>
-        public string ApproveModeName { get; set; } = string.Empty;
+        public string ReviewModeName { get; set; } = string.Empty;
     }
 }

@@ -89,11 +89,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 步骤签核方式下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<ReviewModeDropDto>>> GetApproveModeDrop()
+        public async Task<Result<List<ReviewModeDropDto>>> GetReviewModeDrop()
         {
             try
             {
-                var drop = await _workflowStepRepo.GetApproveModeDrop();
+                var drop = await _workflowStepRepo.GetReviewModeDrop();
                 return Result<List<ReviewModeDropDto>>.Ok(drop);
             }
             catch (Exception ex)
