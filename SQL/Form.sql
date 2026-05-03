@@ -12,7 +12,7 @@
  Target Server Version : 17001110 (17.00.1110)
  File Encoding         : 65001
 
- Date: 03/05/2026 00:26:49
+ Date: 03/05/2026 20:09:45
 */
 
 
@@ -458,98 +458,9 @@ GO
 -- ----------------------------
 -- Records of FormInstance
 -- ----------------------------
-INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [RuleId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860347188580352', N'1987217256446300160', N'LVR-2026040001', N'Voided', N'1903486709602062336', N'2046850267772751872', N'2009890853346217984', N'1903486709602062336', N'2026-04-22 15:55:10.153', N'1903486709602062336', N'2026-05-03 00:07:08.193')
+INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [RuleId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2050906881840517120', N'1987217256446300160', N'LVR-2026050001', N'PendingSubmit', N'1903486709602062336', N'2046860073602519040', N'2009890853346217984', N'1903486709602062336', N'2026-05-03 19:54:39.293', N'1903486709602062336', N'2026-05-03 19:54:50.943')
 GO
 
-
--- ----------------------------
--- Table structure for FormLog
--- ----------------------------
-IF EXISTS (SELECT * FROM sys.all_objects WHERE object_id = OBJECT_ID(N'[Form].[FormLog]') AND type IN ('U'))
-	DROP TABLE [Form].[FormLog]
-GO
-
-CREATE TABLE [Form].[FormLog] (
-  [FormId] bigint  NOT NULL,
-  [StepId] bigint  NOT NULL,
-  [OperationStatus] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [RejectedStepId] bigint  NULL,
-  [Comment] nvarchar(500) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NULL,
-  [OperationType] nvarchar(30) COLLATE Chinese_PRC_90_CI_AS_SC_UTF8  NOT NULL,
-  [OperationUserId] bigint  NOT NULL,
-  [OperationDate] datetime2(3)  NOT NULL
-)
-GO
-
-ALTER TABLE [Form].[FormLog] SET (LOCK_ESCALATION = TABLE)
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单Id',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog',
-'COLUMN', N'FormId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'步骤Id',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog',
-'COLUMN', N'StepId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作状态（签核、驳回）',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog',
-'COLUMN', N'OperationStatus'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'驳回至步骤',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog',
-'COLUMN', N'RejectedStepId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'审批意见',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog',
-'COLUMN', N'Comment'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作类型（手动操作、系统自动）',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog',
-'COLUMN', N'OperationType'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作员工Id',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog',
-'COLUMN', N'OperationUserId'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'操作时间',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog',
-'COLUMN', N'OperationDate'
-GO
-
-EXEC sp_addextendedproperty
-'MS_Description', N'表单日志信息',
-'SCHEMA', N'Form',
-'TABLE', N'FormLog'
-GO
-
-
--- ----------------------------
--- Records of FormLog
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for FormReviewRecord
@@ -647,9 +558,6 @@ GO
 -- ----------------------------
 -- Records of FormReviewRecord
 -- ----------------------------
-INSERT INTO [Form].[FormReviewRecord] ([FormId], [StepId], [ReviewResult], [RejectStepId], [Comment], [ReviewType], [ReviewAppointment], [ReviewUserId], [ReviewDateTime]) VALUES (N'2046860347188580352', N'2009890853346217984', N'Approve', NULL, N'', N'Manual', N'', N'1903486709602062336', N'2026-04-30 15:28:39.597')
-GO
-
 
 -- ----------------------------
 -- Table structure for FormSequence
@@ -731,7 +639,7 @@ GO
 -- ----------------------------
 -- Records of FormSequence
 -- ----------------------------
-INSERT INTO [Form].[FormSequence] ([FormTypeId], [Ym], [Total], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'202604', N'1', N'1903486709602062336', N'2026-04-22 15:55:10.153', NULL, NULL)
+INSERT INTO [Form].[FormSequence] ([FormTypeId], [Ym], [Total], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'202605', N'1', N'1903486709602062336', N'2026-05-03 19:54:39.293', NULL, NULL)
 GO
 
 
@@ -987,7 +895,7 @@ GO
 -- ----------------------------
 -- Records of LeaveForm
 -- ----------------------------
-INSERT INTO [Form].[LeaveForm] ([FormId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveDays], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860347188580352', N'Marriage', N'1', N'2026-04-22 00:00:00.0000000', N'2026-04-25 00:00:00.0000000', N'0.00', N'342306', N'1903486709602062336', N'2026-04-22 15:55:10.333', N'1903486709602062336', N'2026-05-01 22:09:24.117')
+INSERT INTO [Form].[LeaveForm] ([FormId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveDays], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2050906881840517120', N'Annual', N'12', N'2026-05-08 00:00:00.0000000', N'2026-05-16 00:00:00.0000000', N'9.00', N'E', N'1903486709602062336', N'2026-05-03 19:54:39.297', N'1903486709602062336', N'2026-05-03 19:54:46.760')
 GO
 
 
@@ -1039,7 +947,7 @@ GO
 -- ----------------------------
 -- Records of PendingReview
 -- ----------------------------
-INSERT INTO [Form].[PendingReview] ([FormId], [CurrentStepId], [ReviewUserId]) VALUES (N'2046860347188580352', N'2009890853346217984', N'1903486709602062336')
+INSERT INTO [Form].[PendingReview] ([FormId], [CurrentStepId], [ReviewUserId]) VALUES (N'2050906881840517120', N'2009890853346217984', N'1903486709602062336')
 GO
 
 
@@ -1155,7 +1063,7 @@ GO
 -- ----------------------------
 -- Records of WorkflowRule
 -- ----------------------------
-INSERT INTO [Form].[WorkflowRule] ([RuleId], [RuleNameCn], [RuleNameEn], [FormTypeId], [PositionId], [Guidance], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'组长请假小于2天', N'Team leaders requesting leave for less than 2 days', N'1987217256446300160', N'1351600746193223680', N'IsLeaveDaysOver2', N'3', N'1903486709602062336', N'2026-04-22 15:15:07.133', N'1903486709602062336', N'2026-05-01 21:30:08.540')
+INSERT INTO [Form].[WorkflowRule] ([RuleId], [RuleNameCn], [RuleNameEn], [FormTypeId], [PositionId], [Guidance], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'组长请假小于2天', N'Team leaders requesting leave for less than 2 days', N'1987217256446300160', N'1351602631784529920', N'IsLeaveDaysOver2', N'1', N'1903486709602062336', N'2026-04-22 15:15:07.133', N'1903486709602062336', N'2026-05-03 19:25:11.017')
 GO
 
 INSERT INTO [Form].[WorkflowRule] ([RuleId], [RuleNameCn], [RuleNameEn], [FormTypeId], [PositionId], [Guidance], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860073602519040', N'其他', N'Other', N'1987217256446300160', N'0', N'', N'4', N'1903486709602062336', N'2026-04-22 15:54:05.027', NULL, NULL)
@@ -1260,6 +1168,27 @@ INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], 
 GO
 
 INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046850267772751872', N'2032353104544010240', N'0', N'4', N'1903486709602062336', N'2026-04-23 11:58:54.023', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860073602519040', N'2009890853346217984', N'2009892923604340736', N'1', N'1903486709602062336', N'2026-05-03 19:55:38.247', N'1903486709602062336', N'2026-05-03 19:55:44.140')
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860073602519040', N'2009892923604340736', N'2009897830268932096', N'2', N'1903486709602062336', N'2026-05-03 19:55:53.800', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860073602519040', N'2009897830268932096', N'2009898117243211776', N'3', N'1903486709602062336', N'2026-05-03 19:59:09.177', N'1903486709602062336', N'2026-05-03 19:59:13.263')
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860073602519040', N'2009898117243211776', N'2029389483455156224', N'4', N'1903486709602062336', N'2026-05-03 19:59:22.433', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860073602519040', N'2029389483455156224', N'2032353104544010240', N'5', N'1903486709602062336', N'2026-05-03 19:59:28.767', N'1903486709602062336', N'2026-05-03 19:59:33.143')
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860073602519040', N'2032353104544010240', N'2032353104544010286', N'6', N'1903486709602062336', N'2026-05-03 19:59:42.087', NULL, NULL)
+GO
+
+INSERT INTO [Form].[WorkflowRuleStep] ([RuleId], [CurrentStepId], [NextStepId], [SortOrder], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2046860073602519040', N'2032353104544010286', N'0', N'7', N'1903486709602062336', N'2026-05-03 19:59:47.373', N'1903486709602062336', N'2026-05-03 19:59:52.553')
 GO
 
 
