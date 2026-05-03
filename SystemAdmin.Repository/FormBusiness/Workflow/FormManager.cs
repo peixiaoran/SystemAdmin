@@ -40,15 +40,12 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             var (formNo, prefix) = await GenerateFormNoAsync(formTypeId, ym, now);
             var formId = SnowFlakeSingle.Instance.NextId();
 
-            // 2. 匹配工作流规则
-            var ruleId = await MatchWorkflowRuleAsync(formTypeId, formId);
-
-            // 3. 查询起始步骤
+            // 2. 查询起始步骤
             var startStepId = await _db.Queryable<WorkflowStepEntity>()
                                        .Where(step => step.FormTypeId == formTypeId && step.IsStartStep == 1)
                                        .Select(step => step.StepId)
                                        .FirstAsync();
-            // 4. 创建表单实例
+            // 3. 创建表单实例
             await _db.Insertable(new FormInstanceEntity
             {
                 FormId = formId,
@@ -56,7 +53,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 FormNo = formNo,
                 FormStatus = FormStatus.PendingSubmit.ToEnumString(),
                 ApplicantUserId = _loginuser.UserId,
-                RuleId = ruleId,
+                RuleId = 0,
                 CurrentStepId = startStepId,
                 CreatedBy = _loginuser.UserId,
                 CreatedDate = now
@@ -132,17 +129,17 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// <param name="formTypeId"></param>
         /// <param name="formId"></param>
         /// <returns></returns>
-        private async Task<long> MatchWorkflowRuleAsync(long formTypeId, long formId)
+        public async Task<int> MatchWorkflowRuleAsync(long formTypeId, long formId)
         {
             var appPositionId = await _db.Queryable<UserInfoEntity>()
                                          .With(SqlWith.NoLock)
-                                         .Where(u => u.UserId == _loginuser.UserId)
-                                         .Select(u => u.PositionId)
+                                         .Where(user => user.UserId == _loginuser.UserId)
+                                         .Select(user => user.PositionId)
                                          .FirstAsync();
 
             var ruleList = await _db.Queryable<WorkflowRuleEntity>()
                                     .With(SqlWith.NoLock)
-                                    .Where(r => r.FormTypeId == formTypeId)
+                                    .Where(rule => rule.FormTypeId == formTypeId)
                                     .ToListAsync();
 
             long ruleId = 0;
@@ -165,18 +162,29 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
                 // 优先级1：Position匹配且(Guidance为空或匹配)
                 if (positionMatch && (string.IsNullOrEmpty(rule.Guidance) || guidanceMatch))
-                    return rule.RuleId;
+                {
+                    ruleId = rule.RuleId;
+                    continue;
+                }
 
                 // 优先级2：仅Guidance匹配
                 if (ruleId == 0 && !positionMatch && guidanceMatch)
+                {
                     ruleId = rule.RuleId;
+                }
 
                 // 优先级3：Position和Guidance都为空
                 if (ruleId == 0 && rule.PositionId == 0 && string.IsNullOrEmpty(rule.Guidance))
+                {
                     ruleId = rule.RuleId;
+                }
             }
-
-            return ruleId;
+            return await _db.Updateable<FormInstanceEntity>()
+                            .SetColumns(instance => new FormInstanceEntity
+                            {
+                                RuleId = ruleId
+                            }).Where(instance => instance.FormId == formId)
+                            .ExecuteCommandAsync();
         }
 
         /// <summary>
@@ -187,8 +195,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         {
             var formTypeId = await _db.Queryable<FormInstanceEntity>()
                                       .With(SqlWith.NoLock)
-                                      .Where(f => f.FormId == formId)
-                                      .Select(f => f.FormTypeId)
+                                      .Where(instance => instance.FormId == formId)
+                                      .Select(instance => instance.FormTypeId)
                                       .FirstAsync();
 
             // 匹配工作流规则
@@ -198,10 +206,9 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             return await _db.Updateable<FormInstanceEntity>()
                             .SetColumns(f => new FormInstanceEntity
                             {
-                                RuleId = ruleId,
                                 ModifiedBy = _loginuser.UserId,
                                 ModifiedDate = DateTime.Now
-                            }).Where(f => f.FormId == formId)
+                            }).Where(instance => instance.FormId == formId)
                             .ExecuteCommandAsync();
         }
 

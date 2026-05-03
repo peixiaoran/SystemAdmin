@@ -88,6 +88,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                         CreatedDate = DateTime.Now
                     };
                     await _leaveForm.InitLeaveForm(leaveForm);
+                    await _formRepo.MatchWorkflowRuleAsync(long.Parse(formTypeId), long.Parse(formId));
                     await _db.CommitTranAsync();
 
                     var leaveFormDto = await _leaveForm.GetLeaveForm(long.Parse(formId));

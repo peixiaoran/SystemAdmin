@@ -39,9 +39,9 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// <returns></returns>
         public async Task<bool> CanView(long formId)
         {
-            return await _db.Queryable<FormReviewRecordEntity>()
+            return await _db.Queryable<FormInstanceEntity>()
                             .With(SqlWith.NoLock)
-                            .Where(record => record.ReviewUserId == _loginuser.UserId)
+                            .Where(instance => instance.ApplicantUserId == _loginuser.UserId)
                             .AnyAsync();
         }
 
