@@ -1,5 +1,6 @@
 ﻿using Mapster;
 using SqlSugar;
+using System.Data;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Dto;
@@ -166,23 +167,32 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         public async Task<ResultPaged<WorkflowRuleDto>> GetWorkflowRulePage(GetWorkflowRulePage getPage)
         {
             RefAsync<int> totalCount = 0;
-            var page = await _db.Queryable<WorkflowRuleEntity>()
-                                .With(SqlWith.NoLock)
-                                .InnerJoin<PositionInfoEntity>((rule, position) => rule.PositionId == position.PositionId)
-                                .Where((rule, position) => rule.FormTypeId == long.Parse(getPage.FormTypeId) && rule.PositionId == long.Parse(getPage.PositionId))
-                                .Select((rule, position) => new WorkflowRuleDto
-                                {
-                                    RuleId = rule.RuleId,
-                                    FormTypeId = rule.FormTypeId,
-                                    RuleNameCn = rule.RuleNameCn,
-                                    RuleNameEn = rule.RuleNameEn,
-                                    PositionId = rule.PositionId,
-                                    PositionName = _lang.Locale == "zh-CN"
-                                                   ? position.PositionNameCn
-                                                   : position.PositionNameEn,
-                                    Guidance = rule.Guidance,
-                                    SortOrder = rule.SortOrder,
-                                }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            var query = _db.Queryable<WorkflowRuleEntity>()
+                .With(SqlWith.NoLock)
+                .InnerJoin<PositionInfoEntity>((rule, position) => rule.PositionId == position.PositionId)
+                .Where((rule, position) => rule.FormTypeId == long.Parse(getPage.FormTypeId));
+
+            if (!string.IsNullOrWhiteSpace(getPage.PositionId) && getPage.PositionId != "0")
+            {
+                query = query.Where((rule, position) => rule.PositionId == long.Parse(getPage.PositionId));
+            }
+
+            // 排序
+            query = query.OrderBy((rule, position) => rule.SortOrder);
+
+            var page = await query.Select((rule, position) => new WorkflowRuleDto
+                             {
+                                 RuleId = rule.RuleId,
+                                 FormTypeId = rule.FormTypeId,
+                                 RuleNameCn = rule.RuleNameCn,
+                                 RuleNameEn = rule.RuleNameEn,
+                                 PositionId = rule.PositionId,
+                                 PositionName = _lang.Locale == "zh-CN"
+                                                ? position.PositionNameCn
+                                                : position.PositionNameEn,
+                                 Guidance = rule.Guidance,
+                                 SortOrder = rule.SortOrder,
+                             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<WorkflowRuleDto>.Ok(page, totalCount);
         }
     }

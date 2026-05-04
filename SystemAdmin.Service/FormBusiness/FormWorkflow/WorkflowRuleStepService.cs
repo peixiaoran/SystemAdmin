@@ -86,11 +86,11 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         /// 步骤下拉
         /// </summary>
         /// <returns></returns>
-        public async Task<Result<List<WorkflowStepDropDto>>> GetWorkflowStepDrop()
+        public async Task<Result<List<WorkflowStepDropDto>>> GetWorkflowStepDrop(string formTypeId)
         {
             try
             {
-                var drop = await _workflowRuleStepRepo.GetWorkflowStepDrop();
+                var drop = await _workflowRuleStepRepo.GetWorkflowStepDrop(long.Parse(formTypeId));
                 return Result<List<WorkflowStepDropDto>>.Ok(drop);
             }
             catch (Exception ex)

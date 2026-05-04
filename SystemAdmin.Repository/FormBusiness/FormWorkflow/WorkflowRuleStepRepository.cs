@@ -77,14 +77,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 规则下拉
+        /// 步骤下拉
         /// </summary>
-        /// <param name="formTypeId"></param>
         /// <returns></returns>
-        public async Task<List<WorkflowStepDropDto>> GetWorkflowStepDrop()
+        public async Task<List<WorkflowStepDropDto>> GetWorkflowStepDrop(long formTypeId)
         {
             return await _db.Queryable<WorkflowStepEntity>()
                             .With(SqlWith.NoLock)
+                            .Where(rule => rule.FormTypeId == formTypeId)
                             .OrderBy(rule => rule.SortOrder)
                             .Select(rule => new WorkflowStepDropDto
                             {
@@ -190,6 +190,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                                 .InnerJoin<WorkflowStepEntity>((rulestep, currentstep) => rulestep.CurrentStepId == currentstep.StepId)
                                 .LeftJoin<WorkflowStepEntity>((rulestep, currentstep, nextstep) => rulestep.NextStepId == nextstep.StepId)
                                 .Where((rulestep, currentstep, nextstep) => rulestep.RuleId == ruleId)
+                                .OrderBy((rulestep, currentstep, nextstep)=>rulestep.SortOrder)
                                 .Select((rulestep, currentstep, nextstep) => new WorkflowRuleStepDto
                                 {
                                     RuleId = rulestep.RuleId,

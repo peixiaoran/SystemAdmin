@@ -216,17 +216,31 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
         #region 请假单
         /// <summary>
-        /// 请假天数超过3天
+        /// 请假天数小于2天
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<bool> IsLeaveDaysOver2(long formId)
+        public async Task<bool> LessOver2(long formId)
         {
             var leave = await _db.Queryable<LeaveFormEntity>()
                                  .With(SqlWith.NoLock)
                                  .FirstAsync(leave => leave.FormId == formId);
 
             return leave != null && leave.LeaveDays <= 2;
+        }
+
+        /// <summary>
+        /// 请假天数大于2天
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public async Task<bool> MoreOver2(long formId)
+        {
+            var leave = await _db.Queryable<LeaveFormEntity>()
+                                 .With(SqlWith.NoLock)
+                                 .FirstAsync(leave => leave.FormId == formId);
+
+            return leave != null && leave.LeaveDays > 2;
         }
         #endregion
     }

@@ -47,9 +47,9 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
         [HttpPost]
         [Tags("表单业务管理-表单流程配置")]
         [EndpointSummary("[流程规则步骤] 步骤下拉")]
-        public async Task<Result<List<WorkflowStepDropDto>>> GetWorkflowStepDrop()
+        public async Task<Result<List<WorkflowStepDropDto>>> GetWorkflowStepDrop([FromForm] string formTypeId)
         {
-            return await _workflowRuleStepService.GetWorkflowStepDrop();
+            return await _workflowRuleStepService.GetWorkflowStepDrop(formTypeId);
         }
 
         [HttpPost]
