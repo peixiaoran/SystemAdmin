@@ -39,10 +39,35 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// <returns></returns>
         public async Task<bool> CanView(long formId)
         {
-            return await _db.Queryable<FormInstanceEntity>()
-                            .With(SqlWith.NoLock)
-                            .Where(instance => instance.ApplicantUserId == _loginuser.UserId)
-                            .AnyAsync();
+            // 检查当前用户是否是申请人
+            bool isApplicant = await _db.Queryable<FormInstanceEntity>()
+                                        .With(SqlWith.NoLock)
+                                        .Where(instance => instance.FormId == formId
+                                                       && instance.ApplicantUserId == _loginuser.UserId)
+                                        .AnyAsync();
+
+            if (isApplicant)
+                return true;
+
+            // 检查当前用户是否在待审核列表中
+            bool isReviewer = await _db.Queryable<PendingReviewEntity>()
+                                       .With(SqlWith.NoLock)
+                                       .LeftJoin<UserAgentEntity>((pending, useragent) => pending.ReviewUserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
+                                       .Where((pending, useragent) => pending.FormId == formId && (pending.ReviewUserId == _loginuser.UserId || useragent.AgentUserId == _loginuser.UserId))
+                                       .AnyAsync();
+
+            if (isReviewer)
+                return true;
+
+            // 检查当前用户是否曾经参与过审批（原始人或实际操作人）
+            bool hasReviewRecord = await _db.Queryable<FormReviewRecordEntity>()
+                                            .With(SqlWith.NoLock)
+                                            .Where(record => record.FormId == formId
+                                                         && (record.ReviewUserId == _loginuser.UserId
+                                                          || record.OriginalUserId == _loginuser.UserId))
+                                            .AnyAsync();
+
+            return hasReviewRecord;
         }
 
         /// <summary>

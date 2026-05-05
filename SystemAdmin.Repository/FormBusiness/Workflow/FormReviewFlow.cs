@@ -1173,7 +1173,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         {
             var reviewRecord = await _db.Queryable<FormReviewRecordEntity>()
                                         .With(SqlWith.NoLock)
-                                        .Where(record => record.FormId == formId)
+                                        .Where(record => record.FormId == formId && record.ReviewResult == ReviewResult.Approve.ToEnumString())
                                         .OrderBy(record => record.ReviewDateTime)
                                         .ToListAsync();
 
@@ -1206,19 +1206,30 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
                 foreach (var user in flow.stepReviewUser)
                 {
-                    if (currentStepId != flow.StepId)
+                    bool isCurrentStep = currentStepId == flow.StepId;
+
+                    if (!isCurrentStep)
                     {
-                        user.Result = FormReviewResult.Unsigned.ToEnumString();
-                        continue;
+                        // 步骤不匹配，检查历史记录是否有签核
+                        bool hasSigned = validRecords.Any(record =>
+                            record.StepId == flow.StepId &&
+                            (record.ReviewUserId == user.UserId || record.ReviewUserId == user.AgentUserId));
+
+                        user.Result = hasSigned
+                            ? FormReviewResult.Approve.ToEnumString()
+                            : FormReviewResult.Unsigned.ToEnumString();
                     }
+                    else
+                    {
+                        // 步骤匹配，再看该用户是否已签核
+                        bool hasSigned = validRecords.Any(record =>
+                            record.StepId == flow.StepId &&
+                            (record.ReviewUserId == user.UserId || record.ReviewUserId == user.AgentUserId));
 
-                    bool hasSigned = validRecords.Any(r =>
-                        r.StepId == flow.StepId &&
-                        (r.ReviewUserId == user.UserId || r.ReviewUserId == user.AgentUserId));
-
-                    user.Result = hasSigned
-                        ? FormReviewResult.Approve.ToEnumString()
-                        : FormReviewResult.UnderReview.ToEnumString();
+                        user.Result = hasSigned
+                            ? FormReviewResult.Approve.ToEnumString()
+                            : FormReviewResult.UnderReview.ToEnumString();
+                    }
                 }
             }
             return reviewFlow;

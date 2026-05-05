@@ -8,17 +8,17 @@ using SystemAdmin.Repository.FormBusiness.Workflow;
 
 namespace SystemAdmin.Service.FormBusiness.FormOperate
 {
-    public class PendingSubReviewService
+    public class PendingReviewService
     {
         private readonly CurrentUser _loginuser;
-        private readonly ILogger<PendingSubReviewService> _logger;
+        private readonly ILogger<PendingReviewService> _logger;
         private readonly SqlSugarScope _db;
         private readonly FormPermissionChecker _formChecker;
-        private readonly PendingSubReviewRepository _pendingReviewRepo;
+        private readonly PendingReviewRepository _pendingReviewRepo;
         private readonly LocalizationService _localization;
         private readonly string _this = "FormBusiness.FormOperate.PendingSubApp";
 
-        public PendingSubReviewService(CurrentUser loginuser, ILogger<PendingSubReviewService> logger, SqlSugarScope db, FormPermissionChecker formChecker, PendingSubReviewRepository pendingReviewRepo, LocalizationService localization)
+        public PendingReviewService(CurrentUser loginuser, ILogger<PendingReviewService> logger, SqlSugarScope db, FormPermissionChecker formChecker, PendingReviewRepository pendingReviewRepo, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;

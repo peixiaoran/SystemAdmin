@@ -168,9 +168,9 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<WorkflowRuleEntity>()
-                .With(SqlWith.NoLock)
-                .InnerJoin<PositionInfoEntity>((rule, position) => rule.PositionId == position.PositionId)
-                .Where((rule, position) => rule.FormTypeId == long.Parse(getPage.FormTypeId));
+                           .With(SqlWith.NoLock)
+                           .LeftJoin<PositionInfoEntity>((rule, position) => rule.PositionId == position.PositionId)
+                           .Where((rule, position) => rule.FormTypeId == long.Parse(getPage.FormTypeId));
 
             if (!string.IsNullOrWhiteSpace(getPage.PositionId) && getPage.PositionId != "0")
             {

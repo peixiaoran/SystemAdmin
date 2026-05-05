@@ -9,15 +9,16 @@ using SystemAdmin.Model.FormBusiness.FormOperate.Queries;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
+using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity;
 
 namespace SystemAdmin.Repository.FormBusiness.FormOperate
 {
-    public class PendingSubReviewRepository
+    public class PendingReviewRepository
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
 
-        public PendingSubReviewRepository(SqlSugarScope db, Language lang)
+        public PendingReviewRepository(SqlSugarScope db, Language lang)
         {
             _db = db;
             _lang = lang;
@@ -89,36 +90,36 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<PendingReviewEntity>()
                            .With(SqlWith.NoLock)
-                           .InnerJoin<FormInstanceEntity>((pendreview, instance) => pendreview.FormId == instance.FormId)
-                           .InnerJoin<FormTypeEntity>((pendreview, instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
-                           .InnerJoin<DictionaryInfoEntity>((pendreview, instance, formtype, dic) => dic.DicType == "FormStatus" && dic.DicCode == FormStatus.PendingSubmit.ToEnumString() && instance.FormStatus == dic.DicCode)
-                           .InnerJoin<UserInfoEntity>((pendreview, instance, formtype, dic, penduser) => pendreview.ReviewUserId == penduser.UserId)
-                           .LeftJoin<UserInfoEntity>((pendreview, instance, formtype, dic, penduser, reviewuser) => instance.CreatedBy == reviewuser.UserId)
-                           .LeftJoin<DepartmentInfoEntity>((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => reviewuser.DepartmentId == reviewuserdept.DepartmentId)
-                           .Where((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => instance.ApplicantUserId == loginUserId);
+                           .InnerJoin<FormInstanceEntity>((pending, instance) => pending.FormId == instance.FormId)
+                           .InnerJoin<DictionaryInfoEntity>((pending, instance, dic) => dic.DicType == "FormStatus" && dic.DicCode == instance.FormStatus && instance.FormStatus == FormStatus.PendingSubmit.ToEnumString())
+                           .InnerJoin<FormTypeEntity>((pending, instance, dic, formtype) => instance.FormTypeId == formtype.FormTypeId)
+                           .LeftJoin<UserInfoEntity>((pending, instance, dic, formtype, applyuser) => instance.ApplicantUserId == applyuser.UserId)
+                           .LeftJoin<DepartmentInfoEntity>((pending, instance, dic, formtype, applyuser, applyuserdept) => applyuser.DepartmentId == applyuserdept.DepartmentId)
+                           .LeftJoin<UserAgentEntity>((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => applyuser.UserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
+                           .Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => instance.ApplicantUserId == loginUserId);
 
             // 表单组别Id
             if (!string.IsNullOrEmpty(getPage.FormGroupId) && long.Parse(getPage.FormGroupId) > 0)
             {
-                query = query.Where((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) =>
+                query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) =>
                     formtype.FormGroupId == long.Parse(getPage.FormGroupId));
             }
             // 表单类别Id
             if (!string.IsNullOrEmpty(getPage.FormTypeId) && long.Parse(getPage.FormTypeId) > 0)
             {
-                query = query.Where((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) =>
+                query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) =>
                     formtype.FormTypeId == long.Parse(getPage.FormTypeId));
             }
             // 表单状态
             if (!string.IsNullOrEmpty(getPage.FormStatus))
             {
-                query = query.Where((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => instance.FormStatus == getPage.FormStatus);
+                query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => instance.FormStatus == getPage.FormStatus);
             }
 
             // 排序
-            query = query.OrderBy((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => new { instance.CreatedDate });
+            query = query.OrderBy((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new { instance.CreatedDate });
 
-            var page = await query.Select((pendreview, instance, formtype, dic, penduser, reviewuser, reviewuserdept) => new PendingSubReviewDto
+            var page = await query.Select((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new PendingSubReviewDto
                                   {
                                       FormId = instance.FormId,
                                       FormNo = instance.FormNo,
@@ -131,14 +132,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                                                      ? dic.DicNameCn
                                                      : dic.DicNameEn,
                                       ApplyUserName = _lang.Locale == "zh-CN"
-                                                     ? reviewuser.UserNameCn
-                                                     : reviewuser.UserNameEn,
+                                                     ? applyuser.UserNameCn
+                                                     : applyuser.UserNameEn,
                                       ApplyUserDeptName = _lang.Locale == "zh-CN"
-                                                     ? reviewuserdept.DepartmentNameCn
-                                                     : reviewuserdept.DepartmentNameEn,
+                                                     ? applyuserdept.DepartmentNameCn
+                                                     : applyuserdept.DepartmentNameEn,
                                       ApprovalPath = formtype.ApprovalPath,
                                       ViewPath = formtype.ViewPath,
-                                      isDelete = (reviewuser.CreatedBy == loginUserId
+                                      isDelete = (instance.ApplicantUserId == loginUserId
                                                   && instance.FormStatus != FormStatus.Voided.ToEnumString()) ? 1 : 0
                                   }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<PendingSubReviewDto>.Ok(page, totalCount, "");
@@ -154,35 +155,38 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<PendingReviewEntity>()
                            .With(SqlWith.NoLock)
-                           .InnerJoin<FormInstanceEntity>((pendreview, instance) => pendreview.FormId == instance.FormId)
-                           .InnerJoin<FormTypeEntity>((pendreview, instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
-                           .InnerJoin<DictionaryInfoEntity>((pendreview, instance, formtype, dic) => dic.DicType == "FormStatus" && instance.FormStatus == dic.DicCode)
-                           .LeftJoin<UserInfoEntity>((pendreview, instance, formtype, dic, reviewuser) => instance.ApplicantUserId == reviewuser.UserId)
-                           .LeftJoin<DepartmentInfoEntity>((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => reviewuser.DepartmentId == reviewuserdept.DepartmentId)
-                           .Where((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => pendreview.ReviewUserId == loginUserId && instance.ApplicantUserId != loginUserId);
+                           .InnerJoin<FormInstanceEntity>((pending, instance) => pending.FormId == instance.FormId)
+                           .InnerJoin<DictionaryInfoEntity>((pending, instance, dic) => dic.DicType == "FormStatus" && instance.FormStatus == dic.DicCode && instance.FormStatus == FormStatus.UnderReview.ToEnumString())
+                           .InnerJoin<FormTypeEntity>((pending, instance, dic, formtype) => instance.FormTypeId == formtype.FormTypeId)
+                           .InnerJoin<UserInfoEntity>((pending, instance, dic, formtype, applyuser) => instance.ApplicantUserId == applyuser.UserId)
+                           .InnerJoin<DepartmentInfoEntity>((pending, instance, dic, formtype, applyuser, applyuserdept) => applyuser.DepartmentId == applyuserdept.DepartmentId)
+                           .LeftJoin<UserAgentEntity>((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => pending.ReviewUserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
+                           .Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => (pending.ReviewUserId == loginUserId || useragent.AgentUserId == loginUserId) && instance.ApplicantUserId != loginUserId);
+
+            string sql = query.ToSqlString();
 
             // 表单组别Id
             if (!string.IsNullOrEmpty(getPage.FormGroupId) && long.Parse(getPage.FormGroupId) > 0)
             {
-                query = query.Where((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) =>
+                query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) =>
                     formtype.FormGroupId == long.Parse(getPage.FormGroupId));
             }
             // 表单类别Id
             if (!string.IsNullOrEmpty(getPage.FormTypeId) && long.Parse(getPage.FormTypeId) > 0)
             {
-                query = query.Where((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) =>
+                query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) =>
                     formtype.FormTypeId == long.Parse(getPage.FormTypeId));
             }
             // 表单状态
             if (!string.IsNullOrEmpty(getPage.FormStatus))
             {
-                query = query.Where((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => instance.FormStatus == getPage.FormStatus);
+                query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => instance.FormStatus == getPage.FormStatus);
             }
 
             // 排序
-            query = query.OrderBy((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => new { instance.CreatedDate });
+            query = query.OrderBy((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new { instance.CreatedDate });
 
-            var page = await query.Select((pendreview, instance, formtype, dic, reviewuser, reviewuserdept) => new PendingSubReviewDto
+            var page = await query.Select((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new PendingSubReviewDto
                                   {
                                       FormId = instance.FormId,
                                       FormNo = instance.FormNo,
@@ -195,11 +199,11 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                                                      ? dic.DicNameCn
                                                      : dic.DicNameEn,
                                       ApplyUserName = _lang.Locale == "zh-CN"
-                                                     ? reviewuser.UserNameCn
-                                                     : reviewuser.UserNameEn,
+                                                     ? applyuser.UserNameCn
+                                                     : applyuser.UserNameEn,
                                       ApplyUserDeptName = _lang.Locale == "zh-CN"
-                                                     ? reviewuserdept.DepartmentNameCn
-                                                     : reviewuserdept.DepartmentNameEn,
+                                                     ? applyuserdept.DepartmentNameCn
+                                                     : applyuserdept.DepartmentNameEn,
                                       ApprovalPath = formtype.ApprovalPath,
                                       ViewPath = formtype.ViewPath,
                                       isDelete = 0

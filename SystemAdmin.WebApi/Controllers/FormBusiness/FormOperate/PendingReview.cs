@@ -10,10 +10,10 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
     [RoutingAuthorize]
     [Route("api/FormBusiness/FormOperate/[controller]/[action]")]
     [ApiController]
-    public class PendingSubReview : ControllerBase
+    public class PendingReview : ControllerBase
     {
-        private readonly PendingSubReviewService _pendingReviewService;
-        public PendingSubReview(PendingSubReviewService PendingSubAppService)
+        private readonly PendingReviewService _pendingReviewService;
+        public PendingReview(PendingReviewService PendingSubAppService)
         {
             _pendingReviewService = PendingSubAppService;
         }
