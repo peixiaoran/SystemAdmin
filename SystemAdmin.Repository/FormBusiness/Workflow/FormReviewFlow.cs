@@ -243,14 +243,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             bool isSingle = reviewMode == ReviewMode.Single.ToEnumString();
 
             string topN = isSingle ? "TOP 1" : "";
-            var actual = AppointmentType.Actual.ToEnumString();
-            var autoActual = AppointmentType.AutoActual.ToEnumString();
-            var agent = AppointmentType.Agent.ToEnumString();
-            var autoAgent = AppointmentType.AutoAgent.ToEnumString();
-            var concurrent = AppointmentType.Concurrent.ToEnumString();
-            var autoConcurrent = AppointmentType.AutoConcurrent.ToEnumString();
-            var concurrentAgent = AppointmentType.ConcurrentAgent.ToEnumString();
-            var autoConcurrentAgent = AppointmentType.AutoConcurrentAgent.ToEnumString();
+            var (actual, agent, concurrent, concurrentAgent, autoActual, autoAgent, autoConcurrent, autoConcurrentAgent) = AppointmentEnumStrings();
             var now = DateTime.Now;
 
             string exactOrderBy = isSingle
@@ -565,15 +558,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             bool isSingle = reviewMode == ReviewMode.Single.ToEnumString();
 
             string topN = isSingle ? "TOP 1" : "";
-            var actual = AppointmentType.Actual.ToEnumString();
-            var agent = AppointmentType.Agent.ToEnumString();
-            var concurrent = AppointmentType.Concurrent.ToEnumString();
-            var concurrentAgent = AppointmentType.ConcurrentAgent.ToEnumString();
-
-            var autoActual = AppointmentType.AutoActual.ToEnumString();
-            var autoAgent = AppointmentType.AutoAgent.ToEnumString();
-            var autoConcurrent = AppointmentType.AutoConcurrent.ToEnumString();
-            var autoConcurrentAgent = AppointmentType.AutoConcurrentAgent.ToEnumString();
+            var (actual, agent, concurrent, concurrentAgent, autoActual, autoAgent, autoConcurrent, autoConcurrentAgent) = AppointmentEnumStrings();
             var now = DateTime.Now;
 
             string exactOrderBy = isSingle
@@ -886,15 +871,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             bool isSingle = reviewMode == ReviewMode.Single.ToEnumString();
 
             string topN = isSingle ? "TOP 1" : "";
-            var actual = AppointmentType.Actual.ToEnumString();
-            var agent = AppointmentType.Agent.ToEnumString();
-            var concurrent = AppointmentType.Concurrent.ToEnumString();
-            var concurrentAgent = AppointmentType.ConcurrentAgent.ToEnumString();
-
-            var autoActual = AppointmentType.AutoActual.ToEnumString();
-            var autoAgent = AppointmentType.AutoAgent.ToEnumString();
-            var autoConcurrent = AppointmentType.AutoConcurrent.ToEnumString();
-            var autoConcurrentAgent = AppointmentType.AutoConcurrentAgent.ToEnumString();
+            var (actual, agent, concurrent, concurrentAgent, autoActual, autoAgent, autoConcurrent, autoConcurrentAgent) = AppointmentEnumStrings();
             var now = DateTime.Now;
 
             string exactOrderBy = isSingle
@@ -1245,5 +1222,21 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             .Where(record => record.FormId == formId && record.ReviewResult == ReviewResult.Reject.ToEnumString())
                             .CountAsync();
         }
+
+        /// <summary>
+        /// 一次性取出所有 AppointmentType 枚举字符串
+        /// </summary>
+        /// <returns></returns>
+        private (string actual, string agent, string concurrent, string concurrentAgent, string autoActual, string autoAgent, string autoConcurrent, string autoConcurrentAgent) AppointmentEnumStrings() =>
+        (
+            AppointmentType.Actual.ToEnumString(),
+            AppointmentType.Agent.ToEnumString(),
+            AppointmentType.Concurrent.ToEnumString(),
+            AppointmentType.ConcurrentAgent.ToEnumString(),
+            AppointmentType.AutoActual.ToEnumString(),
+            AppointmentType.AutoAgent.ToEnumString(),
+            AppointmentType.AutoConcurrent.ToEnumString(),
+            AppointmentType.AutoConcurrentAgent.ToEnumString()
+        );
     }
 }
