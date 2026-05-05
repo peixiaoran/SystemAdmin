@@ -42,8 +42,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             // 检查当前用户是否是申请人
             bool isApplicant = await _db.Queryable<FormInstanceEntity>()
                                         .With(SqlWith.NoLock)
-                                        .Where(instance => instance.FormId == formId
-                                                       && instance.ApplicantUserId == _loginuser.UserId)
+                                        .Where(instance => instance.FormId == formId && instance.ApplicantUserId == _loginuser.UserId)
                                         .AnyAsync();
 
             if (isApplicant)
@@ -62,9 +61,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             // 检查当前用户是否曾经参与过审批（原始人或实际操作人）
             bool hasReviewRecord = await _db.Queryable<FormReviewRecordEntity>()
                                             .With(SqlWith.NoLock)
-                                            .Where(record => record.FormId == formId
-                                                         && (record.ReviewUserId == _loginuser.UserId
-                                                          || record.OriginalUserId == _loginuser.UserId))
+                                            .Where(record => record.FormId == formId && (record.ReviewUserId == _loginuser.UserId || record.OriginalUserId == _loginuser.UserId))
                                             .AnyAsync();
 
             return hasReviewRecord;

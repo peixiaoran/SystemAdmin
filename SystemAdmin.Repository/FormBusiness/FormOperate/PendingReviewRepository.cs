@@ -96,7 +96,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                            .LeftJoin<UserInfoEntity>((pending, instance, dic, formtype, applyuser) => instance.ApplicantUserId == applyuser.UserId)
                            .LeftJoin<DepartmentInfoEntity>((pending, instance, dic, formtype, applyuser, applyuserdept) => applyuser.DepartmentId == applyuserdept.DepartmentId)
                            .LeftJoin<UserAgentEntity>((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => applyuser.UserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
-                           .Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => instance.ApplicantUserId == loginUserId);
+                           .Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => instance.ApplicantUserId == loginUserId || useragent.AgentUserId == loginUserId);
+
 
             // 表单组别Id
             if (!string.IsNullOrEmpty(getPage.FormGroupId) && long.Parse(getPage.FormGroupId) > 0)
@@ -146,7 +147,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         }
 
         /// <summary>
-        /// 查询待签核分页
+        /// 查询待审批分页
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>

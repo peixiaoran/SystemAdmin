@@ -12,7 +12,7 @@
  Target Server Version : 17001110 (17.00.1110)
  File Encoding         : 65001
 
- Date: 05/05/2026 16:13:24
+ Date: 05/05/2026 21:35:48
 */
 
 
@@ -470,6 +470,9 @@ GO
 INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [RuleId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2051571275339534336', N'1987217256446300160', N'LVR-2026050004', N'UnderReview', N'1903486709602062340', N'2051186400535121920', N'2032353104544010240', N'1903486709602062340', N'2026-05-05 15:54:43.043', N'2050599298114129920', N'2026-05-05 16:08:14.560')
 GO
 
+INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [RuleId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2051655239114821632', N'1987217256446300160', N'LVR-2026050005', N'UnderReview', N'1903486709602062340', N'2051186271467999232', N'2009898117243211776', N'1903486709602062340', N'2026-05-05 21:28:21.533', N'2050599625240481792', N'2026-05-05 21:33:06.947')
+GO
+
 
 -- ----------------------------
 -- Table structure for FormReviewRecord
@@ -620,6 +623,12 @@ GO
 INSERT INTO [Form].[FormReviewRecord] ([FormId], [StepId], [ReviewResult], [RejectStepId], [Comment], [ReviewType], [ReviewAppointment], [OriginalUserId], [ReviewUserId], [ReviewDateTime]) VALUES (N'2051571275339534336', N'2009890853346217984', N'Approve', NULL, N'', N'Manual', N'Actual', N'1903486709602062340', N'1903486709602062340', N'2026-05-05 15:54:56.220')
 GO
 
+INSERT INTO [Form].[FormReviewRecord] ([FormId], [StepId], [ReviewResult], [RejectStepId], [Comment], [ReviewType], [ReviewAppointment], [OriginalUserId], [ReviewUserId], [ReviewDateTime]) VALUES (N'2051655239114821632', N'2009890853346217984', N'Approve', NULL, N'', N'Manual', N'Agent', N'1903486709602062340', N'2050599625240481792', N'2026-05-05 21:33:06.860')
+GO
+
+INSERT INTO [Form].[FormReviewRecord] ([FormId], [StepId], [ReviewResult], [RejectStepId], [Comment], [ReviewType], [ReviewAppointment], [OriginalUserId], [ReviewUserId], [ReviewDateTime]) VALUES (N'2051655239114821632', N'2009898117243211776', N'Approve', NULL, N'', N'Automatic', N'Actual', N'2050599625240481792', N'2050599625240481792', N'2026-05-05 21:33:06.977')
+GO
+
 
 -- ----------------------------
 -- Table structure for FormSequence
@@ -701,7 +710,7 @@ GO
 -- ----------------------------
 -- Records of FormSequence
 -- ----------------------------
-INSERT INTO [Form].[FormSequence] ([FormTypeId], [Ym], [Total], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'202605', N'4', N'1903486709602062336', N'2026-05-05 14:37:17.447', N'1903486709602062340', N'2026-05-05 15:54:43.043')
+INSERT INTO [Form].[FormSequence] ([FormTypeId], [Ym], [Total], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'1987217256446300160', N'202605', N'5', N'1903486709602062336', N'2026-05-05 14:37:17.447', N'1903486709602062340', N'2026-05-05 21:28:21.533')
 GO
 
 
@@ -966,6 +975,9 @@ GO
 INSERT INTO [Form].[LeaveForm] ([FormId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveDays], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2051571275339534336', N'Annual', N'w', N'2026-05-01 00:00:00.0000000', N'2026-05-09 00:00:00.0000000', N'9.00', N'e', N'1903486709602062340', N'2026-05-05 15:54:43.053', N'1903486709602062340', N'2026-05-05 15:54:51.560')
 GO
 
+INSERT INTO [Form].[LeaveForm] ([FormId], [LeaveTypeCode], [LeaveReason], [LeaveStartTime], [LeaveEndTime], [LeaveDays], [AgentUserNo], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2051655239114821632', N'Annual', N'1', N'2026-05-01 00:00:00.0000000', N'2026-05-02 00:00:00.0000000', N'2.00', N'1', N'1903486709602062340', N'2026-05-05 21:28:21.593', N'1903486709602062340', N'2026-05-05 21:28:29.173')
+GO
+
 
 -- ----------------------------
 -- Table structure for PendingReview
@@ -1016,6 +1028,9 @@ GO
 -- Records of PendingReview
 -- ----------------------------
 INSERT INTO [Form].[PendingReview] ([FormId], [CurrentStepId], [ReviewUserId]) VALUES (N'2051571275339534336', N'2032353104544010240', N'1903486709602062341')
+GO
+
+INSERT INTO [Form].[PendingReview] ([FormId], [CurrentStepId], [ReviewUserId]) VALUES (N'2051655239114821632', N'2009898117243211776', N'2050597318784323584')
 GO
 
 
