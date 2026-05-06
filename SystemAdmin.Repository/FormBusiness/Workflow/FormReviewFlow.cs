@@ -161,43 +161,41 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             string agentNameCol = isChinese ? "agentusers.UserNameCn" : "agentusers.UserNameEn";
             string dicNameCol = isChinese ? "dic.DicNameCn" : "dic.DicNameEn";
 
-            var actual = AppointmentType.Actual.ToEnumString();
-            var agent = AppointmentType.Agent.ToEnumString();
+            var (actual, agent, concurrent, concurrentAgent, autoActual, autoAgent, autoConcurrent, autoConcurrentAgent) = AppointmentEnumStrings();
             var now = DateTime.Now;
 
-            string sql = $@"
-                    SELECT
-                        users.UserId,
-                        {userNameCol} AS UserName,
-                        agentusers.UserId AS AgentUserId,
-                        {agentNameCol} AS AgentUserName,
-                        CASE
-                            WHEN agent.AgentUserId IS NOT NULL
-                            THEN (
-                                SELECT {dicNameCol}
-                                FROM Basic.DictionaryInfo dic
-                                WHERE dic.DicType = 'AppointmentType'
-                                  AND dic.DicCode = @Agent
-                            )
-                            ELSE (
-                                SELECT {dicNameCol}
-                                FROM Basic.DictionaryInfo dic
-                                WHERE dic.DicType = 'AppointmentType'
-                                  AND dic.DicCode = @Actual
-                            )
-                        END AS AppointmentTypeName,
-                        CASE
-                            WHEN agent.AgentUserId IS NOT NULL THEN @Agent
-                            ELSE @Actual
-                        END AS AppointmentTypeCode
-                    FROM Basic.UserInfo users
-                    LEFT JOIN Basic.UserAgent agent
-                           ON users.UserId = agent.SubstituteUserId
-                          AND agent.StartTime <= @Now
-                          AND agent.EndTime >= @Now
-                    LEFT JOIN Basic.UserInfo agentusers
-                           ON agent.AgentUserId = agentusers.UserId
-                    WHERE users.UserId = @ApplicantUserId";
+            string sql = $@"SELECT
+                                users.UserId,
+                                {userNameCol} AS UserName,
+                                agentusers.UserId AS AgentUserId,
+                                {agentNameCol} AS AgentUserName,
+                                CASE
+                                    WHEN agent.AgentUserId IS NOT NULL
+                                    THEN (
+                                        SELECT {dicNameCol}
+                                        FROM Basic.DictionaryInfo dic
+                                        WHERE dic.DicType = 'AppointmentType'
+                                          AND dic.DicCode = @Agent
+                                    )
+                                    ELSE (
+                                        SELECT {dicNameCol}
+                                        FROM Basic.DictionaryInfo dic
+                                        WHERE dic.DicType = 'AppointmentType'
+                                          AND dic.DicCode = @Actual
+                                    )
+                                END AS AppointmentTypeName,
+                                CASE
+                                    WHEN agent.AgentUserId IS NOT NULL THEN @Agent
+                                    ELSE @Actual
+                                END AS AppointmentTypeCode
+                            FROM Basic.UserInfo users
+                            LEFT JOIN Basic.UserAgent agent
+                                   ON users.UserId = agent.SubstituteUserId
+                                  AND agent.StartTime <= @Now
+                                  AND agent.EndTime >= @Now
+                            LEFT JOIN Basic.UserInfo agentusers
+                                   ON agent.AgentUserId = agentusers.UserId
+                            WHERE users.UserId = @ApplicantUserId";
 
             var parameters = new[]
             {
@@ -246,29 +244,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             var (actual, agent, concurrent, concurrentAgent, autoActual, autoAgent, autoConcurrent, autoConcurrentAgent) = AppointmentEnumStrings();
             var now = DateTime.Now;
 
-            string exactOrderBy = isSingle
-                ? @"ORDER BY
-                    CASE AppointmentTypeCode
-                        WHEN @Actual          THEN 0
-                        WHEN @Agent           THEN 1
-                        WHEN @Concurrent      THEN 2
-                        WHEN @ConcurrentAgent THEN 3
-                        ELSE 9
-                    END ASC,
-                    HireDate DESC"
-                : "ORDER BY HireDate DESC";
-
-            string autoOrderBy = isSingle
-                ? @"ORDER BY
-                        CASE AppointmentTypeCode
-                            WHEN @AutoActual          THEN 0
-                            WHEN @AutoAgent           THEN 1
-                            WHEN @AutoConcurrent      THEN 2
-                            WHEN @AutoConcurrentAgent THEN 3
-                            ELSE 9
-                        END ASC,
-                        HireDate DESC"
-                : "ORDER BY HireDate DESC";
+            string exactOrderBy = BuildOrderBy(isSingle, isAuto: false);
+            string autoOrderBy = BuildOrderBy(isSingle, isAuto: true);
 
             var exactResult = await _db.Ado.SqlQueryAsync<UserReview>($@"
                 SELECT {topN}
@@ -561,29 +538,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             var (actual, agent, concurrent, concurrentAgent, autoActual, autoAgent, autoConcurrent, autoConcurrentAgent) = AppointmentEnumStrings();
             var now = DateTime.Now;
 
-            string exactOrderBy = isSingle
-                ? @"ORDER BY
-                    CASE AppointmentTypeCode
-                        WHEN @Actual          THEN 0
-                        WHEN @Agent           THEN 1
-                        WHEN @Concurrent      THEN 2
-                        WHEN @ConcurrentAgent THEN 3
-                        ELSE 9
-                    END ASC,
-                    HireDate DESC"
-                : "ORDER BY HireDate DESC";
-
-            string autoOrderBy = isSingle
-                ? @"ORDER BY
-                        CASE AppointmentTypeCode
-                            WHEN @AutoActual          THEN 0
-                            WHEN @AutoAgent           THEN 1
-                            WHEN @AutoConcurrent      THEN 2
-                            WHEN @AutoConcurrentAgent THEN 3
-                            ELSE 9
-                        END ASC,
-                        HireDate DESC"
-                : "ORDER BY HireDate DESC";
+            string exactOrderBy = BuildOrderBy(isSingle, isAuto: false);
+            string autoOrderBy = BuildOrderBy(isSingle, isAuto: true);
 
             // ────────────────────────────────────────────────
             // 第一次：精确匹配，按签核方式返回笔数
@@ -874,29 +830,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             var (actual, agent, concurrent, concurrentAgent, autoActual, autoAgent, autoConcurrent, autoConcurrentAgent) = AppointmentEnumStrings();
             var now = DateTime.Now;
 
-            string exactOrderBy = isSingle
-                ? @"ORDER BY
-                    CASE AppointmentTypeCode
-                        WHEN @Actual          THEN 0
-                        WHEN @Agent           THEN 1
-                        WHEN @Concurrent      THEN 2
-                        WHEN @ConcurrentAgent THEN 3
-                        ELSE 9
-                    END ASC,
-                    HireDate DESC"
-                : "ORDER BY HireDate DESC";
-
-            string autoOrderBy = isSingle
-                ? @"ORDER BY
-                        CASE AppointmentTypeCode
-                            WHEN @AutoActual          THEN 0
-                            WHEN @AutoAgent           THEN 1
-                            WHEN @AutoConcurrent      THEN 2
-                            WHEN @AutoConcurrentAgent THEN 3
-                            ELSE 9
-                        END ASC,
-                        HireDate DESC"
-                : "ORDER BY HireDate DESC";
+            string exactOrderBy = BuildOrderBy(isSingle, isAuto: false);
+            string autoOrderBy = BuildOrderBy(isSingle, isAuto: true);
 
             // ────────────────────────────────────────────────
             // 第一次：精确匹配指定用户
@@ -1221,6 +1156,31 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             .With(SqlWith.NoLock)
                             .Where(record => record.FormId == formId && record.ReviewResult == ReviewResult.Reject.ToEnumString())
                             .CountAsync();
+        }
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        /// <param name="isSingle"></param>
+        /// <param name="isAuto"></param>
+        /// <returns></returns>
+        private string BuildOrderBy(bool isSingle, bool isAuto)
+        {
+            if (!isSingle)
+                return "ORDER BY t.HireDate DESC";
+
+            string c0 = isAuto ? AppointmentType.AutoActual.ToEnumString() : AppointmentType.Actual.ToEnumString();
+            string c1 = isAuto ? AppointmentType.AutoAgent.ToEnumString() : AppointmentType.Agent.ToEnumString();
+            string c2 = isAuto ? AppointmentType.AutoConcurrent.ToEnumString() : AppointmentType.Concurrent.ToEnumString();
+            string c3 = isAuto ? AppointmentType.AutoConcurrentAgent.ToEnumString() : AppointmentType.ConcurrentAgent.ToEnumString();
+
+            return $@"ORDER BY CASE t.AppointmentTypeCode
+                        WHEN '{c0}' THEN 0
+                        WHEN '{c1}' THEN 1
+                        WHEN '{c2}' THEN 2
+                        WHEN '{c3}' THEN 3
+                        ELSE 9
+                    END ASC, t.HireDate DESC";
         }
 
         /// <summary>

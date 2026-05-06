@@ -66,8 +66,8 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                var isCanApp = await _formChecker.CanApply(long.Parse(formTypeId));
-                if (!isCanApp)
+                var isCan = await _formChecker.CanApply(long.Parse(formTypeId));
+                if (!isCan)
                 {
                     return Result<LeaveFormDto>.Failure(400, _localization.ReturnMsg($"{_form}NotCanApply"));
                 }
@@ -113,7 +113,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                await _db.BeginTranAsync();
                 var entity = new LeaveFormEntity()
                 {
                     FormId = long.Parse(save.FormId),
@@ -126,6 +125,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     ModifiedBy = _loginuser.UserId,
                     ModifiedDate = DateTime.Now
                 };
+                await _db.BeginTranAsync();
                 var count = await _leaveForm.SaveLeaveForm(entity);
                 await _formRepo.SaveFormInstance(long.Parse(save.FormId));
                 await _db.CommitTranAsync();
@@ -151,17 +151,15 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                var isCanApp = await _formChecker.CanView(long.Parse(formId));
-                if (!isCanApp)
+                var isCan = await _formChecker.CanView(long.Parse(formId));
+                if (!isCan)
                 {
-                    return Result<LeaveFormDto>.Failure(400, _localization.ReturnMsg($"{_form}NotCanReview"));
+                    return Result<LeaveFormDto>.Failure(400, _localization.ReturnMsg($"{_form}NotCanView"));
                 }
-                else
-                {
-                    var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
-                    dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
-                    return Result<LeaveFormDto>.Ok(dto);
-                }
+
+                var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
+                dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
+                return Result<LeaveFormDto>.Ok(dto);
             }
             catch (Exception ex)
             {
@@ -186,7 +184,6 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 }
 
                 long maxAttachmentSize = _attachmentUpload.MaxSizeMB * 1024L * 1024L;
-
                 var formAttachmentList = new List<FormAttachmentDto>();
 
                 await _db.BeginTranAsync();
@@ -277,6 +274,12 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
+                var isCan = await _formChecker.CanView(long.Parse(formId));
+                if (!isCan)
+                {
+                    return Result<FormReview>.Failure(400, _localization.ReturnMsg($"{_form}NotCanView"));
+                }
+
                 var reviewFlow = await _reviewFlow.GetFullReviewFlow(long.Parse(formId));
                 return Result<FormReview>.Ok(reviewFlow);
             }
@@ -296,6 +299,12 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
+                var isCan = await _formChecker.CanReview(long.Parse(reviewForm.FormId));
+                if (!isCan)
+                {
+                    return Result<bool>.Failure(400, _localization.ReturnMsg($"{_form}NotCanReview"));
+                }
+
                 await _db.BeginTranAsync();
                 var result = await _reviewAction.FromApprove(reviewForm);
                 await _db.CommitTranAsync();

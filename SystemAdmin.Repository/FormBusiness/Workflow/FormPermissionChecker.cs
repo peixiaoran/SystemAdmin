@@ -58,7 +58,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             if (isReviewer)
                 return true;
 
-            // 检查当前用户是否曾经参与过审批（原始人或实际操作人）
+            // 检查当前用户是否曾经参与过审批
             bool hasReviewRecord = await _db.Queryable<FormReviewRecordEntity>()
                                             .With(SqlWith.NoLock)
                                             .Where(record => record.FormId == formId && (record.ReviewUserId == _loginuser.UserId || record.OriginalUserId == _loginuser.UserId))
@@ -74,11 +74,12 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// <returns></returns>
         public async Task<bool> CanReview(long formId)
         {
-            return await _db.Queryable<FormInstanceEntity>()
-                            .With(SqlWith.NoLock)
-                            .InnerJoin<PendingReviewEntity>((instance, pending) => instance.FormId == pending.FormId && instance.CurrentStepId == pending.CurrentStepId)
-                            .Where((instance, pending) => instance.FormId == formId && pending.ReviewUserId == _loginuser.UserId)
-                            .AnyAsync();
+            bool isReviewer = await _db.Queryable<PendingReviewEntity>()
+                                       .With(SqlWith.NoLock)
+                                       .LeftJoin<UserAgentEntity>((pending, useragent) => pending.ReviewUserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
+                                       .Where((pending, useragent) => pending.FormId == formId && (pending.ReviewUserId == _loginuser.UserId || useragent.AgentUserId == _loginuser.UserId))
+                                       .AnyAsync();
+            return isReviewer;
         }
 
         /// <summary>

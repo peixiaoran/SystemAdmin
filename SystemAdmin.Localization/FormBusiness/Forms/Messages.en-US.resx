@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SaveFailed" xml:space="preserve">
-    <value>Failed to save</value>
+    <value>Form save failed</value>
   </data>
   <data name="SaveSuccess" xml:space="preserve">
-    <value>Saved successfully</value>
+    <value>The form was saved successfully</value>
   </data>
   <data name="AttachmentNotNull" xml:space="preserve">
     <value>The uploaded file cannot be empty</value>
@@ -142,12 +142,15 @@
     <value>The file extension does not comply with the specifications</value>
   </data>
   <data name="NotCanApply" xml:space="preserve">
-    <value>Not authorized to submit this form type</value>
+    <value>You do not have permission to submit this form</value>
   </data>
   <data name="NotCanReview" xml:space="preserve">
-    <value>You do not have permission to approve this document</value>
+    <value>You do not have permission to approve this form</value>
   </data>
   <data name="NotCanVoided" xml:space="preserve">
-    <value>I am not authorized to void this document</value>
+    <value>You do not have permission to void this form</value>
+  </data>
+  <data name="NotCanView" xml:space="preserve">
+    <value>You do not have permission to view this form</value>
   </data>
 </root>

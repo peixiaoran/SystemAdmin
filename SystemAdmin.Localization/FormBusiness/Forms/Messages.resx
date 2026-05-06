@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="SaveFailed" xml:space="preserve">
-    <value>保存失败</value>
+    <value>表单保存失败</value>
   </data>
   <data name="SaveSuccess" xml:space="preserve">
-    <value>保存成功</value>
+    <value>表单保存成功</value>
   </data>
   <data name="AttachmentNotNull" xml:space="preserve">
     <value>附件不能为空</value>
@@ -139,15 +139,18 @@
     <value>附件删除失败</value>
   </data>
   <data name="AttachmentExtensionNotAllow" xml:space="preserve">
-    <value>文件后缀不符合规范</value>
+    <value>附件后缀不符合规范</value>
   </data>
   <data name="NotCanApply" xml:space="preserve">
-    <value>无权申请此类单据</value>
+    <value>无权申请此表单</value>
   </data>
   <data name="NotCanReview" xml:space="preserve">
-    <value>无权审批此单据</value>
+    <value>无权审批此表单</value>
   </data>
   <data name="NotCanVoided" xml:space="preserve">
-    <value>无权作废此单据</value>
+    <value>无权作废此表单</value>
+  </data>
+  <data name="NotCanView" xml:space="preserve">
+    <value>无权查看此表单</value>
   </data>
 </root>

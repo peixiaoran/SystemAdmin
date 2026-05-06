@@ -61,7 +61,7 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 文件后缀不符合规范 的本地化字符串。
+        ///   查找类似 附件后缀不符合规范 的本地化字符串。
         /// </summary>
         internal static string AttachmentExtensionNotAllow {
             get {
@@ -106,7 +106,7 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 无权申请此类单据 的本地化字符串。
+        ///   查找类似 无权申请此表单 的本地化字符串。
         /// </summary>
         internal static string NotCanApply {
             get {
@@ -115,7 +115,7 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 无权审批此单据 的本地化字符串。
+        ///   查找类似 无权审批此表单 的本地化字符串。
         /// </summary>
         internal static string NotCanReview {
             get {
@@ -124,7 +124,16 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 无权作废此单据 的本地化字符串。
+        ///   查找类似 无权查看此表单 的本地化字符串。
+        /// </summary>
+        internal static string NotCanView {
+            get {
+                return ResourceManager.GetString("NotCanView", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 无权作废此表单 的本地化字符串。
         /// </summary>
         internal static string NotCanVoided {
             get {
@@ -133,7 +142,7 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 保存失败 的本地化字符串。
+        ///   查找类似 表单保存失败 的本地化字符串。
         /// </summary>
         internal static string SaveFailed {
             get {
@@ -142,7 +151,7 @@ namespace SystemAdmin.Localization.FormBusiness.Forms {
         }
         
         /// <summary>
-        ///   查找类似 保存成功 的本地化字符串。
+        ///   查找类似 表单保存成功 的本地化字符串。
         /// </summary>
         internal static string SaveSuccess {
             get {

@@ -62,7 +62,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             await _db.Insertable(new PendingReviewEntity
             {
                 FormId = formId,
-                CurrentStepId = startStepId,
+                StepId = startStepId,
                 ReviewUserId = _loginuser.UserId
             }).ExecuteCommandAsync();
 

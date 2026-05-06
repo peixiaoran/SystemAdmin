@@ -14,9 +14,9 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         public long FormId { get; set; }
 
         /// <summary>
-        /// 当前步骤Id
+        /// 步骤Id
         /// </summary>
-        public long CurrentStepId { get; set; }
+        public long StepId { get; set; }
 
         /// <summary>
         /// 待签核员工Id

@@ -3,16 +3,16 @@
 
  Source Server         : 127.0.0.1
  Source Server Type    : SQL Server
- Source Server Version : 17001110 (17.00.1110)
- Source Host           : localhost:1433
+ Source Server Version : 16001000 (16.00.1000)
+ Source Host           : 127.0.0.1:1433
  Source Catalog        : SystemAdmin
  Source Schema         : Form
 
  Target Server Type    : SQL Server
- Target Server Version : 17001110 (17.00.1110)
+ Target Server Version : 16001000 (16.00.1000)
  File Encoding         : 65001
 
- Date: 05/05/2026 21:35:48
+ Date: 06/05/2026 10:30:13
 */
 
 
@@ -470,7 +470,7 @@ GO
 INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [RuleId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2051571275339534336', N'1987217256446300160', N'LVR-2026050004', N'UnderReview', N'1903486709602062340', N'2051186400535121920', N'2032353104544010240', N'1903486709602062340', N'2026-05-05 15:54:43.043', N'2050599298114129920', N'2026-05-05 16:08:14.560')
 GO
 
-INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [RuleId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2051655239114821632', N'1987217256446300160', N'LVR-2026050005', N'UnderReview', N'1903486709602062340', N'2051186271467999232', N'2009898117243211776', N'1903486709602062340', N'2026-05-05 21:28:21.533', N'2050599625240481792', N'2026-05-05 21:33:06.947')
+INSERT INTO [Form].[FormInstance] ([FormId], [FormTypeId], [FormNo], [FormStatus], [ApplicantUserId], [RuleId], [CurrentStepId], [CreatedBy], [CreatedDate], [ModifiedBy], [ModifiedDate]) VALUES (N'2051655239114821632', N'1987217256446300160', N'LVR-2026050005', N'UnderReview', N'1903486709602062340', N'2051186271467999232', N'2032353104544010240', N'1903486709602062340', N'2026-05-05 21:28:21.533', N'2050599625240481792', N'2026-05-05 21:33:06.947')
 GO
 
 
@@ -627,6 +627,9 @@ INSERT INTO [Form].[FormReviewRecord] ([FormId], [StepId], [ReviewResult], [Reje
 GO
 
 INSERT INTO [Form].[FormReviewRecord] ([FormId], [StepId], [ReviewResult], [RejectStepId], [Comment], [ReviewType], [ReviewAppointment], [OriginalUserId], [ReviewUserId], [ReviewDateTime]) VALUES (N'2051655239114821632', N'2009898117243211776', N'Approve', NULL, N'', N'Automatic', N'Actual', N'2050599625240481792', N'2050599625240481792', N'2026-05-05 21:33:06.977')
+GO
+
+INSERT INTO [Form].[FormReviewRecord] ([FormId], [StepId], [ReviewResult], [RejectStepId], [Comment], [ReviewType], [ReviewAppointment], [OriginalUserId], [ReviewUserId], [ReviewDateTime]) VALUES (N'2051655239114821632', N'2009898117243211776', N'Approve', NULL, N'111', N'Manual', N'Actual', N'2050597318784323584', N'2050597318784323584', N'2026-05-06 10:20:59.690')
 GO
 
 
@@ -988,7 +991,7 @@ GO
 
 CREATE TABLE [Form].[PendingReview] (
   [FormId] bigint  NOT NULL,
-  [CurrentStepId] bigint  NOT NULL,
+  [StepId] bigint  NOT NULL,
   [ReviewUserId] bigint  NOT NULL
 )
 GO
@@ -1004,10 +1007,10 @@ EXEC sp_addextendedproperty
 GO
 
 EXEC sp_addextendedproperty
-'MS_Description', N'当前步骤Id',
+'MS_Description', N'步骤Id',
 'SCHEMA', N'Form',
 'TABLE', N'PendingReview',
-'COLUMN', N'CurrentStepId'
+'COLUMN', N'StepId'
 GO
 
 EXEC sp_addextendedproperty
@@ -1027,10 +1030,10 @@ GO
 -- ----------------------------
 -- Records of PendingReview
 -- ----------------------------
-INSERT INTO [Form].[PendingReview] ([FormId], [CurrentStepId], [ReviewUserId]) VALUES (N'2051571275339534336', N'2032353104544010240', N'1903486709602062341')
+INSERT INTO [Form].[PendingReview] ([FormId], [StepId], [ReviewUserId]) VALUES (N'2051571275339534336', N'2032353104544010240', N'1903486709602062341')
 GO
 
-INSERT INTO [Form].[PendingReview] ([FormId], [CurrentStepId], [ReviewUserId]) VALUES (N'2051655239114821632', N'2009898117243211776', N'2050597318784323584')
+INSERT INTO [Form].[PendingReview] ([FormId], [StepId], [ReviewUserId]) VALUES (N'2051655239114821632', N'2032353104544010240', N'1903486709602062341')
 GO
 
 
