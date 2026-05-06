@@ -35,54 +35,54 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         public async Task<bool> FromApprove(ReviewForm reviewForm)
         {
             long formId = long.Parse(reviewForm.FormId);
-
             var (stepInfo, ruleId) = await GetCurrentStepInfo(formId);
 
             // 规则1：手动操作处理当前步骤
             bool hasPendingUsers = await ProcessStepApproval(formId, stepInfo, ReviewType.Manual, reviewForm.Comment);
 
-            // 是否还有待审批人员，没有则跳出
             if (hasPendingUsers)
             {
+                // 会签未完成，通知该步骤剩余待签人（归属人 + 其代理人）
+                await NotifyPendingReviewers(formId, stepInfo.StepId);
                 return true;
             }
-            else
+
+            var nextStep = await GetNextStep(ruleId, stepInfo.StepId);
+
+            if (nextStep.NextStepId == 0)
             {
-                var nextStep = await GetNextStep(ruleId, stepInfo.StepId);
-                if (nextStep.NextStepId == 0)
-                {
-                    await ApproveForm(formId);
-                    return true;
-                }
-
-                // 推进步骤，待审批人初始化交给规则2循环顶部统一处理
-                await AdvanceCurrentStep(formId, nextStep.NextStepId);
-
-                // 规则2：继续检查后续步骤是否自动推进
-                await AutoApproveIfSelfInNextSteps(formId);
-
+                await ApproveForm(formId);
                 return true;
             }
+
+            // 推进步骤
+            await AdvanceCurrentStep(formId, nextStep.NextStepId);
+
+            // 规则2：继续检查后续步骤是否自动推进
+            bool needNotify = await AutoApproveIfSelfInNextSteps(formId);
+
+            if (needNotify)
+            {
+                // 循环停止时 CurrentStepId 已指向需要人工签核的步骤
+                var (currentStepInfo, _) = await GetCurrentStepInfo(formId);
+                await NotifyPendingReviewers(formId, currentStepInfo.StepId);
+            }
+
+            return true;
         }
 
         /// <summary>
         /// 规则2：循环检查后续步骤，根据签核模式决定是否自动推进
-        ///
-        /// 每轮循环取当前步骤，按以下规则处理：
-        ///   跳过条件满足        → 清除待审批，推进下一步
-        ///   步骤不包含自己      → 跳出
-        ///   单签 包含自己       → 自动签核，推进下一步
-        ///   或签 包含自己       → 自动签核（含其余人），推进下一步
-        ///   会签 包含自己       → 自动签核自己
-        ///                           → 仍有其他人未签：跳出
-        ///                           → 已无其他人：推进下一步
         /// </summary>
-        private async Task AutoApproveIfSelfInNextSteps(long formId)
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        private async Task<bool> AutoApproveIfSelfInNextSteps(long formId)
         {
             while (true)
             {
-                // 每轮循环进入时先初始化当前步骤的待审批人
                 var (stepInfo, ruleId) = await GetCurrentStepInfo(formId);
+
+                // 每轮循环进入时先初始化当前步骤的待审批人
                 await EnsurePendingReviewExists(formId, stepInfo.StepId);
 
                 // 跳过条件
@@ -96,107 +96,96 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
                     if (skippedNext.NextStepId == 0)
                     {
-                        // 签核完成
                         await ApproveForm(formId);
-                        break;
+                        return false; // 签核到底，无需通知
                     }
 
                     await AdvanceCurrentStep(formId, skippedNext.NextStepId);
                     continue;
                 }
+
+                // 当前步骤待审批人中是否包含自己（含代理情况）
+                var selfPendingUserId = await _db.Queryable<PendingReviewEntity>()
+                                                 .With(SqlWith.NoLock)
+                                                 .LeftJoin<UserAgentEntity>((pending, agent) => pending.ReviewUserId == agent.SubstituteUserId && agent.StartTime <= DateTime.Now && agent.EndTime >= DateTime.Now)
+                                                 .Where((pending, agent) => pending.FormId == formId && pending.StepId == stepInfo.StepId && (pending.ReviewUserId == _loginuser.UserId || agent.AgentUserId == _loginuser.UserId))
+                                                 .Select((pending, agent) => pending.ReviewUserId)
+                                                 .FirstAsync();
+
+                // 不包含自己，停止自动推进
+                if (selfPendingUserId == 0)
+                {
+                    return true; // 需要通知当前步骤的待签人
+                }
                 else
                 {
-                    // 当前步骤待审批人中是否包含自己（含代理）
-                    var selfPendingUserId = await _db.Queryable<PendingReviewEntity>()
-                                                     .With(SqlWith.NoLock)
-                                                     .LeftJoin<UserAgentEntity>((pending, useragent) => pending.ReviewUserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
-                                                     .Where((pending, useragent) => pending.FormId == formId && pending.StepId == stepInfo.StepId && (pending.ReviewUserId == _loginuser.UserId || useragent.AgentUserId == _loginuser.UserId))
-                                                     .Select((pending, useragent) => pending.ReviewUserId)
-                                                     .FirstAsync();
-
-                    // 不包含自己，停止自动推进
-                    if (selfPendingUserId == 0)
+                    string reviewMode = stepInfo.ReviewMode;
+                    if (reviewMode == ReviewMode.Single.ToEnumString())
                     {
-                        break;
+                        var selfAppointments = await GetStepReviewUsers(formId, stepInfo, _loginuser.UserId);
+
+                        await _db.Deleteable<PendingReviewEntity>()
+                                 .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId)
+                                 .ExecuteCommandAsync();
+
+                        await InsertReviewRecords(formId, stepInfo.StepId, selfAppointments, ReviewType.Automatic, string.Empty, _loginuser.UserId);
                     }
-                    else
+                    else if (reviewMode == ReviewMode.OrSingle.ToEnumString())
                     {
-                        // 按签核模式处理
-                        string reviewMode = stepInfo.ReviewMode;
+                        var selfAppointments = await GetStepReviewUsers(formId, stepInfo, _loginuser.UserId);
 
-                        if (reviewMode == ReviewMode.Single.ToEnumString())
+                        var otherPendingUserIds = await _db.Queryable<PendingReviewEntity>()
+                                                           .With(SqlWith.NoLock)
+                                                           .Where(pending => pending.FormId == formId
+                                                                          && pending.StepId == stepInfo.StepId
+                                                                          && pending.ReviewUserId != selfPendingUserId)
+                                                           .Select(pending => pending.ReviewUserId)
+                                                           .ToListAsync();
+
+                        await _db.Deleteable<PendingReviewEntity>()
+                                 .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId)
+                                 .ExecuteCommandAsync();
+
+                        await InsertReviewRecords(formId, stepInfo.StepId, selfAppointments, ReviewType.Automatic, string.Empty, _loginuser.UserId);
+
+                        foreach (long otherUserId in otherPendingUserIds)
                         {
-                            // 单签：自动签核，直接推进
-                            var selfAppointments = await GetStepReviewUsers(formId, stepInfo, _loginuser.UserId);
-
-                            await _db.Deleteable<PendingReviewEntity>()
-                                     .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId)
-                                     .ExecuteCommandAsync();
-
-                            await InsertReviewRecords(formId, stepInfo.StepId, selfAppointments, ReviewType.Automatic, string.Empty, _loginuser.UserId);
+                            var otherAppointments = await GetStepReviewUsers(formId, stepInfo, otherUserId);
+                            await InsertReviewRecords(formId, stepInfo.StepId, otherAppointments, ReviewType.Automatic, string.Empty, otherUserId);
                         }
-                        else if (reviewMode == ReviewMode.OrSingle.ToEnumString())
+                    }
+                    else if (reviewMode == ReviewMode.AndSingle.ToEnumString())
+                    {
+                        var selfAppointments = await GetStepReviewUsers(formId, stepInfo, _loginuser.UserId);
+
+                        await _db.Deleteable<PendingReviewEntity>()
+                                 .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId && pending.ReviewUserId == selfPendingUserId)
+                                 .ExecuteCommandAsync();
+
+                        await InsertReviewRecords(formId, stepInfo.StepId, selfAppointments, ReviewType.Automatic, string.Empty, _loginuser.UserId);
+
+                        // 会签还有其他人未签，停止自动推进
+                        bool othersPending = await _db.Queryable<PendingReviewEntity>()
+                                                      .With(SqlWith.NoLock)
+                                                      .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId)
+                                                      .AnyAsync();
+                        if (othersPending)
                         {
-                            // 或签：自动签核自己，其余待签人也一并以自动操作记录
-                            var selfAppointments = await GetStepReviewUsers(formId, stepInfo, _loginuser.UserId);
-
-                            // 筛选除了自己，其余人仍需记录
-                            var otherPendingUserIds = await _db.Queryable<PendingReviewEntity>()
-                                                               .With(SqlWith.NoLock)
-                                                               .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId && pending.ReviewUserId != selfPendingUserId)
-                                                               .Select(pending => pending.ReviewUserId)
-                                                               .ToListAsync();
-
-                            await _db.Deleteable<PendingReviewEntity>()
-                                     .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId)
-                                     .ExecuteCommandAsync();
-
-                            await InsertReviewRecords(formId, stepInfo.StepId, selfAppointments, ReviewType.Automatic, string.Empty, _loginuser.UserId);
-
-                            foreach (long otherUserId in otherPendingUserIds)
-                            {
-                                // 其他人的自动操作记录：操作人视为归属人本人（自动系统代替）
-                                var otherAppointments = await GetStepReviewUsers(formId, stepInfo, otherUserId);
-                                await InsertReviewRecords(formId, stepInfo.StepId, otherAppointments, ReviewType.Automatic, string.Empty, otherUserId);
-                            }
-                        }
-                        else if (reviewMode == ReviewMode.AndSingle.ToEnumString())
-                        {
-                            // 会签：只签核自己
-                            var selfAppointments = await GetStepReviewUsers(formId, stepInfo, _loginuser.UserId);
-
-                            await _db.Deleteable<PendingReviewEntity>()
-                                     .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId && pending.ReviewUserId == selfPendingUserId)
-                                     .ExecuteCommandAsync();
-
-                            await InsertReviewRecords(formId, stepInfo.StepId, selfAppointments, ReviewType.Automatic, string.Empty, _loginuser.UserId);
-
-                            // 会签还有其他人未签，停止自动推进
-                            bool othersPending = await _db.Queryable<PendingReviewEntity>()
-                                                          .With(SqlWith.NoLock)
-                                                          .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId)
-                                                          .AnyAsync();
-                            if (othersPending)
-                            {
-                                break;
-                            }
+                            return true; // 需要通知剩余待签人
                         }
                     }
                 }
 
-                
+                // 签核完成，推进到下一步骤
                 var nextStep = await GetNextStep(ruleId, stepInfo.StepId);
+
                 if (nextStep.NextStepId == 0)
                 {
-                    // 签核完成
                     await ApproveForm(formId);
-                    break;
+                    return false; // 签核到底，无需通知
                 }
-                else
-                {
-                    // 推进到下一步骤
-                    await AdvanceCurrentStep(formId, nextStep.NextStepId);
-                }
+
+                await AdvanceCurrentStep(formId, nextStep.NextStepId);
             }
         }
 
@@ -1056,7 +1045,51 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             }
         }
 
+        #region 邮件通知
+        /// <summary>
+        /// 查询指定步骤的待签核人（归属人 + 其当前有效代理人），去重后发送邮件通知
+        /// </summary>
+        private async Task NotifyPendingReviewers(long formId, long stepId)
+        {
+            var now = DateTime.Now;
 
+            var pendingUserIds = await _db.Queryable<PendingReviewEntity>()
+                                          .With(SqlWith.NoLock)
+                                          .Where(pending => pending.FormId == formId && pending.StepId == stepId)
+                                          .Select(pending => pending.ReviewUserId)
+                                          .ToListAsync();
+
+            if (!pendingUserIds.Any())
+                return;
+
+            // 查出每个归属人当前有效的代理人，一并纳入通知列表
+            var agentUserIds = await _db.Queryable<UserAgentEntity>()
+                                        .With(SqlWith.NoLock)
+                                        .Where(agent => pendingUserIds.Contains(agent.SubstituteUserId) && agent.StartTime <= now && agent.EndTime >= now)
+                                        .Select(agent => agent.AgentUserId)
+                                        .ToListAsync();
+
+            var notifyUserIds = pendingUserIds
+                .Concat(agentUserIds)
+                .Distinct()
+                .ToList();
+
+            await SendReviewNotification(notifyUserIds);
+        }
+
+        /// <summary>
+        /// 发送签核邮件通知
+        /// </summary>
+        /// <param name="notifyUserIds">需要通知的用户 Id 列表（包含归属人及其代理人）</param>
+        private async Task SendReviewNotification(List<long> notifyUserIds)
+        {
+            // TODO: 实现邮件发送逻辑
+            await Task.CompletedTask;
+        }
+        #endregion
+
+
+        #region 工具
         /// <summary>
         /// 排序
         /// </summary>
@@ -1101,5 +1134,6 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             AppointmentType.AutoConcurrent.ToEnumString(),
             AppointmentType.AutoConcurrentAgent.ToEnumString()
         );
+        #endregion
     }
 }
