@@ -1,14 +1,19 @@
 ﻿namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Upsert
 {
     /// <summary>
-    /// 审批表单提交类
+    /// 驳回表单提交类
     /// </summary>
-    public class ReviewForm
+    public class RejectForm
     {
         /// <summary>
         /// 表单Id
         /// </summary>
         public string FormId { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 驳回至步骤Id
+        /// </summary>
+        public string RejectStepId { get; set; } = "0";
 
         /// <summary>
         /// 审批意见
