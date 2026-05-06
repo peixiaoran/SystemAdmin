@@ -119,14 +119,14 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
                 if (agentIsSubAgent)
                 {
                     // 代理员工已被其他员工代理，不能作为代理员工
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentAlreadyAgented"));
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AlreadyAgented"));
                 }
                 // 查询代理员工已代理其他员工
                 bool agentIsAgent = await _userAgentRepo.GetAgentIsAgent(long.Parse(upsert.AgentUserId));
                 if (agentIsAgent)
                 {
                     // 代理员工已代理其他员工，不可多人员代理
-                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}AgentHasMultipleTargets"));
+                    return Result<int>.Failure(500, _localization.ReturnMsg($"{_this}HasMultipleTargets"));
                 }
                 else
                 {

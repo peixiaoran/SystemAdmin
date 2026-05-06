@@ -1167,20 +1167,20 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         private string BuildOrderBy(bool isSingle, bool isAuto)
         {
             if (!isSingle)
-                return "ORDER BY t.HireDate DESC";
+                return "ORDER BY combined.HireDate DESC";
 
             string c0 = isAuto ? AppointmentType.AutoActual.ToEnumString() : AppointmentType.Actual.ToEnumString();
             string c1 = isAuto ? AppointmentType.AutoAgent.ToEnumString() : AppointmentType.Agent.ToEnumString();
             string c2 = isAuto ? AppointmentType.AutoConcurrent.ToEnumString() : AppointmentType.Concurrent.ToEnumString();
             string c3 = isAuto ? AppointmentType.AutoConcurrentAgent.ToEnumString() : AppointmentType.ConcurrentAgent.ToEnumString();
 
-            return $@"ORDER BY CASE t.AppointmentTypeCode
+            return $@"ORDER BY CASE combined.AppointmentTypeCode
                         WHEN '{c0}' THEN 0
                         WHEN '{c1}' THEN 1
                         WHEN '{c2}' THEN 2
                         WHEN '{c3}' THEN 3
                         ELSE 9
-                    END ASC, t.HireDate DESC";
+                    END ASC, combined.HireDate DESC";
         }
 
         /// <summary>

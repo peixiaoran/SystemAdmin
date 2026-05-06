@@ -165,7 +165,7 @@
   <data name="UserAgentAlreadyAgented" xml:space="preserve">
     <value>代理员工已被其他员工代理，不能作为代理员工</value>
   </data>
-  <data name="UserAgentHasMultipleTargets" xml:space="preserve">
+  <data name="HasMultipleTargets" xml:space="preserve">
     <value>代理员工已代理其他员工，不可多人员代理</value>
   </data>
 </root>

@@ -165,7 +165,7 @@
   <data name="UserAgentAlreadyAgented" xml:space="preserve">
     <value>The agent employee is already delegated by another employee and cannot act as an agent.</value>
   </data>
-  <data name="UserAgentHasMultipleTargets" xml:space="preserve">
+  <data name="HasMultipleTargets" xml:space="preserve">
     <value>The agent employee already delegates another employee. Multiple delegations are not allowed</value>
   </data>
 </root>

@@ -61,6 +61,15 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         }
         
         /// <summary>
+        ///   查找类似 代理员工已代理其他员工，不可多人员代理 的本地化字符串。
+        /// </summary>
+        internal static string HasMultipleTargets {
+            get {
+                return ResourceManager.GetString("HasMultipleTargets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 代理员工已被其他员工代理，不能作为代理员工 的本地化字符串。
         /// </summary>
         internal static string UserAgentAlreadyAgented {
@@ -84,15 +93,6 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.UserSettings {
         internal static string UserAgentDeleteSuccess {
             get {
                 return ResourceManager.GetString("UserAgentDeleteSuccess", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   查找类似 代理员工已代理其他员工，不可多人员代理 的本地化字符串。
-        /// </summary>
-        internal static string UserAgentHasMultipleTargets {
-            get {
-                return ResourceManager.GetString("UserAgentHasMultipleTargets", resourceCulture);
             }
         }
         

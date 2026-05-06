@@ -218,7 +218,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// <param name="formId"></param>
         /// <param name="loginUserId"></param>
         /// <returns></returns>
-        public Task<int> VoidedForm(long formId,long loginUserId)
+        public Task<int> VoidedForm(long formId, long loginUserId)
         {
             return _db.Updateable<FormInstanceEntity>()
                       .SetColumns(instance => new FormInstanceEntity

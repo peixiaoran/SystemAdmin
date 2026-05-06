@@ -1059,29 +1059,40 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                           .Select(pending => pending.ReviewUserId)
                                           .ToListAsync();
 
-            if (!pendingUserIds.Any())
-                return;
+            var agentEntities = await _db.Queryable<UserAgentEntity>()
+                                         .With(SqlWith.NoLock)
+                                         .Where(agent => pendingUserIds.Contains(agent.SubstituteUserId) && agent.StartTime <= now && agent.EndTime >= now)
+                                         .Select(agent => new { agent.SubstituteUserId, agent.AgentUserId })
+                                         .ToListAsync();
 
-            // 查出每个归属人当前有效的代理人，一并纳入通知列表
-            var agentUserIds = await _db.Queryable<UserAgentEntity>()
+            for (var i = 0; i < pendingUserIds.Count; i++)
+            {
+                var agent = agentEntities.FirstOrDefault(agent => agent.SubstituteUserId == pendingUserIds[i]);
+                if (agent != null)
+                {
+                    pendingUserIds[i] = agent.AgentUserId;
+                }
+            }
+
+            var notifyUserIds = pendingUserIds.Distinct().ToList();
+
+            var userInfoList = await _db.Queryable<UserInfoEntity>()
                                         .With(SqlWith.NoLock)
-                                        .Where(agent => pendingUserIds.Contains(agent.SubstituteUserId) && agent.StartTime <= now && agent.EndTime >= now)
-                                        .Select(agent => agent.AgentUserId)
+                                        .Where(user => notifyUserIds.Contains(user.UserId) && user.IsRealtimeNotification == 1)
                                         .ToListAsync();
 
-            var notifyUserIds = pendingUserIds
-                .Concat(agentUserIds)
-                .Distinct()
-                .ToList();
-
-            await SendReviewNotification(notifyUserIds);
+            foreach (var user in userInfoList)
+            {
+                await SendReviewNotification(user.Email);
+            }
         }
 
         /// <summary>
         /// 发送签核邮件通知
         /// </summary>
-        /// <param name="notifyUserIds">需要通知的用户 Id 列表（包含归属人及其代理人）</param>
-        private async Task SendReviewNotification(List<long> notifyUserIds)
+        /// <param name="toUserId">主收人（代理人 或 无代理时的本人）</param>
+        /// <param name="ccUserId">抄送人（被代理人且满足抄送条件），无则为 null</param>
+        private async Task SendReviewNotification(string email)
         {
             // TODO: 实现邮件发送逻辑
             await Task.CompletedTask;
