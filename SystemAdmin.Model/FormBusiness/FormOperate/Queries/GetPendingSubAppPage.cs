@@ -18,11 +18,6 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Queries
         public string FormTypeId { get; set; } = string.Empty;
 
         /// <summary>
-        /// 表单状态
-        /// </summary>
-        public string FormStatus {  get; set; } = string.Empty;
-
-        /// <summary>
         /// 表单单号
         /// </summary>
         public string FormNo { get; set; } = string.Empty;

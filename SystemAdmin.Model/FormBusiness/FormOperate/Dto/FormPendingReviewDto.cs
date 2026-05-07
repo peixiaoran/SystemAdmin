@@ -21,11 +21,6 @@
         public string ReviewUserName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 审批身份名称
-        /// </summary>
-        public string AppointmentTypeName { get; set; } = string.Empty;
-
-        /// <summary>
         /// 代理人工号
         /// </summary>
         public string AgentUserNo { get; set; } = string.Empty;

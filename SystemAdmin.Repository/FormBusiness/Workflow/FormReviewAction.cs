@@ -391,12 +391,12 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             #region SQL
 
             string sql = $@"SELECT {topN}
-                                t.UserId,
+                                t.ReviewUserId,
                                 t.AgentUserId,
                                 t.AppointmentTypeCode
                             FROM (
                                 SELECT
-                                    users.UserId,
+                                    users.UserId AS ReviewUserId,
                                     ISNULL(agentusers.UserId, 0)           AS AgentUserId,
                                     CASE WHEN agent.AgentUserId IS NOT NULL THEN @Agent ELSE @Actual END AS AppointmentTypeCode,
                                     users.HireDate
@@ -451,10 +451,10 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             var exactResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
                 SELECT {topN}
-                    t.UserId, t.AgentUserId, t.AppointmentTypeCode
+                    t.ReviewUserId, t.AgentUserId, t.AppointmentTypeCode
                 FROM (
                     SELECT
-                        users.UserId,
+                        users.UserId AS ReviewUserId,
                         ISNULL(agentusers.UserId, 0)           AS AgentUserId,
                         CASE WHEN agent.AgentUserId IS NOT NULL THEN @Agent ELSE @Actual END AS AppointmentTypeCode,
                         users.HireDate
@@ -1098,6 +1098,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         #region 邮件通知
+
         /// <summary>
         /// 查询指定步骤的待签核人
         /// </summary>
@@ -1145,12 +1146,14 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     Body = "您有新的待签核任务，请及时处理。"
                 };
 
-                await _mailKitEmail.SendAsync(emailMsg);
+                //await _mailKitEmail.SendAsync(emailMsg);
             }
         }
 
+        #endregion
 
         #region 工具
+
         /// <summary>
         /// 排序
         /// </summary>
@@ -1195,6 +1198,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             AppointmentType.AutoConcurrent.ToEnumString(),
             AppointmentType.AutoConcurrentAgent.ToEnumString()
         );
+
         #endregion
     }
 }

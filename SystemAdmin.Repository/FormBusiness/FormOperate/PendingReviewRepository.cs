@@ -7,6 +7,7 @@ using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
 using SystemAdmin.Model.FormBusiness.FormOperate.Queries;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
+using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity;
@@ -111,11 +112,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                 query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) =>
                     formtype.FormTypeId == long.Parse(getPage.FormTypeId));
             }
-            // 表单状态
-            if (!string.IsNullOrEmpty(getPage.FormStatus))
-            {
-                query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => instance.FormStatus == getPage.FormStatus);
-            }
 
             // 排序
             query = query.OrderBy((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new { instance.CreatedDate });
@@ -175,11 +171,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                 query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) =>
                     formtype.FormTypeId == long.Parse(getPage.FormTypeId));
             }
-            // 表单状态
-            if (!string.IsNullOrEmpty(getPage.FormStatus))
-            {
-                query = query.Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => instance.FormStatus == getPage.FormStatus);
-            }
 
             // 排序
             query = query.OrderBy((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new { instance.CreatedDate });
@@ -214,13 +205,29 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<List<long>> GetFormPendingReviewUserId(long formId)
+        public async Task<List<FormPendingReviewDto>> GetFormPendingReviewUserId(long formId)
         {
             return await _db.Queryable<PendingReviewEntity>()
                             .With(SqlWith.NoLock)
-                            .Where(pending => pending.FormId == formId)
-                            .Select(pending => pending.ReviewUserId)
-                            .ToListAsync();
+                            .InnerJoin<WorkflowStepEntity>((pending, step) => pending.StepId == step.StepId)
+                            .InnerJoin<UserInfoEntity>((pending, step, user) => pending.ReviewUserId == user.UserId)
+                            .LeftJoin<UserAgentEntity>((pending, step, user, useragent) => user.UserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
+                            .LeftJoin<UserInfoEntity>((pending, step, user, useragent, agentuser) => useragent.AgentUserId == agentuser.UserId)
+                            .Where((pending, step, user, useragent, agentuser) => pending.FormId == formId)
+                            .Select((pending, step, user, useragent, agentuser) => new FormPendingReviewDto
+                            {
+                                StepName = _lang.Locale == "zh-CN"
+                                           ? step.StepNameCn
+                                           : step.StepNameEn,
+                                ReviewUserNo = user.UserNo,
+                                ReviewUserName = _lang.Locale == "zh-CN"
+                                           ? user.UserNameCn
+                                           : user.UserNameEn,
+                                AgentUserNo = agentuser.UserNo,
+                                AgentUserName =_lang.Locale == "zh-CN"
+                                           ? agentuser.UserNameCn
+                                           : agentuser.UserNameEn,
+                            }).ToListAsync();
         }
 
         /// <summary>

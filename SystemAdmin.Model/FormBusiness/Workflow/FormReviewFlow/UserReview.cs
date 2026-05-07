@@ -31,6 +31,11 @@ namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow
         public string AgentUserName { get; set; } = string.Empty;
 
         /// <summary>
+        /// 审批身份
+        /// </summary>
+        public string AppointmentTypeCode { get; set; } = string.Empty;
+
+        /// <summary>
         /// 审批身份名称
         /// </summary>
         public string AppointmentTypeName { get; set; } = string.Empty;
