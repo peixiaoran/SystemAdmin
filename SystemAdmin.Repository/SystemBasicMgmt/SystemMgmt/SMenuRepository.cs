@@ -162,21 +162,21 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             query.OrderBy((pmenu, dic) => pmenu.SortOrder);
 
             var page = await query.Select((pmenu, dic) => new MenuInfoDto
-                                  {
-                                      MenuId = pmenu.MenuId,
-                                      MenuCode = pmenu.MenuCode,
-                                      MenuNameCn = pmenu.MenuNameCn,
-                                      MenuNameEn = pmenu.MenuNameEn,
-                                      MenuType = pmenu.MenuType,
-                                      MenuTypeName = _lang.Locale == "zh-CN"
-                                                     ? dic.DicNameCn
-                                                     : dic.DicNameEn,
-                                      MenuIcon = pmenu.MenuIcon,
-                                      SortOrder = pmenu.SortOrder,
-                                      IsVisible = pmenu.IsVisible,
-                                      Path = pmenu.Path,
-                                      Remark = pmenu.Remark,
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            {
+                MenuId = pmenu.MenuId,
+                MenuCode = pmenu.MenuCode,
+                MenuNameCn = pmenu.MenuNameCn,
+                MenuNameEn = pmenu.MenuNameEn,
+                MenuType = pmenu.MenuType,
+                MenuTypeName = _lang.Locale == "zh-CN"
+                               ? dic.DicNameCn
+                               : dic.DicNameEn,
+                MenuIcon = pmenu.MenuIcon,
+                SortOrder = pmenu.SortOrder,
+                IsVisible = pmenu.IsVisible,
+                Path = pmenu.Path,
+                Remark = pmenu.Remark,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<MenuInfoDto>.Ok(page.Adapt<List<MenuInfoDto>>(), totalCount, "");
         }
     }

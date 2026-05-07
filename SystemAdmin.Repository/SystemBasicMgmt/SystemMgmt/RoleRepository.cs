@@ -145,16 +145,16 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         public async Task<List<RoleModuleDto>> GetRoleModuleList(long roleId)
         {
             var entityList = await _db.Queryable<ModuleInfoEntity>()
-                                          .With(SqlWith.NoLock)
-                                          .LeftJoin<RoleModuleEntity>((module, rolemodule) => module.ModuleId == rolemodule.ModuleId && rolemodule.RoleId == roleId)
-                                          .Select((module, rolemodule) => new RoleModuleDto
-                                          {
-                                              ModuleId = module.ModuleId,
-                                              ModuleName = _lang.Locale == "zh-CN"
-                                                           ? module.ModuleNameCn
-                                                           : module.ModuleNameEn,
-                                              IsChecked = SqlFunc.IsNull(rolemodule.RoleId, 0) > 0
-                                          }).ToListAsync();
+                                      .With(SqlWith.NoLock)
+                                      .LeftJoin<RoleModuleEntity>((module, rolemodule) => module.ModuleId == rolemodule.ModuleId && rolemodule.RoleId == roleId)
+                                      .Select((module, rolemodule) => new RoleModuleDto
+                                      {
+                                          ModuleId = module.ModuleId,
+                                          ModuleName = _lang.Locale == "zh-CN"
+                                                       ? module.ModuleNameCn
+                                                       : module.ModuleNameEn,
+                                          IsChecked = SqlFunc.IsNull(rolemodule.RoleId, 0) > 0
+                                      }).ToListAsync();
             return entityList;
         }
 
@@ -168,8 +168,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         {
             return await _db.Queryable<MenuInfoEntity>()
                             .With(SqlWith.NoLock)
-                            .LeftJoin<RoleMenuEntity>((menu, rolemenu) => menu.MenuId == rolemenu.MenuId && rolemenu.RoleId ==roleId)
-                            .Where((menu,rolemenu)=> menu.ModuleId == moduleId )
+                            .LeftJoin<RoleMenuEntity>((menu, rolemenu) => menu.MenuId == rolemenu.MenuId && rolemenu.RoleId == roleId)
+                            .Where((menu, rolemenu) => menu.ModuleId == moduleId)
                             .OrderBy((menu, rolemenu) => menu.SortOrder)
                             .Select((menu, rolemenu) => new RoleMenuDto
                             {

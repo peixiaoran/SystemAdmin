@@ -169,13 +169,20 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
 
             // 向上追溯所有祖先节点
             var allDeptIds = matchedNodes.Select(dept => dept.DepartmentId).ToHashSet();
+
             foreach (var node in matchedNodes)
             {
                 var parentId = node.ParentId;
                 while (parentId != 0 && nodeMap.TryGetValue(parentId, out var parent))
                 {
-                    if (!allDeptIds.Add(parentId)) break;
-                    parentId = parent.ParentId;
+                    if (!allDeptIds.Add(parentId))
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        parentId = parent.ParentId;
+                    }
                 }
             }
 
@@ -194,8 +201,8 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                         ParentId = dept.ParentId,
                                         DepartmentLevelId = dept.DepartmentLevelId,
                                         DepartmentLevelName = _lang.Locale == "zh-CN"
-                                                            ? level.DepartmentLevelNameCn
-                                                            : level.DepartmentLevelNameEn,
+                                                              ? level.DepartmentLevelNameCn
+                                                              : level.DepartmentLevelNameEn,
                                         Description = dept.Description,
                                         SortOrder = dept.SortOrder,
                                         Landline = dept.Landline,

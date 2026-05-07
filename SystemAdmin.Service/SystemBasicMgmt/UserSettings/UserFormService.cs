@@ -73,8 +73,8 @@ namespace SystemAdmin.Service.SystemBasicMgmt.UserSettings
         {
             try
             {
-                var treeList = await _userFormBindRepo.GetUserFormViewTree(long.Parse(userId));
-                return Result<List<UserFormViewTreeDto>>.Ok(treeList, "");
+                var tree = await _userFormBindRepo.GetUserFormViewTree(long.Parse(userId));
+                return Result<List<UserFormViewTreeDto>>.Ok(tree, "");
             }
             catch (Exception ex)
             {

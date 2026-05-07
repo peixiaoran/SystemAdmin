@@ -125,36 +125,36 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             query = query.OrderBy((user, userpart, dept, position, p_userdept, p_userpos) => new { PositionInfoOrder = position.SortOrder, user.HireDate, PartTimePositionOrder = p_userpos.SortOrder });
 
             var page = await query.Select((user, userpart, dept, position, p_userdept, p_userpos) => new UserPartTimeDto
-                                  {
-                                      UserId = user.UserId,
-                                      UserNo = user.UserNo,
-                                      // 员工姓名
-                                      UserName = _lang.Locale == "zh-CN"
+            {
+                UserId = user.UserId,
+                UserNo = user.UserNo,
+                // 员工姓名
+                UserName = _lang.Locale == "zh-CN"
                                                  ? user.UserNameCn
                                                  : user.UserNameEn,
-                                      // 部门名称
-                                      DepartmentName = _lang.Locale == "zh-CN"
+                // 部门名称
+                DepartmentName = _lang.Locale == "zh-CN"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
-                                      // 职级名称
-                                      PositionName = _lang.Locale == "zh-CN"
+                // 职级名称
+                PositionName = _lang.Locale == "zh-CN"
                                                  ? position.PositionNameCn
                                                  : position.PositionNameEn,
-                                      // 是否签核
-                                      IsApproval = user.IsApproval,
-                                      // 兼任部门名称
-                                      PartTimeDeptId = userpart.PartTimeDeptId,
-                                      PartTimeDeptName = _lang.Locale == "zh-CN"
+                // 是否签核
+                IsApproval = user.IsApproval,
+                // 兼任部门名称
+                PartTimeDeptId = userpart.PartTimeDeptId,
+                PartTimeDeptName = _lang.Locale == "zh-CN"
                                                  ? p_userdept.DepartmentNameCn
                                                  : p_userdept.DepartmentNameEn,
-                                      // 兼任职级名称
-                                      PartTimePositionId = userpart.PartTimePositionId,
-                                      PartTimePositionName = _lang.Locale == "zh-CN"
+                // 兼任职级名称
+                PartTimePositionId = userpart.PartTimePositionId,
+                PartTimePositionName = _lang.Locale == "zh-CN"
                                                  ? p_userpos.PositionNameCn
                                                  : p_userpos.PositionNameEn,
-                                      StartTime = userpart.StartTime,
-                                      EndTime = userpart.EndTime,
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+                StartTime = userpart.StartTime,
+                EndTime = userpart.EndTime,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserPartTimeDto>.Ok(page, totalCount, "");
         }
 
@@ -178,8 +178,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             // 员工工号
             if (!string.IsNullOrEmpty(getPage.UserNo))
             {
-                query = query.Where((user, dept, position, nation, labor) =>
-                    user.UserNo == getPage.UserNo);
+                query = query.Where((user, dept, position, nation, labor) => user.UserNo == getPage.UserNo);
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getPage.UserName))
@@ -199,26 +198,26 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             query = query.OrderBy((user, dept, position, nation, labor) => new { position.SortOrder, user.HireDate });
 
             var page = await query.Select((user, dept, position, nation, labor) => new UserPartTimeViewDto
-                                  {
-                                       UserId = user.UserId,
-                                       UserNo = user.UserNo,
-                                       UserName = _lang.Locale == "zh-CN"
-                                                  ? user.UserNameCn
-                                                  : user.UserNameEn,
-                                       DepartmentName = _lang.Locale == "zh-CN"
-                                                  ? dept.DepartmentNameCn
-                                                  : dept.DepartmentNameEn,
-                                       PositionName = _lang.Locale == "zh-CN"
-                                                  ? position.PositionNameCn
-                                                  : position.PositionNameEn,
-                                       NationalityName = _lang.Locale == "zh-CN"
-                                                  ? nation.NationNameCn
-                                                  : nation.NationNameEn,
-                                       LaborName = _lang.Locale == "zh-CN"
-                                                  ? labor.LaborNameCn
-                                                  : labor.LaborNameEn,
-                                       IsApproval = user.IsApproval,
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            {
+                UserId = user.UserId,
+                UserNo = user.UserNo,
+                UserName = _lang.Locale == "zh-CN"
+                           ? user.UserNameCn
+                           : user.UserNameEn,
+                DepartmentName = _lang.Locale == "zh-CN"
+                           ? dept.DepartmentNameCn
+                           : dept.DepartmentNameEn,
+                PositionName = _lang.Locale == "zh-CN"
+                           ? position.PositionNameCn
+                           : position.PositionNameEn,
+                NationalityName = _lang.Locale == "zh-CN"
+                           ? nation.NationNameCn
+                           : nation.NationNameEn,
+                LaborName = _lang.Locale == "zh-CN"
+                           ? labor.LaborNameCn
+                           : labor.LaborNameEn,
+                IsApproval = user.IsApproval,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserPartTimeViewDto>.Ok(page, totalCount, "");
         }
 
@@ -252,6 +251,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         public async Task<bool> GetUserPartTimeIsExist(long userId)
         {
             return await _db.Queryable<UserPartTimeEntity>()
+                            .With(SqlWith.NoLock)
                             .Where(userparttime => userparttime.UserId == userId)
                             .AnyAsync();
         }
@@ -280,6 +280,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         public async Task<bool> GetUserPartTimeCount(long userId, long partTimeDeptId, long partTimePositionId)
         {
             return await _db.Queryable<UserPartTimeEntity>()
+                            .With(SqlWith.NoLock)
                             .Where(userparttime => userparttime.UserId == userId && userparttime.PartTimeDeptId == partTimeDeptId && userparttime.PartTimePositionId == partTimePositionId)
                             .AnyAsync();
         }
@@ -292,6 +293,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         public async Task<UserPartTimeDto> GetUserPartTimeList(GetUserPartTimeEntity getEntity)
         {
             var entity = await _db.Queryable<UserPartTimeEntity>()
+                                  .With(SqlWith.NoLock)
                                   .Where(userparttime => userparttime.UserId == long.Parse(getEntity.UserId) && userparttime.PartTimeDeptId == long.Parse(getEntity.Old_PartTimeDeptId) && userparttime.PartTimePositionId == long.Parse(getEntity.Old_PartTimePositionId))
                                   .FirstAsync();
             return entity.Adapt<UserPartTimeDto>();

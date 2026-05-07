@@ -77,7 +77,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 请假单签核")]
+        [EndpointSummary("[请假单] 签核请假单")]
         public async Task<Result<bool>> LeaveFromApprove([FromBody] ReviewForm reviewForm)
         {
             return await _leaveFormService.LeaveFromApprove(reviewForm);

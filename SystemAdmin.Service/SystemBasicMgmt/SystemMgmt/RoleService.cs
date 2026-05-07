@@ -104,7 +104,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                     int delRoleModuleCount = await _roleRepo.DeleleRoleModule(long.Parse(roleId));
                     // 删除角色菜单绑定
                     int delRoleMenuCount = await _roleRepo.DeleteRoleMenu(long.Parse(roleId));
-                   
+
                     await _db.CommitTranAsync();
                     return delRoleCount >= 1
                             ? Result<int>.Ok(delRoleCount, _localization.ReturnMsg($"{_this}DeleteSuccess"))
@@ -271,7 +271,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 var insertRoleModuleCount = await _roleRepo.InsertRoleModule(insertRoleModuleList);
                 await _db.CommitTranAsync();
 
-                return Result<int>.Ok(insertRoleModuleCount, _localization.ReturnMsg($"{_this}RoleModuleUpdateSuccess")); 
+                return Result<int>.Ok(insertRoleModuleCount, _localization.ReturnMsg($"{_this}RoleModuleUpdateSuccess"));
             }
             catch (Exception ex)
             {
@@ -295,16 +295,16 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemMgmt
                 var delMenuIds = await _roleRepo.GetModuleMenuIds(long.Parse(roleMenuUpsert.ModuleId));
                 var delRoleMenuIdCount = await _roleRepo.DeleteRoleMenu(long.Parse(roleMenuUpsert.RoleId), delMenuIds);
                 // 再新增角色菜单绑定
-                List<RoleMenuEntity> insertRoleMenuList = roleMenuUpsert.SelectedMenuIds
-                                     .Select(menuid => new RoleMenuEntity
-                                     {
-                                         RoleId = long.Parse(roleMenuUpsert.RoleId),
-                                         MenuId = long.Parse(menuid),
-                                         CreatedBy = _loginuser.UserId,
-                                         CreatedDate = DateTime.Now,
-                                         ModifiedBy = _loginuser.UserId,
-                                         ModifiedDate = DateTime.Now,
-                                     }).ToList();
+                var insertRoleMenuList = roleMenuUpsert.SelectedMenuIds
+                .Select(menuid => new RoleMenuEntity
+                {
+                    RoleId = long.Parse(roleMenuUpsert.RoleId),
+                    MenuId = long.Parse(menuid),
+                    CreatedBy = _loginuser.UserId,
+                    CreatedDate = DateTime.Now,
+                    ModifiedBy = _loginuser.UserId,
+                    ModifiedDate = DateTime.Now,
+                }).ToList();
                 var insertRoleMenuCount = await _roleRepo.InsertRoleMenu(insertRoleMenuList);
                 await _db.CommitTranAsync();
 

@@ -61,7 +61,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             // 检查当前用户是否曾经参与过审批
             bool hasReviewRecord = await _db.Queryable<FormReviewRecordEntity>()
                                             .With(SqlWith.NoLock)
-                                            .Where(record => record.FormId == formId && (record.ReviewUserId == _loginuser.UserId || record.OriginalUserId == _loginuser.UserId))
+                                            .Where(record => record.FormId == formId && (record.OperationUserId == _loginuser.UserId || record.OriginalUserId == _loginuser.UserId))
                                             .AnyAsync();
 
             return hasReviewRecord;

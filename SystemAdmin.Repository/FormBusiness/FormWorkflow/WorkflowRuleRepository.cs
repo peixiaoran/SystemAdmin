@@ -181,18 +181,18 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
             query = query.OrderBy((rule, position) => rule.SortOrder);
 
             var page = await query.Select((rule, position) => new WorkflowRuleDto
-                             {
-                                 RuleId = rule.RuleId,
-                                 FormTypeId = rule.FormTypeId,
-                                 RuleNameCn = rule.RuleNameCn,
-                                 RuleNameEn = rule.RuleNameEn,
-                                 PositionId = rule.PositionId,
-                                 PositionName = _lang.Locale == "zh-CN"
-                                                ? position.PositionNameCn
-                                                : position.PositionNameEn,
-                                 Guidance = rule.Guidance,
-                                 SortOrder = rule.SortOrder,
-                             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            {
+                RuleId = rule.RuleId,
+                FormTypeId = rule.FormTypeId,
+                RuleNameCn = rule.RuleNameCn,
+                RuleNameEn = rule.RuleNameEn,
+                PositionId = rule.PositionId,
+                PositionName = _lang.Locale == "zh-CN"
+                               ? position.PositionNameCn
+                               : position.PositionNameEn,
+                Guidance = rule.Guidance,
+                SortOrder = rule.SortOrder,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<WorkflowRuleDto>.Ok(page, totalCount);
         }
     }

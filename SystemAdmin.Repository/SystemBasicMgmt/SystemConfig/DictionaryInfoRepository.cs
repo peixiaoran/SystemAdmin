@@ -141,18 +141,18 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemConfig
             query = query.OrderBy((dicinfo, moduleinfo) => dicinfo.SortOrder);
 
             var page = await query.Select((dicinfo, moduleinfo) => new DictionaryInfoDto
-                                  {
-                                      DicId = dicinfo.DicId,
-                                      ModuleId = dicinfo.ModuleId,
-                                      ModuleName = _lang.Locale == "zh-CN"
-                                                   ? moduleinfo.ModuleNameCn
-                                                   : moduleinfo.ModuleNameEn,
-                                      DicType = dicinfo.DicType,
-                                      DicCode = dicinfo.DicCode,
-                                      DicNameCn = dicinfo.DicNameCn,
-                                      DicNameEn = dicinfo.DicNameEn,
-                                      SortOrder = dicinfo.SortOrder
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            {
+                DicId = dicinfo.DicId,
+                ModuleId = dicinfo.ModuleId,
+                ModuleName = _lang.Locale == "zh-CN"
+                             ? moduleinfo.ModuleNameCn
+                             : moduleinfo.ModuleNameEn,
+                DicType = dicinfo.DicType,
+                DicCode = dicinfo.DicCode,
+                DicNameCn = dicinfo.DicNameCn,
+                DicNameEn = dicinfo.DicNameEn,
+                SortOrder = dicinfo.SortOrder
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<DictionaryInfoDto>.Ok(page.Adapt<List<DictionaryInfoDto>>(), totalCount, "");
         }
 

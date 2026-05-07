@@ -342,24 +342,24 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             query = query.OrderBy((user, userrole, dept, position, nation) => new { position.SortOrder, user.HireDate });
 
             var page = await query.Select((user, userrole, dept, position, nation) => new UserInfoPageDto
-                                  {
-                                      UserId = user.UserId,
-                                      DepartmentId = user.DepartmentId,
-                                      DepartmentName = _lang.Locale == "zh-CN"
+            {
+                UserId = user.UserId,
+                DepartmentId = user.DepartmentId,
+                DepartmentName = _lang.Locale == "zh-CN"
                                                        ? dept.DepartmentNameCn
                                                        : dept.DepartmentNameEn,
-                                      UserNo = user.UserNo,
-                                      UserNameCn = user.UserNameCn,
-                                      UserNameEn = user.UserNameEn,
-                                      PositionName = _lang.Locale == "zh-CN"
+                UserNo = user.UserNo,
+                UserNameCn = user.UserNameCn,
+                UserNameEn = user.UserNameEn,
+                PositionName = _lang.Locale == "zh-CN"
                                                        ? position.PositionNameCn
-                                                       : position.PositionNameEn, 
-                                      Gender = user.Gender,
-                                      IsEmployed = user.IsEmployed,
-                                      IsApproval = user.IsApproval,
-                                      IsFreeze = user.IsFreeze,
-                                      Remark = user.Remark
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+                                                       : position.PositionNameEn,
+                Gender = user.Gender,
+                IsEmployed = user.IsEmployed,
+                IsApproval = user.IsApproval,
+                IsFreeze = user.IsFreeze,
+                Remark = user.Remark
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserInfoPageDto>.Ok(page, totalCount, "");
         }
 

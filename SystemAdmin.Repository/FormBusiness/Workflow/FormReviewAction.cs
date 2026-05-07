@@ -30,19 +30,19 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 表单签核
+        /// 签核表单
         /// </summary>
         public async Task<bool> FromApprove(ReviewForm reviewForm)
         {
             long formId = long.Parse(reviewForm.FormId);
             var (stepInfo, ruleId) = await GetCurrentStepInfo(formId);
 
-            // 规则1：手动操作处理当前步骤
+            // 手动签核：手动操作处理当前步骤
             bool hasPendingUsers = await ProcessStepApproval(formId, stepInfo, ReviewType.Manual, reviewForm.Comment);
 
             if (hasPendingUsers)
             {
-                // 会签未完成，通知该步骤剩余待签人（归属人 + 其代理人）
+                // 会签未完成，通知该步骤剩余待审批人
                 await NotifyPendingReviewers(formId, stepInfo.StepId);
                 return true;
             }
@@ -58,12 +58,12 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             // 推进步骤
             await AdvanceCurrentStep(formId, nextStep.NextStepId);
 
-            // 规则2：继续检查后续步骤是否自动推进
+            // 自动签核：继续检查后续步骤是否自动推进
             bool needNotify = await AutoApproveIfSelfInNextSteps(formId);
 
             if (needNotify)
             {
-                // 循环停止时 CurrentStepId 已指向需要人工签核的步骤
+                // 获取当前步骤信息，通知剩余待审批人
                 var (currentStepInfo, _) = await GetCurrentStepInfo(formId);
                 await NotifyPendingReviewers(formId, currentStepInfo.StepId);
             }
@@ -72,7 +72,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 规则2：循环检查后续步骤，根据签核模式决定是否自动推进
+        /// 自动签核：循环检查后续步骤，根据签核模式决定是否自动推进
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
@@ -136,9 +136,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
                         var otherPendingUserIds = await _db.Queryable<PendingReviewEntity>()
                                                            .With(SqlWith.NoLock)
-                                                           .Where(pending => pending.FormId == formId
-                                                                          && pending.StepId == stepInfo.StepId
-                                                                          && pending.ReviewUserId != selfPendingUserId)
+                                                           .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId && pending.ReviewUserId != selfPendingUserId)
                                                            .Select(pending => pending.ReviewUserId)
                                                            .ToListAsync();
 
@@ -190,7 +188,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 规则1、处理某步骤的签核
+        /// 手动签核：处理某步骤的签核
         /// </summary>
         /// <param name="formId"></param>
         /// <param name="stepInfo"></param>
@@ -286,15 +284,15 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
                 var reviewUsers = await GetStepReviewUsers(formId, stepInfo);
 
-                // 始终存实/兼归属人（UserId），不存代理人
+                // 始终存实/兼归属人
                 var pendingRecords = reviewUsers
-                                    .Select(u => u.UserId)
+                                    .Select(review => review.ReviewUserId)
                                     .Distinct()
-                                    .Select(userId => new PendingReviewEntity
+                                    .Select(review => new PendingReviewEntity
                                     {
                                         FormId = formId,
                                         StepId = stepId,
-                                        ReviewUserId = userId,
+                                        ReviewUserId = review,
                                     }).ToList();
                 await _db.Insertable(pendingRecords).ExecuteCommandAsync();
             }
@@ -367,7 +365,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             // 传入 reviewUserId 时，只返回匹配该人的记录
             if (reviewUserId.HasValue)
-                result = result.Where(result => result.UserId == reviewUserId.Value || result.AgentUserId == reviewUserId.Value).ToList();
+                result = result.Where(result => result.ReviewUserId == reviewUserId.Value || result.AgentUserId == reviewUserId.Value).ToList();
 
             return result;
         }
@@ -387,6 +385,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             var now = DateTime.Now;
 
             string orderBy = BuildOrderBy(isSingle, isAuto: false);
+
+            #region SQL
 
             string sql = $@"SELECT {topN}
                                 t.UserId,
@@ -415,6 +415,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 new SugarParameter("@ApplicantUserId", applicantUserId),
             });
 
+            #endregion
+
             return result ?? new List<UserAppointment>();
         }
 
@@ -442,6 +444,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             string exactOrderBy = BuildOrderBy(isSingle, isAuto: false);
             string autoOrderBy = BuildOrderBy(isSingle, isAuto: true);
+
+            #region SQL
 
             var exactResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
                 SELECT {topN}
@@ -488,21 +492,28 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     new SugarParameter("@PositionSort", posInfo.SortOrder),
                     new SugarParameter("@Actual", actual),
                     new SugarParameter("@Agent", agent),
-                    new SugarParameter("@Concurrent", concurrent), 
+                    new SugarParameter("@Concurrent", concurrent),
                     new SugarParameter("@ConcurrentAgent",concurrentAgent),
                 });
 
+            #endregion
+
             if (exactResult.Any())
-                return exactResult;
-
-            int currentPositionSort = posInfo.SortOrder - 1;
-            int currentDeptLevelSort = deptlevel.SortOrder;
-
-            while (currentPositionSort >= 1)
             {
-                while (currentDeptLevelSort >= 1)
+                return exactResult;
+            }
+            else
+            {
+                int currentPositionSort = posInfo.SortOrder - 1;
+                int currentDeptLevelSort = deptlevel.SortOrder;
+
+                while (currentPositionSort >= 1)
                 {
-                    var autoResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
+                    while (currentDeptLevelSort >= 1)
+                    {
+                        #region SQL
+
+                        var autoResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
                         SELECT {topN}
                             t.UserId, t.AgentUserId, t.AppointmentTypeCode
                         FROM (
@@ -551,14 +562,21 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             new SugarParameter("@AutoConcurrentAgent", autoConcurrentAgent),
                         });
 
-                    if (autoResult.Any())
-                        return autoResult;
+                        #endregion
 
-                    currentDeptLevelSort--;
+                        if (autoResult.Any())
+                        {
+                            return autoResult;
+                        }
+                        else
+                        {
+                            currentDeptLevelSort--;
+                        }
+                    }
+
+                    currentPositionSort--;
+                    currentDeptLevelSort = deptlevel.SortOrder;
                 }
-
-                currentPositionSort--;
-                currentDeptLevelSort = deptlevel.SortOrder;
             }
 
             return new List<UserAppointment>();
@@ -592,6 +610,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             string exactOrderBy = BuildOrderBy(isSingle, isAuto: false);
             string autoOrderBy = BuildOrderBy(isSingle, isAuto: true);
+
+            #region SQL
 
             var exactResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
                 SELECT {topN}
@@ -640,17 +660,24 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     new SugarParameter("@ConcurrentAgent", concurrentAgent),
                 });
 
+            #endregion
+
             if (exactResult.Any())
-                return exactResult;
-
-            int currentPositionSort = posInfo.SortOrder - 1;
-            int currentDeptLevelSort = deptlevel.SortOrder;
-
-            while (currentPositionSort >= 1)
             {
-                while (currentDeptLevelSort >= 1)
+                return exactResult;
+            }
+            else
+            {
+                int currentPositionSort = posInfo.SortOrder - 1;
+                int currentDeptLevelSort = deptlevel.SortOrder;
+
+                while (currentPositionSort >= 1)
                 {
-                    var autoResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
+                    while (currentDeptLevelSort >= 1)
+                    {
+                        #region SQL
+
+                        var autoResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
                         SELECT {topN}
                             t.UserId, t.AgentUserId, t.AppointmentTypeCode
                         FROM (
@@ -688,8 +715,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                               AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                         ) t
                         {autoOrderBy}",
-                        new[]
-                        {
+                            new[]
+                            {
                             new SugarParameter("@Now", now),
                             new SugarParameter("@DepartmentId", departmentId),
                             new SugarParameter("@CurrentPositionSort", currentPositionSort),
@@ -698,16 +725,23 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             new SugarParameter("@AutoAgent", autoAgent),
                             new SugarParameter("@AutoConcurrent", autoConcurrent),
                             new SugarParameter("@AutoConcurrentAgent", autoConcurrentAgent),
-                        });
+                            });
 
-                    if (autoResult.Any())
-                        return autoResult;
+                        #endregion
 
-                    currentDeptLevelSort--;
+                        if (autoResult.Any())
+                        {
+                            return autoResult;
+                        }
+                        else
+                        {
+                            currentDeptLevelSort--;
+                        }
+                    }
+
+                    currentPositionSort--;
+                    currentDeptLevelSort = deptlevel.SortOrder;
                 }
-
-                currentPositionSort--;
-                currentDeptLevelSort = deptlevel.SortOrder;
             }
 
             return new List<UserAppointment>();
@@ -746,6 +780,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             string exactOrderBy = BuildOrderBy(isSingle, isAuto: false);
             string autoOrderBy = BuildOrderBy(isSingle, isAuto: true);
+
+            #region SQL
 
             var exactResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
                 SELECT {topN}
@@ -787,17 +823,24 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     new SugarParameter("@ConcurrentAgent", concurrentAgent),
                 });
 
+            #endregion
+
             if (exactResult.Any())
-                return exactResult;
-
-            int currentPositionSort = posInfo.SortOrder - 1;
-            int currentDeptLevelSort = deptlevel.SortOrder;
-
-            while (currentPositionSort >= 1)
             {
-                while (currentDeptLevelSort >= 1)
+                return exactResult;
+            }
+            else
+            {
+                int currentPositionSort = posInfo.SortOrder - 1;
+                int currentDeptLevelSort = deptlevel.SortOrder;
+
+                while (currentPositionSort >= 1)
                 {
-                    var autoResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
+                    while (currentDeptLevelSort >= 1)
+                    {
+                        #region SQL
+
+                        var autoResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
                         SELECT {topN}
                             t.UserId, t.AgentUserId, t.AppointmentTypeCode
                         FROM (
@@ -835,8 +878,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                               AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                         ) t
                         {autoOrderBy}",
-                        new[]
-                        {
+                            new[]
+                            {
                             new SugarParameter("@Now", now),
                             new SugarParameter("@DepartmentId", userInfo.DepartmentId),
                             new SugarParameter("@CurrentPositionSort", currentPositionSort),
@@ -845,16 +888,23 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             new SugarParameter("@AutoAgent", autoAgent),
                             new SugarParameter("@AutoConcurrent", autoConcurrent),
                             new SugarParameter("@AutoConcurrentAgent", autoConcurrentAgent),
-                        });
+                            });
 
-                    if (autoResult.Any())
-                        return autoResult;
+                        #endregion
 
-                    currentDeptLevelSort--;
+                        if (autoResult.Any())
+                        {
+                            return autoResult;
+                        }
+                        else
+                        {
+                            currentDeptLevelSort--;
+                        }
+                    }
+
+                    currentPositionSort--;
+                    currentDeptLevelSort = deptlevel.SortOrder;
                 }
-
-                currentPositionSort--;
-                currentDeptLevelSort = deptlevel.SortOrder;
             }
 
             return new List<UserAppointment>();
@@ -881,8 +931,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                           .With(SqlWith.NoLock)
                                           .InnerJoin<UserInfoEntity>((instance, user) => instance.ApplicantUserId == user.UserId)
                                           .InnerJoin<DepartmentInfoEntity>((instance, user, dept) => user.DepartmentId == dept.DepartmentId)
-                                          .InnerJoin<DepartmentLevelEntity>((instance, user, dept, deptlevel) => dept.DepartmentLevelId ==     deptlevel.DepartmentLevelId)
-                                          .InnerJoin<PositionInfoEntity>((instance, user, dept, deptlevel, position) => user.PositionId ==     position.PositionId)
+                                          .InnerJoin<DepartmentLevelEntity>((instance, user, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                                          .InnerJoin<PositionInfoEntity>((instance, user, dept, deptlevel, position) => user.PositionId == position.PositionId)
                                           .Where((instance, user, dept, deptlevel, position) => instance.FormId == formId)
                                           .Select((instance, user, dept, deptlevel, position) => new
                                           {
@@ -918,6 +968,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         private async Task<WorkflowRuleStepEntity> GetNextStep(long ruleId, long currentStepId)
         {
             return await _db.Queryable<WorkflowRuleStepEntity>()
+                            .With(SqlWith.NoLock)
                             .Where(rulestep => rulestep.RuleId == ruleId && rulestep.CurrentStepId == currentStepId)
                             .FirstAsync();
         }
@@ -1024,7 +1075,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             var c when c == autoAgentConc => AppointmentType.AutoConcurrent.ToEnumString(),
                             _ => appoint.AppointmentTypeCode,
                         };
-                        reviewUserId = appoint.UserId;
+                        reviewUserId = appoint.ReviewUserId;
                     }
 
                     return new FormReviewRecordEntity
@@ -1036,8 +1087,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                         Comment = comment,
                         ReviewType = reviewType.ToEnumString(),
                         ReviewAppointment = appointmentCode,
-                        OriginalUserId = appoint.UserId,
-                        ReviewUserId = reviewUserId,
+                        OriginalUserId = appoint.ReviewUserId,
+                        OperationUserId = reviewUserId,
                         ReviewDateTime = DateTime.Now,
                     };
                 }).ToList();
@@ -1134,7 +1185,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         /// 一次性取出所有 AppointmentType 枚举字符串
         /// </summary>
         /// <returns></returns>
-        private (string actual, string agent, string concurrent, string concurrentAgent,string autoActual, string autoAgent, string autoConcurrent, string autoConcurrentAgent) AppointmentEnumStrings() =>
+        private (string actual, string agent, string concurrent, string concurrentAgent, string autoActual, string autoAgent, string autoConcurrent, string autoConcurrentAgent) AppointmentEnumStrings() =>
         (
             AppointmentType.Actual.ToEnumString(),
             AppointmentType.Agent.ToEnumString(),

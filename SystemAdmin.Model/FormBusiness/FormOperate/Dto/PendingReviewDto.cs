@@ -6,7 +6,7 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Dto
     /// <summary>
     /// 待送审 & 审批表单Dto
     /// </summary>
-    public class PendingSubReviewDto
+    public class PendingReviewDto
     {
         /// <summary>
         /// 表单Id
@@ -61,8 +61,8 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Dto
         public string ViewPath { get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否可以删除
+        /// 是否可以作废
         /// </summary>
-        public int isDelete { get; set; }
+        public int isVoided { get; set; }
     }
 }

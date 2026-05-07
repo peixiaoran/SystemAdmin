@@ -12,7 +12,7 @@ namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewAction
         /// 审批人员Id - 实或兼
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
-        public long UserId { get; set; }
+        public long ReviewUserId { get; set; }
 
         /// <summary>
         /// 审批人员Id - 实或兼代

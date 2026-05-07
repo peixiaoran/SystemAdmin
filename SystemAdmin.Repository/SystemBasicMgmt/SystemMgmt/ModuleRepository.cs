@@ -143,17 +143,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             query = query.OrderBy(module => module.SortOrder);
 
             var page = await query.Select((module) => new ModuleInfoDto
-                                  {
-                                      ModuleId = module.ModuleId,
-                                      ModuleCode = module.ModuleCode,
-                                      ModuleNameCn = module.ModuleNameCn,
-                                      ModuleNameEn = module.ModuleNameEn,
-                                      ModuleIcon = module.ModuleIcon,
-                                      IsVisible = module.IsVisible,
-                                      Path = module.Path,
-                                      RemarkCh = module.RemarkCh,
-                                      RemarkEn = module.RemarkEn,
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            {
+                ModuleId = module.ModuleId,
+                ModuleCode = module.ModuleCode,
+                ModuleNameCn = module.ModuleNameCn,
+                ModuleNameEn = module.ModuleNameEn,
+                ModuleIcon = module.ModuleIcon,
+                IsVisible = module.IsVisible,
+                Path = module.Path,
+                RemarkCh = module.RemarkCh,
+                RemarkEn = module.RemarkEn,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<ModuleInfoDto>.Ok(page, totalCount, "");
         }
     }

@@ -81,27 +81,27 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             query = query.OrderBy((user, dept, position, labor, nation) => new { position.SortOrder, user.HireDate });
 
             var page = await query.Select((user, dept, position, labor, nation) => new UserAgentDto
-                                  {
-                                      UserId = user.UserId,
-                                      UserNo = user.UserNo,
-                                      UserName = _lang.Locale == "zh-CN"
+            {
+                UserId = user.UserId,
+                UserNo = user.UserNo,
+                UserName = _lang.Locale == "zh-CN"
                                                  ? user.UserNameCn
                                                  : user.UserNameEn,
-                                      DepartmentName = _lang.Locale == "zh-CN"
+                DepartmentName = _lang.Locale == "zh-CN"
                                                  ? dept.DepartmentNameCn
                                                  : dept.DepartmentNameEn,
-                                      PositionName = _lang.Locale == "zh-CN"
+                PositionName = _lang.Locale == "zh-CN"
                                                  ? position.PositionNameCn
                                                  : position.PositionNameEn,
-                                      LaborName = _lang.Locale == "zh-CN"
+                LaborName = _lang.Locale == "zh-CN"
                                                  ? labor.LaborNameCn
                                                  : labor.LaborNameEn,
-                                      NationalityName = _lang.Locale == "zh-CN"
+                NationalityName = _lang.Locale == "zh-CN"
                                                  ? nation.NationNameCn
                                                  : nation.NationNameEn,
-                                      IsAgent = user.IsAgent,
-                                      IsApproval = user.IsApproval,
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+                IsAgent = user.IsAgent,
+                IsApproval = user.IsApproval,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserAgentDto>.Ok(page.Adapt<List<UserAgentDto>>(), totalCount, "");
         }
 
@@ -145,25 +145,25 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             query = query.OrderBy((user, dept, position, labor, nation) => user.UserId);
 
             var page = await query.Select((user, dept, position, labor, nation) => new UserAgentViewDto
-                                  {
-                                      UserId = user.UserId,
-                                      UserNo = user.UserNo,
-                                      UserName = _lang.Locale == "zh-CN"
-                                                 ? user.UserNameCn
-                                                 : user.UserNameEn,
-                                      DepartmentName = _lang.Locale == "zh-CN"
-                                                 ? dept.DepartmentNameCn
-                                                 : dept.DepartmentNameEn,
-                                      PositionName = _lang.Locale == "zh-CN"
-                                                 ? position.PositionNameCn
-                                                 : position.PositionNameEn,
-                                      LaborName = _lang.Locale == "zh-CN"
-                                                 ? labor.LaborNameCn
-                                                 : labor.LaborNameEn,
-                                      NationalityName = _lang.Locale == "zh-CN"
-                                                 ? nation.NationNameCn
-                                                 : nation.NationNameEn,
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            {
+                UserId = user.UserId,
+                UserNo = user.UserNo,
+                UserName = _lang.Locale == "zh-CN"
+                           ? user.UserNameCn
+                           : user.UserNameEn,
+                DepartmentName = _lang.Locale == "zh-CN"
+                           ? dept.DepartmentNameCn
+                           : dept.DepartmentNameEn,
+                PositionName = _lang.Locale == "zh-CN"
+                           ? position.PositionNameCn
+                           : position.PositionNameEn,
+                LaborName = _lang.Locale == "zh-CN"
+                           ? labor.LaborNameCn
+                           : labor.LaborNameEn,
+                NationalityName = _lang.Locale == "zh-CN"
+                           ? nation.NationNameCn
+                           : nation.NationNameEn,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserAgentViewDto>.Ok(page, totalCount, "");
         }
 

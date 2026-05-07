@@ -152,10 +152,10 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
         public async Task<ResultPaged<MenuInfoDto>> GetPMenuPage(GetMenuInfoPage getPage)
         {
             RefAsync<int> totalCount = 0;
-           var query = _db.Queryable<MenuInfoEntity>()
-                          .With(SqlWith.NoLock)
-                          .LeftJoin<DictionaryInfoEntity>((pmenu, dic) => dic.DicType == "MenuType" && pmenu.MenuType ==  dic.DicCode)
-                          .Where(pmenu => pmenu.MenuType == MenuType.PrimaryMenu.ToEnumString());
+            var query = _db.Queryable<MenuInfoEntity>()
+                           .With(SqlWith.NoLock)
+                           .LeftJoin<DictionaryInfoEntity>((pmenu, dic) => dic.DicType == "MenuType" && pmenu.MenuType == dic.DicCode)
+                           .Where(pmenu => pmenu.MenuType == MenuType.PrimaryMenu.ToEnumString());
 
             // 一级菜单编码
             if (!string.IsNullOrEmpty(getPage.MenuCode))
@@ -179,21 +179,21 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemMgmt
             query = query.OrderBy(pmenu => pmenu.SortOrder);
 
             var page = await query.Select((pmenu, dic) => new MenuInfoDto
-                                  {
-                                      MenuId = pmenu.MenuId,
-                                      MenuCode = pmenu.MenuCode,
-                                      MenuNameCn = pmenu.MenuNameCn,
-                                      MenuNameEn = pmenu.MenuNameEn,
-                                      MenuType = pmenu.MenuType,
-                                      MenuTypeName = _lang.Locale == "zh-CN"
-                                                     ? dic.DicNameCn
-                                                     : dic.DicNameEn,
-                                      MenuIcon = pmenu.MenuIcon,
-                                      SortOrder = pmenu.SortOrder,
-                                      IsVisible = pmenu.IsVisible,
-                                      Path = pmenu.Path,
-                                      Remark = pmenu.Remark,
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            {
+                MenuId = pmenu.MenuId,
+                MenuCode = pmenu.MenuCode,
+                MenuNameCn = pmenu.MenuNameCn,
+                MenuNameEn = pmenu.MenuNameEn,
+                MenuType = pmenu.MenuType,
+                MenuTypeName = _lang.Locale == "zh-CN"
+                               ? dic.DicNameCn
+                               : dic.DicNameEn,
+                MenuIcon = pmenu.MenuIcon,
+                SortOrder = pmenu.SortOrder,
+                IsVisible = pmenu.IsVisible,
+                Path = pmenu.Path,
+                Remark = pmenu.Remark,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<MenuInfoDto>.Ok(page, totalCount, "");
         }
     }

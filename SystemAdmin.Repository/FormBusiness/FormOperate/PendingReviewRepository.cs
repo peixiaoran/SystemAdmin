@@ -85,7 +85,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<PendingSubReviewDto>> GetPendingSubmissionPage(GetPendingSubAppPage getPage, long loginUserId)
+        public async Task<ResultPaged<PendingReviewDto>> GetPendingSubmissionPage(GetPendingSubAppPage getPage, long loginUserId)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<PendingReviewEntity>()
@@ -120,30 +120,29 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
             // 排序
             query = query.OrderBy((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new { instance.CreatedDate });
 
-            var page = await query.Select((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new PendingSubReviewDto
-                                  {
-                                      FormId = instance.FormId,
-                                      FormNo = instance.FormNo,
-                                      FormTypeId = formtype.FormTypeId,
-                                      FormTypeName = _lang.Locale == "zh-CN"
-                                                     ? formtype.FormTypeNameCn
-                                                     : formtype.FormTypeNameEn,
-                                      FormStatus = instance.FormStatus,
-                                      FormStatusName = _lang.Locale == "zh-CN"
-                                                     ? dic.DicNameCn
-                                                     : dic.DicNameEn,
-                                      ApplyUserName = _lang.Locale == "zh-CN"
-                                                     ? applyuser.UserNameCn
-                                                     : applyuser.UserNameEn,
-                                      ApplyUserDeptName = _lang.Locale == "zh-CN"
-                                                     ? applyuserdept.DepartmentNameCn
-                                                     : applyuserdept.DepartmentNameEn,
-                                      ApprovalPath = formtype.ApprovalPath,
-                                      ViewPath = formtype.ViewPath,
-                                      isDelete = (instance.ApplicantUserId == loginUserId
-                                                  && instance.FormStatus != FormStatus.Voided.ToEnumString()) ? 1 : 0
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<PendingSubReviewDto>.Ok(page, totalCount, "");
+            var page = await query.Select((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new PendingReviewDto
+            {
+                FormId = instance.FormId,
+                FormNo = instance.FormNo,
+                FormTypeId = formtype.FormTypeId,
+                FormTypeName = _lang.Locale == "zh-CN"
+                               ? formtype.FormTypeNameCn
+                               : formtype.FormTypeNameEn,
+                FormStatus = instance.FormStatus,
+                FormStatusName = _lang.Locale == "zh-CN"
+                               ? dic.DicNameCn
+                               : dic.DicNameEn,
+                ApplyUserName = _lang.Locale == "zh-CN"
+                               ? applyuser.UserNameCn
+                               : applyuser.UserNameEn,
+                ApplyUserDeptName = _lang.Locale == "zh-CN"
+                               ? applyuserdept.DepartmentNameCn
+                               : applyuserdept.DepartmentNameEn,
+                ApprovalPath = formtype.ApprovalPath,
+                ViewPath = formtype.ViewPath,
+                isVoided = (instance.ApplicantUserId == loginUserId && instance.FormStatus != FormStatus.Voided.ToEnumString()) ? 1 : 0
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<PendingReviewDto>.Ok(page, totalCount, "");
         }
 
         /// <summary>
@@ -151,7 +150,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// </summary>
         /// <param name="getPage"></param>
         /// <returns></returns>
-        public async Task<ResultPaged<PendingSubReviewDto>> GetPendingReviewPage(GetPendingSubAppPage getPage, long loginUserId)
+        public async Task<ResultPaged<PendingReviewDto>> GetPendingReviewPage(GetPendingSubAppPage getPage, long loginUserId)
         {
             RefAsync<int> totalCount = 0;
             var query = _db.Queryable<PendingReviewEntity>()
@@ -163,8 +162,6 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                            .InnerJoin<DepartmentInfoEntity>((pending, instance, dic, formtype, applyuser, applyuserdept) => applyuser.DepartmentId == applyuserdept.DepartmentId)
                            .LeftJoin<UserAgentEntity>((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => pending.ReviewUserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
                            .Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => (pending.ReviewUserId == loginUserId || useragent.AgentUserId == loginUserId) && instance.ApplicantUserId != loginUserId);
-
-            string sql = query.ToSqlString();
 
             // 表单组别Id
             if (!string.IsNullOrEmpty(getPage.FormGroupId) && long.Parse(getPage.FormGroupId) > 0)
@@ -187,29 +184,43 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
             // 排序
             query = query.OrderBy((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new { instance.CreatedDate });
 
-            var page = await query.Select((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new PendingSubReviewDto
-                                  {
-                                      FormId = instance.FormId,
-                                      FormNo = instance.FormNo,
-                                      FormTypeId = formtype.FormTypeId,
-                                      FormTypeName = _lang.Locale == "zh-CN"
-                                                     ? formtype.FormTypeNameCn
-                                                     : formtype.FormTypeNameEn,
-                                      FormStatus = instance.FormStatus,
-                                      FormStatusName = _lang.Locale == "zh-CN"
-                                                     ? dic.DicNameCn
-                                                     : dic.DicNameEn,
-                                      ApplyUserName = _lang.Locale == "zh-CN"
-                                                     ? applyuser.UserNameCn
-                                                     : applyuser.UserNameEn,
-                                      ApplyUserDeptName = _lang.Locale == "zh-CN"
-                                                     ? applyuserdept.DepartmentNameCn
-                                                     : applyuserdept.DepartmentNameEn,
-                                      ApprovalPath = formtype.ApprovalPath,
-                                      ViewPath = formtype.ViewPath,
-                                      isDelete = 0
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
-            return ResultPaged<PendingSubReviewDto>.Ok(page, totalCount, "");
+            var page = await query.Select((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new PendingReviewDto
+            {
+                FormId = instance.FormId,
+                FormNo = instance.FormNo,
+                FormTypeId = formtype.FormTypeId,
+                FormTypeName = _lang.Locale == "zh-CN"
+                               ? formtype.FormTypeNameCn
+                               : formtype.FormTypeNameEn,
+                FormStatus = instance.FormStatus,
+                FormStatusName = _lang.Locale == "zh-CN"
+                               ? dic.DicNameCn
+                               : dic.DicNameEn,
+                ApplyUserName = _lang.Locale == "zh-CN"
+                               ? applyuser.UserNameCn
+                               : applyuser.UserNameEn,
+                ApplyUserDeptName = _lang.Locale == "zh-CN"
+                               ? applyuserdept.DepartmentNameCn
+                               : applyuserdept.DepartmentNameEn,
+                ApprovalPath = formtype.ApprovalPath,
+                ViewPath = formtype.ViewPath,
+                isVoided = 0
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            return ResultPaged<PendingReviewDto>.Ok(page, totalCount, "");
+        }
+
+        /// <summary>
+        /// 查询表单待审批员工
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public async Task<List<long>> GetFormPendingReviewUserId(long formId)
+        {
+            return await _db.Queryable<PendingReviewEntity>()
+                            .With(SqlWith.NoLock)
+                            .Where(pending => pending.FormId == formId)
+                            .Select(pending => pending.ReviewUserId)
+                            .ToListAsync();
         }
 
         /// <summary>

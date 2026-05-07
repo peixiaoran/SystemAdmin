@@ -39,14 +39,14 @@ namespace SystemAdmin.Repository.FormBusiness.FormAudit
             query = query.OrderBy((formtype, formcounting) => formcounting.Ym);
 
             var page = await query.Select((formtype, formcounting) => new FormSequenceDto
-                                  {
-                                      FormTypeId = formtype.FormTypeId,
-                                      FormTypeName = _lang.Locale == "zh-CN"
-                                                     ? formtype.FormTypeNameCn
-                                                     : formtype.FormTypeNameEn,
-                                      Ym = formcounting.Ym,
-                                      Total = formcounting.Total,
-                                  }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            {
+                FormTypeId = formtype.FormTypeId,
+                FormTypeName = _lang.Locale == "zh-CN"
+                               ? formtype.FormTypeNameCn
+                               : formtype.FormTypeNameEn,
+                Ym = formcounting.Ym,
+                Total = formcounting.Total,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<FormSequenceDto>.Ok(page, totalCount, "");
         }
     }

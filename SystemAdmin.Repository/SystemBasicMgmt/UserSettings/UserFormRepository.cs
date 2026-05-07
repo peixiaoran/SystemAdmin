@@ -81,26 +81,26 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
             query = query.OrderBy((user, dept, position, labor, nation) => new { position.SortOrder, user.HireDate });
 
             var page = await query.Select((user, dept, position, labor, nation) => new UserFormDto
-                             {
-                                 UserId = user.UserId,
-                                 UserNo = user.UserNo,
-                                 UserName = _lang.Locale == "zh-CN"
-                                            ? user.UserNameCn
-                                            : user.UserNameEn,
-                                 DepartmentName = _lang.Locale == "zh-CN"
-                                            ? dept.DepartmentNameCn
-                                            : dept.DepartmentNameEn,
-                                 PositionName = _lang.Locale == "zh-CN"
-                                            ? position.PositionNameCn
-                                            : position.PositionNameEn,
-                                 LaborName = _lang.Locale == "zh-CN"
-                                            ? labor.LaborNameCn
-                                            : labor.LaborNameEn,
-                                 NationalityName = _lang.Locale == "zh-CN"
-                                            ? nation.NationNameCn
-                                            : nation.NationNameEn,
-                                 IsApproval = user.IsApproval,
-                             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
+            {
+                UserId = user.UserId,
+                UserNo = user.UserNo,
+                UserName = _lang.Locale == "zh-CN"
+                           ? user.UserNameCn
+                           : user.UserNameEn,
+                DepartmentName = _lang.Locale == "zh-CN"
+                           ? dept.DepartmentNameCn
+                           : dept.DepartmentNameEn,
+                PositionName = _lang.Locale == "zh-CN"
+                           ? position.PositionNameCn
+                           : position.PositionNameEn,
+                LaborName = _lang.Locale == "zh-CN"
+                           ? labor.LaborNameCn
+                           : labor.LaborNameEn,
+                NationalityName = _lang.Locale == "zh-CN"
+                           ? nation.NationNameCn
+                           : nation.NationNameEn,
+                IsApproval = user.IsApproval,
+            }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserFormDto>.Ok(page, totalCount, "");
         }
 
@@ -112,23 +112,23 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
         public async Task<List<UserFormViewTreeDto>> GetUserFormViewTree(long userId)
         {
             var formGroup = await _db.Queryable<FormGroupEntity>()
-                          .With(SqlWith.NoLock)
-                          .LeftJoin<UserFormEntity>((formgroup, userform) => formgroup.FormGroupId == userform.FormGroupTypeId && userform.UserId == userId)
-                          .OrderBy((formgroup, userform) => formgroup.SortOrder)
-                          .Select((formgroup, userform) => new UserFormViewTreeDto
-                          {
-                              ParentId = 0,
-                              FormGroupTypeId = formgroup.FormGroupId,
-                              FormGroupTypeName = _lang.Locale == "zh-CN" 
-                                                  ? formgroup.FormGroupNameCn 
-                                                  : formgroup.FormGroupNameEn,
-                              Description = _lang.Locale == "zh-CN" 
-                                                  ? formgroup.DescriptionCn 
-                                                  : formgroup.DescriptionEn,
-                              Disabled = false,
-                              IsChecked = SqlFunc.IsNull(userform.UserId, 0) > 0,
-                              FormTypeChildren = new List<UserFormViewTreeDto>()
-                          }).ToListAsync();
+                                     .With(SqlWith.NoLock)
+                                     .LeftJoin<UserFormEntity>((formgroup, userform) => formgroup.FormGroupId == userform.FormGroupTypeId && userform.UserId == userId)
+                                     .OrderBy((formgroup, userform) => formgroup.SortOrder)
+                                     .Select((formgroup, userform) => new UserFormViewTreeDto
+                                     {
+                                         ParentId = 0,
+                                         FormGroupTypeId = formgroup.FormGroupId,
+                                         FormGroupTypeName = _lang.Locale == "zh-CN"
+                                                             ? formgroup.FormGroupNameCn
+                                                             : formgroup.FormGroupNameEn,
+                                         Description = _lang.Locale == "zh-CN"
+                                                             ? formgroup.DescriptionCn
+                                                             : formgroup.DescriptionEn,
+                                         Disabled = false,
+                                         IsChecked = SqlFunc.IsNull(userform.UserId, 0) > 0,
+                                         FormTypeChildren = new List<UserFormViewTreeDto>()
+                                     }).ToListAsync();
 
             var formType = await _db.Queryable<FormTypeEntity>()
                                     .With(SqlWith.NoLock)
@@ -138,11 +138,11 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                     {
                                         ParentId = formtype.FormGroupId,
                                         FormGroupTypeId = formtype.FormTypeId,
-                                        FormGroupTypeName = _lang.Locale == "zh-CN" 
-                                                            ? formtype.FormTypeNameCn 
+                                        FormGroupTypeName = _lang.Locale == "zh-CN"
+                                                            ? formtype.FormTypeNameCn
                                                             : formtype.FormTypeNameEn,
-                                        Description = _lang.Locale == "zh-CN" 
-                                                            ? formtype.DescriptionCn 
+                                        Description = _lang.Locale == "zh-CN"
+                                                            ? formtype.DescriptionCn
                                                             : formtype.DescriptionEn,
                                         IsChecked = SqlFunc.IsNull(userform.UserId, 0) > 0,
                                         FormTypeChildren = new List<UserFormViewTreeDto>()
