@@ -276,7 +276,7 @@
   <data name="UserExcel_IsEmployedName" xml:space="preserve">
     <value>EmployedStatus</value>
   </data>
-  <data name="UserExcel_IsApprovalName" xml:space="preserve">
+  <data name="UserExcel_IsReviewName" xml:space="preserve">
     <value>ApprovalStatus</value>
   </data>
   <data name="UserExcel_IsFreezeName" xml:space="preserve">

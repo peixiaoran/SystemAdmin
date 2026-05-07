@@ -61,9 +61,9 @@
         public string IsEmployedName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否需要签核
+        /// 是否需要审批
         /// </summary>
-        public string IsApprovalName { get; set; } = string.Empty;
+        public string IsReviewName { get; set; } = string.Empty;
 
         /// <summary>
         /// 是否冻结

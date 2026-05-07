@@ -141,7 +141,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                                  ? position.PositionNameCn
                                                  : position.PositionNameEn,
                 // 是否签核
-                IsApproval = user.IsApproval,
+                IsReview = user.IsReview,
                 // 兼任部门名称
                 PartTimeDeptId = userpart.PartTimeDeptId,
                 PartTimeDeptName = _lang.Locale == "zh-CN"
@@ -216,7 +216,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 LaborName = _lang.Locale == "zh-CN"
                            ? labor.LaborNameCn
                            : labor.LaborNameEn,
-                IsApproval = user.IsApproval,
+                IsReview = user.IsReview,
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserPartTimeViewDto>.Ok(page, totalCount, "");
         }

@@ -212,7 +212,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormWorkflow
                            ? nation.NationNameCn
                            : nation.NationNameEn,
                 IsAgent = user.IsAgent,
-                IsApproval = user.IsApproval,
+                IsReview = user.IsReview,
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserInfoDto>.Ok(page, totalCount, "");
         }

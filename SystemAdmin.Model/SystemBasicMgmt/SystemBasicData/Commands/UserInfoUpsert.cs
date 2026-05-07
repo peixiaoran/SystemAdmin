@@ -98,7 +98,7 @@
         /// <summary>
         /// 是否签核
         /// </summary>
-        public int IsApproval { get; set; }
+        public int IsReview { get; set; }
 
         /// <summary>
         /// 是否实时邮件通知

@@ -308,7 +308,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     WHERE dept.DepartmentId IN ({parentDeptIdsStr})
                       AND deptlevel.SortOrder = @DeptLevelSort
                       AND position.SortOrder  = @PositionSort
-                      AND users.IsApproval    = 1
+                      AND users.IsReview    = 1
                       AND users.IsEmployed    = 1
                       AND users.IsFreeze      = 0
 
@@ -354,7 +354,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     WHERE dept.DepartmentId IN ({parentDeptIdsStr})
                       AND deptlevel.SortOrder = @DeptLevelSort
                       AND position.SortOrder  = @PositionSort
-                      AND users.IsApproval    = 1
+                      AND users.IsReview    = 1
                       AND users.IsEmployed    = 1
                       AND users.IsFreeze      = 0
 
@@ -445,7 +445,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             WHERE dept.DepartmentId IN ({parentDeptIdsStr})
                               AND position.SortOrder  = @CurrentPositionSort
                               AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval    = 1
+                              AND users.IsReview    = 1
                               AND users.IsEmployed    = 1
                               AND users.IsFreeze      = 0
 
@@ -491,7 +491,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             WHERE dept.DepartmentId IN ({parentDeptIdsStr})
                               AND position.SortOrder  = @CurrentPositionSort
                               AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval    = 1
+                              AND users.IsReview    = 1
                               AND users.IsEmployed    = 1
                               AND users.IsFreeze      = 0
 
@@ -622,7 +622,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     LEFT  JOIN Basic.UserInfo        agentusers ON agent.AgentUserId      = agentusers.UserId
                     WHERE dept.DepartmentId  = @DepartmentId
                       AND position.SortOrder = @PositionSort
-                      AND users.IsApproval   = 1
+                      AND users.IsReview   = 1
                       AND users.IsEmployed   = 1
                       AND users.IsFreeze     = 0
 
@@ -667,7 +667,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     LEFT  JOIN Basic.UserInfo        agentusers ON agent.AgentUserId         = agentusers.UserId
                     WHERE dept.DepartmentId  = @DepartmentId
                       AND position.SortOrder = @PositionSort
-                      AND users.IsApproval   = 1
+                      AND users.IsReview   = 1
                       AND users.IsEmployed   = 1
                       AND users.IsFreeze     = 0
 
@@ -759,7 +759,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             WHERE dept.DepartmentId  = @DepartmentId
                               AND position.SortOrder  = @CurrentPositionSort
                               AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval    = 1
+                              AND users.IsReview    = 1
                               AND users.IsEmployed    = 1
                               AND users.IsFreeze      = 0
 
@@ -805,7 +805,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             WHERE dept.DepartmentId  = @DepartmentId
                               AND position.SortOrder  = @CurrentPositionSort
                               AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval    = 1
+                              AND users.IsReview    = 1
                               AND users.IsEmployed    = 1
                               AND users.IsFreeze      = 0
 
@@ -947,7 +947,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                                                AND agent.EndTime         >= @Now
                     LEFT  JOIN Basic.UserInfo        agentusers ON agent.AgentUserId     = agentusers.UserId
                     WHERE users.UserId      = @UserId
-                      AND users.IsApproval  = 1
+                      AND users.IsReview  = 1
                       AND users.IsEmployed  = 1
                       AND users.IsFreeze    = 0
 
@@ -991,7 +991,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                                                AND agent.EndTime             >= @Now
                     LEFT  JOIN Basic.UserInfo        agentusers ON agent.AgentUserId         = agentusers.UserId
                     WHERE partime.UserId    = @UserId
-                      AND users.IsApproval  = 1
+                      AND users.IsReview  = 1
                       AND users.IsEmployed  = 1
                       AND users.IsFreeze    = 0
 
@@ -1082,7 +1082,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             WHERE dept.DepartmentId  = @DepartmentId
                               AND position.SortOrder  = @CurrentPositionSort
                               AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval    = 1
+                              AND users.IsReview    = 1
                               AND users.IsEmployed    = 1
                               AND users.IsFreeze      = 0
 
@@ -1128,7 +1128,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             WHERE dept.DepartmentId  = @DepartmentId
                               AND position.SortOrder  = @CurrentPositionSort
                               AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval    = 1
+                              AND users.IsReview    = 1
                               AND users.IsEmployed    = 1
                               AND users.IsFreeze      = 0
 
@@ -1492,7 +1492,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                       AND users.UserId IN ({pendingUserIdsStr})
                       AND deptlevel.SortOrder = @DeptLevelSort
                       AND position.SortOrder  = @PositionSort
-                      AND users.IsApproval    = 1
+                      AND users.IsReview    = 1
                       AND users.IsEmployed    = 1
                       AND users.IsFreeze      = 0
 
@@ -1539,7 +1539,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                       AND users.UserId IN ({pendingUserIdsStr})
                       AND deptlevel.SortOrder = @DeptLevelSort
                       AND position.SortOrder  = @PositionSort
-                      AND users.IsApproval    = 1
+                      AND users.IsReview    = 1
                       AND users.IsEmployed    = 1
                       AND users.IsFreeze      = 0
 
@@ -1630,7 +1630,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                   AND users.UserId IN ({pendingUserIdsStr})
                                   AND position.SortOrder  = @CurrentPositionSort
                                   AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                                  AND users.IsApproval    = 1
+                                  AND users.IsReview    = 1
                                   AND users.IsEmployed    = 1
                                   AND users.IsFreeze      = 0
 
@@ -1677,7 +1677,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                   AND users.UserId IN ({pendingUserIdsStr})
                                   AND position.SortOrder  = @CurrentPositionSort
                                   AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                                  AND users.IsApproval    = 1
+                                  AND users.IsReview    = 1
                                   AND users.IsEmployed    = 1
                                   AND users.IsFreeze      = 0
 
@@ -1810,7 +1810,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     WHERE dept.DepartmentId  = @DepartmentId
                       AND users.UserId IN ({pendingUserIdsStr})
                       AND position.SortOrder = @PositionSort
-                      AND users.IsApproval   = 1
+                      AND users.IsReview   = 1
                       AND users.IsEmployed   = 1
                       AND users.IsFreeze     = 0
 
@@ -1856,7 +1856,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     WHERE dept.DepartmentId  = @DepartmentId
                       AND users.UserId IN ({pendingUserIdsStr})
                       AND position.SortOrder = @PositionSort
-                      AND users.IsApproval   = 1
+                      AND users.IsReview   = 1
                       AND users.IsEmployed   = 1
                       AND users.IsFreeze     = 0
 
@@ -1947,7 +1947,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                   AND users.UserId IN ({pendingUserIdsStr})
                                   AND position.SortOrder  = @CurrentPositionSort
                                   AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                                  AND users.IsApproval    = 1
+                                  AND users.IsReview    = 1
                                   AND users.IsEmployed    = 1
                                   AND users.IsFreeze      = 0
 
@@ -1994,7 +1994,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                   AND users.UserId IN ({pendingUserIdsStr})
                                   AND position.SortOrder  = @CurrentPositionSort
                                   AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                                  AND users.IsApproval    = 1
+                                  AND users.IsReview    = 1
                                   AND users.IsEmployed    = 1
                                   AND users.IsFreeze      = 0
 
@@ -2126,7 +2126,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                                               AND agent.EndTime         >= @Now
                     LEFT  JOIN Basic.UserInfo        agentusers ON agent.AgentUserId    = agentusers.UserId
                     WHERE users.UserId     = @UserId
-                      AND users.IsApproval = 1
+                      AND users.IsReview = 1
                       AND users.IsEmployed = 1
                       AND users.IsFreeze   = 0
 
@@ -2170,7 +2170,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                                                AND agent.EndTime             >= @Now
                     LEFT  JOIN Basic.UserInfo        agentusers ON agent.AgentUserId         = agentusers.UserId
                     WHERE partime.UserId   = @UserId
-                      AND users.IsApproval = 1
+                      AND users.IsReview = 1
                       AND users.IsEmployed = 1
                       AND users.IsFreeze   = 0
 
@@ -2260,7 +2260,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                 WHERE dept.DepartmentId  = @DepartmentId
                                   AND position.SortOrder  = @CurrentPositionSort
                                   AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                                  AND users.IsApproval    = 1
+                                  AND users.IsReview    = 1
                                   AND users.IsEmployed    = 1
                                   AND users.IsFreeze      = 0
 
@@ -2306,7 +2306,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                 WHERE dept.DepartmentId  = @DepartmentId
                                   AND position.SortOrder  = @CurrentPositionSort
                                   AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                                  AND users.IsApproval    = 1
+                                  AND users.IsReview    = 1
                                   AND users.IsEmployed    = 1
                                   AND users.IsFreeze      = 0
 

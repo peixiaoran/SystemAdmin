@@ -292,7 +292,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                       Email = user.Email,
                                       PhoneNumber = user.PhoneNumber,
                                       IsEmployed = user.IsEmployed,
-                                      IsApproval = user.IsApproval,
+                                      IsReview = user.IsReview,
                                       IsRealtimeNotification = user.IsRealtimeNotification,
                                       IsScheduledNotification = user.IsScheduledNotification,
                                       IsAgent = user.IsAgent,
@@ -322,15 +322,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             // 员工工号
             if (!string.IsNullOrEmpty(getPage.UserNo))
             {
-                query = query.Where(user =>
-                    user.UserNo.Contains(getPage.UserNo));
+                query = query.Where(user => user.UserNo.Contains(getPage.UserNo));
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getPage.UserName))
             {
-                query = query.Where(user =>
-                    user.UserNameCn.Contains(getPage.UserName) ||
-                    user.UserNameEn.Contains(getPage.UserName));
+                query = query.Where(user => user.UserNameCn.Contains(getPage.UserName) || user.UserNameEn.Contains(getPage.UserName));
             }
             // 部门Id
             if (getPage.DepartmentId != "-1")
@@ -346,17 +343,17 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                 UserId = user.UserId,
                 DepartmentId = user.DepartmentId,
                 DepartmentName = _lang.Locale == "zh-CN"
-                                                       ? dept.DepartmentNameCn
-                                                       : dept.DepartmentNameEn,
+                                 ? dept.DepartmentNameCn
+                                 : dept.DepartmentNameEn,
                 UserNo = user.UserNo,
                 UserNameCn = user.UserNameCn,
                 UserNameEn = user.UserNameEn,
                 PositionName = _lang.Locale == "zh-CN"
-                                                       ? position.PositionNameCn
-                                                       : position.PositionNameEn,
+                                 ? position.PositionNameCn
+                                 : position.PositionNameEn,
                 Gender = user.Gender,
                 IsEmployed = user.IsEmployed,
-                IsApproval = user.IsApproval,
+                IsReview = user.IsReview,
                 IsFreeze = user.IsFreeze,
                 Remark = user.Remark
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
@@ -411,15 +408,12 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
             // 员工工号
             if (!string.IsNullOrEmpty(getUserExcel.UserNo))
             {
-                query = query.Where(user =>
-                    user.UserNo.Contains(getUserExcel.UserNo));
+                query = query.Where(user => user.UserNo.Contains(getUserExcel.UserNo));
             }
             // 员工姓名
             if (!string.IsNullOrEmpty(getUserExcel.UserName))
             {
-                query = query.Where(user =>
-                    user.UserNameCn.Contains(getUserExcel.UserName) ||
-                    user.UserNameEn.Contains(getUserExcel.UserName));
+                query = query.Where(user => user.UserNameCn.Contains(getUserExcel.UserName) || user.UserNameEn.Contains(getUserExcel.UserName));
             }
             // 部门Id
             if (getUserExcel.DepartmentId != "-1")
@@ -454,9 +448,9 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                    IsEmployedName = _lang.Locale == "zh-CN"
                                                     ? (user.IsEmployed == 1 ? "在职" : "离职")
                                                     : (user.IsEmployed == 1 ? "Yes" : "No"),
-                                   IsApprovalName = _lang.Locale == "zh-CN"
-                                                    ? (user.IsApproval == 1 ? "需要签核" : "无需签核")
-                                                    : (user.IsApproval == 1 ? "Yes" : "No"),
+                                   IsReviewName = _lang.Locale == "zh-CN"
+                                                    ? (user.IsReview == 1 ? "需要签核" : "无需签核")
+                                                    : (user.IsReview == 1 ? "Yes" : "No"),
                                    IsFreezeName = _lang.Locale == "zh-CN"
                                                     ? (user.IsFreeze == 1 ? "已冻结" : "未冻结")
                                                     : (user.IsFreeze == 1 ? "Yes" : "No"),

@@ -99,7 +99,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 NationalityName = _lang.Locale == "zh-CN"
                            ? nation.NationNameCn
                            : nation.NationNameEn,
-                IsApproval = user.IsApproval,
+                IsReview = user.IsReview,
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserFormDto>.Ok(page, totalCount, "");
         }

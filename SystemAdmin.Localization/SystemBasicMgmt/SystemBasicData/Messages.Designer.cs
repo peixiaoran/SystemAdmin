@@ -342,9 +342,9 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         /// <summary>
         ///   查找类似 是否签核 的本地化字符串。
         /// </summary>
-        internal static string UserExcel_IsApprovalName {
+        internal static string UserExcel_IsReviewName {
             get {
-                return ResourceManager.GetString("UserExcel_IsApprovalName", resourceCulture);
+                return ResourceManager.GetString("UserExcel_IsReviewName", resourceCulture);
             }
         }
         

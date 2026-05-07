@@ -18,13 +18,15 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
     {
         private readonly CurrentUser _loginuser;
         private readonly SqlSugarScope _db;
+        private readonly MailKitEmailSender _mailKitEmail;
         private readonly LocalizationService _localization;
         private readonly Language _lang;
 
-        public FormReviewAction(CurrentUser loginuser, SqlSugarScope db, LocalizationService localization, Language lang)
+        public FormReviewAction(CurrentUser loginuser, SqlSugarScope db, MailKitEmailSender mailKitEmail, LocalizationService localization, Language lang)
         {
             _loginuser = loginuser;
             _db = db;
+            _mailKitEmail = mailKitEmail;
             _localization = localization;
             _lang = lang;
         }
@@ -97,7 +99,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     if (skippedNext.NextStepId == 0)
                     {
                         await ApproveForm(formId);
-                        return false; // 签核到底，无需通知
+                        return false;
                     }
 
                     await AdvanceCurrentStep(formId, skippedNext.NextStepId);
@@ -180,7 +182,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 if (nextStep.NextStepId == 0)
                 {
                     await ApproveForm(formId);
-                    return false; // 签核到底，无需通知
+                    return false;
                 }
 
                 await AdvanceCurrentStep(formId, nextStep.NextStepId);
@@ -465,7 +467,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId      = agentusers.UserId
                     WHERE dept.DepartmentId IN ({parentDeptIdsStr})
                       AND deptlevel.SortOrder = @DeptLevelSort AND position.SortOrder = @PositionSort
-                      AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                      AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                     UNION ALL
                     SELECT
                         users.UserId,
@@ -482,7 +484,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId          = agentusers.UserId
                     WHERE dept.DepartmentId IN ({parentDeptIdsStr})
                       AND deptlevel.SortOrder = @DeptLevelSort AND position.SortOrder = @PositionSort
-                      AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                      AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                 ) t
                 {exactOrderBy}",
                 new[]
@@ -531,7 +533,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId      = agentusers.UserId
                             WHERE dept.DepartmentId IN ({parentDeptIdsStr})
                               AND position.SortOrder = @CurrentPositionSort AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                              AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                             UNION ALL
                             SELECT
                                 users.UserId,
@@ -548,7 +550,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId          = agentusers.UserId
                             WHERE dept.DepartmentId IN ({parentDeptIdsStr})
                               AND position.SortOrder = @CurrentPositionSort AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                              AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                         ) t
                         {autoOrderBy}",
                         new[]
@@ -630,7 +632,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                                               AND agent.StartTime       <= @Now AND agent.EndTime >= @Now
                     LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId      = agentusers.UserId
                     WHERE dept.DepartmentId = @DepartmentId AND position.SortOrder = @PositionSort
-                      AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                      AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                     UNION ALL
                     SELECT
                         users.UserId,
@@ -646,7 +648,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                                               AND agent.StartTime           <= @Now AND agent.EndTime >= @Now
                     LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId          = agentusers.UserId
                     WHERE dept.DepartmentId = @DepartmentId AND position.SortOrder = @PositionSort
-                      AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                      AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                 ) t
                 {exactOrderBy}",
                 new[]
@@ -695,7 +697,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId      = agentusers.UserId
                             WHERE dept.DepartmentId = @DepartmentId
                               AND position.SortOrder = @CurrentPositionSort AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                              AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                             UNION ALL
                             SELECT
                                 users.UserId,
@@ -712,7 +714,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId          = agentusers.UserId
                             WHERE dept.DepartmentId = @DepartmentId
                               AND position.SortOrder = @CurrentPositionSort AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                              AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                         ) t
                         {autoOrderBy}",
                             new[]
@@ -797,7 +799,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                                        AND agent.StartTime  <= @Now AND agent.EndTime >= @Now
                     LEFT JOIN Basic.UserInfo agentusers ON agent.AgentUserId  = agentusers.UserId
                     WHERE users.UserId = @UserId
-                      AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                      AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                     UNION ALL
                     SELECT
                         users.UserId,
@@ -810,7 +812,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                                        AND agent.StartTime  <= @Now AND agent.EndTime >= @Now
                     LEFT JOIN  Basic.UserInfo agentusers ON agent.AgentUserId = agentusers.UserId
                     WHERE partime.UserId = @UserId
-                      AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                      AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                 ) t
                 {exactOrderBy}",
                 new[]
@@ -858,7 +860,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId      = agentusers.UserId
                             WHERE dept.DepartmentId = @DepartmentId
                               AND position.SortOrder = @CurrentPositionSort AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                              AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                             UNION ALL
                             SELECT
                                 users.UserId,
@@ -875,7 +877,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             LEFT JOIN  Basic.UserInfo agentusers       ON agent.AgentUserId          = agentusers.UserId
                             WHERE dept.DepartmentId = @DepartmentId
                               AND position.SortOrder = @CurrentPositionSort AND deptlevel.SortOrder = @CurrentDeptLevelSort
-                              AND users.IsApproval = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
+                              AND users.IsReview = 1 AND users.IsEmployed = 1 AND users.IsFreeze = 0
                         ) t
                         {autoOrderBy}",
                             new[]
@@ -1000,8 +1002,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                      .SetColumns(instance => new FormInstanceEntity
                      {
                          FormStatus = FormStatus.Approved.ToEnumString(),
-                         ModifiedBy = _loginuser.UserId,
-                         ModifiedDate = DateTime.Now
+                         CurrentStepId = 0,
                      }).Where(instance => instance.FormId == formId)
                      .ExecuteCommandAsync();
         }
@@ -1098,8 +1099,11 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
         #region 邮件通知
         /// <summary>
-        /// 查询指定步骤的待签核人（归属人 + 其当前有效代理人），去重后发送邮件通知
+        /// 查询指定步骤的待签核人
         /// </summary>
+        /// <param name="formId"></param>
+        /// <param name="stepId"></param>
+        /// <returns></returns>
         private async Task NotifyPendingReviewers(long formId, long stepId)
         {
             var now = DateTime.Now;
@@ -1134,21 +1138,16 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             foreach (var user in userInfoList)
             {
-                await SendReviewNotification(user.Email);
+                EmailMessage emailMsg = new EmailMessage
+                {
+                    To = new List<string> { user.Email },
+                    Subject = "待签核通知",
+                    Body = "您有新的待签核任务，请及时处理。"
+                };
+
+                await _mailKitEmail.SendAsync(emailMsg);
             }
         }
-
-        /// <summary>
-        /// 发送签核邮件通知
-        /// </summary>
-        /// <param name="toUserId">主收人（代理人 或 无代理时的本人）</param>
-        /// <param name="ccUserId">抄送人（被代理人且满足抄送条件），无则为 null</param>
-        private async Task SendReviewNotification(string email)
-        {
-            // TODO: 实现邮件发送逻辑
-            await Task.CompletedTask;
-        }
-        #endregion
 
 
         #region 工具

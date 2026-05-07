@@ -56,9 +56,9 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public int IsEmployed { get; set; }
 
         /// <summary>
-        /// 是否需要签核
+        /// 是否需要审批
         /// </summary>
-        public int IsApproval { get; set; }
+        public int IsReview { get; set; }
 
         /// <summary>
         /// 是否冻结

@@ -48,6 +48,6 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         /// 是否签核
         /// </summary>
         [JsonConverter(typeof(IntToStringConverter))]
-        public int IsApproval { get; set; }
+        public int IsReview { get; set; }
     }
 }

@@ -24,9 +24,6 @@ namespace SystemAdmin.CommonSetup.Security
         {
             _settings = options.Value ?? throw new ArgumentNullException(nameof(options));
 
-            if (!string.Equals(_settings.Algorithm, "ES256", StringComparison.OrdinalIgnoreCase))
-                throw new NotSupportedException("当前 JwtTokenService 仅支持 ES256 算法。");
-
             // 私钥（必须有）
             _ecdsaPrivate = CreateEcdsaFromPem(_settings.PrivateKey, isPrivateKey: true);
 
@@ -149,10 +146,8 @@ namespace SystemAdmin.CommonSetup.Security
         /// <summary>
         /// 从 PEM 字符串创建 ECDSA（同时兼容 JSON 中的 \n）
         /// </summary>
-        private static ECDsa CreateEcdsaFromPem(string? pem, bool isPrivateKey)
+        private static ECDsa CreateEcdsaFromPem(string pem, bool isPrivateKey)
         {
-            if (string.IsNullOrWhiteSpace(pem))
-                throw new InvalidOperationException("JwtSettings 中的公钥/私钥不能为空。");
 
             var fixedPem = pem.Replace("\\n", "\n").Trim();
 

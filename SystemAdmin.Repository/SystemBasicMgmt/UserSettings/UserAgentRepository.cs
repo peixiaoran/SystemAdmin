@@ -100,7 +100,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                                                  ? nation.NationNameCn
                                                  : nation.NationNameEn,
                 IsAgent = user.IsAgent,
-                IsApproval = user.IsApproval,
+                IsReview = user.IsReview,
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
             return ResultPaged<UserAgentDto>.Ok(page.Adapt<List<UserAgentDto>>(), totalCount, "");
         }

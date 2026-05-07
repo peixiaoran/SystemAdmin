@@ -136,7 +136,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                  HireDate = Convert.ToDateTime(user.HireDate).ToString("yyyy-MM-dd"),
                                  AvatarAddress = user.AvatarAddress,
                                  IsEmployed = user.IsEmployed,
-                                 IsApproval = user.IsApproval,
+                                 IsReview = user.IsReview,
                                  IsRealtimeNotification = user.IsRealtimeNotification,
                                  IsScheduledNotification = user.IsScheduledNotification,
                                  IsAgent = user.IsAgent,

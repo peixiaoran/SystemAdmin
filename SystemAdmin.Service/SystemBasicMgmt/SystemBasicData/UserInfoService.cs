@@ -267,7 +267,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     PassWord = HashPasswordWithArgon2id(upsert.PassWord, salt),
                     PwdSalt = saltString,
                     AvatarAddress = upsert.AvatarAddress,
-                    IsApproval = upsert.IsApproval,
+                    IsReview = upsert.IsReview,
                     IsRealtimeNotification = upsert.IsRealtimeNotification,
                     IsScheduledNotification = upsert.IsScheduledNotification,
                     IsEmployed = upsert.IsEmployed,
@@ -394,7 +394,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     PwdSalt = updateSaltString,
                     AvatarAddress = upsert.AvatarAddress,
                     IsEmployed = upsert.IsEmployed,
-                    IsApproval = upsert.IsApproval,
+                    IsReview = upsert.IsReview,
                     IsRealtimeNotification = upsert.IsRealtimeNotification,
                     IsScheduledNotification = upsert.IsScheduledNotification,
                     IsFreeze = upsert.IsFreeze,
@@ -485,19 +485,19 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
 
                 var columnConfigs = new Dictionary<string, ExcelColumnConfig>
                 {
-                    { "UserNo",         ExcelColumnConfig.Text },    // 工号，防前导零消失
-                    { "UserNameCn",     ExcelColumnConfig.Text },    // 姓名
-                    { "UserNameEn",     ExcelColumnConfig.Text },    // 姓名
-                    { "DepartmentName", ExcelColumnConfig.Text },    // 部门名称
-                    { "PositionName",   ExcelColumnConfig.Text },    // 职位名称
-                    { "HireDate",       ExcelColumnConfig.Date },    // 入职日期 yyyy/MM/dd
-                    { "GenderName",     ExcelColumnConfig.Text },    // 性别
-                    { "NationalityName",ExcelColumnConfig.Text },    // 国籍
-                    { "Email",          ExcelColumnConfig.Text },    // 邮箱，防 @ 被解析
-                    { "PhoneNumber",    ExcelColumnConfig.Text },    // 手机号，防科学计数
-                    { "IsEmployedName", ExcelColumnConfig.Text },    // 在职状态
-                    { "IsApprovalName", ExcelColumnConfig.Text },    // 签核状态
-                    { "IsFreezeName",   ExcelColumnConfig.Text },    // 冻结状态
+                    { "UserNo", ExcelColumnConfig.Text },// 工号，防前导零消失
+                    { "UserNameCn", ExcelColumnConfig.Text },// 姓名（中文）
+                    { "UserNameEn", ExcelColumnConfig.Text },// 姓名（英文）
+                    { "DepartmentName", ExcelColumnConfig.Text },// 部门名称
+                    { "PositionName", ExcelColumnConfig.Text },// 职位名称
+                    { "HireDate", ExcelColumnConfig.Date },// 入职日期 yyyy/MM/dd
+                    { "GenderName", ExcelColumnConfig.Text },// 性别
+                    { "NationalityName",ExcelColumnConfig.Text },// 国籍
+                    { "Email", ExcelColumnConfig.Text },// 邮箱，防 @ 被解析
+                    { "PhoneNumber", ExcelColumnConfig.Text },// 手机号，防科学计数
+                    { "IsEmployedName", ExcelColumnConfig.Text },// 在职状态
+                    { "IsReviewName", ExcelColumnConfig.Text },// 签核状态
+                    { "IsFreezeName", ExcelColumnConfig.Text },// 冻结状态
                 };
                 var headers = new Dictionary<string, string>
                 {
@@ -512,7 +512,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     { "Email", _localization.ReturnMsg($"{_thisExcel}Email") },
                     { "PhoneNumber", _localization.ReturnMsg($"{_thisExcel}PhoneNumber") },
                     { "IsEmployedName", _localization.ReturnMsg($"{_thisExcel}IsEmployedName") },
-                    { "IsApprovalName", _localization.ReturnMsg($"{_thisExcel}IsApprovalName") },
+                    { "IsReviewName", _localization.ReturnMsg($"{_thisExcel}IsReviewName") },
                     { "IsFreezeName", _localization.ReturnMsg($"{_thisExcel}IsFreezeName") }
                 };
 

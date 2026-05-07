@@ -27,7 +27,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         /// <summary>
         /// 是否签核
         /// </summary>
-        public int IsApproval { get; set; }
+        public int IsReview { get; set; }
 
         /// <summary>
         /// 部门名称
