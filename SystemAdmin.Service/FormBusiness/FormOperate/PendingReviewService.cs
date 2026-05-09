@@ -127,7 +127,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         {
             try
             {
-                var list = await _pendingReviewRepo.GetFormPendingReviewUserId(long.Parse(formId));
+                var list = await _pendingReviewRepo.GetFormPendingReviewUser(long.Parse(formId));
                 return Result<List<FormPendingReviewDto>>.Ok(list);
             }
             catch (Exception ex)

@@ -6,18 +6,18 @@
     public enum ReviewMode
     {
         /// <summary>
-        /// 单签
+        /// 单审
         /// </summary>
-        Single = 1,
+        Review = 1,
 
         /// <summary>
-        /// 会签
+        /// 会审
         /// </summary
-        AndSingle = 2,
+        AndReview = 2,
 
         /// <summary>
-        /// 或签
+        /// 或审
         /// </summary
-        OrSingle = 3,
+        OrReview = 3,
     }
 }

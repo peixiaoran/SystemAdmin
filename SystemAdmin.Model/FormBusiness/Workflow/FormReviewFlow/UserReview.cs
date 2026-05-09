@@ -33,7 +33,7 @@ namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow
         /// <summary>
         /// 审批身份
         /// </summary>
-        public string AppointmentTypeCode { get; set; } = string.Empty;
+        public string AppointmentType { get; set; } = string.Empty;
 
         /// <summary>
         /// 审批身份名称

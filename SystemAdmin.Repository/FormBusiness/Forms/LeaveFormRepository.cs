@@ -5,6 +5,7 @@ using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
+using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
@@ -105,17 +106,17 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 查询文件列表
+        /// 查询附件列表
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
         public async Task<List<FormAttachmentDto>> GetAttachmentList(long formId)
         {
-            var fileList = await _db.Queryable<FormAttachmentEntity>()
-                                    .With(SqlWith.NoLock)
-                                    .Where(formfile => formfile.FormId == formId)
-                                    .ToListAsync();
-            return fileList.Adapt<List<FormAttachmentDto>>();
+            var list = await _db.Queryable<FormAttachmentEntity>()
+                                .With(SqlWith.NoLock)
+                                .Where(formfile => formfile.FormId == formId)
+                                .ToListAsync();
+            return list.Adapt<List<FormAttachmentDto>>();
         }
 
         /// <summary>
@@ -138,6 +139,23 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
             return await _db.Deleteable<FormAttachmentEntity>()
                             .Where(attach => attach.AttachmentId == attachmentId)
                             .ExecuteCommandAsync();
+        }
+
+
+        /// <summary>
+        /// 查询审批记录列表
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        public async Task<List<FormReviewRecordDto>> GetReviewRecordList(long formId)
+        {
+            var list = await _db.Queryable<FormReviewRecordEntity>()
+                                .InnerJoin<WorkflowStepEntity>((review, step) => review.StepId == step.StepId)
+                                .InnerJoin<DictionaryInfoEntity>((review, step, reviewresult) => reviewresult.DicType == "ReviewResult" && review.ReviewResult == reviewresult.DicCode)
+                                .With(SqlWith.NoLock)
+                                .Where(formfile => formfile.FormId == formId)
+                                .ToListAsync();
+            return list.Adapt<List<FormReviewRecordDto>>();
         }
     }
 }

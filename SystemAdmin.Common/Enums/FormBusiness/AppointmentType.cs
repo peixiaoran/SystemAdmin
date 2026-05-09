@@ -1,7 +1,7 @@
 ﻿namespace SystemAdmin.Common.Enums.FormBusiness
 {
     /// <summary>
-    /// 签核身份
+    /// 审批身份
     /// </summary>
     public enum AppointmentType
     {

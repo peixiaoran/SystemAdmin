@@ -36,6 +36,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         {
             var now = DateTime.Now;
             var ym = now.ToString("yyyyMM");
+
             // 1. 生成表单编号
             var (formNo, prefix) = await GenerateFormNoAsync(formTypeId, ym, now);
             var formId = SnowFlakeSingle.Instance.NextId();
@@ -63,6 +64,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             {
                 FormId = formId,
                 StepId = startStepId,
+                AppointmentType = AppointmentType.Actual.ToEnumString(),
                 ReviewUserId = _loginuser.UserId
             }).ExecuteCommandAsync();
 
@@ -211,7 +213,6 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                             }).Where(instance => instance.FormId == formId)
                             .ExecuteCommandAsync();
         }
-
 
 
         #region 请假单

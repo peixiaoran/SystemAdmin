@@ -28,7 +28,6 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemConfig
             _localization = localization;
         }
 
-
         /// <summary>
         /// 模块下拉
         /// </summary>

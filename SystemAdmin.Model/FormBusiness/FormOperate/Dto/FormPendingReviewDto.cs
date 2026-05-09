@@ -11,19 +11,14 @@
         public string StepName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 待审批人工号
+        /// 待审批人身份
         /// </summary>
-        public string ReviewUserNo { get; set; } = string.Empty;
+        public string AppointmentType { get; set; } = string.Empty;
 
         /// <summary>
         /// 待审批人名称
         /// </summary>
         public string ReviewUserName { get; set; } = string.Empty;
-
-        /// <summary>
-        /// 代理人工号
-        /// </summary>
-        public string AgentUserNo { get; set; } = string.Empty;
 
         /// <summary>
         /// 代理人名称

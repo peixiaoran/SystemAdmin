@@ -15,7 +15,7 @@ namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewAction
         public long ReviewUserId { get; set; }
 
         /// <summary>
-        /// 审批人员Id - 实或兼代
+        /// 审批人员Id - 代或兼代
         /// </summary>
         [JsonConverter(typeof(LongToStringConverter))]
         public long AgentUserId { get; set; }
@@ -23,6 +23,6 @@ namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewAction
         /// <summary>
         /// 审批身份类型
         /// </summary>
-        public string AppointmentTypeCode { get; set; } = string.Empty;
+        public string AppointmentType { get; set; } = string.Empty;
     }
 }

@@ -205,25 +205,27 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
-        public async Task<List<FormPendingReviewDto>> GetFormPendingReviewUserId(long formId)
+        public async Task<List<FormPendingReviewDto>> GetFormPendingReviewUser(long formId)
         {
             return await _db.Queryable<PendingReviewEntity>()
                             .With(SqlWith.NoLock)
                             .InnerJoin<WorkflowStepEntity>((pending, step) => pending.StepId == step.StepId)
-                            .InnerJoin<UserInfoEntity>((pending, step, user) => pending.ReviewUserId == user.UserId)
-                            .LeftJoin<UserAgentEntity>((pending, step, user, useragent) => user.UserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
-                            .LeftJoin<UserInfoEntity>((pending, step, user, useragent, agentuser) => useragent.AgentUserId == agentuser.UserId)
-                            .Where((pending, step, user, useragent, agentuser) => pending.FormId == formId)
-                            .Select((pending, step, user, useragent, agentuser) => new FormPendingReviewDto
+                            .InnerJoin<DictionaryInfoEntity>((pending, step, dic) => dic.DicType == "AppointmentType" && pending.AppointmentType == dic.DicCode)
+                            .InnerJoin<UserInfoEntity>((pending, step, dic, user) => pending.ReviewUserId == user.UserId)
+                            .LeftJoin<UserAgentEntity>((pending, step, dic, user, useragent) => user.UserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
+                            .LeftJoin<UserInfoEntity>((pending, step, dic, user, useragent, agentuser) => useragent.AgentUserId == agentuser.UserId)
+                            .Where((pending, step, dic, user, useragent, agentuser) => pending.FormId == formId)
+                            .Select((pending, step, dic, user, useragent, agentuser) => new FormPendingReviewDto
                             {
                                 StepName = _lang.Locale == "zh-CN"
                                            ? step.StepNameCn
                                            : step.StepNameEn,
-                                ReviewUserNo = user.UserNo,
+                                AppointmentType = _lang.Locale == "zh-CN"
+                                           ? dic.DicNameCn
+                                           : dic.DicNameEn,
                                 ReviewUserName = _lang.Locale == "zh-CN"
                                            ? user.UserNameCn
                                            : user.UserNameEn,
-                                AgentUserNo = agentuser.UserNo,
                                 AgentUserName =_lang.Locale == "zh-CN"
                                            ? agentuser.UserNameCn
                                            : agentuser.UserNameEn,

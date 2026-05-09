@@ -19,7 +19,12 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
         public long StepId { get; set; }
 
         /// <summary>
-        /// 待签核员工Id
+        /// 待审批人身份
+        /// </summary>
+        public string AppointmentType { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 待审批人Id
         /// </summary>
         public long ReviewUserId { get; set; }
     }

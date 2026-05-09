@@ -157,9 +157,9 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                     return Result<LeaveFormDto>.Failure(400, _localization.ReturnMsg($"{_form}NotCanView"));
                 }
 
-                var dto = await _leaveForm.GetLeaveForm(long.Parse(formId));
-                dto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
-                return Result<LeaveFormDto>.Ok(dto);
+                var form = await _leaveForm.GetLeaveForm(long.Parse(formId));
+                form.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
+                return Result<LeaveFormDto>.Ok(form);
             }
             catch (Exception ex)
             {
@@ -274,14 +274,8 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         {
             try
             {
-                var isCan = await _formChecker.CanView(long.Parse(formId));
-                if (!isCan)
-                {
-                    return Result<FormReview>.Failure(400, _localization.ReturnMsg($"{_form}NotCanView"));
-                }
-
-                var reviewFlow = await _reviewFlow.GetFullReviewFlow(long.Parse(formId));
-                return Result<FormReview>.Ok(reviewFlow);
+                var fullflow = await _reviewFlow.GetFullReviewFlow(long.Parse(formId));
+                return Result<FormReview>.Ok(fullflow);
             }
             catch (Exception ex)
             {

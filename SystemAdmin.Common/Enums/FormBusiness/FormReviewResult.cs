@@ -5,7 +5,7 @@ using System.Text;
 namespace SystemAdmin.Common.Enums.FormBusiness
 {
     /// <summary>
-    /// 签核状态
+    /// 审批状态
     /// </summary>
     public enum FormReviewResult
     {
