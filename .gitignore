@@ -29,3 +29,4 @@ bld/
 
 # 屏蔽生产环境配置文件
 appsettings.Production.json
+appsettings.Development.json
