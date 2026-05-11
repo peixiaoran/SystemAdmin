@@ -45,8 +45,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             if (hasPendingUsers)
             {
-                // 会签未完成，通知该步骤剩余待审批人
-                await NotifyPendingReviewers(formId, stepInfo.StepId);
+                // 还有剩余待审批人
                 return true;
             }
 
@@ -165,7 +164,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
                         await InsertReviewRecords(formId, stepInfo.StepId, selfAppointments, ReviewType.Automatic, string.Empty, _loginuser.UserId);
 
-                        // 会签还有其他人未签，停止自动推进
+                        // 会审还有其他人未签，停止自动推进
                         bool othersPending = await _db.Queryable<PendingReviewEntity>()
                                                       .With(SqlWith.NoLock)
                                                       .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId)
@@ -243,7 +242,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             }
             else if (reviewMode == ReviewMode.AndReview.ToEnumString())
             {
-                // 会签：按归属人 UserId 删除自己的待审批记录
+                // 会审：按归属人 UserId 删除自己的待审批记录
                 await _db.Deleteable<PendingReviewEntity>()
                          .Where(pending => pending.FormId == formId && pending.StepId == stepInfo.StepId && pending.ReviewUserId == selfOriginalUserId)
                          .ExecuteCommandAsync();
@@ -615,10 +614,10 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             var exactResult = await _db.Ado.SqlQueryAsync<UserAppointment>($@"
                 SELECT {topN}
-                    t.UserId, t.AgentUserId, t.AppointmentType
+                    t.ReviewUserId, t.AgentUserId, t.AppointmentType
                 FROM (
                     SELECT
-                        users.UserId,
+                        users.UserId AS ReviewUserId,
                         ISNULL(agentusers.UserId, 0)           AS AgentUserId,
                         CASE WHEN agent.AgentUserId IS NOT NULL THEN @Agent ELSE @Actual END AS AppointmentType,
                         users.HireDate
@@ -1707,7 +1706,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     Body = "您有新的待签核任务，请及时处理。"
                 };
 
-                //await _mailKitEmail.SendAsync(emailMsg);
+                await _mailKitEmail.SendAsync(emailMsg);
             }
         }
 

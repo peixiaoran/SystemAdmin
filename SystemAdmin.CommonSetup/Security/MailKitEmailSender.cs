@@ -10,52 +10,25 @@ namespace SystemAdmin.CommonSetup.Security
     public class MailKitEmailSender
     {
         private readonly EmailOptions _options;
+        private readonly ILogger<MailKitEmailSender> _logger;
 
-        /// <summary>
-        /// 构造函数，由依赖注入框架调用，EmailSettings 节点。
-        /// </summary>
-        /// <param name="options"></param>
-        /// <param name="logger"></param>
         public MailKitEmailSender(IOptions<EmailOptions> options, ILogger<MailKitEmailSender> logger)
         {
             _options = options.Value;
+            _logger = logger;
         }
 
-        /// <summary>
-        /// 发送邮件
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="cancellationToken"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public async Task SendAsync(EmailMessage message, CancellationToken cancellationToken = default)
+        public async Task SendAsync( EmailMessage message, CancellationToken cancellationToken = default)
         {
-            // 基础校验：必须至少有一个收件人
-            if (message.To == null || message.To.Count == 0)
-            {
-                throw new ArgumentException("邮件至少需要一个收件人（To）。", nameof(message));
-            }
-
-            // 将业务层的 EmailMessage 转换为 MimeMessage（MailKit/MimeKit 使用的格式）
             var mimeMessage = BuildMimeMessage(message);
 
-            // MailKit SmtpClient 实例
-            using var client = new SmtpClient();
+            using var client = new SmtpClient
+            {
+                Timeout = _options.Timeout
+            };
 
-            // 设置超时时间（毫秒）
-            client.Timeout = _options.Timeout;
+            await client.ConnectAsync( _options.SmtpServer, 587, SecureSocketOptions.StartTls, cancellationToken);
 
-            // 依据配置选择加密方式
-            var secureOption = GetSecureSocketOptions();
-
-            // 连接到 SMTP 服务器
-            await client.ConnectAsync(
-                _options.SmtpServer,
-                _options.Port,
-                secureOption,
-                cancellationToken);
-
-            // 如果配置了员工名，则进行 SMTP 身份认证
             if (!string.IsNullOrWhiteSpace(_options.UserName))
             {
                 await client.AuthenticateAsync(
@@ -64,76 +37,36 @@ namespace SystemAdmin.CommonSetup.Security
                     cancellationToken);
             }
 
-            // 发送邮件
             await client.SendAsync(mimeMessage, cancellationToken);
 
-            // 正常断开连接
             await client.DisconnectAsync(true, cancellationToken);
         }
 
-        /// <summary>
-        /// 根据 EmailMessage 构建 MimeMessage 对象
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
         private MimeMessage BuildMimeMessage(EmailMessage message)
         {
             var mimeMessage = new MimeMessage();
 
-            // 设置发件人（使用配置中的 From 和 DisplayName）
             mimeMessage.From.Add(new MailboxAddress(
                 _options.DisplayName,
                 _options.From));
 
-            // 收件人
             foreach (var to in message.To)
-            {
-                if (!string.IsNullOrWhiteSpace(to))
-                {
-                    mimeMessage.To.Add(MailboxAddress.Parse(to));
-                }
-            }
+                mimeMessage.To.Add(MailboxAddress.Parse(to));
 
-            // 抄送
-            if (message.Cc != null)
-            {
-                foreach (var cc in message.Cc)
-                {
-                    if (!string.IsNullOrWhiteSpace(cc))
-                    {
-                        mimeMessage.Cc.Add(MailboxAddress.Parse(cc));
-                    }
-                }
-            }
-
-            // 密送
-            if (message.Bcc != null)
-            {
-                foreach (var bcc in message.Bcc)
-                {
-                    if (!string.IsNullOrWhiteSpace(bcc))
-                    {
-                        mimeMessage.Bcc.Add(MailboxAddress.Parse(bcc));
-                    }
-                }
-            }
-
-            // 主题
             mimeMessage.Subject = message.Subject ?? string.Empty;
 
-            // 正文和附件构建
             var bodyBuilder = new BodyBuilder
             {
                 HtmlBody = message.IsHtml ? message.Body : null,
                 TextBody = message.IsHtml ? null : message.Body
             };
 
-            // 附件处理：只添加存在的文件
             if (message.Attachments != null)
             {
                 foreach (var path in message.Attachments)
                 {
-                    if (!string.IsNullOrWhiteSpace(path) && File.Exists(path))
+                    if (!string.IsNullOrWhiteSpace(path)
+                        && File.Exists(path))
                     {
                         bodyBuilder.Attachments.Add(path);
                     }
@@ -143,21 +76,6 @@ namespace SystemAdmin.CommonSetup.Security
             mimeMessage.Body = bodyBuilder.ToMessageBody();
 
             return mimeMessage;
-        }
-
-        /// <summary>
-        /// 根据配置决定使用的加密方式
-        /// </summary>
-        /// <returns></returns>
-        private SecureSocketOptions GetSecureSocketOptions()
-        {
-            if (_options.UseSsl)
-                return SecureSocketOptions.SslOnConnect;
-
-            if (_options.UseStartTls)
-                return SecureSocketOptions.StartTls;
-
-            return SecureSocketOptions.Auto;
         }
     }
 }
