@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
-namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow
+namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow.Dto
 {
     /// <summary>
     /// 表单审批人员

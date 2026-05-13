@@ -121,7 +121,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormBasicInfo
                 FormTypeNameCn = formtype.FormTypeNameCn,
                 FormTypeNameEn = formtype.FormTypeNameEn,
                 Prefix = formtype.Prefix,
-                ApprovalPath = formtype.ApprovalPath,
+                ReviewPath = formtype.ReviewPath,
                 ViewPath = formtype.ViewPath,
                 DescriptionCn = formtype.DescriptionCn,
                 DescriptionEn = formtype.DescriptionEn,

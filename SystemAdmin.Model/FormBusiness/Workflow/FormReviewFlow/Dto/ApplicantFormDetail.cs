@@ -1,4 +1,4 @@
-﻿namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow
+﻿namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow.Dto
 {
     /// <summary>
     /// 申请人表单详情

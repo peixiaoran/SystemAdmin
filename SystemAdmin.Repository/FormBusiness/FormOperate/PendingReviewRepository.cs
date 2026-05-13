@@ -134,7 +134,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                 ApplyUserDeptName = _lang.Locale == "zh-CN"
                                ? applyuserdept.DepartmentNameCn
                                : applyuserdept.DepartmentNameEn,
-                ApprovalPath = formtype.ApprovalPath,
+                ReviewPath = formtype.ReviewPath,
                 ViewPath = formtype.ViewPath,
                 isVoided = (instance.ApplicantUserId == loginUserId && instance.FormStatus != FormStatus.Voided.ToEnumString()) ? 1 : 0
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
@@ -193,7 +193,7 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                 ApplyUserDeptName = _lang.Locale == "zh-CN"
                                ? applyuserdept.DepartmentNameCn
                                : applyuserdept.DepartmentNameEn,
-                ApprovalPath = formtype.ApprovalPath,
+                ReviewPath = formtype.ReviewPath,
                 ViewPath = formtype.ViewPath,
                 isVoided = 0
             }).ToPageListAsync(getPage.PageIndex, getPage.PageSize, totalCount);
@@ -220,7 +220,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
                                 StepName = _lang.Locale == "zh-CN"
                                            ? step.StepNameCn
                                            : step.StepNameEn,
-                                AppointmentType = _lang.Locale == "zh-CN"
+                                AppointmentType = pending.AppointmentType,
+                                AppointmentTypeName = _lang.Locale == "zh-CN"
                                            ? dic.DicNameCn
                                            : dic.DicNameEn,
                                 ReviewUserName = _lang.Locale == "zh-CN"

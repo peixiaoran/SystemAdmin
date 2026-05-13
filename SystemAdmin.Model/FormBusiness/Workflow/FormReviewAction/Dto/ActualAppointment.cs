@@ -1,4 +1,4 @@
-﻿namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewAction
+﻿namespace SystemAdmin.Model.FormBusiness.Workflow.FormReviewAction.Dto
 {
     /// <summary>
     /// 实职和审批人身份

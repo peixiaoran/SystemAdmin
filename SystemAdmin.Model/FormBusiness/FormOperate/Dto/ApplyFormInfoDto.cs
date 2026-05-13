@@ -22,7 +22,7 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Dto
         /// <summary>
         /// 表单审批路径
         /// </summary>
-        public string ApprovalPath { get; set; } = string.Empty;
+        public string ReviewPath { get; set; } = string.Empty;
 
         /// <summary>
         /// 表单类别描述

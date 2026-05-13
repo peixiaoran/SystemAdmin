@@ -33,7 +33,7 @@
         /// <summary>
         /// 表单审批路径
         /// </summary>
-        public string ApprovalPath { get; set; } = string.Empty;
+        public string ReviewPath { get; set; } = string.Empty;
 
         /// <summary>
         /// 表单视图路径

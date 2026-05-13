@@ -1,15 +1,17 @@
 ﻿using SqlSugar;
+using SystemAdmin.Common.EmailTemplates;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.CommonSetup.Security;
-using SystemAdmin.Model.FormBusiness.FormOperate.Dto;
+using SystemAdmin.Model.FormBusiness.FormBasicInfo.Entity;
 using SystemAdmin.Model.FormBusiness.FormOperate.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Upsert;
 using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
-using SystemAdmin.Model.FormBusiness.Workflow.FormReviewAction;
-using SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow;
+using SystemAdmin.Model.FormBusiness.Workflow.FormReviewAction.Dto;
+using SystemAdmin.Model.FormBusiness.Workflow.FormReviewAction.Entity;
+using SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.UserSettings.Entity;
 
@@ -1660,7 +1662,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         #region 邮件通知
 
         /// <summary>
-        /// 查询指定步骤的待签核人
+        /// 邮件通知待签核人
         /// </summary>
         /// <param name="formId"></param>
         /// <param name="stepId"></param>
@@ -1668,6 +1670,29 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         private async Task NotifyPendingReviewers(long formId, long stepId)
         {
             var now = DateTime.Now;
+
+            // 写死的域名与登入连结
+            const string BaseDomain = "https://workflow.yourcompany.com";
+            const string LoginUrl = "https://workflow.yourcompany.com/login";
+
+            // 读取邮件模板
+            var template = EmailTemplateLoader.GetReviewNotice();
+
+            var formNotice = await _db.Queryable<FormInstanceEntity>()
+                                      .With(SqlWith.NoLock)
+                                      .InnerJoin<FormTypeEntity>((instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
+                                      .InnerJoin<WorkflowStepEntity>((instance, formtype, step) => instance.CurrentStepId == step.StepId)
+                                      .Where((instance, formtype, step) => instance.FormId == formId)
+                                      .Select((instance, formtype, step) => new FormNoticeDto()
+                                      {
+                                          FormId = instance.FormId,
+                                          FormNo = instance.FormNo,
+                                          FormTypeNameCn = formtype.FormTypeNameCn,
+                                          FormTypeNameEn = formtype.FormTypeNameEn,
+                                          ReviewPath = formtype.ReviewPath,
+                                          CurrentStepNameCn = step.StepNameCn,
+                                          CurrentStepNameEn = step.StepNameEn,
+                                      }).FirstAsync();
 
             var pendingUserIds = await _db.Queryable<PendingReviewEntity>()
                                           .With(SqlWith.NoLock)
@@ -1677,13 +1702,13 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
             var agentEntities = await _db.Queryable<UserAgentEntity>()
                                          .With(SqlWith.NoLock)
-                                         .Where(agent => pendingUserIds.Contains(agent.SubstituteUserId) && agent.StartTime <= now && agent.EndTime >= now)
+                                         .Where(useragent => pendingUserIds.Contains(useragent.SubstituteUserId) && useragent.StartTime <= now && useragent.EndTime >= now)
                                          .Select(agent => new { agent.SubstituteUserId, agent.AgentUserId })
                                          .ToListAsync();
 
             for (var i = 0; i < pendingUserIds.Count; i++)
             {
-                var agent = agentEntities.FirstOrDefault(agent => agent.SubstituteUserId == pendingUserIds[i]);
+                var agent = agentEntities.FirstOrDefault(a => a.SubstituteUserId == pendingUserIds[i]);
                 if (agent != null)
                 {
                     pendingUserIds[i] = agent.AgentUserId;
@@ -1697,13 +1722,53 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                         .Where(user => notifyUserIds.Contains(user.UserId) && user.IsRealtimeNotification == 1)
                                         .ToListAsync();
 
+            // 模板基础信息
+            var bodyBase = template
+                .Replace("{{FormNo}}", System.Net.WebUtility.HtmlEncode(formNotice.FormNo ?? string.Empty))
+                .Replace("{{FormTypeNameCn}}", System.Net.WebUtility.HtmlEncode(formNotice.FormTypeNameCn ?? string.Empty))
+                .Replace("{{FormTypeNameEn}}", System.Net.WebUtility.HtmlEncode(formNotice.FormTypeNameEn ?? string.Empty))
+                .Replace("{{CurrentStepNameCn}}", System.Net.WebUtility.HtmlEncode(formNotice.CurrentStepNameCn ?? string.Empty))
+                .Replace("{{CurrentStepNameEn}}", System.Net.WebUtility.HtmlEncode(formNotice.CurrentStepNameEn ?? string.Empty))
+                .Replace("{{LoginUrl}}", LoginUrl);
+
+            var expirationTime = now.AddDays(15);
+            var tokenEntities = new List<FormNotificationTokenEntity>(userInfoList.Count);
+            var userTokenMap = new Dictionary<long, string>(userInfoList.Count);
+
             foreach (var user in userInfoList)
             {
-                EmailMessage emailMsg = new EmailMessage
+                var token = GenerateSecureToken();
+                userTokenMap[user.UserId] = token;
+
+                tokenEntities.Add(new FormNotificationTokenEntity
+                {
+                    FormId = formNotice.FormId,
+                    ReviewUserId = user.UserId,
+                    Token = token,
+                    ExpirationTime = expirationTime,
+                    CreatedDate = now,
+                });
+            }
+
+            // 批次写入 Token
+            if (tokenEntities.Count > 0)
+            {
+                await _db.Insertable(tokenEntities).ExecuteCommandAsync();
+            }
+
+            foreach (var user in userInfoList)
+            {
+                var token = userTokenMap[user.UserId];
+                var separator = formNotice.ReviewPath?.Contains('?') == true ? "&" : "?";
+                var reviewUrl = $"{BaseDomain}{formNotice.ReviewPath}{separator}token={Uri.EscapeDataString(token)}";
+
+                var body = bodyBase.Replace("{{ReviewUrl}}", reviewUrl);
+
+                var emailMsg = new EmailMessage
                 {
                     To = new List<string> { user.Email },
-                    Subject = "待签核通知",
-                    Body = "您有新的待签核任务，请及时处理。"
+                    Subject = $"[待签核 / Pending Review] {formNotice.FormNo} - {formNotice.FormTypeNameCn}",
+                    Body = body,
                 };
 
                 await _mailKitEmail.SendAsync(emailMsg);
@@ -1758,6 +1823,21 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             AppointmentType.AutoConcurrent.ToEnumString(),
             AppointmentType.AutoConcurrentAgent.ToEnumString()
         );
+
+        /// <summary>
+        /// 产生密码学安全、URL-safe 的随机 Token（约 43 字元）
+        /// </summary>
+        private static string GenerateSecureToken()
+        {
+            Span<byte> buffer = stackalloc byte[32];
+            System.Security.Cryptography.RandomNumberGenerator.Fill(buffer);
+
+            // URL-safe Base64：移除 '+' '/' '='
+            return Convert.ToBase64String(buffer)
+                          .Replace('+', '-')
+                          .Replace('/', '_')
+                          .TrimEnd('=');
+        }
 
         #endregion
     }

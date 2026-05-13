@@ -16,6 +16,11 @@
         public string AppointmentType { get; set; } = string.Empty;
 
         /// <summary>
+        /// 待审批人身份名称
+        /// </summary>
+        public string AppointmentTypeName { get; set; } = string.Empty;
+
+        /// <summary>
         /// 待审批人名称
         /// </summary>
         public string ReviewUserName { get; set; } = string.Empty;
