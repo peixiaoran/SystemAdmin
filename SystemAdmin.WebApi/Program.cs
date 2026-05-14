@@ -32,11 +32,11 @@ builder.Services.AddMinioSetup(builder.Configuration);
 // 注入 文件上传设置
 builder.Services.AddFileUploadSetup(builder.Configuration);
 
-// 注入 MailKit
-builder.Services.AddMailKitSetup(builder.Configuration);
-
 // 注入 前端相关配置
 builder.Services.AddAppUrlSetup(builder.Configuration);
+
+// 注入 MailKit
+builder.Services.AddMailKitSetup(builder.Configuration);
 
 // 注入 获取语言服务
 builder.Services.AddLocalizationSetup();
