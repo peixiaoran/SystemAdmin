@@ -42,7 +42,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto
         /// <summary>
         /// 审批身份名称
         /// </summary>
-        public string ReviewAppointmentTypeName { get; set; } = string.Empty;
+        public string AppointmentTypeName { get; set; } = string.Empty;
 
         /// <summary>
         /// 原本审批员工姓名
@@ -52,7 +52,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto
         /// <summary>
         /// 实际审批员工姓名
         /// </summary>
-        public string OperationUserId { get; set; } = string.Empty;
+        public string OperationUserName { get; set; } = string.Empty;
 
         /// <summary>
         /// 审批时间

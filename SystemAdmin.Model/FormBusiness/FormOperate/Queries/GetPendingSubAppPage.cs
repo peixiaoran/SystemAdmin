@@ -3,7 +3,7 @@
 namespace SystemAdmin.Model.FormBusiness.FormOperate.Queries
 {
     /// <summary>
-    /// 查询待签核信息请求参数
+    /// 查询待审批请求参数
     /// </summary>
     public class GetPendingSubAppPage : PageModel
     {

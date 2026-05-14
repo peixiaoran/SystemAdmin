@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace SystemAdmin.Common.Enums.FormBusiness
+﻿namespace SystemAdmin.Common.Enums.FormBusiness
 {
     /// <summary>
     /// 审批状态
@@ -10,7 +6,7 @@ namespace SystemAdmin.Common.Enums.FormBusiness
     public enum FormReviewResult
     {
         /// <summary>
-        /// 未签核
+        /// 未审批
         /// </summary>
         Unsigned,
 
@@ -20,7 +16,7 @@ namespace SystemAdmin.Common.Enums.FormBusiness
         UnderReview,
 
         /// <summary>
-        /// 已签核
+        /// 已核准
         /// </summary>
         Approve,
     }

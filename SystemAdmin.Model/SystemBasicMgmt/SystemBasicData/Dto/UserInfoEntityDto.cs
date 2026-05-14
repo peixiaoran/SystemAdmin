@@ -147,7 +147,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto
         public int IsEmployed { get; set; }
 
         /// <summary>
-        /// 是否签核
+        /// 是否审批
         /// </summary>
         public int IsReview { get; set; }
 

@@ -40,7 +40,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Entity
         public string Assignment { get; set; } = string.Empty;
 
         /// <summary>
-        /// 签核方式（单签、会审、或签）
+        /// 审批方式（单审、会审、或审）
         /// </summary>
         public string ReviewMode { get; set; } = string.Empty;
 

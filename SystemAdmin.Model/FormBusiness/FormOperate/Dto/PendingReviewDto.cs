@@ -51,7 +51,7 @@ namespace SystemAdmin.Model.FormBusiness.FormOperate.Dto
         public string ApplyUserDeptName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 表单签核路径
+        /// 表单审批路径
         /// </summary>
         public string ReviewPath { get; set; } = string.Empty;
 

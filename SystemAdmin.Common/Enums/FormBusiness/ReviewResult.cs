@@ -6,7 +6,7 @@
     public enum ReviewResult
     {
         /// <summary>
-        /// 通过
+        /// 核准
         /// </summary>
         Approve = 1,
 

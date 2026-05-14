@@ -140,7 +140,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.UserSettings
                 PositionName = _lang.Locale == "zh-CN"
                                                  ? position.PositionNameCn
                                                  : position.PositionNameEn,
-                // 是否签核
+                // 是否审批
                 IsReview = user.IsReview,
                 // 兼任部门名称
                 PartTimeDeptId = userpart.PartTimeDeptId,

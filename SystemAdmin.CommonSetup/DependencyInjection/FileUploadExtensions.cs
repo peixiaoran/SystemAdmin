@@ -10,8 +10,7 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
         public static IServiceCollection AddFileUploadSetup(this IServiceCollection services, IConfiguration configuration)
         {
             // 绑定配置
-            services.Configure<FileUploadOptions>(
-                configuration.GetSection("FileUpload"));
+            services.Configure<FileUploadOptions>(configuration.GetSection("FileUpload"));
 
             // 同步设置表单上传大小限制
             var fileUploadSection = configuration.GetSection("FileUpload");

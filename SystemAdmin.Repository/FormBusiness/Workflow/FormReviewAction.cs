@@ -1,4 +1,5 @@
-﻿using SqlSugar;
+﻿using Microsoft.Extensions.Options;
+using SqlSugar;
 using SystemAdmin.Common.EmailTemplates;
 using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.Common.Utilities;
@@ -22,27 +23,29 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         private readonly CurrentUser _loginuser;
         private readonly SqlSugarScope _db;
         private readonly MailKitEmailSender _mailKitEmail;
+        private readonly AppUrlOptions _formNotice;
         private readonly LocalizationService _localization;
         private readonly Language _lang;
 
-        public FormReviewAction(CurrentUser loginuser, SqlSugarScope db, MailKitEmailSender mailKitEmail, LocalizationService localization, Language lang)
+        public FormReviewAction(CurrentUser loginuser, SqlSugarScope db, MailKitEmailSender mailKitEmail, IOptions<AppUrlOptions> formNotice, LocalizationService localization, Language lang)
         {
             _loginuser = loginuser;
             _db = db;
             _mailKitEmail = mailKitEmail;
+            _formNotice = formNotice.Value;
             _localization = localization;
             _lang = lang;
         }
 
         /// <summary>
-        /// 签核表单
+        /// 核准表单
         /// </summary>
         public async Task<bool> FromApprove(ReviewForm reviewForm)
         {
             long formId = long.Parse(reviewForm.FormId);
             var (stepInfo, ruleId) = await GetCurrentStepInfo(formId);
 
-            // 手动签核：手动操作处理当前步骤
+            // 手动核准：手动操作处理当前步骤
             bool hasPendingUsers = await ProcessStepApproval(formId, stepInfo, ReviewType.Manual, reviewForm.Comment);
 
             if (hasPendingUsers)
@@ -62,7 +65,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             // 推进步骤
             await AdvanceCurrentStep(formId, nextStep.NextStepId);
 
-            // 自动签核：继续检查后续步骤是否自动推进
+            // 自动核准：继续检查后续步骤是否自动推进
             bool needNotify = await AutoApproveIfSelfInNextSteps(formId);
 
             if (needNotify)
@@ -76,7 +79,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 自动签核：循环检查后续步骤，根据签核模式决定是否自动推进
+        /// 自动核准：循环检查后续步骤，根据审批模式决定是否自动推进
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
@@ -178,7 +181,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                     }
                 }
 
-                // 签核完成，推进到下一步骤
+                // 核准完成，推进到下一步骤
                 var nextStep = await GetNextStep(ruleId, stepInfo.StepId);
 
                 if (nextStep.NextStepId == 0)
@@ -192,7 +195,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 手动签核：处理某步骤的签核
+        /// 手动核准：处理某步骤的核准
         /// </summary>
         /// <param name="formId"></param>
         /// <param name="stepInfo"></param>
@@ -1554,7 +1557,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 更改表单为签核完成
+        /// 更改表单为已核准
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
@@ -1649,7 +1652,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                         RejectStepId = null,
                         Comment = comment,
                         ReviewType = reviewType.ToEnumString(),
-                        ReviewAppointmentType = appointmentCode,
+                        AppointmentType = appointmentCode,
                         OriginalUserId = appoint.ReviewUserId,
                         OperationUserId = reviewUserId,
                         ReviewDateTime = DateTime.Now,
@@ -1662,7 +1665,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         #region 邮件通知
 
         /// <summary>
-        /// 邮件通知待签核人
+        /// 邮件通知待审批人
         /// </summary>
         /// <param name="formId"></param>
         /// <param name="stepId"></param>
@@ -1670,108 +1673,93 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         private async Task NotifyPendingReviewers(long formId, long stepId)
         {
             var now = DateTime.Now;
-
-            // 写死的域名与登入连结
-            const string BaseDomain = "https://workflow.yourcompany.com";
-            const string LoginUrl = "https://workflow.yourcompany.com/login";
-
-            // 读取邮件模板
             var template = EmailTemplateLoader.GetReviewNotice();
 
+            // 1. 表单 + 当前步骤
             var formNotice = await _db.Queryable<FormInstanceEntity>()
-                                      .With(SqlWith.NoLock)
-                                      .InnerJoin<FormTypeEntity>((instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
-                                      .InnerJoin<WorkflowStepEntity>((instance, formtype, step) => instance.CurrentStepId == step.StepId)
-                                      .Where((instance, formtype, step) => instance.FormId == formId)
-                                      .Select((instance, formtype, step) => new FormNoticeDto()
-                                      {
-                                          FormId = instance.FormId,
-                                          FormNo = instance.FormNo,
-                                          FormTypeNameCn = formtype.FormTypeNameCn,
-                                          FormTypeNameEn = formtype.FormTypeNameEn,
-                                          ReviewPath = formtype.ReviewPath,
-                                          CurrentStepNameCn = step.StepNameCn,
-                                          CurrentStepNameEn = step.StepNameEn,
-                                      }).FirstAsync();
-
-            var pendingUserIds = await _db.Queryable<PendingReviewEntity>()
-                                          .With(SqlWith.NoLock)
-                                          .Where(pending => pending.FormId == formId && pending.StepId == stepId)
-                                          .Select(pending => pending.ReviewUserId)
-                                          .ToListAsync();
-
-            var agentEntities = await _db.Queryable<UserAgentEntity>()
-                                         .With(SqlWith.NoLock)
-                                         .Where(useragent => pendingUserIds.Contains(useragent.SubstituteUserId) && useragent.StartTime <= now && useragent.EndTime >= now)
-                                         .Select(agent => new { agent.SubstituteUserId, agent.AgentUserId })
-                                         .ToListAsync();
-
-            for (var i = 0; i < pendingUserIds.Count; i++)
-            {
-                var agent = agentEntities.FirstOrDefault(a => a.SubstituteUserId == pendingUserIds[i]);
-                if (agent != null)
+                .With(SqlWith.NoLock)
+                .InnerJoin<FormTypeEntity>((instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
+                .InnerJoin<WorkflowStepEntity>((instance, formtype, step) => instance.CurrentStepId == step.StepId)
+                .Where((instance, formtype, step) => instance.FormId == formId)
+                .Select((instance, formtype, step) => new FormNoticeDto
                 {
-                    pendingUserIds[i] = agent.AgentUserId;
-                }
-            }
+                    FormId = instance.FormId,
+                    FormNo = instance.FormNo,
+                    FormTypeNameCn = formtype.FormTypeNameCn,
+                    FormTypeNameEn = formtype.FormTypeNameEn,
+                    ReviewPath = formtype.ReviewPath,
+                    CurrentStepNameCn = step.StepNameCn,
+                    CurrentStepNameEn = step.StepNameEn,
+                }).FirstAsync();
 
-            var notifyUserIds = pendingUserIds.Distinct().ToList();
+            // 2. 待审批用户
+            var pendingUserIds = await _db.Queryable<PendingReviewEntity>()
+                .With(SqlWith.NoLock)
+                .Where(p => p.FormId == formId && p.StepId == stepId)
+                .Select(p => p.ReviewUserId)
+                .ToListAsync();
 
+            // 3. 代理人替换（字典 O(1)）
+            var agentMap = (await _db.Queryable<UserAgentEntity>()
+                                     .With(SqlWith.NoLock)
+                                     .Where(a => pendingUserIds.Contains(a.SubstituteUserId) && a.StartTime <= now && a.EndTime >= now)
+                                     .Select(a => new { a.SubstituteUserId, a.AgentUserId })
+                                     .ToListAsync())
+                                     .ToDictionary(a => a.SubstituteUserId, a => a.AgentUserId);
+
+            var notifyUserIds = pendingUserIds
+                                .Select(id => agentMap.TryGetValue(id, out var agentId) ? agentId : id)
+                                .Distinct()
+                                .ToList();
+
+            // 4. 收件人（仅订阅实时通知的）
             var userInfoList = await _db.Queryable<UserInfoEntity>()
                                         .With(SqlWith.NoLock)
-                                        .Where(user => notifyUserIds.Contains(user.UserId) && user.IsRealtimeNotification == 1)
+                                        .Where(u => notifyUserIds.Contains(u.UserId) && u.IsRealtimeNotification == 1)
                                         .ToListAsync();
 
-            // 模板基础信息
+            if (userInfoList.Count == 0) return;
+
+            // 5. 模板基础内容（与用户无关的部分一次替换）
             var bodyBase = template
                 .Replace("{{FormNo}}", System.Net.WebUtility.HtmlEncode(formNotice.FormNo ?? string.Empty))
                 .Replace("{{FormTypeNameCn}}", System.Net.WebUtility.HtmlEncode(formNotice.FormTypeNameCn ?? string.Empty))
                 .Replace("{{FormTypeNameEn}}", System.Net.WebUtility.HtmlEncode(formNotice.FormTypeNameEn ?? string.Empty))
                 .Replace("{{CurrentStepNameCn}}", System.Net.WebUtility.HtmlEncode(formNotice.CurrentStepNameCn ?? string.Empty))
                 .Replace("{{CurrentStepNameEn}}", System.Net.WebUtility.HtmlEncode(formNotice.CurrentStepNameEn ?? string.Empty))
-                .Replace("{{LoginUrl}}", LoginUrl);
+                .Replace("{{LoginUrl}}", _formNotice.LoginUrl);
 
+            // 6. 生成 token + 批量入库
             var expirationTime = now.AddDays(15);
-            var tokenEntities = new List<FormNotificationTokenEntity>(userInfoList.Count);
-            var userTokenMap = new Dictionary<long, string>(userInfoList.Count);
+            var tokens = userInfoList.ToDictionary(u => u.UserId, _ => GenerateSecureToken());
 
+            var tokenEntities = tokens.Select(kv => new FormNotificationTokenEntity
+            {
+                FormId = formNotice.FormId,
+                ReviewUserId = kv.Key,
+                Token = kv.Value,
+                ExpirationTime = expirationTime,
+                CreatedDate = now,
+            }).ToList();
+
+            await _db.Insertable(tokenEntities).ExecuteCommandAsync();
+
+            // 7. 逐人发送
             foreach (var user in userInfoList)
             {
-                var token = GenerateSecureToken();
-                userTokenMap[user.UserId] = token;
+                var reviewUrl = BuildReviewUrl(_formNotice.BaseDomain, formNotice.ReviewPath, tokens[user.UserId]);
+                var greeting = BuildGreeting(user.UserNameCn, user.UserNameEn, user.Gender);
 
-                tokenEntities.Add(new FormNotificationTokenEntity
-                {
-                    FormId = formNotice.FormId,
-                    ReviewUserId = user.UserId,
-                    Token = token,
-                    ExpirationTime = expirationTime,
-                    CreatedDate = now,
-                });
-            }
+                var body = bodyBase
+                    .Replace("{{Greeting}}", greeting)
+                    .Replace("{{ReviewUrl}}", reviewUrl);
 
-            // 批次写入 Token
-            if (tokenEntities.Count > 0)
-            {
-                await _db.Insertable(tokenEntities).ExecuteCommandAsync();
-            }
-
-            foreach (var user in userInfoList)
-            {
-                var token = userTokenMap[user.UserId];
-                var separator = formNotice.ReviewPath?.Contains('?') == true ? "&" : "?";
-                var reviewUrl = $"{BaseDomain}{formNotice.ReviewPath}{separator}token={Uri.EscapeDataString(token)}";
-
-                var body = bodyBase.Replace("{{ReviewUrl}}", reviewUrl);
-
-                var emailMsg = new EmailMessage
+                await _mailKitEmail.SendAsync(new EmailMessage
                 {
                     To = new List<string> { user.Email },
-                    Subject = $"[待签核 / Pending Review] {formNotice.FormNo} - {formNotice.FormTypeNameCn}",
+                    Subject = $"[待审批 / Pending Review] {formNotice.FormNo} - {formNotice.FormTypeNameCn}",
                     Body = body,
-                };
-
-                await _mailKitEmail.SendAsync(emailMsg);
+                });
             }
         }
 
@@ -1837,6 +1825,25 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                           .Replace('+', '-')
                           .Replace('/', '_')
                           .TrimEnd('=');
+        }
+
+        private static string BuildReviewUrl(string baseDomain, string reviewPath, string token)
+        {
+            var separator = reviewPath?.Contains('?') == true ? "&" : "?";
+            return $"{baseDomain}{reviewPath}{separator}token={Uri.EscapeDataString(token)}";
+        }
+
+        private static string BuildGreeting(string userNameCn, string userNameEn, int gender)
+        {
+            // Gender: 1=男, 其他=女（按需调整）
+            var cnTitle = gender == 1 ? "先生" : "女士";
+            var enTitle = gender == 1 ? "Mr." : "Ms.";
+
+            var cnName = System.Net.WebUtility.HtmlEncode(userNameCn ?? string.Empty);
+            var enName = System.Net.WebUtility.HtmlEncode(userNameEn ?? string.Empty);
+
+            // 例：尊敬的 张三 先生 / Dear Mr. San Zhang，您好！
+            return $"尊敬的 {cnName} {cnTitle} / Dear {enTitle} {enName}，您好！";
         }
 
         #endregion

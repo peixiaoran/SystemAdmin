@@ -1169,7 +1169,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 取最后一笔驳回记录之后的有效签核数据
+        /// 取最后一笔驳回记录之后的有效核准数据
         /// </summary>
         private async Task<List<FormReviewRecordEntity>> GetValidReviewRecords(long formId)
         {
@@ -1195,7 +1195,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 获取表单签核结果，填充每个步骤及每位签核人员的状态
+        /// 获取表单审批结果，填充每个步骤及每位审批人员的状态
         /// </summary>
         public async Task<List<StepReview>> GetFormReviewResult(long formId, long currentStepId, List<StepReview> reviewFlow)
         {
@@ -1215,7 +1215,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
                         if (!isCurrentStep)
                         {
-                            // 步骤不匹配，检查历史记录是否有签核
+                            // 步骤不匹配，检查历史记录是否有核准
                             bool hasSigned = validRecords.Any(record =>
                                 record.StepId == flow.StepId &&
                                 (record.OperationUserId == user.ReviewUserId || record.OperationUserId == user.AgentUserId));
@@ -1226,7 +1226,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                         }
                         else
                         {
-                            // 步骤匹配，再看该用户是否已签核
+                            // 步骤匹配，再看该用户是否已核准
                             bool hasSigned = validRecords.Any(record =>
                                 record.StepId == flow.StepId &&
                                 (record.OperationUserId == user.ReviewUserId || record.OperationUserId == user.AgentUserId));

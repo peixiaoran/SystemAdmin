@@ -45,7 +45,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         public string NationalityName { get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否签核描述
+        /// 是否审批描述
         /// </summary>
         [JsonConverter(typeof(IntToStringConverter))]
         public int IsReview { get; set; }

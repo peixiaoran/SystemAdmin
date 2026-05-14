@@ -25,7 +25,7 @@ namespace SystemAdmin.Model.SystemBasicMgmt.UserSettings.Dto
         public string UserName {  get; set; } = string.Empty;
 
         /// <summary>
-        /// 是否签核
+        /// 是否审批
         /// </summary>
         [JsonConverter(typeof(IntToStringConverter))]
         public int IsReview { get; set; }

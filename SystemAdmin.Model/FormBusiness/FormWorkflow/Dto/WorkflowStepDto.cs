@@ -47,7 +47,7 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public string Assignment { get; set; } = string.Empty;
 
         /// <summary>
-        /// 签核方式（单签、会审、或签）
+        /// 审批方式（单审、会审、或审）
         /// </summary>
         public string ReviewMode { get; set; } = string.Empty;
 
@@ -67,22 +67,22 @@ namespace SystemAdmin.Model.FormBusiness.FormWorkflow.Dto
         public int SortOrder { get; set; }
 
         /// <summary>
-        /// 签核步骤组织架构来源实体
+        /// 审批步骤组织架构来源实体
         /// </summary>
         public WorkflowStepOrgDto workflowStepOrgDto { get; set; } = new WorkflowStepOrgDto();
 
         /// <summary>
-        /// 签核步骤组织架构来源实体
+        /// 审批步骤组织架构来源实体
         /// </summary>
         public WorkflowStepDeptUserDto workflowStepDeptUserDto { get; set; } = new WorkflowStepDeptUserDto();
 
         /// <summary>
-        /// 签核步骤指定员工来源实体
+        /// 审批步骤指定员工来源实体
         /// </summary>
         public WorkflowStepUserDto workflowStepUserDto { get; set; } = new WorkflowStepUserDto();
 
         /// <summary>
-        /// 签核步骤自定义来源实体
+        /// 审批步骤自定义来源实体
         /// </summary>
         public WorkflowStepCustomDto workflowStepCustomDto { get; set; } = new WorkflowStepCustomDto();
     }

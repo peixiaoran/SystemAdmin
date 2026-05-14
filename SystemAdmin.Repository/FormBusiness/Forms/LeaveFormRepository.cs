@@ -1,5 +1,7 @@
 ﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using SqlSugar;
+using SystemAdmin.Common.Enums.FormBusiness;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
@@ -150,11 +152,43 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
         public async Task<List<FormReviewRecordDto>> GetReviewRecordList(long formId)
         {
             var list = await _db.Queryable<FormReviewRecordEntity>()
-                                .InnerJoin<WorkflowStepEntity>((review, step) => review.StepId == step.StepId)
-                                .InnerJoin<DictionaryInfoEntity>((review, step, reviewresult) => reviewresult.DicType == "ReviewResult" && review.ReviewResult == reviewresult.DicCode)
                                 .With(SqlWith.NoLock)
-                                .Where(formfile => formfile.FormId == formId)
-                                .ToListAsync();
+                                .InnerJoin<WorkflowStepEntity>((record, step) => record.StepId == step.StepId)
+                                .InnerJoin<DictionaryInfoEntity>((record, step, reviewresult) => reviewresult.DicType == "ReviewResult" && record.ReviewResult == reviewresult.DicCode)
+                                .LeftJoin<WorkflowStepEntity>((record, step, reviewresult, rejectstep) => record.RejectStepId == rejectstep.StepId)
+                                .InnerJoin<DictionaryInfoEntity>((record, step, reviewresult, rejectstep, reivewtype) => reivewtype.DicType == "ReviewType" && record.ReviewType == reivewtype.DicCode)
+                                .InnerJoin<DictionaryInfoEntity>((record, step, reviewresult, rejectstep, reivewtype, appointmenttype) => appointmenttype.DicType == "AppointmentType" && record.AppointmentType == appointmenttype.DicCode)
+                                .InnerJoin<UserInfoEntity>((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser) => record.OriginalUserId == originaluser.UserId)
+                                .InnerJoin<UserInfoEntity>((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser, operationUser) => record.OperationUserId == operationUser.UserId)
+                                .Where((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser, operationuser) => record.FormId == formId)
+                                .OrderBy((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser, operationuser) => record.ReviewDateTime)
+                                .Select((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser, operationuser) => new FormReviewRecordDto
+                                {
+                                    FormId = record.FormId,
+                                    StepName = _lang.Locale == "zh-CN"
+                                               ? step.StepNameCn
+                                               : step.StepNameEn,
+                                    ReviewResultName = _lang.Locale == "zh-CN"
+                                               ? reviewresult.DicNameCn
+                                               : reviewresult.DicNameEn,
+                                    RejectStepName = _lang.Locale == "zh-CN"
+                                               ? rejectstep.StepNameCn
+                                               : rejectstep.StepNameEn,
+                                    Comment = record.Comment,
+                                    ReviewTypeName = _lang.Locale == "zh-CN"
+                                               ? reivewtype.DicNameCn
+                                               : reivewtype.DicNameEn,
+                                    AppointmentTypeName = _lang.Locale == "zh-CN"
+                                               ? appointmenttype.DicNameCn
+                                               : appointmenttype.DicNameEn,
+                                    OriginalUserName = _lang.Locale == "zh-CN"
+                                               ? originaluser.UserNameCn
+                                               : originaluser.UserNameEn,
+                                    OperationUserName = _lang.Locale == "zh-CN"
+                                               ? operationuser.UserNameCn
+                                               : operationuser.UserNameEn,
+                                    ReviewDateTime = record.ReviewDateTime,
+                                }).ToListAsync();
             return list.Adapt<List<FormReviewRecordDto>>();
         }
     }

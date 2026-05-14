@@ -3,7 +3,7 @@
 namespace SystemAdmin.Model.FormBusiness.FormOperate.Entity
 {
     /// <summary>
-    /// 表单待签核人表
+    /// 表单待审批人表
     /// </summary>
     [SugarTable("[Form].[PendingReview]")]
     public class PendingReviewEntity

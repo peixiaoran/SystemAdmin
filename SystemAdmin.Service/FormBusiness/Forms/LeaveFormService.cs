@@ -93,6 +93,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                     var leaveFormDto = await _leaveForm.GetLeaveForm(long.Parse(formId));
                     leaveFormDto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
+                    leaveFormDto.ReviewRecordList = await _leaveForm.GetReviewRecordList(long.Parse(formId));
                     return Result<LeaveFormDto>.Ok(leaveFormDto);
                 }
             }
@@ -159,6 +160,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                 var form = await _leaveForm.GetLeaveForm(long.Parse(formId));
                 form.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
+                form.ReviewRecordList = await _leaveForm.GetReviewRecordList(long.Parse(formId));
                 return Result<LeaveFormDto>.Ok(form);
             }
             catch (Exception ex)
@@ -266,7 +268,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 查询完整签核流程
+        /// 查询完整审批流程
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>
@@ -285,7 +287,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         }
 
         /// <summary>
-        /// 签核请假单
+        /// 核准请假单
         /// </summary>
         /// <param name="reviewForm"></param>
         /// <returns></returns>

@@ -15,8 +15,7 @@ namespace SystemAdmin.CommonSetup.Security
 
         public CurrentUser(IHttpContextAccessor httpContextAccessor)
         {
-            _httpContextAccessor = httpContextAccessor
-                ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
         private ClaimsPrincipal? Principal => _httpContextAccessor.HttpContext?.User;

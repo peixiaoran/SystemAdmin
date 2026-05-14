@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 namespace SystemAdmin.CommonSetup.Security
 {
     /// <summary>
-    /// Jwt Token 生成 & 校验服务（ES256 + HttpOnly Cookie 支持）
+    /// Jwt Token 生成
     /// </summary>
     public sealed class JwtTokenService : IDisposable
     {
@@ -52,9 +52,12 @@ namespace SystemAdmin.CommonSetup.Security
         }
 
         /// <summary>
-        /// 登录成功时调用：生成 Token 并写入 HttpOnly Cookie。
-        /// 前端不需要拿到 Token 字符串。
+        ///  登录成功时调用：生成 Token 并写入 HttpOnly Cookie。
         /// </summary>
+        /// <param name="response"></param>
+        /// <param name="userId"></param>
+        /// <param name="userNo"></param>
+        /// <exception cref="ArgumentNullException"></exception>
         public void SetAuthCookie(HttpResponse response, long userId, string userNo)
         {
             if (response == null) throw new ArgumentNullException(nameof(response));
@@ -79,9 +82,11 @@ namespace SystemAdmin.CommonSetup.Security
         }
 
         /// <summary>
-        /// 可选：需要时仍然可以拿到 Token 字符串（比如给第三方系统用）。
-        /// 一般业务登录不需要调用这个。
+        /// 需要时仍然可以拿到 Token 字符串（比如给第三方系统用）。
         /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="userNo"></param>
+        /// <returns></returns>
         public string GenerateTokenString(long userId, string userNo)
         {
             return GenerateTokenInternal(userId, userNo);

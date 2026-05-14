@@ -496,7 +496,7 @@ namespace SystemAdmin.Service.SystemBasicMgmt.SystemBasicData
                     { "Email", ExcelColumnConfig.Text },// 邮箱，防 @ 被解析
                     { "PhoneNumber", ExcelColumnConfig.Text },// 手机号，防科学计数
                     { "IsEmployedName", ExcelColumnConfig.Text },// 在职状态
-                    { "IsReviewName", ExcelColumnConfig.Text },// 签核状态
+                    { "IsReviewName", ExcelColumnConfig.Text },// 审批状态
                     { "IsFreezeName", ExcelColumnConfig.Text },// 冻结状态
                 };
                 var headers = new Dictionary<string, string>

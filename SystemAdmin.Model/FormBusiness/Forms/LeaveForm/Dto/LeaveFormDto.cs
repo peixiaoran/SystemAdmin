@@ -85,5 +85,10 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
         /// 附件列表
         /// </summary>
         public List<FormAttachmentDto> AttachmentList { get; set; } = new List<FormAttachmentDto>();
+
+        /// <summary>
+        /// 审批记录表
+        /// </summary>
+        public List<FormReviewRecordDto> ReviewRecordList { get; set; } = new List<FormReviewRecordDto>();
     }
 }

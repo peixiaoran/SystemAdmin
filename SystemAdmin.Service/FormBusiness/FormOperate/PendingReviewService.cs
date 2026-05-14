@@ -102,7 +102,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         }
 
         /// <summary>
-        /// 查询待签核分页
+        /// 查询待审批分页
         /// </summary>
         /// <returns></returns>
         public async Task<ResultPaged<PendingReviewDto>> GetPendingReviewPage(GetPendingSubAppPage getpage)
@@ -119,7 +119,7 @@ namespace SystemAdmin.Service.FormBusiness.FormOperate
         }
 
         /// <summary>
-        /// 查询表单待签核人列表
+        /// 查询表单待审批人列表
         /// </summary>
         /// <param name="formId"></param>
         /// <returns></returns>

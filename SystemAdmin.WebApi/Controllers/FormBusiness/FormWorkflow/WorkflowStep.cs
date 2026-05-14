@@ -46,7 +46,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormWorkflow
 
         [HttpPost]
         [Tags("表单业务管理-表单流程配置")]
-        [EndpointSummary("[流程步骤详情] 步骤签核方式下拉")]
+        [EndpointSummary("[流程步骤详情] 步骤审批方式下拉")]
         public async Task<Result<List<ReviewModeDropDto>>> GetReviewModeDrop()
         {
             return await _workflowStepService.GetReviewModeDrop();

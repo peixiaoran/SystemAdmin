@@ -86,7 +86,7 @@ namespace SystemAdmin.Service.FormBusiness.FormWorkflow
         }
 
         /// <summary>
-        /// 步骤签核方式下拉
+        /// 步骤审批方式下拉
         /// </summary>
         /// <returns></returns>
         public async Task<Result<List<ReviewModeDropDto>>> GetReviewModeDrop()

@@ -44,7 +44,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[待签表单列表] 查询待送审分页")]
+        [EndpointSummary("[待审表单列表] 查询待送审分页")]
         public async Task<ResultPaged<PendingReviewDto>> GetPendingSubmissionPage([FromBody] GetPendingSubAppPage getpage)
         {
             return await _pendingReviewService.GetPendingSubmissionPage(getpage);
@@ -52,7 +52,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[待签表单列表] 查询待签核分页")]
+        [EndpointSummary("[待审表单列表] 查询待审批分页")]
         public async Task<ResultPaged<PendingReviewDto>> GetPendingReviewPage([FromBody] GetPendingSubAppPage getpage)
         {
             return await _pendingReviewService.GetPendingReviewPage(getpage);
@@ -60,7 +60,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.FormOperate
 
         [HttpPost]
         [Tags("表单业务管理-表单作业模块")]
-        [EndpointSummary("[待签表单列表] 查询表单待签核人列表")]
+        [EndpointSummary("[待审表单列表] 查询表单待审批人列表")]
         public async Task<Result<List<FormPendingReviewDto>>> GetFormPendingReview([FromForm] string formId)
         {
             return await _pendingReviewService.GetFormPendingReview(formId);

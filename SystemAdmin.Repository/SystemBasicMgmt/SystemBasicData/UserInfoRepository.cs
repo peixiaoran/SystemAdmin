@@ -449,7 +449,7 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                     ? (user.IsEmployed == 1 ? "在职" : "离职")
                                                     : (user.IsEmployed == 1 ? "Yes" : "No"),
                                    IsReviewName = _lang.Locale == "zh-CN"
-                                                    ? (user.IsReview == 1 ? "需要签核" : "无需签核")
+                                                    ? (user.IsReview == 1 ? "需要审批" : "无需审批")
                                                     : (user.IsReview == 1 ? "Yes" : "No"),
                                    IsFreezeName = _lang.Locale == "zh-CN"
                                                     ? (user.IsFreeze == 1 ? "已冻结" : "未冻结")

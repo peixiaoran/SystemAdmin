@@ -41,7 +41,7 @@ namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity
         /// <summary>
         /// 审批身份
         /// </summary>
-        public string ReviewAppointmentType { get; set; } = string.Empty;
+        public string AppointmentType { get; set; } = string.Empty;
 
         /// <summary>
         /// 原本审批员工Id
