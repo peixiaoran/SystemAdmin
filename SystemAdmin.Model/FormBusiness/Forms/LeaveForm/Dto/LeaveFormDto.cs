@@ -1,5 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto;
+using SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow.Dto;
 using SystemAdmin.Model.ModelHelper.ModelConverter;
 
 namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
@@ -80,6 +81,11 @@ namespace SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto
         /// 代理人工号
         /// </summary>
         public string AgentUserNo { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 可驳回下拉
+        /// </summary>
+        public List<RejectStepDrop> RejectStepDrop { get; set; } = new List<RejectStepDrop>();
 
         /// <summary>
         /// 附件列表

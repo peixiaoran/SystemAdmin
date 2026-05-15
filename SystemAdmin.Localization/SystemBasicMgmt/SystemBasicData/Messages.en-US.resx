@@ -297,4 +297,28 @@
   <data name="DeptInfoDeptCodeExist" xml:space="preserve">
     <value>Department code already exists, please re-enter</value>
   </data>
+  <data name="UserExcel_GenderMale" xml:space="preserve">
+    <value>Male</value>
+  </data>
+  <data name="UserExcel_GenderFemale" xml:space="preserve">
+    <value>Female</value>
+  </data>
+  <data name="UserExcel_IsEmployedCurrent" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="UserExcel_IsEmployedFormer" xml:space="preserve">
+    <value>Former</value>
+  </data>
+  <data name="UserExcel_IsReviewRequired" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="UserExcel_IsReviewNorequired" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="UserExcel_IsFreezeNormal" xml:space="preserve">
+    <value>Normal</value>
+  </data>
+  <data name="UserExcel_IsReviewFrozen" xml:space="preserve">
+    <value>Frozen</value>
+  </data>
 </root>

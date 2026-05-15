@@ -15,14 +15,12 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
     {
         private readonly CurrentUser _loginuser;
         private readonly SqlSugarScope _db;
-        private readonly LocalizationService _localization;
         private readonly Language _lang;
 
-        public FormReviewFlow(CurrentUser loginuser, SqlSugarScope db, LocalizationService localization, Language lang)
+        public FormReviewFlow(CurrentUser loginuser, SqlSugarScope db, Language lang)
         {
             _loginuser = loginuser;
             _db = db;
-            _localization = localization;
             _lang = lang;
         }
 
@@ -35,6 +33,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         {
             var formReview = new FormReview();
             var stepReviewList = new List<StepReview>();
+
             formReview.FormId = formId;
 
             var formDetail = await _db.Queryable<FormInstanceEntity>()
@@ -88,6 +87,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
                 stepReview.StepId = currentStepId;
                 stepReview.StepName = stepInfo.StepName;
+
                 if (stepInfo.IsStartStep == 1)
                 {
                     userReview = await GetStartReviewUser(formDetail.ApplicantUserId);
@@ -150,10 +150,156 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             return formReview;
         }
 
-        #region 查询完整流程审核人员
+        /// <summary>
+        /// 查询可驳回步骤
+        /// </summary>
+        /// <param name="formId"></param>
+        /// <returns></returns>
+        /// <summary>
+        public async Task<List<RejectStepDrop>> GetRejectStepDrop(long formId)
+        {
+            var stepReviewList = new List<StepReview>();
+
+            var formDetail = await _db.Queryable<FormInstanceEntity>()
+                                      .With(SqlWith.NoLock)
+                                      .InnerJoin<FormTypeEntity>((instance, formtype) => instance.FormTypeId == formtype.FormTypeId)
+                                      .InnerJoin<UserInfoEntity>((instance, formtype, user) => instance.ApplicantUserId == user.UserId)
+                                      .InnerJoin<DepartmentInfoEntity>((instance, formtype, user, dept) => user.DepartmentId == dept.DepartmentId)
+                                      .InnerJoin<DepartmentLevelEntity>((instance, formtype, user, dept, deptlevel) => dept.DepartmentLevelId == deptlevel.DepartmentLevelId)
+                                      .InnerJoin<PositionInfoEntity>((instance, formtype, user, dept, deptlevel, position) => user.PositionId == position.PositionId)
+                                      .Where((instance, formtype, user, dept, deptlevel, position) => instance.FormId == formId)
+                                      .Select((instance, formtype, user, dept, deptlevel, position) => new ApplicantFormDetail
+                                      {
+                                          FormId = instance.FormId,
+                                          FormTypeId = instance.FormTypeId,
+                                          RuleId = instance.RuleId,
+                                          CurrentStepId = instance.CurrentStepId,
+                                          ApplicantUserId = user.UserId,
+                                          ApplicantDeptId = dept.DepartmentId,
+                                          DeptLevelSort = deptlevel.SortOrder,
+                                          PositionSort = position.SortOrder
+                                      }).FirstAsync();
+
+            // 申请人上级部门列表（包含申请人所在部门）
+            var applicantDept = await _db.Queryable<DepartmentInfoEntity>()
+                                         .With(SqlWith.NoLock)
+                                         .ToParentListAsync(dept => dept.ParentId, formDetail.ApplicantDeptId);
+            // 所属规则的初始步骤
+            var ruleStep = await _db.Queryable<WorkflowRuleStepEntity>()
+                                    .With(SqlWith.NoLock)
+                                    .Where(rule => rule.RuleId == formDetail.RuleId && rule.SortOrder == 1)
+                                    .FirstAsync();
+
+            var currentStepId = ruleStep.CurrentStepId;
+            while (currentStepId != 0)
+            {
+                var stepReview = new StepReview();
+                var userReview = new List<UserReview>();
+
+                var stepInfo = await _db.Queryable<WorkflowStepEntity>()
+                                        .With(SqlWith.NoLock)
+                                        .Where(step => step.StepId == currentStepId)
+                                        .Select(step => new
+                                        {
+                                            StepName = _lang.Locale == "zh-CN"
+                                                       ? step.StepNameCn
+                                                       : step.StepNameEn,
+                                            step.IsStartStep,
+                                            step.Assignment,
+                                            step.ReviewMode,
+                                        }).FirstAsync();
+
+                stepReview.StepId = currentStepId;
+                stepReview.StepName = stepInfo.StepName;
+
+                if (stepInfo.IsStartStep == 1)
+                {
+                    userReview = await GetStartReviewUser(formDetail.ApplicantUserId);
+                }
+                else if (stepInfo.Assignment == Assignment.Org.ToEnumString())
+                {
+                    var orgInfo = await _db.Queryable<WorkflowStepOrgEntity>()
+                                           .With(SqlWith.NoLock)
+                                           .Where(step => step.StepId == currentStepId)
+                                           .FirstAsync();
+
+                    // 查询部门级别信息和职位信息
+                    var deptInfo = await _db.Queryable<DepartmentLevelEntity>()
+                                            .With(SqlWith.NoLock)
+                                            .Where(dept => dept.DepartmentLevelId == orgInfo.DeptLeaveId)
+                                            .FirstAsync();
+                    var posInfo = await _db.Queryable<PositionInfoEntity>()
+                                           .With(SqlWith.NoLock)
+                                           .Where(pos => pos.PositionId == orgInfo.PositionId)
+                                           .FirstAsync();
+                    if (formDetail.DeptLevelSort < deptInfo.SortOrder || formDetail.PositionSort <= posInfo.SortOrder)
+                    {
+                        stepReview.Skip = 1;
+                    }
+                    else
+                    {
+                        userReview = await GetOrgReviewUser(applicantDept, orgInfo.DeptLeaveId, orgInfo.PositionId, stepInfo.ReviewMode);
+                    }
+                }
+                else if (stepInfo.Assignment == Assignment.DeptUser.ToEnumString())
+                {
+                    var deptUserInfo = await _db.Queryable<WorkflowStepDeptUserEntity>()
+                                                .With(SqlWith.NoLock)
+                                                .Where(step => step.StepId == currentStepId)
+                                                .FirstAsync();
+                    userReview = await GetDeptUserReviewUser(deptUserInfo.DepartmentId, deptUserInfo.PositionId, stepInfo.ReviewMode);
+                }
+                else if (stepInfo.Assignment == Assignment.User.ToEnumString())
+                {
+                    var userInfo = await _db.Queryable<WorkflowStepUserEntity>()
+                                            .With(SqlWith.NoLock)
+                                            .Where(step => step.StepId == currentStepId)
+                                            .FirstAsync();
+                    userReview = await GetUserReviewUser(userInfo.UserId, stepInfo.ReviewMode);
+                }
+
+                stepReview.stepReviewUser.AddRange(userReview);
+                stepReviewList.Add(stepReview);
+
+                currentStepId = await _db.Queryable<WorkflowRuleStepEntity>()
+                                         .With(SqlWith.NoLock)
+                                         .Where(rule => rule.RuleId == formDetail.RuleId && rule.CurrentStepId == currentStepId)
+                                         .Select(rule => rule.NextStepId)
+                                         .FirstAsync();
+            }
+
+            // 查询当前步骤及所有候选步骤的 SortOrder
+            var allStepIds = stepReviewList.Select(stepreview => stepreview.StepId).Append(formDetail.CurrentStepId).Distinct().ToList();
+            var stepSortDict = (await _db.Queryable<WorkflowStepEntity>()
+                                         .With(SqlWith.NoLock)
+                                         .Where(step => allStepIds.Contains(step.StepId))
+                                         .Select(step => new { step.StepId, step.SortOrder })
+                                         .ToListAsync())
+                                         .ToDictionary(step => step.StepId, step => step.SortOrder);
+
+            var currentSortOrder = stepSortDict.GetValueOrDefault(formDetail.CurrentStepId, int.MaxValue);
+
+            // 筛选可驳回步骤
+            var rejectStepDropList = stepReviewList
+                                    .Where(step => step.Skip != 1)
+                                    .Where(step => stepSortDict.GetValueOrDefault(step.StepId, int.MaxValue) < currentSortOrder) // 只保留排序小于当前步骤的
+                                    .Where(step => !step.stepReviewUser.Any(user =>
+                                        user.ReviewUserId == _loginuser.UserId ||
+                                        user.AgentUserId == _loginuser.UserId))
+                                    .OrderBy(step => stepSortDict.GetValueOrDefault(step.StepId, int.MaxValue)) // 按 SortOrder 升序
+                                    .Select(step => new RejectStepDrop
+                                    {
+                                        StepId = step.StepId,
+                                        StepName = step.StepName
+                                    }).ToList();
+
+            return rejectStepDropList;
+        }
+
+        #region 查询步骤审批人员
 
         /// <summary>
-        /// 查询起始步骤审核人员
+        /// 查询起始步骤审批人员
         /// </summary>
         /// <param name="applicantUserId"></param>
         /// <returns></returns>
@@ -219,7 +365,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 查询按照组织架构审核人员
+        /// 查询按照组织架构审批人员
         /// </summary>
         /// <param name="applicantParentDept"></param>
         /// <param name="deptLeaveId"></param>
@@ -531,7 +677,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 查询按照指定部门指定职级审核人员
+        /// 查询按照指定部门指定职级审批人员
         /// </summary>
         /// <param name="departmentId"></param>
         /// <param name="positionId"></param>
@@ -851,7 +997,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 查询按照指定人审核人员
+        /// 查询按照指定人审批人员
         /// </summary>
         /// <param name="userId"></param>
         /// <param name="reviewMode"></param>
@@ -1254,6 +1400,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
         #endregion
 
+        #region 工具
+
         /// <summary>
         /// 排序
         /// </summary>
@@ -1298,5 +1446,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             AppointmentType.AutoConcurrent.ToEnumString(),
             AppointmentType.AutoConcurrentAgent.ToEnumString()
         );
+
+        #endregion
+
     }
 }

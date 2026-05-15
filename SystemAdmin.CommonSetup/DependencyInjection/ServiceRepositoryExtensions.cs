@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace SystemAdmin.CommonSetup.DependencyInjection
 {
@@ -20,8 +21,10 @@ namespace SystemAdmin.CommonSetup.DependencyInjection
             var types = assembly.GetTypes()
                 .Where(t => t.IsClass
                             && !t.IsAbstract
-                            && !t.IsGenericTypeDefinition);
-                            //&& (t.Name.EndsWith("Service") || t.Name.EndsWith("Repository")));
+                            && !t.IsGenericTypeDefinition
+                            && t.IsPublic                                    // 只注册 public 类
+                            && !t.Name.StartsWith("<")                       // 排除编译器生成的 <XXX> 类型
+                            && !Attribute.IsDefined(t, typeof(CompilerGeneratedAttribute))); // 双保险
 
             foreach (var type in types)
             {

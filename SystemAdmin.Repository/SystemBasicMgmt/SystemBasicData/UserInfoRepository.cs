@@ -2,6 +2,7 @@
 using SqlSugar;
 using System.Data;
 using SystemAdmin.CommonSetup.Options;
+using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Dto;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Queries;
@@ -16,11 +17,14 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
     {
         private readonly SqlSugarScope _db;
         private readonly Language _lang;
+        private readonly LocalizationService _localization;
+        private readonly string _thisExcel = "SystemBasicMgmt.SystemBasicData.UserExcel_";
 
-        public UserInfoRepository(SqlSugarScope db, Language lang)
+        public UserInfoRepository(SqlSugarScope db, Language lang, LocalizationService localization)
         {
             _db = db;
             _lang = lang;
+            _localization = localization;
         }
 
         /// <summary>
@@ -437,23 +441,23 @@ namespace SystemAdmin.Repository.SystemBasicMgmt.SystemBasicData
                                                     ? position.PositionNameCn
                                                     : position.PositionNameEn,
                                    HireDate = user.HireDate,
-                                   GenderName = _lang.Locale == "zh-CN"
-                                                    ? (user.Gender == 1 ? "男" : "女")
-                                                    : (user.Gender == 1 ? "Male" : "Female"),
+                                   GenderName = user.Gender == 1
+                                                    ? _localization.ReturnMsg($"{_thisExcel}UserExcel_GenderMale")
+                                                    : _localization.ReturnMsg($"{_thisExcel}UserExcel_GenderFemale"),
                                    NationalityName = _lang.Locale == "zh-CN"
-                                                       ? nation.NationNameCn
-                                                       : nation.NationNameEn,
+                                                    ? nation.NationNameCn
+                                                    : nation.NationNameEn,
                                    Email = user.Email,
                                    PhoneNumber = user.PhoneNumber,
                                    IsEmployedName = _lang.Locale == "zh-CN"
-                                                    ? (user.IsEmployed == 1 ? "在职" : "离职")
-                                                    : (user.IsEmployed == 1 ? "Yes" : "No"),
+                                                    ? _localization.ReturnMsg($"{_thisExcel}UserExcel_IsEmployedCurrent")
+                                                    : _localization.ReturnMsg($"{_thisExcel}UserExcel_IsEmployedFormer"),
                                    IsReviewName = _lang.Locale == "zh-CN"
-                                                    ? (user.IsReview == 1 ? "需要审批" : "无需审批")
-                                                    : (user.IsReview == 1 ? "Yes" : "No"),
+                                                    ? _localization.ReturnMsg($"{_thisExcel}UserExcel_IsReviewRequired")
+                                                    : _localization.ReturnMsg($"{_thisExcel}UserExcel_IsReviewNorequired"),
                                    IsFreezeName = _lang.Locale == "zh-CN"
-                                                    ? (user.IsFreeze == 1 ? "已冻结" : "未冻结")
-                                                    : (user.IsFreeze == 1 ? "Yes" : "No"),
+                                                    ? _localization.ReturnMsg($"{_thisExcel}UserExcel_IsFreezeNormal")
+                                                    : _localization.ReturnMsg($"{_thisExcel}UserExcel_IsReviewFrozen"),
                                }).ToDataTableAsync();
         }
     }

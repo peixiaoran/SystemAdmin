@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
-using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto;
-using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Upsert;
-using SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow.Dto;
 using SystemAdmin.Service.FormBusiness.Forms;
 
 namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
@@ -49,38 +46,6 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         public async Task<Result<LeaveFormDto>> GetLeaveForm([FromForm] string formId)
         {
             return await _leaveFormService.GetLeaveForm(formId);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 请假单上传附件")]
-        public async Task<Result<List<FormAttachmentDto>>> UploadAttachment([FromForm] string formId, List<IFormFile> files)
-        {
-            return await _leaveFormService.UploadAttachment(formId, files);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 请假单删除附件")]
-        public async Task<Result<int>> DeleteAttachment([FromForm] string attachmentId, [FromForm] string attachmentPath)
-        {
-            return await _leaveFormService.DeleteAttachment(attachmentId, attachmentPath);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 查询请假单流程")]
-        public async Task<Result<FormReview>> GetFullReviewFlow([FromForm] string formId)
-        {
-            return await _leaveFormService.GetFullReviewFlow(formId);
-        }
-
-        [HttpPost]
-        [Tags("表单业务管理-表单Forms")]
-        [EndpointSummary("[请假单] 核准请假单")]
-        public async Task<Result<bool>> LeaveFromApprove([FromBody] ReviewForm reviewForm)
-        {
-            return await _leaveFormService.LeaveFromApprove(reviewForm);
         }
     }
 }

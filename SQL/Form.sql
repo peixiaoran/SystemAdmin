@@ -12,7 +12,7 @@
  Target Server Version : 17001115 (17.00.1115)
  File Encoding         : 65001
 
- Date: 14/05/2026 16:58:36
+ Date: 15/05/2026 17:18:49
 */
 
 
@@ -544,28 +544,7 @@ GO
 -- ----------------------------
 -- Records of FormNotificationToken
 -- ----------------------------
-INSERT INTO [Form].[FormNotificationToken] ([FormId], [ReviewUserId], [Token], [ExpirationTime], [CreatedDate]) VALUES (N'2053008449054314496', N'1903486709602062341', N'YSUVA8kY9YsrArzQzLTXTFoNjm4-0lpMAq4r9SDmTEk', N'2026-05-28 16:55:43.937', N'2026-05-13 16:55:43.937')
-GO
-
 INSERT INTO [Form].[FormNotificationToken] ([FormId], [ReviewUserId], [Token], [ExpirationTime], [CreatedDate]) VALUES (N'2052396992105156608', N'1903486709602062341', N'tJmmuRMNOixOUj89Ja0KcdxyEPK2b9ef5E9UMnwHJlQ', N'2026-05-29 15:16:50.480', N'2026-05-14 15:16:50.480')
-GO
-
-INSERT INTO [Form].[FormNotificationToken] ([FormId], [ReviewUserId], [Token], [ExpirationTime], [CreatedDate]) VALUES (N'2052396992105156608', N'1903486709602062341', N'XAVtZCI78co8Fnwp6thc2HHq2Slx7-Q8Piwi16GELIk', N'2026-05-29 15:28:10.930', N'2026-05-14 15:28:10.930')
-GO
-
-INSERT INTO [Form].[FormNotificationToken] ([FormId], [ReviewUserId], [Token], [ExpirationTime], [CreatedDate]) VALUES (N'2052396992105156608', N'1903486709602062341', N'ceaGQlR0r7b_Do9-PqqDyUyxK5Lc5r87fZRn6NyGDqo', N'2026-05-29 15:38:45.370', N'2026-05-14 15:38:45.370')
-GO
-
-INSERT INTO [Form].[FormNotificationToken] ([FormId], [ReviewUserId], [Token], [ExpirationTime], [CreatedDate]) VALUES (N'2052396992105156608', N'1903486709602062341', N'8T3KmOAypdcf0Zi6rDYDwbAZT6TFokKD3s-C3wPJ2hk', N'2026-05-29 15:47:02.393', N'2026-05-14 15:47:02.393')
-GO
-
-INSERT INTO [Form].[FormNotificationToken] ([FormId], [ReviewUserId], [Token], [ExpirationTime], [CreatedDate]) VALUES (N'2052396992105156608', N'1903486709602062341', N'jeKzB8oQcgldxfLNzCIeHhDXptvODkKW3wraLsIdY_I', N'2026-05-29 15:52:39.273', N'2026-05-14 15:52:39.273')
-GO
-
-INSERT INTO [Form].[FormNotificationToken] ([FormId], [ReviewUserId], [Token], [ExpirationTime], [CreatedDate]) VALUES (N'2052396992105156608', N'1903486709602062341', N'SyBG9wY7a_c0YcW8yt4acWtjyq7_5oMV2wk_Z96qIVM', N'2026-05-29 15:55:35.600', N'2026-05-14 15:55:35.600')
-GO
-
-INSERT INTO [Form].[FormNotificationToken] ([FormId], [ReviewUserId], [Token], [ExpirationTime], [CreatedDate]) VALUES (N'2052396992105156608', N'1903486709602062341', N'8wKRctR7B4ukKThX9wVftPaP9JinJK8qOItiGuTmGhc', N'2026-05-29 15:57:16.597', N'2026-05-14 15:57:16.597')
 GO
 
 

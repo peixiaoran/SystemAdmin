@@ -48,7 +48,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             if (isApplicant)
                 return true;
 
-            // 检查当前用户是否在待审核列表中
+            // 检查当前用户是否在待审批列表中
             bool isReviewer = await _db.Queryable<PendingReviewEntity>()
                                        .With(SqlWith.NoLock)
                                        .LeftJoin<UserAgentEntity>((pending, useragent) => pending.ReviewUserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)

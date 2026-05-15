@@ -38,7 +38,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 核准表单
+        /// 表单核准
         /// </summary>
         public async Task<bool> FromApprove(ReviewForm reviewForm)
         {
@@ -305,7 +305,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 查询步骤所有审批人身份
+        /// 查询步骤全部审批人身份
         /// </summary>
         /// <param name="formId"></param>
         /// <param name="stepInfo"></param>
@@ -376,15 +376,14 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             return result;
         }
 
-
         #region 查询各指派类型审批人身份
 
         /// <summary>
-        /// 起始步骤 - 查询审批人身份
+        /// 查询起始步骤审批人身份
         /// </summary>
         private async Task<List<UserAppointment>> GetStartReviewUsers(long applicantUserId)
         {
-            var (actual, agent, concurrent, concurrentAgent, autoActual, autoAgent, autoConcurrent, autoConcurrentAgent) = AppointmentEnumStrings();
+            var (actual, agent, _, _, _, _, _, _) = AppointmentEnumStrings();
             var now = DateTime.Now;
 
             #region SQL
@@ -925,7 +924,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
 
 
         /// <summary>
-        /// 查询步骤所有审批人身份
+        /// 查询单步骤全部审批人身份
         /// </summary>
         /// <param name="formId"></param>
         /// <param name="stepInfo"></param>
@@ -996,11 +995,10 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
             return result;
         }
 
-
         #region 查询各指派类型审批人身份（实、兼）
 
         /// <summary>
-        /// 起始步骤 - 查询审批人身份
+        /// 查询起始步骤审批人身份
         /// </summary>
         private async Task<List<UserAppointment>> GetActualConStartReviewUsers(long applicantUserId)
         {
@@ -1034,7 +1032,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 查询审批人身份 - 按组织架构
+        /// 查询单步骤审批人身份 - 按组织架构
         /// </summary>
         public async Task<List<UserAppointment>> GetActualConOrgReviewUsers(List<DepartmentInfoEntity> applicantParentDept, long deptLeaveId, long positionId, string reviewMode)
         {
@@ -1329,7 +1327,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
 
         /// <summary>
-        /// 查询审批人身份 - 按指定人
+        /// 查询单步骤审批人身份 - 按指定人
         /// </summary>
         public async Task<List<UserAppointment>> GetActualConUserReviewUsers(long userId, string reviewMode)
         {
@@ -1593,8 +1591,10 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         }
         #endregion
 
+        #region 审批日志记录
+
         /// <summary>
-        /// 记录审批日志
+        /// 审批日志记录
         /// </summary>
         /// <param name="formId"></param>
         /// <param name="stepId"></param>
@@ -1661,6 +1661,8 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                 await _db.Insertable(records).ExecuteCommandAsync();
             }
         }
+
+        #endregion
 
         #region 邮件通知
 

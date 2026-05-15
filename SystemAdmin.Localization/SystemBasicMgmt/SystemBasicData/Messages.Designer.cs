@@ -322,6 +322,24 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
+        ///   查找类似 女 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_GenderFemale {
+            get {
+                return ResourceManager.GetString("UserExcel_GenderFemale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 男 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_GenderMale {
+            get {
+                return ResourceManager.GetString("UserExcel_GenderMale", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 性别 的本地化字符串。
         /// </summary>
         internal static string UserExcel_GenderName {
@@ -340,11 +358,20 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         }
         
         /// <summary>
-        ///   查找类似 是否签核 的本地化字符串。
+        ///   查找类似 在职 的本地化字符串。
         /// </summary>
-        internal static string UserExcel_IsReviewName {
+        internal static string UserExcel_IsEmployedCurrent {
             get {
-                return ResourceManager.GetString("UserExcel_IsReviewName", resourceCulture);
+                return ResourceManager.GetString("UserExcel_IsEmployedCurrent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 离职 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_IsEmployedFormer {
+            get {
+                return ResourceManager.GetString("UserExcel_IsEmployedFormer", resourceCulture);
             }
         }
         
@@ -363,6 +390,51 @@ namespace SystemAdmin.Localization.SystemBasicMgmt.SystemBasicData {
         internal static string UserExcel_IsFreezeName {
             get {
                 return ResourceManager.GetString("UserExcel_IsFreezeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 正常 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_IsFreezeNormal {
+            get {
+                return ResourceManager.GetString("UserExcel_IsFreezeNormal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 冻结 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_IsReviewFrozen {
+            get {
+                return ResourceManager.GetString("UserExcel_IsReviewFrozen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 是否签核 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_IsReviewName {
+            get {
+                return ResourceManager.GetString("UserExcel_IsReviewName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 否 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_IsReviewNorequired {
+            get {
+                return ResourceManager.GetString("UserExcel_IsReviewNorequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 是 的本地化字符串。
+        /// </summary>
+        internal static string UserExcel_IsReviewRequired {
+            get {
+                return ResourceManager.GetString("UserExcel_IsReviewRequired", resourceCulture);
             }
         }
         

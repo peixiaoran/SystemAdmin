@@ -1,17 +1,9 @@
-﻿using Mapster;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
 using SqlSugar;
-using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.CommonSetup.Security;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Commands;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
-using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto;
-using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
-using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Upsert;
-using SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow.Dto;
 using SystemAdmin.Repository.FormBusiness.Forms;
 using SystemAdmin.Repository.FormBusiness.Workflow;
 
@@ -22,29 +14,23 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         private readonly CurrentUser _loginuser;
         private readonly ILogger<LeaveFormService> _logger;
         private readonly SqlSugarScope _db;
-        private readonly FileUploadOptions _attachmentUpload;
-        private readonly MinioService _minioService;
         private readonly FormPermissionChecker _formChecker;
-        private readonly FormManager _formRepo;
         private readonly LeaveFormRepository _leaveForm;
+        private readonly FormManager _formmanger;
+        private readonly FormReviewFlow _formflow;
         private readonly LocalizationService _localization;
-        private readonly FormReviewFlow _reviewFlow;
-        private readonly FormReviewAction _reviewAction;
         private readonly string _form = "FormBusiness.Forms.";
 
-        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, IOptions<FileUploadOptions> attachmentUpload, MinioService minioService, FormPermissionChecker formChecker, FormManager formRepo, LeaveFormRepository leaveForm, LocalizationService localization, FormReviewFlow reviewFlow, FormReviewAction reviewAction)
+        public LeaveFormService(CurrentUser loginuser, ILogger<LeaveFormService> logger, SqlSugarScope db, FormPermissionChecker formchecker,  LeaveFormRepository leaveForm, FormManager formmanger, FormReviewFlow formflow, LocalizationService localization)
         {
             _loginuser = loginuser;
             _logger = logger;
             _db = db;
-            _attachmentUpload = attachmentUpload.Value;
-            _minioService = minioService;
-            _formChecker = formChecker;
-            _formRepo = formRepo;
             _leaveForm = leaveForm;
+            _formChecker = formchecker;
+            _formmanger = formmanger;
+            _formflow = formflow;
             _localization = localization;
-            _reviewFlow = reviewFlow;
-            _reviewAction = reviewAction;
         }
 
         /// <summary>
@@ -74,7 +60,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 else
                 {
                     await _db.BeginTranAsync();
-                    var formId = await _formRepo.InitializeFormInstance(long.Parse(formTypeId));
+                    var formId = await _formmanger.InitializeFormInstance(long.Parse(formTypeId));
                     var leaveForm = new LeaveFormEntity()
                     {
                         FormId = long.Parse(formId),
@@ -88,12 +74,13 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                         CreatedDate = DateTime.Now
                     };
                     await _leaveForm.InitLeaveForm(leaveForm);
-                    await _formRepo.MatchWorkflowRuleAsync(long.Parse(formTypeId), long.Parse(formId));
+                    await _formmanger.MatchWorkflowRuleAsync(long.Parse(formTypeId), long.Parse(formId));
                     await _db.CommitTranAsync();
 
                     var leaveFormDto = await _leaveForm.GetLeaveForm(long.Parse(formId));
-                    leaveFormDto.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
-                    leaveFormDto.ReviewRecordList = await _leaveForm.GetReviewRecordList(long.Parse(formId));
+                    leaveFormDto.RejectStepDrop = await _formflow.GetRejectStepDrop(long.Parse(formId));
+                    leaveFormDto.AttachmentList = await _formmanger.GetAttachmentList(long.Parse(formId));
+                    leaveFormDto.ReviewRecordList = await _formmanger.GetReviewRecordList(long.Parse(formId));
                     return Result<LeaveFormDto>.Ok(leaveFormDto);
                 }
             }
@@ -128,7 +115,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 };
                 await _db.BeginTranAsync();
                 var count = await _leaveForm.SaveLeaveForm(entity);
-                await _formRepo.SaveFormInstance(long.Parse(save.FormId));
+                await _formmanger.SaveFormInstance(long.Parse(save.FormId));
                 await _db.CommitTranAsync();
 
                 return count >= 1
@@ -159,159 +146,15 @@ namespace SystemAdmin.Service.FormBusiness.Forms
                 }
 
                 var form = await _leaveForm.GetLeaveForm(long.Parse(formId));
-                form.AttachmentList = await _leaveForm.GetAttachmentList(long.Parse(formId));
-                form.ReviewRecordList = await _leaveForm.GetReviewRecordList(long.Parse(formId));
+                form.RejectStepDrop = await _formflow.GetRejectStepDrop(long.Parse(formId));
+                form.AttachmentList = await _formmanger.GetAttachmentList(long.Parse(formId));
+                form.ReviewRecordList = await _formmanger.GetReviewRecordList(long.Parse(formId));
                 return Result<LeaveFormDto>.Ok(form);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 return Result<LeaveFormDto>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 上传附件
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <param name="attachments"></param>
-        /// <returns></returns>
-        public async Task<Result<List<FormAttachmentDto>>> UploadAttachment(string formId, List<IFormFile> attachments)
-        {
-            try
-            {
-                if (attachments == null || attachments.Count == 0)
-                {
-                    return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentNotNull"));
-                }
-
-                long maxAttachmentSize = _attachmentUpload.MaxSizeMB * 1024L * 1024L;
-                var formAttachmentList = new List<FormAttachmentDto>();
-
-                await _db.BeginTranAsync();
-                foreach (var attachment in attachments)
-                {
-                    if (attachment == null || attachment.Length == 0)
-                    {
-                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentNotNull"));
-                    }
-                    if (attachment.Length > maxAttachmentSize)
-                    {
-                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentSizeLimit"));
-                    }
-
-                    var attachmentExt = Path.GetExtension(attachment.FileName)?.ToLowerInvariant();
-                    if (string.IsNullOrWhiteSpace(attachmentExt) || !_attachmentUpload.AllowExtensions.Contains(attachmentExt))
-                    {
-                        return Result<List<FormAttachmentDto>>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentExtensionNotAllow"));
-                    }
-
-                    using var stream = attachment.OpenReadStream();
-                    var avatarUrl = await _minioService.UploadFile(attachment.FileName, stream, attachment.ContentType);
-
-                    int attachmentSizeKb = (int)(attachment.Length / 1024);
-
-                    var attachmentItem = new FormAttachmentEntity
-                    {
-                        AttachmentId = SnowFlakeSingle.Instance.NextId(),
-                        FormId = long.Parse(formId),
-                        AttachmentName = attachment.FileName,
-                        AttachmentPath = avatarUrl.ToString(),
-                        AttachmentSize = attachmentSizeKb,
-                        CreatedBy = _loginuser.UserId,
-                        CreatedDate = DateTime.Now
-                    };
-                    var attachmentItemDto = attachmentItem.Adapt<FormAttachmentDto>();
-                    var count = await _leaveForm.InsertAttachment(attachmentItem);
-                    formAttachmentList.Add(attachmentItemDto);
-                }
-                await _db.CommitTranAsync();
-
-                return Result<List<FormAttachmentDto>>.Ok(formAttachmentList, _localization.ReturnMsg($"{_form}UploadSuccess"));
-            }
-            catch (Exception ex)
-            {
-                await _db.RollbackTranAsync();
-                _logger.LogError(ex, ex.Message);
-                return Result<List<FormAttachmentDto>>.Failure(500, _localization.ReturnMsg($"{_form}UploadFailed"));
-            }
-        }
-
-        /// <summary>
-        /// 删除附件
-        /// </summary>
-        /// <param name="attachmentId"></param>
-        /// <param name="attachmentPath"></param>
-        /// <returns></returns>
-        public async Task<Result<int>> DeleteAttachment(string attachmentId, string attachmentPath)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(attachmentId))
-                {
-                    return Result<int>.Failure(400, _localization.ReturnMsg($"{_form}AttachmentIdNotNull"));
-                }
-
-                await _db.BeginTranAsync();
-                var count = await _leaveForm.DeleteAttachment(long.Parse(attachmentId));
-                await _db.CommitTranAsync();
-
-                await _minioService.DeleteFile(attachmentPath);
-                return Result<int>.Ok(count, "");
-            }
-            catch (Exception ex)
-            {
-                await _db.RollbackTranAsync();
-                _logger.LogError(ex, ex.Message);
-                return Result<int>.Failure(500, _localization.ReturnMsg($"{_form}DeleteAttachmentFailed"));
-            }
-        }
-
-        /// <summary>
-        /// 查询完整审批流程
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        public async Task<Result<FormReview>> GetFullReviewFlow(string formId)
-        {
-            try
-            {
-                var fullflow = await _reviewFlow.GetFullReviewFlow(long.Parse(formId));
-                return Result<FormReview>.Ok(fullflow);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, ex.Message);
-                return Result<FormReview>.Failure(500, ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// 核准请假单
-        /// </summary>
-        /// <param name="reviewForm"></param>
-        /// <returns></returns>
-        public async Task<Result<bool>> LeaveFromApprove(ReviewForm reviewForm)
-        {
-            try
-            {
-                var isCan = await _formChecker.CanReview(long.Parse(reviewForm.FormId));
-                if (!isCan)
-                {
-                    return Result<bool>.Failure(400, _localization.ReturnMsg($"{_form}NotCanReview"));
-                }
-
-                await _db.BeginTranAsync();
-                var result = await _reviewAction.FromApprove(reviewForm);
-                await _db.CommitTranAsync();
-
-                return Result<bool>.Ok(result);
-            }
-            catch (Exception ex)
-            {
-                await _db.RollbackTranAsync();
-                _logger.LogError(ex, ex.Message);
-                return Result<bool>.Failure(500, ex.Message);
             }
         }
     }

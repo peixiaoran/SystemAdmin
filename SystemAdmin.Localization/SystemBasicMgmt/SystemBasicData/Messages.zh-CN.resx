@@ -297,4 +297,28 @@
   <data name="DeptInfoDeptCodeExist" xml:space="preserve">
     <value>部门代码已存在，请重新输入</value>
   </data>
+  <data name="UserExcel_GenderMale" xml:space="preserve">
+    <value>男</value>
+  </data>
+  <data name="UserExcel_GenderFemale" xml:space="preserve">
+    <value>女</value>
+  </data>
+  <data name="UserExcel_IsEmployedCurrent" xml:space="preserve">
+    <value>在职</value>
+  </data>
+  <data name="UserExcel_IsEmployedFormer" xml:space="preserve">
+    <value>离职</value>
+  </data>
+  <data name="UserExcel_IsReviewRequired" xml:space="preserve">
+    <value>是</value>
+  </data>
+  <data name="UserExcel_IsReviewNorequired" xml:space="preserve">
+    <value>否</value>
+  </data>
+  <data name="UserExcel_IsFreezeNormal" xml:space="preserve">
+    <value>正常</value>
+  </data>
+  <data name="UserExcel_IsReviewFrozen" xml:space="preserve">
+    <value>冻结</value>
+  </data>
 </root>

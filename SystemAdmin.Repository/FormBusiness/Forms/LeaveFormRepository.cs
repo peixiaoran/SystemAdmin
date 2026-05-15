@@ -1,13 +1,8 @@
-﻿using Mapster;
-using Microsoft.AspNetCore.Mvc;
-using SqlSugar;
-using SystemAdmin.Common.Enums.FormBusiness;
+﻿using SqlSugar;
 using SystemAdmin.CommonSetup.Options;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.LeaveForm.Entity;
-using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
-using SystemAdmin.Model.FormBusiness.FormWorkflow.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemBasicData.Entity;
 using SystemAdmin.Model.SystemBasicMgmt.SystemConfig.Entity;
 
@@ -105,91 +100,6 @@ namespace SystemAdmin.Repository.FormBusiness.Forms
                                 LeaveHours = leave.LeaveDays,
                                 AgentUserNo = leave.AgentUserNo,
                             }).FirstAsync();
-        }
-
-        /// <summary>
-        /// 查询附件列表
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        public async Task<List<FormAttachmentDto>> GetAttachmentList(long formId)
-        {
-            var list = await _db.Queryable<FormAttachmentEntity>()
-                                .With(SqlWith.NoLock)
-                                .Where(formfile => formfile.FormId == formId)
-                                .ToListAsync();
-            return list.Adapt<List<FormAttachmentDto>>();
-        }
-
-        /// <summary>
-        /// 新增附件
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public async Task<int> InsertAttachment(FormAttachmentEntity entity)
-        {
-            return await _db.Insertable(entity).ExecuteCommandAsync();
-        }
-
-        /// <summary>
-        /// 删除附件
-        /// </summary>
-        /// <param name="attachmentId"></param>
-        /// <returns></returns>
-        public async Task<int> DeleteAttachment(long attachmentId)
-        {
-            return await _db.Deleteable<FormAttachmentEntity>()
-                            .Where(attach => attach.AttachmentId == attachmentId)
-                            .ExecuteCommandAsync();
-        }
-
-
-        /// <summary>
-        /// 查询审批记录列表
-        /// </summary>
-        /// <param name="formId"></param>
-        /// <returns></returns>
-        public async Task<List<FormReviewRecordDto>> GetReviewRecordList(long formId)
-        {
-            var list = await _db.Queryable<FormReviewRecordEntity>()
-                                .With(SqlWith.NoLock)
-                                .InnerJoin<WorkflowStepEntity>((record, step) => record.StepId == step.StepId)
-                                .InnerJoin<DictionaryInfoEntity>((record, step, reviewresult) => reviewresult.DicType == "ReviewResult" && record.ReviewResult == reviewresult.DicCode)
-                                .LeftJoin<WorkflowStepEntity>((record, step, reviewresult, rejectstep) => record.RejectStepId == rejectstep.StepId)
-                                .InnerJoin<DictionaryInfoEntity>((record, step, reviewresult, rejectstep, reivewtype) => reivewtype.DicType == "ReviewType" && record.ReviewType == reivewtype.DicCode)
-                                .InnerJoin<DictionaryInfoEntity>((record, step, reviewresult, rejectstep, reivewtype, appointmenttype) => appointmenttype.DicType == "AppointmentType" && record.AppointmentType == appointmenttype.DicCode)
-                                .InnerJoin<UserInfoEntity>((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser) => record.OriginalUserId == originaluser.UserId)
-                                .InnerJoin<UserInfoEntity>((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser, operationUser) => record.OperationUserId == operationUser.UserId)
-                                .Where((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser, operationuser) => record.FormId == formId)
-                                .OrderBy((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser, operationuser) => record.ReviewDateTime)
-                                .Select((record, step, reviewresult, rejectstep, reivewtype, appointmenttype, originaluser, operationuser) => new FormReviewRecordDto
-                                {
-                                    FormId = record.FormId,
-                                    StepName = _lang.Locale == "zh-CN"
-                                               ? step.StepNameCn
-                                               : step.StepNameEn,
-                                    ReviewResultName = _lang.Locale == "zh-CN"
-                                               ? reviewresult.DicNameCn
-                                               : reviewresult.DicNameEn,
-                                    RejectStepName = _lang.Locale == "zh-CN"
-                                               ? rejectstep.StepNameCn
-                                               : rejectstep.StepNameEn,
-                                    Comment = record.Comment,
-                                    ReviewTypeName = _lang.Locale == "zh-CN"
-                                               ? reivewtype.DicNameCn
-                                               : reivewtype.DicNameEn,
-                                    AppointmentTypeName = _lang.Locale == "zh-CN"
-                                               ? appointmenttype.DicNameCn
-                                               : appointmenttype.DicNameEn,
-                                    OriginalUserName = _lang.Locale == "zh-CN"
-                                               ? originaluser.UserNameCn
-                                               : originaluser.UserNameEn,
-                                    OperationUserName = _lang.Locale == "zh-CN"
-                                               ? operationuser.UserNameCn
-                                               : operationuser.UserNameEn,
-                                    ReviewDateTime = record.ReviewDateTime,
-                                }).ToListAsync();
-            return list.Adapt<List<FormReviewRecordDto>>();
         }
     }
 }
