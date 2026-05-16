@@ -15,12 +15,23 @@ namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto
         public long FormId { get; set; }
 
         /// <summary>
+        /// 步骤Id
+        /// </summary>
+        [JsonConverter(typeof(LongToStringConverter))]
+        public long StepId { get; set; }
+
+        /// <summary>
         /// 步骤名称
         /// </summary>
         public string StepName { get; set; } = string.Empty;
 
         /// <summary>
         /// 操作状态
+        /// </summary>
+        public string ReviewResult { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 操作状态名称
         /// </summary>
         public string ReviewResultName { get; set; } = string.Empty;
 
@@ -37,7 +48,17 @@ namespace SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto
         /// <summary>
         /// 审批类型
         /// </summary>
+        public string ReviewType { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 审批类型名称
+        /// </summary>
         public string ReviewTypeName { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 审批身份
+        /// </summary>
+        public string AppointmentType { get; set; } = string.Empty;
 
         /// <summary>
         /// 审批身份名称

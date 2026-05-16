@@ -268,25 +268,37 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
                                          .FirstAsync();
             }
 
-            // 查询当前步骤及所有候选步骤的 SortOrder
+            // 查询当前步骤及所有候选步骤的 SortOrder 和 IsStartStep
             var allStepIds = stepReviewList.Select(stepreview => stepreview.StepId).Append(formDetail.CurrentStepId).Distinct().ToList();
-            var stepSortDict = (await _db.Queryable<WorkflowStepEntity>()
+            var stepInfoDict = (await _db.Queryable<WorkflowStepEntity>()
                                          .With(SqlWith.NoLock)
                                          .Where(step => allStepIds.Contains(step.StepId))
-                                         .Select(step => new { step.StepId, step.SortOrder })
+                                         .Select(step => new { step.StepId, step.SortOrder, step.IsStartStep })
                                          .ToListAsync())
-                                         .ToDictionary(step => step.StepId, step => step.SortOrder);
+                                         .ToDictionary(step => step.StepId, step => new { step.SortOrder, step.IsStartStep });
 
-            var currentSortOrder = stepSortDict.GetValueOrDefault(formDetail.CurrentStepId, int.MaxValue);
+            var currentSortOrder = stepInfoDict.TryGetValue(formDetail.CurrentStepId, out var current)
+                                   ? current.SortOrder
+                                   : int.MaxValue;
 
             // 筛选可驳回步骤
             var rejectStepDropList = stepReviewList
                                     .Where(step => step.Skip != 1)
-                                    .Where(step => stepSortDict.GetValueOrDefault(step.StepId, int.MaxValue) < currentSortOrder) // 只保留排序小于当前步骤的
-                                    .Where(step => !step.stepReviewUser.Any(user =>
-                                        user.ReviewUserId == _loginuser.UserId ||
-                                        user.AgentUserId == _loginuser.UserId))
-                                    .OrderBy(step => stepSortDict.GetValueOrDefault(step.StepId, int.MaxValue)) // 按 SortOrder 升序
+                                    .Where(step =>
+                                    {
+                                        if (!stepInfoDict.TryGetValue(step.StepId, out var info)) return false;
+                                        return info.SortOrder < currentSortOrder || info.IsStartStep == 1;
+                                    })
+                                    .Where(step =>
+                                    {
+                                        if (!stepInfoDict.TryGetValue(step.StepId, out var info)) return false;
+                                        if (info.IsStartStep == 1) return true; // 起始步骤始终保留，不做用户过滤
+                                        return info.SortOrder < currentSortOrder
+                                               && !step.stepReviewUser.Any(user =>
+                                                   user.ReviewUserId == _loginuser.UserId ||
+                                                   user.AgentUserId == _loginuser.UserId);
+                                    })
+                                    .OrderBy(step => stepInfoDict.TryGetValue(step.StepId, out var info) ? info.SortOrder : int.MaxValue)
                                     .Select(step => new RejectStepDrop
                                     {
                                         StepId = step.StepId,
@@ -1321,7 +1333,7 @@ namespace SystemAdmin.Repository.FormBusiness.Workflow
         {
             var reviewRecord = await _db.Queryable<FormReviewRecordEntity>()
                                         .With(SqlWith.NoLock)
-                                        .Where(record => record.FormId == formId && record.ReviewResult == ReviewResult.Approve.ToEnumString())
+                                        .Where(record => record.FormId == formId)
                                         .OrderBy(record => record.ReviewDateTime)
                                         .ToListAsync();
 

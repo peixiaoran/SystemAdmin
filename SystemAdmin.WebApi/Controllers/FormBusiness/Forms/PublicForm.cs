@@ -4,12 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Upsert;
 using SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Dto;
 using SystemAdmin.Service.FormBusiness.Forms;
 
 namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
 {
-    [JwtAuthorize]
     [Route("api/FormBusiness/Forms/[controller]/[action]")]
     [ApiController]
     public class PublicForm : ControllerBase
@@ -24,7 +22,7 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[表单公共接口] 表单邮件Token验证")]
         [AllowAnonymous]
-        public async Task<Result<SysUserLoginReturnDto>> UserLogin([FromForm] string tokenValue)
+        public async Task<Result<FormNotificationReturnDto>> GetFormNotificationToken([FromForm] string tokenValue)
         {
             return await _publicFormService.GetFormNotificationToken(Response, tokenValue);
         }
@@ -56,9 +54,17 @@ namespace SystemAdmin.WebApi.Controllers.FormBusiness.Forms
         [HttpPost]
         [Tags("表单业务管理-表单Forms")]
         [EndpointSummary("[表单公共接口] 表单核准")]
-        public async Task<Result<bool>> FromApprove([FromBody] ReviewForm reviewForm)
+        public async Task<Result<bool>> FromApprove([FromBody] ApproveForm reviewForm)
         {
             return await _publicFormService.FromApprove(reviewForm);
+        }
+
+        [HttpPost]
+        [Tags("表单业务管理-表单Forms")]
+        [EndpointSummary("[表单公共接口] 表单驳回")]
+        public async Task<Result<bool>> FromReject([FromBody] RejectForm rejectForm)
+        {
+            return await _publicFormService.FromReject(rejectForm);
         }
     }
 }

@@ -152,12 +152,12 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
             var query = _db.Queryable<PendingReviewEntity>()
                            .With(SqlWith.NoLock)
                            .InnerJoin<FormInstanceEntity>((pending, instance) => pending.FormId == instance.FormId)
-                           .InnerJoin<DictionaryInfoEntity>((pending, instance, dic) => dic.DicType == "FormStatus" && instance.FormStatus == dic.DicCode && instance.FormStatus == FormStatus.UnderReview.ToEnumString())
+                           .InnerJoin<DictionaryInfoEntity>((pending, instance, dic) => dic.DicType == "FormStatus" && instance.FormStatus == dic.DicCode && (instance.FormStatus == FormStatus.UnderReview.ToEnumString() || instance.FormStatus == FormStatus.Rejected.ToEnumString()))
                            .InnerJoin<FormTypeEntity>((pending, instance, dic, formtype) => instance.FormTypeId == formtype.FormTypeId)
                            .InnerJoin<UserInfoEntity>((pending, instance, dic, formtype, applyuser) => instance.ApplicantUserId == applyuser.UserId)
                            .InnerJoin<DepartmentInfoEntity>((pending, instance, dic, formtype, applyuser, applyuserdept) => applyuser.DepartmentId == applyuserdept.DepartmentId)
                            .LeftJoin<UserAgentEntity>((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => pending.ReviewUserId == useragent.SubstituteUserId && useragent.StartTime <= DateTime.Now && useragent.EndTime >= DateTime.Now)
-                           .Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => (pending.ReviewUserId == loginUserId || useragent.AgentUserId == loginUserId) && instance.ApplicantUserId != loginUserId);
+                           .Where((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => (pending.ReviewUserId == loginUserId || useragent.AgentUserId == loginUserId));
 
             // 表单组别Id
             if (!string.IsNullOrEmpty(getPage.FormGroupId) && long.Parse(getPage.FormGroupId) > 0)
@@ -174,6 +174,8 @@ namespace SystemAdmin.Repository.FormBusiness.FormOperate
 
             // 排序
             query = query.OrderBy((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new { instance.CreatedDate });
+
+            string ss = query.ToSqlString();
 
             var page = await query.Select((pending, instance, dic, formtype, applyuser, applyuserdept, useragent) => new PendingReviewDto
             {

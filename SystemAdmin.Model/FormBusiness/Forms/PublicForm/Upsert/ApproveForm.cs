@@ -3,7 +3,7 @@
     /// <summary>
     /// 审批表单提交类
     /// </summary>
-    public class ReviewForm
+    public class ApproveForm
     {
         /// <summary>
         /// 表单Id

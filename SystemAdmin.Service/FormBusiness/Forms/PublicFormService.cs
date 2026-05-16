@@ -9,7 +9,6 @@ using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Dto;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Entity;
 using SystemAdmin.Model.FormBusiness.Forms.PublicForm.Upsert;
 using SystemAdmin.Model.FormBusiness.Workflow.FormReviewFlow.Dto;
-using SystemAdmin.Model.SystemBasicMgmt.SystemAuth.Dto;
 using SystemAdmin.Repository.FormBusiness.Workflow;
 
 namespace SystemAdmin.Service.FormBusiness.Forms
@@ -50,25 +49,26 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// <param name="httpResponse"></param>
         /// <param name="tokenValue"></param>
         /// <returns></returns>
-        public async Task<Result<SysUserLoginReturnDto>> GetFormNotificationToken(HttpResponse httpResponse, string tokenValue)
+        public async Task<Result<FormNotificationReturnDto>> GetFormNotificationToken(HttpResponse httpResponse, string tokenValue)
         {
             var entity = await _formmanger.GetFormNotificationTokenWithUser(tokenValue);
             if (entity == null)
             {
-                return Result<SysUserLoginReturnDto>.Failure(400, _localization.ReturnMsg($"{_form}NotCanView"));
+                return Result<FormNotificationReturnDto>.Failure(400, _localization.ReturnMsg($"{_form}NotCanView"));
             }
             else
             {
-                _jwt.SetAuthCookie(httpResponse, userId: entity.UserId, userNo: entity.UserNo);
+                _jwt.SetAuthCookie(httpResponse, userId: entity.user.UserId, userNo: entity.user.UserNo);
 
                 // 返回登录成功信息（JWT Cookie 已在其他层处理）
-                return Result<SysUserLoginReturnDto>.Ok(
-                    new SysUserLoginReturnDto
+                return Result<FormNotificationReturnDto>.Ok(
+                    new FormNotificationReturnDto
                     {
-                        UserNo = entity.UserNo,
-                        UserNameCn = entity.UserNameCn,
-                        UserNameEn = entity.UserNameEn,
-                        AvatarAddress = entity.AvatarAddress
+                        UserNo = entity.user.UserNo,
+                        UserNameCn = entity.user.UserNameCn,
+                        UserNameEn = entity.user.UserNameEn,
+                        AvatarAddress = entity.user.AvatarAddress,
+                        FormId = entity.FormId,
                     }, ""
                 );
             }
@@ -195,7 +195,7 @@ namespace SystemAdmin.Service.FormBusiness.Forms
         /// </summary>
         /// <param name="reviewForm"></param>
         /// <returns></returns>
-        public async Task<Result<bool>> FromApprove(ReviewForm reviewForm)
+        public async Task<Result<bool>> FromApprove(ApproveForm reviewForm)
         {
             try
             {
@@ -207,6 +207,35 @@ namespace SystemAdmin.Service.FormBusiness.Forms
 
                 await _db.BeginTranAsync();
                 var result = await _formction.FromApprove(reviewForm);
+                await _db.CommitTranAsync();
+
+                return Result<bool>.Ok(result);
+            }
+            catch (Exception ex)
+            {
+                await _db.RollbackTranAsync();
+                _logger.LogError(ex, ex.Message);
+                return Result<bool>.Failure(500, ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 表单核准
+        /// </summary>
+        /// <param name="rejectForm"></param>
+        /// <returns></returns>
+        public async Task<Result<bool>> FromReject(RejectForm rejectForm)
+        {
+            try
+            {
+                var isCan = await _formchecker.CanReview(long.Parse(rejectForm.FormId));
+                if (!isCan)
+                {
+                    return Result<bool>.Failure(400, _localization.ReturnMsg($"{_form}NotCanReview"));
+                }
+
+                await _db.BeginTranAsync();
+                var result = await _formction.FromReject(rejectForm);
                 await _db.CommitTranAsync();
 
                 return Result<bool>.Ok(result);
